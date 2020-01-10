@@ -1,0 +1,16 @@
+{
+  "name": "recipe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm i -S mongoose express body-parser morgan cors && node index.js",
+    "heroku-postbuild": "cd client && npm install --save redux react-redux redux-saga axios && npm run build"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^5.8.6",
+    "morgan": "^1.9.1"
+  }
+}

@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { connect } from 'react-redux';
+import { FETCH_RECIPE_REQUESTED } from './actions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  componentDidMount() {
+    this.props.getRandomRecipe();
+  }
+
+  render() {
+    console.log(this.props.viewedRecipeIds);
+    return (
+      <div className="App">
+        <header className="App-header">
+          <button onClick={this.props.getRandomRecipe}>Get Recipe</button>
+          <img src={this.props.activeRecipe.image} alt="Recipe" />
+        </header>
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    fetchRecipeSuccess: state.fetchRecipeSuccess,
+    activeRecipe: state.activeRecipe,
+    viewedRecipeIds: state.viewedRecipeIds
+  };
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
+  };
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

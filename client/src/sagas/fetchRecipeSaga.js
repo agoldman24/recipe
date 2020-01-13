@@ -5,7 +5,8 @@ import {
   FETCH_RECIPE_SUCCEEDED,
   FETCH_RECIPE_FAILED,
   UPDATE_ACTIVE_RECIPE,
-  ADD_VIEWED_RECIPE
+  ADD_VIEWED_RECIPE,
+  TOGGLE_SPINNER_VISIBILITY
 } from '../actions';
 
 const getViewedRecipeIds = state => state.viewedRecipeIds;
@@ -14,6 +15,7 @@ function* fetchRecipe() {
   try {
     const viewedRecipeIds = yield select(getViewedRecipeIds);
     let result, data;
+    yield put({ type: TOGGLE_SPINNER_VISIBILITY });
     for(;;) {
       result = yield call(Api.get);
       data = result.data.meals[0];
@@ -35,6 +37,7 @@ function* fetchRecipe() {
         };
       })
     });
+    yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   } catch (e) {
       yield put({ type: FETCH_RECIPE_FAILED });
   }

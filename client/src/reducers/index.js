@@ -4,8 +4,18 @@ import {
   FETCH_RECIPE_SUCCEEDED,
   FETCH_RECIPE_FAILED,
   UPDATE_ACTIVE_RECIPE,
-  ADD_VIEWED_RECIPE
+  ADD_VIEWED_RECIPE,
+  TOGGLE_SPINNER_VISIBILITY
 } from '../actions';
+
+const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
+  switch(action.type) {
+    case TOGGLE_SPINNER_VISIBILITY:
+      return !state;
+    default:
+      return state;
+  }
+}
 
 const fetchRecipeSuccessReduce = (state = StateTree.fetchRecipeSuccess, action) => {
   switch(action.type) {
@@ -43,6 +53,7 @@ const viewedRecipesReduce = (state = StateTree.viewedRecipeIds, action) => {
 }
 
 export default combineReducers({
+  isSpinnerVisible: spinnerReduce,
   fetchRecipeSuccess: fetchRecipeSuccessReduce,
   activeRecipe: activeRecipeReduce,
   viewedRecipeIds: viewedRecipesReduce

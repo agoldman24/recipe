@@ -1,5 +1,6 @@
 export default Object.assign({},
   {
+    isSpinnerVisible: false,
     fetchRecipeSuccess: false,
     activeRecipe: {
       id: "",
@@ -11,12 +12,19 @@ export default Object.assign({},
     viewedRecipeIds: [],
     isDetailVisible: false,
     isLoggedIn: false,
-    user: {
+    activeUser: {
       id: "",
       firstName: "",
       lastName: "",
       username: "",
       password: "",
       favorites: []
+    },
+    isNewUserFormVisible: false,
+    newUserData: {
+      firstName: "",
+      lastName: "",
+      username: "",
+      password: ""
     }
   });

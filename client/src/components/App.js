@@ -5,6 +5,9 @@ import '../index.css';
 import Button from '@material-ui/core/Button';
 import Spinner from './Spinner';
 import AppBar from './AppBar';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import RecipeCard from './RecipeCard';
 
 class App extends React.Component {
   componentDidMount() {
@@ -17,12 +20,21 @@ class App extends React.Component {
       padding:"15px 20px",
       margin:"10px 5px"
     };
-    const buttonRowStyle = { display:"inline" };
     return (
-      <div className="App">
-        <div className="App-header">
-          <AppBar />
-          <div style={buttonRowStyle}>
+      <Box
+        style={{
+          backgroundColor:"#282c34",
+          paddingBottom:"10vh"
+        }}
+      >
+        <AppBar />
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item>
             <Button
               variant="contained"
               color="primary"
@@ -30,6 +42,8 @@ class App extends React.Component {
             >
               Add User
             </Button>
+          </Grid>
+          <Grid item>
             <Button
               variant="contained"
               color="primary"
@@ -38,13 +52,22 @@ class App extends React.Component {
             >
               Get New Recipe
             </Button>
-          </div>
-          {this.props.isSpinnerVisible ?
-            <Spinner /> : null
-          }
-          <img src={this.props.activeRecipe.image} alt="Recipe" />
-        </div>
-      </div>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+        >
+          <Grid item>
+            <RecipeCard/>
+          </Grid>
+        </Grid>
+        {this.props.isSpinnerVisible ?
+          <Spinner /> : null
+        }
+      </Box>
     );
   }
 }

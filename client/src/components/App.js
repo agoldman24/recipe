@@ -4,6 +4,7 @@ import { FETCH_RECIPE_REQUESTED } from '../actions';
 import '../index.css';
 import Button from '@material-ui/core/Button';
 import Spinner from './Spinner';
+import AppBar from './AppBar';
 
 class App extends React.Component {
   componentDidMount() {
@@ -20,6 +21,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <div className="App-header">
+          <AppBar />
           <div style={buttonRowStyle}>
             <Button
               variant="contained"

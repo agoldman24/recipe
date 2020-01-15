@@ -13,52 +13,58 @@ import Typography from '@material-ui/core/Typography';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+// import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { FETCH_RECIPE_REQUESTED } from '../actions';
 
-const useStyles = makeStyles(theme => ({
-  card: {
-    width: '90vw',
-  },
-  media: {
-    height: 0,
-    paddingTop: '56.25%', // 16:9
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)',
+// const useStyles = makeStyles(theme => ({
+//   card: {
+//     width: '90vw',
+//   },
+//   media: {
+//     height: 0,
+//     paddingTop: '56.25%', // 16:9
+//   },
+//   expand: {
+//     transform: 'rotate(0deg)',
+//     marginLeft: 'auto',
+//     transition: theme.transitions.create('transform', {
+//       duration: theme.transitions.duration.shortest,
+//     }),
+//   },
+//   expandOpen: {
+//     transform: 'rotate(180deg)',
+//   }
+// }));
+
+class RecipeCard extends React.Component {
+  state = {
+    expanded: false
   }
-}));
+  componentDidMount() {
+    this.props.getRandomRecipe();
+  }
 
-const RecipeCard = props => {
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  handleExpandClick = () => {
+    this.setState({ expanded: !this.state.expanded });
   };
 
-  return (
-    <ThemeProvider theme={React.useMemo(
-      () =>
-        createMuiTheme({
-          palette: {
-            type: 'dark'
-          },
-        })
-    )}>
-      <Card inverted className={classes.card}>
+  render() {
+    return (
+    // <ThemeProvider theme={React.useMemo(
+    //   () =>
+    //     createMuiTheme({
+    //       palette: {
+    //         type: 'dark'
+    //       },
+    //     })
+    // )}>
+      <Card style={{width:"90vw"}}>
         <CardHeader
-          title={props.activeRecipe.name}
+          title={this.props.activeRecipe.name}
         />
         <CardMedia
-          className={classes.media}
-          image={props.activeRecipe.image}
+          style={{height: 0, paddingTop: '56.25%'}}
+          image={this.props.activeRecipe.image}
         />
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
@@ -67,28 +73,29 @@ const RecipeCard = props => {
           <IconButton aria-label="share">
             <ShareIcon />
           </IconButton>
-          <IconButton
+          {/* <IconButton
             className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded,
+              [classes.expandOpen]: this.state.expanded,
             })}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
+            onClick={this.handleExpandClick}
+            aria-expanded={this.state.expanded}
             aria-label="show more"
           >
             <ExpandMoreIcon />
-          </IconButton>
+          </IconButton> */}
         </CardActions>
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <Collapse in={this.expanded} timeout="auto" unmountOnExit>
           <CardContent>
             <Typography paragraph>Directions:</Typography>
             <Typography paragraph>
-              {props.activeRecipe.directions}
+              {this.props.activeRecipe.directions}
             </Typography>
           </CardContent>
         </Collapse>
       </Card>
-    </ThemeProvider>
-  );
+    // </ThemeProvider>
+    );
+  }
 };
 
 const mapStateToProps = state => {
@@ -97,7 +104,13 @@ const mapStateToProps = state => {
   };
 }
 
+const mapDispatchToProps = dispatch => {
+  return {
+    getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
+  };
+}
+
 export default connect(
   mapStateToProps,
-  {}
+  mapDispatchToProps
 )(RecipeCard);

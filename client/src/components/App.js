@@ -9,20 +9,32 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import RecipeCard from './RecipeCard';
 import SignIn from './SignIn';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-class App extends React.Component {
-  componentDidMount() {
-    this.props.getRandomRecipe();
-  }
+const App = () => {
 
-  render() {
-    const buttonStyle = {
-      fontSize:"15px",
-      padding:"15px 20px",
-      margin:"10px 5px"
-    };
+  //render() {
+    // const buttonStyle = {
+    //   fontSize:"15px",
+    //   padding:"15px 20px",
+    //   margin:"10px 5px"
+    // };
     return (
-      <SignIn />
+      <ThemeProvider theme={React.useMemo(
+        () =>
+          createMuiTheme({
+            palette: {
+              type: 'dark'
+            },
+          })
+      )}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <AppBar />
+        </Container>
+      </ThemeProvider>
       // <Box
       //   style={{
       //     backgroundColor:"#282c34",
@@ -71,7 +83,7 @@ class App extends React.Component {
       //   }
       // </Box>
     );
-  }
+  //}
 }
 
 const mapStateToProps = state => {
@@ -82,13 +94,13 @@ const mapStateToProps = state => {
   };
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
-  };
-}
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
+//   };
+// }
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  {}
 )(App);

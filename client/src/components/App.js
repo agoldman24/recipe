@@ -10,64 +10,64 @@ import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 const App = props => {
-    const buttonStyle = {
-      fontSize:"15px",
-      padding:"15px 20px",
-      margin:"10px 5px"
-    };
-    return (
-      <ThemeProvider theme={React.useMemo(
-        () =>
-          createMuiTheme({
-            palette: {
-              type: 'dark'
-            },
-          })
-      )}>
-        <Container
-          component="main"
-          maxWidth="xs"
-          style={{paddingBottom:"10vh"}}
+  const buttonStyle = {
+    fontSize:"15px",
+    padding:"15px 20px",
+    margin:"10px 5px"
+  };
+  return (
+    <ThemeProvider theme={React.useMemo(
+      () =>
+        createMuiTheme({
+          palette: {
+            type: 'dark'
+          },
+        })
+    )}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        style={{paddingBottom:"10vh"}}
+      >
+        <CssBaseline />
+        <AppBar />
+        <Grid
+          container
+          direction="row"
+          justify="center"
         >
-          <CssBaseline />
-          <AppBar />
-          <Grid
-            container
-            direction="row"
-            justify="center"
-          >
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                style={buttonStyle}
-              >
-                Add User
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                style={buttonStyle}
-                onClick={props.getRandomRecipe}
-              >
-                New Recipe
-              </Button>
-            </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              style={buttonStyle}
+            >
+              Add User
+            </Button>
           </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-          >
-            <Grid item>
-              <RecipeCard/>
-            </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              style={buttonStyle}
+              onClick={props.getRandomRecipe}
+            >
+              New Recipe
+            </Button>
           </Grid>
-        </Container>
-      </ThemeProvider>
-    );
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+        >
+          <Grid item>
+            <RecipeCard/>
+          </Grid>
+        </Grid>
+      </Container>
+    </ThemeProvider>
+  );
 }
 
 const mapStateToProps = state => {

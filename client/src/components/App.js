@@ -8,6 +8,7 @@ import AppBar from './AppBar';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import RecipeCard from './RecipeCard';
+import SignIn from './SignIn';
 
 class App extends React.Component {
   componentDidMount() {
@@ -21,53 +22,54 @@ class App extends React.Component {
       margin:"10px 5px"
     };
     return (
-      <Box
-        style={{
-          backgroundColor:"#282c34",
-          paddingBottom:"10vh"
-        }}
-      >
-        <AppBar />
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-        >
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              style={buttonStyle}
-            >
-              Add User
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              style={buttonStyle}
-              onClick={this.props.getRandomRecipe}
-            >
-              Get New Recipe
-            </Button>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-        >
-          <Grid item>
-            <RecipeCard/>
-          </Grid>
-        </Grid>
-        {this.props.isSpinnerVisible ?
-          <Spinner /> : null
-        }
-      </Box>
+      <SignIn />
+      // <Box
+      //   style={{
+      //     backgroundColor:"#282c34",
+      //     paddingBottom:"10vh"
+      //   }}
+      // >
+      //   <AppBar />
+      //   <Grid
+      //     container
+      //     direction="row"
+      //     justify="center"
+      //     alignItems="center"
+      //   >
+      //     <Grid item>
+      //       <Button
+      //         variant="contained"
+      //         color="primary"
+      //         style={buttonStyle}
+      //       >
+      //         Add User
+      //       </Button>
+      //     </Grid>
+      //     <Grid item>
+      //       <Button
+      //         variant="contained"
+      //         color="primary"
+      //         style={buttonStyle}
+      //         onClick={this.props.getRandomRecipe}
+      //       >
+      //         Get New Recipe
+      //       </Button>
+      //     </Grid>
+      //   </Grid>
+      //   <Grid
+      //     container
+      //     direction="row"
+      //     justify="center"
+      //     alignItems="center"
+      //   >
+      //     <Grid item>
+      //       <RecipeCard/>
+      //     </Grid>
+      //   </Grid>
+      //   {this.props.isSpinnerVisible ?
+      //     <Spinner /> : null
+      //   }
+      // </Box>
     );
   }
 }

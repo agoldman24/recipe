@@ -6,8 +6,8 @@ export default function Spinner() {
       <div
         className="ui segment"
         style={{
-          position:"fixed",
-          opacity:"0.5",
+          position:"absolute",
+          opacity:"0.7",
           top:"0",
           left:"0",
           width:"100%",

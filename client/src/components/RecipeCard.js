@@ -6,6 +6,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import RecipeDetails from './RecipeDetails';
 import Spinner from './Spinner';
 import { FETCH_RECIPE_REQUESTED } from '../actions';
+import { isMobile } from 'react-device-detect';
 
 class RecipeCard extends React.Component {
   componentDidMount() {
@@ -17,9 +18,9 @@ class RecipeCard extends React.Component {
   };
 
   render() {
+    const cardStyle = isMobile ? { width:"90vw" } : { width:"50vw" };
     return (
-      <Card inverted style={{position:"relative", width:"90vw"}}>
-        {this.props.isSpinnerVisible && <Spinner />}
+      <Card inverted style={cardStyle}>
         <CardHeader
           title={this.props.activeRecipe.name}
         />
@@ -37,8 +38,7 @@ class RecipeCard extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isSpinnerVisible: state.isSpinnerVisible,
-    activeRecipe: state.activeRecipe,
+    activeRecipe: state.activeRecipe
   };
 }
 

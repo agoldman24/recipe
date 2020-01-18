@@ -16,7 +16,6 @@ const BottomBar = props => {
   return (
     <React.Fragment>
       <CssBaseline />
-      <div style={{width:"100%", textAlign:"center"}}>
       <AppBar
         position="fixed"
         style={{
@@ -33,7 +32,7 @@ const BottomBar = props => {
           >
             <Grid item>
               <Fab
-                color="primary"
+                color="secondary"
                 style={buttonStyle}
               >
                 <FavoriteIcon />
@@ -41,7 +40,7 @@ const BottomBar = props => {
             </Grid>
             <Grid item>
               <Fab
-                color="primary"
+                color="secondary"
                 style={buttonStyle}
                 onClick={props.getRandomRecipe}
               >
@@ -51,7 +50,6 @@ const BottomBar = props => {
           </Grid>
         </Toolbar>
       </AppBar>
-      </div>
     </React.Fragment>
   );
 }

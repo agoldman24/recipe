@@ -1,5 +1,6 @@
 export default Object.assign({},
   {
+    activeTab: "Recipes",
     isSpinnerVisible: false,
     fetchRecipeSuccess: false,
     activeRecipe: {

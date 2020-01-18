@@ -3,10 +3,20 @@ import StateTree from '../store/stateTree';
 import {
   FETCH_RECIPE_SUCCEEDED,
   FETCH_RECIPE_FAILED,
-  UPDATE_ACTIVE_RECIPE,
+  SET_ACTIVE_TAB,
+  SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY
 } from '../actions';
+
+const activeTabReduce = (state = StateTree.activeTab, action) => {
+  switch(action.type) {
+    case SET_ACTIVE_TAB:
+      return action.tab;
+    default:
+      return state;
+  }
+}
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch(action.type) {
@@ -30,7 +40,7 @@ const fetchRecipeSuccessReduce = (state = StateTree.fetchRecipeSuccess, action) 
 
 const activeRecipeReduce = (state = StateTree.activeRecipe, action) => {
   switch(action.type) {
-    case UPDATE_ACTIVE_RECIPE:
+    case SET_ACTIVE_RECIPE:
       return {
         id: action.id,
         name: action.name,
@@ -53,6 +63,7 @@ const viewedRecipesReduce = (state = StateTree.viewedRecipeIds, action) => {
 }
 
 export default combineReducers({
+  activeTab: activeTabReduce,
   isSpinnerVisible: spinnerReduce,
   fetchRecipeSuccess: fetchRecipeSuccessReduce,
   activeRecipe: activeRecipeReduce,

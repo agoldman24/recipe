@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TopBar from './TopBar';
+import TabPanel from './TabPanel';
 import BottomBar from './BottomBar';
 import Grid from '@material-ui/core/Grid';
 import RecipeCard from './RecipeCard';
@@ -18,14 +18,14 @@ const App = props => {
         },
       })
     }>
+      {props.isSpinnerVisible && <Spinner />}
+      <TabPanel />
       <Container
         component="main"
         maxWidth="xs"
         style={{padding:"10px 0"}}
       >
         <CssBaseline />
-        <TopBar />
-        {props.isSpinnerVisible && <Spinner />}
         <Grid
           container
           direction="row"

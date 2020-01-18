@@ -4,7 +4,7 @@ import {
   FETCH_RECIPE_REQUESTED,
   FETCH_RECIPE_SUCCEEDED,
   FETCH_RECIPE_FAILED,
-  UPDATE_ACTIVE_RECIPE,
+  SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY
 } from '../actions';
@@ -25,7 +25,7 @@ function* fetchRecipe() {
     yield put({ type: FETCH_RECIPE_SUCCEEDED });
     yield put({ type: ADD_VIEWED_RECIPE, id: data.idMeal });
     yield put({
-      type: UPDATE_ACTIVE_RECIPE,
+      type: SET_ACTIVE_RECIPE,
       id: data.idMeal,
       name: data.strMeal,
       image: data.strMealThumb,

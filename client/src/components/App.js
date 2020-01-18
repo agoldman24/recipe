@@ -1,13 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TabPanel from './TabPanel';
-import BottomBar from './BottomBar';
-import Grid from '@material-ui/core/Grid';
-import RecipeCard from './RecipeCard';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Spinner from './Spinner';
+import SignIn from './SignIn';
+import SignUp from './SignUp';
+import RecipeTab from './RecipeTab';
 
 const App = props => {
   return (
@@ -26,16 +26,9 @@ const App = props => {
         style={{padding:"10px 0"}}
       >
         <CssBaseline />
-        <Grid
-          container
-          direction="row"
-          justify="center"
-        >
-          <Grid item>
-            <RecipeCard/>
-          </Grid>
-        </Grid>
-        <BottomBar />
+        {props.activeTab === "SignIn" && <SignIn />}
+        {props.activeTab === "Recipes" && <RecipeTab />}
+        {props.activeTab == "SignUp" && <SignUp />}
       </Container>
     </ThemeProvider>
   );
@@ -43,6 +36,7 @@ const App = props => {
 
 const mapStateToProps = state => {
   return {
+    activeTab: state.activeTab,
     isSpinnerVisible: state.isSpinnerVisible
   };
 }

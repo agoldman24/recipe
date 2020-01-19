@@ -1,6 +1,8 @@
+import { RECIPES_TAB } from "../variables/Constants";
+
 export default Object.assign({},
   {
-    activeTab: "Recipes",
+    activeTab: RECIPES_TAB,
     isSpinnerVisible: false,
     fetchRecipeSuccess: false,
     activeRecipe: {

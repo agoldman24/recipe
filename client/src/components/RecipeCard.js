@@ -9,8 +9,10 @@ import { isMobile } from 'react-device-detect';
 
 class RecipeCard extends React.Component {
   componentDidMount() {
-    this.props.getRandomRecipe();
-  }
+    if (!this.props.activeRecipe.id) {
+      this.props.getRandomRecipe();
+    }
+  };
 
   handleExpandClick = () => {
     this.setState({ expanded: !this.state.expanded });
@@ -39,13 +41,13 @@ const mapStateToProps = state => {
   return {
     activeRecipe: state.activeRecipe
   };
-}
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
   };
-}
+};
 
 export default connect(
   mapStateToProps,

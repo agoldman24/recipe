@@ -52,17 +52,17 @@ const BottomBar = props => {
       </AppBar>
     </React.Fragment>
   );
-}
+};
 
 const mapStateToProps = state => {
   return {};
-}
+};
 
 const mapDispatchToProps = dispatch => {
   return {
     getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
   };
-}
+};
 
 export default connect(
   mapStateToProps,

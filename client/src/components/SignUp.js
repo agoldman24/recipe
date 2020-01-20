@@ -33,13 +33,17 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(3, 0, 2),
   }
 }));
-
+ 
 const SignUp = props => {
   const classes = useStyles();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const onFormSubmit = () => {
+    props.setActiveTab(RECIPES_TAB);
+  }
 
   return (
     <ThemeProvider theme={
@@ -100,7 +104,7 @@ const SignUp = props => {
               color="secondary"
               className={classes.submit}
               type="submit"
-              onClick={() => props.setActiveTab(RECIPES_TAB)}
+              onClick={onFormSubmit}
             >
               Sign Up
             </Button>

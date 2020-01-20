@@ -39,6 +39,10 @@ const SignIn = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const onFormSubmit = () => {
+    props.setActiveTab(RECIPES_TAB);
+  }
+
   return (
     <ThemeProvider theme={
       createMuiTheme(defaultTheme)
@@ -76,7 +80,7 @@ const SignIn = props => {
               color="secondary"
               className={classes.submit}
               type="submit"
-              onClick={() => props.setActiveTab(RECIPES_TAB)}
+              onClick={onFormSubmit}
             >
               Sign In
             </Button>

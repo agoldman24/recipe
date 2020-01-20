@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  inputText: {
+    fontSize: '16px'
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -58,6 +61,11 @@ const SignIn = props => {
           </Typography>
           <form className={classes.form}>
             <TextField
+              InputProps={{
+                classes: {
+                  input: classes.inputText
+                }
+              }}
               variant="outlined"
               margin="normal"
               required
@@ -66,6 +74,11 @@ const SignIn = props => {
               onChange={e => setUsername(e.target.value)}
             />
             <TextField
+              InputProps={{
+                classes: {
+                  input: classes.inputText
+                }
+              }}
               variant="outlined"
               margin="normal"
               required

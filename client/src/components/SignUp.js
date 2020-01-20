@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
+  inputText: {
+    fontSize: '16px'
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   }
@@ -62,6 +65,11 @@ const SignUp = props => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText
+                    }
+                  }}
                   variant="outlined"
                   required
                   fullWidth
@@ -71,6 +79,11 @@ const SignUp = props => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText
+                    }
+                  }}
                   variant="outlined"
                   required
                   fullWidth
@@ -80,6 +93,11 @@ const SignUp = props => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText
+                    }
+                  }}
                   variant="outlined"
                   required
                   fullWidth
@@ -89,6 +107,11 @@ const SignUp = props => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText
+                    }
+                  }}
                   variant="outlined"
                   required
                   fullWidth

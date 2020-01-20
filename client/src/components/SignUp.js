@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -8,10 +9,10 @@ import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SET_ACTIVE_TAB } from '../actions';
-import { SIGN_IN_TAB } from '../variables/Constants';
+import { SIGN_IN_TAB, RECIPES_TAB, defaultTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: defaultTheme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -30,89 +31,95 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
 
 const SignUp = props => {
   const classes = useStyles();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <div className={classes.form}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-              />
+    <ThemeProvider theme={
+      createMuiTheme(defaultTheme)
+    }>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <form className={classes.form}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="First Name"
+                  onChange={e => setFirstName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Last Name"
+                  onChange={e => setLastName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Username"
+                  onChange={e => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  onChange={e => setPassword(e.target.value)}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-              />
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              type="submit"
+              onClick={() => props.setActiveTab(RECIPES_TAB)}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link
+                  href="#"
+                  variant="body2"
+                  color="primary"
+                  onClick={() => props.setActiveTab(SIGN_IN_TAB)}
+                >
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                autoComplete="username"
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-            onClick={() => {}}
-          >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link onClick={() => { props.setActiveTab(SIGN_IN_TAB) }} href="#" variant="body2" color="secondary">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
+          </form>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </ThemeProvider>
   );
 }
 

@@ -16,7 +16,7 @@ const App = props => {
       createMuiTheme({
         palette: {
           type: 'dark'
-        },
+        }
       })
     }>
       {props.isSpinnerVisible && <Spinner />}

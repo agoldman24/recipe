@@ -8,49 +8,55 @@ import Fab from '@material-ui/core/Fab';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
 import Grid from '@material-ui/core/Grid';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { defaultTheme } from '../variables/Constants';
 
 const BottomBar = props => {
   const buttonStyle = {
     margin:"0 5px"
   };
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        style={{
-          background:"transparent",
-          boxShadow:"none",
-          top:"auto",
-          bottom: 10
-        }}>
-        <Toolbar >
-          <Grid
-            container
-            direction="row"
-            justify="center"
-          >
-            <Grid item>
-              <Fab
-                color="secondary"
-                style={buttonStyle}
-              >
-                <FavoriteIcon />
-              </Fab>
+    <ThemeProvider theme={
+      createMuiTheme(defaultTheme)
+    }>
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          style={{
+            background:"transparent",
+            boxShadow:"none",
+            top:"auto",
+            bottom: 10
+          }}>
+          <Toolbar >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+            >
+              <Grid item>
+                <Fab
+                  color="secondary"
+                  style={buttonStyle}
+                >
+                  <FavoriteIcon />
+                </Fab>
+              </Grid>
+              <Grid item>
+                <Fab
+                  color="secondary"
+                  style={buttonStyle}
+                  onClick={props.getRandomRecipe}
+                >
+                  <ShuffleIcon />
+                </Fab>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Fab
-                color="secondary"
-                style={buttonStyle}
-                onClick={props.getRandomRecipe}
-              >
-                <ShuffleIcon />
-              </Fab>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
+    </ThemeProvider>
   );
 };
 

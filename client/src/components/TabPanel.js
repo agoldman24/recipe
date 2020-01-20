@@ -2,9 +2,12 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
 import { connect } from 'react-redux';
-import { SIGN_UP_TAB, RECIPES_TAB, SIGN_IN_TAB } from '../variables/Constants';
+import {
+  SIGN_UP_TAB, RECIPES_TAB, SIGN_IN_TAB, defaultTheme
+} from '../variables/Constants';
 
 const TabPanel = props => {
 
@@ -13,22 +16,24 @@ const TabPanel = props => {
   };
 
   return (
-    <Paper
-      square
-    >
-      <Tabs
-        value={props.activeTab}
-        style={{width:"100vw", left:"0"}}
-        variant="fullWidth"
-        indicatorColor="secondary"
-        textColor="secondary"
-        onChange={handleChange}
-      >
-        <Tab label="Sign Up" value={SIGN_UP_TAB}/>
-        <Tab label="Recipes" value={RECIPES_TAB}/>
-        <Tab label="Sign In" value={SIGN_IN_TAB}/>
-      </Tabs>
-    </Paper>
+    <ThemeProvider theme={
+      createMuiTheme(defaultTheme)
+    }>
+      <Paper square>
+        <Tabs
+          value={props.activeTab}
+          style={{width:"100vw", left:"0"}}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={handleChange}
+        >
+          <Tab label="Sign Up" value={SIGN_UP_TAB}/>
+          <Tab label="Recipes" value={RECIPES_TAB}/>
+          <Tab label="Sign In" value={SIGN_IN_TAB}/>
+        </Tabs>
+      </Paper>
+    </ThemeProvider>
   );
 }
 

@@ -8,7 +8,7 @@ import Spinner from './Spinner';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import RecipeTab from './RecipeTab';
-import { SIGN_UP_TAB, RECIPES_TAB, SIGN_IN_TAB } from '../variables/Constants';
+import { SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB } from '../variables/Constants';
 
 const App = props => {
   return (
@@ -28,7 +28,7 @@ const App = props => {
       >
         <CssBaseline />
         {props.activeTab === SIGN_UP_TAB && <SignUp />}
-        {props.activeTab === RECIPES_TAB && <RecipeTab />}
+        {props.activeTab === RECIPE_TAB && <RecipeTab />}
         {props.activeTab === SIGN_IN_TAB && <SignIn />}
       </Container>
     </ThemeProvider>

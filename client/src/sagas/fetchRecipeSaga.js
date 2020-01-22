@@ -2,8 +2,6 @@ import { call, put, takeLatest, select } from 'redux-saga/effects';
 import Api from '../api/recipeUrl';
 import {
   FETCH_RECIPE_REQUESTED,
-  FETCH_RECIPE_SUCCEEDED,
-  FETCH_RECIPE_FAILED,
   SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY
@@ -19,10 +17,10 @@ function* fetchRecipe() {
     for(;;) {
       result = yield call(Api.get);
       data = result.data.meals[0];
-      if (!viewedRecipeIds.includes(data.idMeal))
+      if (!viewedRecipeIds.includes(data.idMeal)) {
         break;
+      }
     }
-    yield put({ type: FETCH_RECIPE_SUCCEEDED });
     yield put({ type: ADD_VIEWED_RECIPE, id: data.idMeal });
     yield put({
       type: SET_ACTIVE_RECIPE,
@@ -38,8 +36,8 @@ function* fetchRecipe() {
       })
     });
     yield put({ type: TOGGLE_SPINNER_VISIBILITY });
-  } catch (e) {
-      yield put({ type: FETCH_RECIPE_FAILED });
+  } catch (err) {
+    console.log(err);
   }
 }
 

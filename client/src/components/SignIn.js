@@ -11,8 +11,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { SET_ACTIVE_TAB } from '../actions';
-import { SIGN_UP_TAB, RECIPES_TAB, defaultTheme } from '../variables/Constants';
+import { FETCH_USER, SET_ACTIVE_TAB } from '../actions';
+import { SIGN_UP_TAB, RECIPE_TAB, defaultTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -43,7 +43,8 @@ const SignIn = props => {
   const [password, setPassword] = useState("");
 
   const onFormSubmit = () => {
-    props.setActiveTab(RECIPES_TAB);
+    props.fetchUser(username, password);
+    props.setActiveTab(RECIPE_TAB);
   }
 
   return (
@@ -122,6 +123,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    fetchUser: (username, password) => dispatch({
+      type: FETCH_USER, username, password
+    }),
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   }
 };

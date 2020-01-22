@@ -5,6 +5,7 @@ const logger = require("morgan");
 const cors = require('cors');
 const path = require('path');
 const getSecret = require("./secret");
+const User = require('./user');
 
 const app = express();
 const router = express.Router();
@@ -20,6 +21,26 @@ app.use(cors());
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
+
+router.get("/user", (req, res) => {
+  const { username, password } = req.query;
+  User.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({
+      success: true,
+      user: data.filter(d => d.username === username && d.password === password)
+    });
+  });
+});
+
+router.post("/addUser", (req, res) => {
+  const { firstName, lastName, username, password } = req.body;
+  const user = new User({ firstName, lastName, username, password });
+  user.save(err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  });
+});
 
 app.use("/api", router);
 

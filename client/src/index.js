@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-import fetchRecipeSaga from './sagas/fetchRecipeSaga';
+import rootSaga from './sagas/rootSaga';
 import App from './components/App';
 import reducers from './reducers';
 import './index.css';
@@ -13,7 +13,7 @@ const store = createStore(
   reducers,
   applyMiddleware(sagaMiddleware)
 );
-sagaMiddleware.run(fetchRecipeSaga);
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>

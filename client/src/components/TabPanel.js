@@ -6,7 +6,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
 import { connect } from 'react-redux';
 import {
-  SIGN_UP_TAB, RECIPES_TAB, SIGN_IN_TAB, defaultTheme
+  SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme
 } from '../variables/Constants';
 
 const TabPanel = props => {
@@ -29,7 +29,7 @@ const TabPanel = props => {
           onChange={handleChange}
         >
           <Tab label="Sign Up" value={SIGN_UP_TAB}/>
-          <Tab label="Recipes" value={RECIPES_TAB}/>
+          <Tab label="Recipes" value={RECIPE_TAB}/>
           <Tab label="Sign In" value={SIGN_IN_TAB}/>
         </Tabs>
       </Paper>

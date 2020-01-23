@@ -28,7 +28,7 @@ router.get("/user", (req, res) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({
       success: true,
-      user: data.filter(d => d.username === username && d.password === password)
+      users: data.filter(d => d.username === username && d.password === password)
     });
   });
 });

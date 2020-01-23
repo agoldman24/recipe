@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ADD_USER, SET_ACTIVE_TAB } from '../actions';
-import { SIGN_IN_TAB, RECIPE_TAB, defaultTheme } from '../variables/Constants';
+import { SIGN_IN_TAB, defaultTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -44,9 +44,9 @@ const SignUp = props => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const onFormSubmit = () => {
+  const onFormSubmit = (e) => {
+    e.preventDefault();
     props.addUser(firstName, lastName, username, password);
-    props.setActiveTab(RECIPE_TAB);
   }
 
   return (

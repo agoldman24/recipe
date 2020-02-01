@@ -6,7 +6,7 @@ import {
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY,
   SET_ACTIVE_USER,
-  LOGOUT
+  SIGNOUT
 } from '../actions';
 
 const activeTabReduce = (state = StateTree.activeTab, action) => {
@@ -55,7 +55,7 @@ const loginReduce = (state = StateTree.isLoggedIn, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
       return true;
-    case LOGOUT:
+    case SIGNOUT:
       return false;
     default:
       return state;

@@ -6,5 +6,5 @@ export const TOGGLE_SPINNER_VISIBILITY = 'TOGGLE_SPINNER_VISIBILITY';
 export const ADD_USER = 'ADD_USER';
 export const FETCH_USER = 'FETCH_USER';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
-export const LOGIN_FAILED = 'LOGIN_FAILED';
-export const LOGOUT = 'LOGOUT';
+export const SIGNIN_FAILED = 'SIGNIN_FAILED';
+export const SIGNOUT = 'SIGNOUT';

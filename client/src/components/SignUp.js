@@ -46,7 +46,11 @@ const SignUp = props => {
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    props.addUser(firstName, lastName, username, password);
+    if (!firstName || !lastName || !username || !password) {
+      alert("One or more fields is empty");
+    } else {
+      props.addUser(firstName, lastName, username, password);
+    }
   }
 
   return (

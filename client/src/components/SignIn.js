@@ -29,9 +29,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     marginTop: theme.spacing(1),
   },
-  inputText: {
-    fontSize: '16px'
-  },
+  // inputText: {
+  //   fontSize: '16px'
+  // },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -63,9 +63,10 @@ const SignIn = props => {
           <form className={classes.form}>
             <TextField
               InputProps={{
-                classes: {
-                  input: classes.inputText
-                }
+                // classes: {
+                //   input: classes.inputText
+                // }
+                autoCapitalize: 'none'
               }}
               variant="outlined"
               margin="normal"
@@ -76,9 +77,9 @@ const SignIn = props => {
             />
             <TextField
               InputProps={{
-                classes: {
-                  input: classes.inputText
-                }
+                // classes: {
+                //   input: classes.inputText
+                // }
               }}
               variant="outlined"
               margin="normal"

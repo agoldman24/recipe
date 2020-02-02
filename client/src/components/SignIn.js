@@ -32,6 +32,10 @@ const useStyles = makeStyles(theme => ({
   inputText: {
     fontSize: '16px'
   },
+  inputTextLowercase: {
+    fontSize: '16px',
+    textTransform: 'lowercase'
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
@@ -64,11 +68,9 @@ const SignIn = props => {
             <TextField
               InputProps={{
                 classes: {
-                  input: classes.inputText
+                  input: classes.inputTextLowercase
                 }
               }}
-              type="text"
-              autoCapitalize="none"
               variant="outlined"
               margin="normal"
               required

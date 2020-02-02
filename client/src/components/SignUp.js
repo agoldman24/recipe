@@ -30,7 +30,11 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3),
   },
   inputText: {
-    fontSize: '16px'
+    fontSize: '16px',
+  },
+  inputTextLowercase: {
+    fontSize: '16px',
+    textTransform: 'lowercase'
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
@@ -73,8 +77,7 @@ const SignUp = props => {
                   InputProps={{
                     classes: {
                       input: classes.inputText
-                    },
-                    autoCapitalize: 'none'
+                    }
                   }}
                   variant="outlined"
                   required
@@ -101,7 +104,7 @@ const SignUp = props => {
                 <TextField
                   InputProps={{
                     classes: {
-                      input: classes.inputText
+                      input: classes.inputTextLowercase
                     }
                   }}
                   variant="outlined"

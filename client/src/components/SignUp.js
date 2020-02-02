@@ -111,7 +111,7 @@ const SignUp = props => {
                   required
                   fullWidth
                   label="Username"
-                  onChange={e => setUsername(e.target.value)}
+                  onChange={e => setUsername(e.target.value.toLowerCase())}
                 />
               </Grid>
               <Grid item xs={12}>

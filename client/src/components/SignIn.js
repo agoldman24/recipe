@@ -76,7 +76,7 @@ const SignIn = props => {
               required
               fullWidth
               label="Username"
-              onChange={e => setUsername(e.target.value)}
+              onChange={e => setUsername(e.target.value.toLowerCase())}
             />
             <TextField
               InputProps={{

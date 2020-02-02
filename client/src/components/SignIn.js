@@ -66,10 +66,10 @@ const SignIn = props => {
                 classes: {
                   input: classes.inputText
                 },
-                autocapitalize: "off"
+                autocapitalize: "none"
               }}
               type="text"
-              autocapitalize="off"
+              autocapitalize="none"
               variant="outlined"
               margin="normal"
               required

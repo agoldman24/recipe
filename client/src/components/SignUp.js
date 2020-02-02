@@ -30,7 +30,8 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(3),
   },
   inputText: {
-    fontSize: '16px'
+    fontSize: '16px',
+    autoCapitalize: 'none'
   },
   submit: {
     margin: theme.spacing(3, 0, 2),

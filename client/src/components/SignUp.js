@@ -29,9 +29,9 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     marginTop: theme.spacing(3),
   },
-  // inputText: {
-  //   fontSize: '16px'
-  // },
+  inputText: {
+    fontSize: '16px'
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   }
@@ -71,9 +71,9 @@ const SignUp = props => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   InputProps={{
-                    // classes: {
-                    //   input: classes.inputText
-                    // }
+                    classes: {
+                      input: classes.inputText
+                    },
                     autoCapitalize: 'none'
                   }}
                   variant="outlined"
@@ -86,9 +86,9 @@ const SignUp = props => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   InputProps={{
-                    // classes: {
-                    //   input: classes.inputText
-                    // }
+                    classes: {
+                      input: classes.inputText
+                    }
                   }}
                   variant="outlined"
                   required
@@ -100,9 +100,9 @@ const SignUp = props => {
               <Grid item xs={12}>
                 <TextField
                   InputProps={{
-                    // classes: {
-                    //   input: classes.inputText
-                    // }
+                    classes: {
+                      input: classes.inputText
+                    }
                   }}
                   variant="outlined"
                   required
@@ -114,9 +114,9 @@ const SignUp = props => {
               <Grid item xs={12}>
                 <TextField
                   InputProps={{
-                    // classes: {
-                    //   input: classes.inputText
-                    // }
+                    classes: {
+                      input: classes.inputText
+                    }
                   }}
                   variant="outlined"
                   required

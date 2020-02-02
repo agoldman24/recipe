@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import DropdownMenu from './DropdownMenu';
+import CreateIcon from '@material-ui/icons/Create';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
 import { connect } from 'react-redux';
@@ -15,7 +16,7 @@ const TabPanel = props => {
     props.setActiveTab(newValue)
   };
 
-  const tabStyle = {fontSize:'14px'};
+  const tabStyle = {fontSize:'13px'};
 
   return (
     <ThemeProvider theme={
@@ -31,18 +32,13 @@ const TabPanel = props => {
             textColor="primary"
             onChange={handleChange}
           >
-            <Tab style={tabStyle} label="Create" value={CREATE_TAB}/>
+            <Tab
+              style={tabStyle}
+              label={<div><CreateIcon style={{verticalAlign: 'top'}}/> Create</div>}
+              value={CREATE_TAB}
+            />
             <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
             <DropdownMenu />
-            {/* <Tab
-              label={
-                <div>
-                  <AccountCircleIcon style={{verticalAlign: 'middle'}}/>
-                  {" " + props.activeUser.firstName}
-                </div>
-              }
-              value={}
-            /> */}
           </Tabs>
         : <Tabs
             value={props.activeTab}

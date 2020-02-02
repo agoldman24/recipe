@@ -7,15 +7,23 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { useState, useRef, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { SIGN_OUT } from '../actions';
+import { SIGN_OUT, SET_ACTIVE_TAB } from '../actions';
+import { RECIPE_TAB } from '../variables/Constants';
 
 const DropdownMenu = props => {
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [buttonOpacity, setButtonOpacity] = useState('0.7'); 
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
 
   const handleToggle = () => {
     setOpen(prevOpen => !prevOpen);
+    if (buttonOpacity === '0.7') {
+      setButtonOpacity('1.0');
+    } else {
+      setButtonOpacity('0.7');
+    }
   };
 
   const handleClose = event => {
@@ -23,11 +31,12 @@ const DropdownMenu = props => {
       return;
     }
     setOpen(false);
+    setButtonOpacity('0.7');
   };
 
   // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
+  const prevOpen = useRef(open);
+  useEffect(() => {
     if (prevOpen.current === true && open === false) {
       anchorRef.current.focus();
     }
@@ -40,7 +49,7 @@ const DropdownMenu = props => {
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}
         aria-haspopup="true"
-        style={{width:'33.33vw'}}
+        style={{width:'33.33vw', fontSize:'13px', opacity:buttonOpacity}}
         startIcon={<AccountCircleIcon />}
         onClick={handleToggle}
       >
@@ -48,7 +57,6 @@ const DropdownMenu = props => {
       </Button>
       <Popper
         style={{float:'right'}}
-        anchorEl={null}
         open={open}
         role={undefined}
         transition disablePortal
@@ -84,7 +92,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    signOut: () => dispatch({ type: SIGN_OUT })
+    signOut: () => {
+      dispatch({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
+      dispatch({ type: SIGN_OUT });
+    }
   }
 }
 

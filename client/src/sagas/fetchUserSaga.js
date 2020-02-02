@@ -4,9 +4,9 @@ import {
   FETCH_USER,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
-  SIGNIN_FAILED
+  SIGN_IN_FAILED
 } from '../actions';
-import { SIGN_IN_TAB, RECIPE_TAB } from '../variables/Constants';
+import { RECIPE_TAB } from '../variables/Constants';
 
 const getActiveUser = state => state.activeUser;
 
@@ -17,13 +17,12 @@ function* fetchUser(action) {
       '/user?username=' + username + "&password=" + password
     );
     if (data.users.length === 1) {
-      yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
+      yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
       console.log(yield select(getActiveUser));
     } else {
       alert("Incorrect username or password");
-      yield put({ type: SIGNIN_FAILED });
-      yield put({ type: SET_ACTIVE_TAB, tab: SIGN_IN_TAB });
+      yield put({ type: SIGN_IN_FAILED });
     }
   } catch (err) {
     console.log(err);

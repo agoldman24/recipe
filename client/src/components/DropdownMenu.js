@@ -8,7 +8,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
-import { SIGNOUT } from '../actions';
+import { SIGN_OUT } from '../actions';
 
 const DropdownMenu = props => {
   const [open, setOpen] = React.useState(false);
@@ -34,8 +34,6 @@ const DropdownMenu = props => {
     prevOpen.current = open;
   }, [open]);
 
-  const itemStyle = {width:'200px'};
-
   return (
     <div style={{display:'flex'}}>
       <Button
@@ -48,7 +46,13 @@ const DropdownMenu = props => {
       >
         {props.activeUser.firstName}
       </Button>
-      <Popper style={{float:'right'}} open={open} role={undefined} transition disablePortal>
+      <Popper
+        style={{float:'right'}}
+        anchorEl={null}
+        open={open}
+        role={undefined}
+        transition disablePortal
+      >
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
@@ -58,9 +62,9 @@ const DropdownMenu = props => {
             <Paper style={{float:'right'}}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
-                  <MenuItem style={itemStyle} onClick={handleClose}>Profile</MenuItem>
-                  <MenuItem style={itemStyle} onClick={handleClose}>Favorites</MenuItem>
-                  <MenuItem style={itemStyle} onClick={props.signOut}>Sign Out</MenuItem>
+                  <MenuItem onClick={handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleClose}>Favorites</MenuItem>
+                  <MenuItem onClick={props.signOut}>Sign Out</MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -80,7 +84,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    signOut: () => dispatch({ type: SIGNOUT })
+    signOut: () => dispatch({ type: SIGN_OUT })
   }
 }
 

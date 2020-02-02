@@ -6,7 +6,8 @@ import DropdownMenu from './DropdownMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
 import { connect } from 'react-redux';
-import { SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme } from '../variables/Constants';
+import { SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB, CREATE_TAB, defaultTheme }
+from '../variables/Constants';
 
 const TabPanel = props => {
 
@@ -30,7 +31,7 @@ const TabPanel = props => {
             textColor="primary"
             onChange={handleChange}
           >
-            <Tab style={tabStyle} label="Create"/>
+            <Tab style={tabStyle} label="Create" value={CREATE_TAB}/>
             <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
             <DropdownMenu />
             {/* <Tab

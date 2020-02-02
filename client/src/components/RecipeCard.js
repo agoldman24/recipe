@@ -21,13 +21,14 @@ class RecipeCard extends React.Component {
   render() {
     const cardStyle = isMobile ? { width:"90vw" } : { width:"43vw" };
     return (
-      <Card inverted style={cardStyle}>
+      <Card inverted="true" style={cardStyle}>
         <CardHeader
           title={this.props.activeRecipe.name}
         />
         <CardMedia
           style={{height:"0", paddingTop:"56.25%"}}
           image={this.props.activeRecipe.image}
+          children={[]}
         />
         <RecipeDetails
           directions={this.props.activeRecipe.directions}

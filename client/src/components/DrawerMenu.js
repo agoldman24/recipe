@@ -55,18 +55,17 @@ export default function DrawerMenu() {
   return (
     <div style={{display:'flex'}}>
       <Button
-        //ref={anchorRef}
-        //aria-controls={open ? 'menu-list-grow' : undefined}
-        //aria-haspopup="true"
-        style={{width:'33.33vw', fontSize:'13px'}}
-        //startIcon={<AccountCircleIcon />}
+        style={{
+          width:'33.33vw',
+          fontSize:'13px',
+          background: open ? 'grey' : 'linear-gradient(black, #202020)'
+        }}
         onClick={toggleDrawer}
       >
         TEST
       </Button>
-      {/* <Button onClick={toggleDrawer('right', true)}>Open Right</Button> */}
       <SwipeableDrawer
-        style={{zIndex:'1'}}
+        style={{zIndex:'3'}}
         anchor="right"
         open={open}
         onClose={toggleDrawer}

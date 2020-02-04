@@ -12,7 +12,7 @@ const BottomButtons = props => {
     position:'fixed',
     bottom:'5vh',
     color:'black',
-    zIndex:'999',
+    zIndex:'2',
     backgroundImage: defaultTheme.palette.primary.mainGradient
   };
   return (

@@ -2,7 +2,8 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import DropdownMenu from './DropdownMenu';
+//import DropdownMenu from './DropdownMenu';
+import DrawerMenu from './DrawerMenu';
 import CreateIcon from '@material-ui/icons/Create';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
@@ -17,7 +18,7 @@ const TabPanel = props => {
   };
 
   const navBarStyle = {
-    width:'100%', left:'0', position:'fixed',
+    width:'100%', left:'0', position:'fixed', zIndex:'999',
     backgroundImage:'linear-gradient(black, #202020)'
   };
   const tabStyle = {fontSize:'13px'};
@@ -27,7 +28,7 @@ const TabPanel = props => {
       createMuiTheme(defaultTheme)
     }>
       <Paper square>
-      {props.isLoggedIn
+      {!props.isLoggedIn
         ? <Tabs
             value={props.activeTab}
             style={navBarStyle}
@@ -42,7 +43,7 @@ const TabPanel = props => {
               value={CREATE_TAB}
             />
             <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
-            <DropdownMenu />
+            <DrawerMenu />
           </Tabs>
         : <Tabs
             value={props.activeTab}

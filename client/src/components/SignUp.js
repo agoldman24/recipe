@@ -16,21 +16,20 @@ import { SIGN_IN_TAB, defaultTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: defaultTheme.palette.primary.main,
+    background: defaultTheme.palette.primary.mainGradient,
   },
   form: {
     width: '100%',
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(1),
   },
   inputText: {
-    fontSize: '16px',
+    fontSize: '16px'
   },
   inputTextLowercase: {
     fontSize: '16px',
@@ -38,6 +37,10 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    background: defaultTheme.palette.primary.mainGradient
   }
 }));
  

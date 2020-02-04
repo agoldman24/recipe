@@ -49,14 +49,13 @@ const DropdownMenu = props => {
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}
         aria-haspopup="true"
-        style={{width:'33.33vw', fontSize:'13px', opacity:buttonOpacity}}
+        style={{width:'33.33vw', fontSize:'13px', opacity: buttonOpacity}}
         startIcon={<AccountCircleIcon />}
         onClick={handleToggle}
       >
         {props.activeUser.firstName}
       </Button>
       <Popper
-        style={{float:'right'}}
         open={open}
         role={undefined}
         transition disablePortal
@@ -67,7 +66,7 @@ const DropdownMenu = props => {
             style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
           >
             <div style={{width:'100vw', marginTop:'50px'}}>
-            <Paper style={{float:'right'}}>
+            <Paper style={{float:'right', backgroundImage:'linear-gradient(#202020, black)'}}>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList autoFocusItem={open} id="menu-list-grow">
                   <MenuItem onClick={handleClose}>Profile</MenuItem>

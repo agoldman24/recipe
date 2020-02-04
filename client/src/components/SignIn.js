@@ -16,14 +16,13 @@ import { SIGN_UP_TAB, defaultTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(theme => ({
   paper: {
-    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor:defaultTheme.palette.primary.main,
+    background: defaultTheme.palette.primary.mainGradient,
   },
   form: {
     width: '100%',
@@ -38,7 +37,11 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    background: defaultTheme.palette.primary.mainGradient
+  }
 }));
 
 const SignIn = props => {
@@ -95,7 +98,6 @@ const SignIn = props => {
             <Button
               fullWidth
               variant="contained"
-              color="secondary"
               className={classes.submit}
               type="submit"
               onClick={onFormSubmit}

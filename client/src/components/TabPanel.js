@@ -16,6 +16,10 @@ const TabPanel = props => {
     props.setActiveTab(newValue)
   };
 
+  const navBarStyle = {
+    width:'100%', left:'0', position:'fixed',
+    backgroundImage:'linear-gradient(black, #202020)'
+  };
   const tabStyle = {fontSize:'13px'};
 
   return (
@@ -26,7 +30,7 @@ const TabPanel = props => {
       {props.isLoggedIn
         ? <Tabs
             value={props.activeTab}
-            style={{width:"100%", left:"0"}}
+            style={navBarStyle}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"
@@ -42,7 +46,7 @@ const TabPanel = props => {
           </Tabs>
         : <Tabs
             value={props.activeTab}
-            style={{width:"100%", left:"0"}}
+            style={navBarStyle}
             variant="fullWidth"
             indicatorColor="primary"
             textColor="primary"

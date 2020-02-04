@@ -1,7 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import RecipeCard from './RecipeCard';
-import BottomBar from './BottomBar';
 
 export default function RecipeTab() {
   return (
@@ -15,7 +14,6 @@ export default function RecipeTab() {
           <RecipeCard/>
         </Grid>
       </Grid>
-      <BottomBar />
     </div>
   );
 }

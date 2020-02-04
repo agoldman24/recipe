@@ -59,6 +59,7 @@ const DropdownMenu = props => {
         open={open}
         role={undefined}
         transition disablePortal
+        style={{float:'right'}}
       >
         {({ TransitionProps, placement }) => (
           <Grow

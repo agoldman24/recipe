@@ -12,37 +12,9 @@ import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ADD_USER, SET_ACTIVE_TAB } from '../actions';
-import { SIGN_IN_TAB, defaultTheme } from '../variables/Constants';
+import { SIGN_IN_TAB, defaultTheme, formTheme } from '../variables/Constants';
 
-const useStyles = makeStyles(theme => ({
-  paper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    background: defaultTheme.palette.primary.mainGradient,
-  },
-  form: {
-    width: '100%',
-    marginTop: theme.spacing(1),
-  },
-  inputText: {
-    fontSize: '16px'
-  },
-  inputTextLowercase: {
-    fontSize: '16px',
-    textTransform: 'lowercase'
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-    color: '#000000',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    background: defaultTheme.palette.primary.mainGradient
-  }
-}));
+const useStyles = makeStyles(formTheme);
  
 const SignUp = props => {
   const classes = useStyles();

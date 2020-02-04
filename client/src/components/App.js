@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TabPanel from './TabPanel';
+import BottomButtons from './BottomButtons';
 import BottomBar from './BottomBar';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
@@ -18,6 +19,7 @@ const App = props => {
     }>
       {props.isSpinnerVisible && <Spinner />}
       <TabPanel />
+      {props.activeTab === RECIPE_TAB && <BottomButtons />}
       <BottomBar />
       <Container
         component="main"

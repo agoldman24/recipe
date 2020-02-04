@@ -18,3 +18,34 @@ export const defaultTheme = {
     }
   }
 }
+
+export const formTheme = theme => ({
+  paper: {
+    margin: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    background: defaultTheme.palette.primary.mainGradient,
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(2),
+  },
+  inputText: {
+    fontSize: '16px'
+  },
+  inputTextLowercase: {
+    fontSize: '16px',
+    textTransform: 'lowercase'
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    background: defaultTheme.palette.primary.mainGradient
+  }
+});

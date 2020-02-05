@@ -2,13 +2,12 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-//import DropdownMenu from './DropdownMenu';
 import DrawerMenu from './DrawerMenu';
-import CreateIcon from '@material-ui/icons/Create';
+import SearchIcon from '@material-ui/icons/Search';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB } from '../actions';
 import { connect } from 'react-redux';
-import { SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB, CREATE_TAB, defaultTheme }
+import { SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB, SEARCH_TAB, defaultTheme }
 from '../variables/Constants';
 
 const TabPanel = props => {
@@ -28,7 +27,7 @@ const TabPanel = props => {
       createMuiTheme(defaultTheme)
     }>
       <Paper square>
-      {!props.isLoggedIn
+      {props.isLoggedIn
         ? <Tabs
             value={props.activeTab}
             style={navBarStyle}
@@ -39,8 +38,8 @@ const TabPanel = props => {
           >
             <Tab
               style={tabStyle}
-              label={<div><CreateIcon style={{verticalAlign: 'top'}}/> Create</div>}
-              value={CREATE_TAB}
+              label={<div><SearchIcon style={{verticalAlign:'top'}}/> Search</div>}
+              value={SEARCH_TAB}
             />
             <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
             <DrawerMenu />

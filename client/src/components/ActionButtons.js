@@ -2,13 +2,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { FETCH_RECIPE_REQUESTED } from '../actions';
 import Fab from '@material-ui/core/Fab';
+import CreateIcon from '@material-ui/icons/Create';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShuffleIcon from '@material-ui/icons/Shuffle';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { defaultTheme } from '../variables/Constants';
 
-const BottomButtons = props => {
-  const fabStyle = {
+const ActionButtons = props => {
+  const fabStyleTop = {
+    position:'fixed',
+    top:'10vh',
+    color:'black',
+    zIndex:'2',
+    backgroundImage: defaultTheme.palette.primary.mainGradient
+  };
+  const fabStyleBottom = {
     position:'fixed',
     bottom:'5vh',
     color:'black',
@@ -19,15 +27,16 @@ const BottomButtons = props => {
     <ThemeProvider theme={
       createMuiTheme(defaultTheme)
     }>
-      <Fab
-        color="secondary"
-        style={{...fabStyle, right:'55%'}}
-      >
+      {props.isLoggedIn &&
+        <Fab style={{...fabStyleTop, right:'10%'}}>
+          <CreateIcon />
+        </Fab>
+      }
+      <Fab style={{...fabStyleBottom, right:'55%'}}>
         <FavoriteIcon />
       </Fab>
       <Fab
-        color="secondary"
-        style={{...fabStyle, left:'55%'}}
+        style={{...fabStyleBottom, left:'55%'}}
         onClick={props.getRandomRecipe}
       >
         <ShuffleIcon />
@@ -44,7 +53,9 @@ const BottomButtons = props => {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    isLoggedIn: state.isLoggedIn
+  };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -56,4 +67,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BottomButtons);
+)(ActionButtons);

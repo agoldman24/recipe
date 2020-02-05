@@ -3,12 +3,16 @@ import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import PersonIcon from '@material-ui/icons/Person';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { connect } from 'react-redux';
+import { SIGN_OUT, SET_ACTIVE_TAB } from '../actions';
+import { RECIPE_TAB } from '../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
@@ -17,14 +21,38 @@ const useStyles = makeStyles({
   }
 });
 
-export default function DrawerMenu() {
+const DrawerMenu = props => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const toggleDrawer = () => { setOpen(!open) };
 
-  const toggleDrawer = () => {
-    if (open) setOpen(false);
-    else setOpen(true);
-  };
+  const clickHandler = text => {
+    switch (text) {
+      case "Profile":
+        props.goToProfile();
+        break;
+      case "Favorites":
+        break;
+      case "Sign Out":
+        props.signOut();
+        break;
+      default:
+        break;
+    }
+  }
+
+  const getIcon = text => {
+    switch (text) {
+      case "Profile":
+        return <PersonIcon/>
+      case "Favorites":
+        return <FavoriteIcon />;
+      case "Sign Out":
+        return <ExitToAppIcon />;
+      default:
+        return null;
+    }
+  }
 
   const sideList = () => (
     <div
@@ -33,19 +61,15 @@ export default function DrawerMenu() {
       onClick={toggleDrawer}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+        {['Profile', 'Favorites', 'Sign Out'].map((text, index) => (
+          <ListItem
+            button
+            key={text}
+            style={{marginLeft:'10px'}}
+            onClick={() => clickHandler(text)}
+          >
+            <ListItemIcon>{getIcon(text)}</ListItemIcon>
+            <ListItemText primary={text}/>
           </ListItem>
         ))}
       </List>
@@ -58,11 +82,16 @@ export default function DrawerMenu() {
         style={{
           width:'33.33vw',
           fontSize:'13px',
-          background: open ? 'grey' : 'linear-gradient(black, #202020)'
+          borderRadius:'0',
+          opacity: open ? '1.0' : '0.7',
+          background: open
+            ? 'linear-gradient(black, #424242)'
+            : 'linear-gradient(black, #202020)'
         }}
+        startIcon={<AccountCircleIcon />}
         onClick={toggleDrawer}
       >
-        TEST
+        {props.activeUser.firstName}
       </Button>
       <SwipeableDrawer
         style={{zIndex:'3'}}
@@ -76,3 +105,26 @@ export default function DrawerMenu() {
     </div>
   );
 }
+
+const mapStateToProps = state => {
+  return {
+    activeUser: state.activeUser
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    goToProfile: () => {
+      dispatch({ type: SET_ACTIVE_TAB, tab: false });
+    },
+    signOut: () => {
+      dispatch({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
+      dispatch({ type: SIGN_OUT });
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DrawerMenu);

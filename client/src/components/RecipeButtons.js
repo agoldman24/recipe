@@ -4,7 +4,6 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Fab from '@material-ui/core/Fab';
-import HomeIcon from '@material-ui/icons/Home';
 import CreateIcon from '@material-ui/icons/Create';
 import { defaultTheme } from '../variables/Constants';
 
@@ -17,7 +16,8 @@ export default function RecipeFabs() {
   };
   const fabStyle = {
     background: 'none',
-    color: 'white'
+    color: 'white',
+    marginLeft:'5px'
   };
 
   const [value, setValue] = React.useState('Random');
@@ -34,9 +34,6 @@ export default function RecipeFabs() {
         style={{justifyContent:'center'}}
         row
       >
-        <Fab size="small" style={fabStyle}>
-          <HomeIcon/>
-        </Fab>
         <FormControlLabel
           value="By Me"
           control={<Radio color="primary" />}
@@ -70,8 +67,8 @@ export default function RecipeFabs() {
               : 'white'
           }}
         />
-        <Fab size="small" style={fabStyle}>
-          <CreateIcon/>
+        <Fab style={fabStyle}>
+          <CreateIcon style={{height:'40', width:'40'}}/>
         </Fab>
       </RadioGroup>
     </FormControl>

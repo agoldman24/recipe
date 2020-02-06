@@ -47,7 +47,7 @@ export default function RecipeDetails(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>Directions:</Typography>
-          <Typography paragraph style={{paddingBottom:'10vh'}}>
+          <Typography paragraph style={{paddingBottom:'15vh'}}>
             {props.directions}
           </Typography>
         </CardContent>

@@ -33,6 +33,7 @@ export const formTheme = theme => ({
   form: {
     width: '100%',
     marginTop: theme.spacing(2),
+    zIndex: '3'
   },
   inputText: {
     fontSize: '16px'

@@ -5,9 +5,9 @@ export default function() {
     <div style={{
       position:'fixed',
       width:'100vw',
-      height:'100px',
+      height:'200px',
       bottom:'0',
-      backgroundImage:'linear-gradient(rgba(0,0,0,0), rgb(20,20,20)'
+      backgroundImage:'linear-gradient(rgba(0,0,0,0), black'
     }}/>
   )
 }

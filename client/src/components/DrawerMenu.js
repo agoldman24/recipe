@@ -7,7 +7,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import PeopleIcon from '@material-ui/icons/People';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
@@ -31,7 +32,11 @@ const DrawerMenu = props => {
       case "Profile":
         props.goToProfile();
         break;
-      case "Favorites":
+      case "Recipe Book":
+        break;
+      case "Followers":
+        break;
+      case "Follorwing":
         break;
       case "Sign Out":
         props.signOut();
@@ -44,9 +49,12 @@ const DrawerMenu = props => {
   const getIcon = text => {
     switch (text) {
       case "Profile":
-        return <PersonIcon/>
-      case "Favorites":
-        return <FavoriteIcon />;
+        return <PersonIcon />
+      case "Recipe Book":
+        return <MenuBookIcon />;
+      case "Followers":
+      case "Following":
+        return <PeopleIcon />
       case "Sign Out":
         return <ExitToAppIcon />;
       default:
@@ -61,7 +69,8 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Favorites', 'Sign Out'].map((text, index) => (
+        {['Profile', 'Recipe Book', 'Followers', 'Following', 'Sign Out']
+        .map((text, index) => (
           <ListItem
             button
             key={text}

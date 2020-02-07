@@ -7,15 +7,17 @@ import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
 import { defaultTheme } from '../variables/Constants';
 
-export default function RecipeFabs() {
+export default function RecipeButtons() {
   const radioStyle = {
     position: 'fixed',
     width: '100vw',
+    left: '0',
     bottom: '3vh',
     zIndex: '2'
   };
   const fabStyle = {
     background: 'none',
+    boxShadow: 'none',
     color: 'white',
     marginLeft:'5px'
   };

@@ -91,6 +91,7 @@ const DrawerMenu = props => {
         style={{
           width:'33.33vw',
           fontSize:'13px',
+          height:'50px',
           borderRadius:'0',
           opacity: open ? '1.0' : '0.7',
           background: open

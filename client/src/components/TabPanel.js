@@ -17,7 +17,7 @@ const TabPanel = props => {
   };
 
   const navBarStyle = {
-    width:'100%', left:'0', position:'fixed', zIndex:'4',
+    width:'100%', height:'50px', left:'0', position:'fixed', zIndex:'4',
     backgroundImage:'linear-gradient(black, #202020)'
   };
   const tabStyle = {fontSize:'13px'};

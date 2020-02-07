@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
@@ -8,7 +9,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { FETCH_RECIPE_REQUESTED } from '../actions';
+ import { FETCH_RECIPE_REQUESTED } from '../actions';
 import { isMobile } from 'react-device-detect';
 
 class RecipeCard extends React.Component {
@@ -30,12 +31,26 @@ class RecipeCard extends React.Component {
     };
     return (
       <Card
-        inverted="true"
         style={{
           width: isMobile ? '100vw' : '43vw',
-          borderRadius: '0'
+          borderRadius: '0',
+          background: '#202020',
+          boxShadow: 'none'
         }}
       >
+        <CardHeader
+          title={
+            <Typography
+              variant="h4"
+              style={{
+                fontWeight:'bold', fontFamily:'Shadows Into Light'
+              }}
+            >
+              {this.props.activeRecipe.name}
+            </Typography>
+          }
+          style={{background:'white', color:'black'}}
+        />
         <CardMedia
           style={{height:"0", paddingTop:"100%", position:'relative'}}
           image={this.props.activeRecipe.image}
@@ -49,15 +64,6 @@ class RecipeCard extends React.Component {
               color:'black', fontWeight:'bold'
             }}
           >
-            <Typography
-              variant="h4"
-              style={{
-                padding:'10px 10px 0 15px', width:'90%', float:'left',
-                fontWeight:'bold', fontFamily:'Garamond'
-              }}
-            >
-              {this.props.activeRecipe.name}
-            </Typography>
             <div style={{width:'10%', float:'right'}}>
               <Fab style={{...fabStyle, float:'right'}}>
                 <InfoIcon style={{height:'30', width:'30'}}/>
@@ -69,7 +75,7 @@ class RecipeCard extends React.Component {
           </div>
           <div
             style={{
-              position:'absolute',top:'40%', left:'0',
+              position:'absolute',top:'30%', left:'0',
               width:'100%', verticalAlign:'text-top'
             }}
           >
@@ -83,6 +89,13 @@ class RecipeCard extends React.Component {
               <ArrowForwardIosIcon style={{height:'30', width:'30'}}/>
             </Fab>
           </div>
+          <div style={{
+            position:'absolute',
+            bottom:'0',
+            width:'100%',
+            height:'50px',
+            backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
+          }}/>
         </CardMedia>
       </Card>
     );

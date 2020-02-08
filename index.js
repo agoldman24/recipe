@@ -33,6 +33,17 @@ router.get("/user", (req, res) => {
   });
 });
 
+router.get("/username", (req, res) => {
+  const { username } = req.query;
+  User.find((err, data) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({
+      success: true,
+      users: data.filter(d => d.username === username)
+    });
+  });
+});
+
 router.post("/addUser", (req, res) => {
   const { firstName, lastName, username, password } = req.body;
   const user = new User({ firstName, lastName, username, password });

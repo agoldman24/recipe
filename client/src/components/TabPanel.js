@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import DrawerMenu from './DrawerMenu';
 import SearchIcon from '@material-ui/icons/Search';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { SET_ACTIVE_TAB } from '../actions';
+import { SET_ACTIVE_TAB, CLEAR_FAILURE_MESSAGES, HIDE_SPINNER } from '../actions';
 import { connect } from 'react-redux';
 import { SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB, SEARCH_TAB, defaultTheme }
 from '../variables/Constants';
@@ -13,7 +13,9 @@ from '../variables/Constants';
 const TabPanel = props => {
 
   const handleChange = (event, newValue) => {
-    props.setActiveTab(newValue)
+    props.clearFailureMessages();
+    props.hideSpinner();
+    props.setActiveTab(newValue);
   };
 
   const navBarStyle = {
@@ -72,7 +74,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
+    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab }),
+    clearFailureMessages: () => dispatch({ type: CLEAR_FAILURE_MESSAGES }),
+    hideSpinner: () => dispatch({ type: HIDE_SPINNER })
   }
 };
 

@@ -4,16 +4,19 @@ import {
   FETCH_RECIPE_REQUESTED,
   SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
-  TOGGLE_SPINNER_VISIBILITY
+  TOGGLE_SPINNER_VISIBILITY,
+  NETWORK_FAILED,
+  CLEAR_FAILURE_MESSAGES
 } from '../actions';
 
 const getViewedRecipeIds = state => state.viewedRecipeIds;
 
 function* fetchRecipe() {
+  yield put({ type: CLEAR_FAILURE_MESSAGES });
+  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const viewedRecipeIds = yield select(getViewedRecipeIds);
     let result, data;
-    yield put({ type: TOGGLE_SPINNER_VISIBILITY });
     for(;;) {
       result = yield call(Api.get);
       data = result.data.meals[0];
@@ -35,10 +38,12 @@ function* fetchRecipe() {
         };
       })
     });
-    yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   } catch (err) {
+    yield put({ type: NETWORK_FAILED });
     console.log(err);
   }
+  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
+
 }
 
 function* fetchRecipeSaga() {

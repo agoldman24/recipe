@@ -11,10 +11,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { ADD_USER, SET_ACTIVE_TAB } from '../actions';
+import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS } from '../actions';
 import { SIGN_IN_TAB, defaultTheme, formTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(formTheme);
+
+const errorStyle = { textAlign:'center', color:'#ff2200', paddingBottom:'15px' };
  
 const SignUp = props => {
   const classes = useStyles();
@@ -26,7 +28,7 @@ const SignUp = props => {
   const onFormSubmit = (e) => {
     e.preventDefault();
     if (!firstName || !lastName || !username || !password) {
-      alert("One or more fields is empty");
+      props.putEmptyFieldsError();
     } else {
       props.addUser(firstName, lastName, username, password);
     }
@@ -46,6 +48,12 @@ const SignUp = props => {
             Sign up
           </Typography>
           <form className={classes.form}>
+            {props.emptyFields &&
+              <div style={errorStyle}>One or more fields is empty</div>}
+            {props.usernameExists &&
+              <div style={errorStyle}>That username already exists, please choose a different one</div>}
+            {props.networkFailed &&
+              <div style={errorStyle}>Network error</div>}
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -135,11 +143,16 @@ const SignUp = props => {
 }
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    emptyFields: state.emptyFields,
+    usernameExists: state.usernameExists,
+    networkFailed: state.networkFailed
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
+    putEmptyFieldsError: () => dispatch({ type: EMPTY_FIELDS }),
     addUser: (firstName, lastName, username, password) => dispatch({
       type: ADD_USER, firstName, lastName, username, password
     }),

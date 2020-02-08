@@ -5,15 +5,18 @@ import {
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   SIGN_IN_FAILED,
-  TOGGLE_SPINNER_VISIBILITY
+  TOGGLE_SPINNER_VISIBILITY,
+  NETWORK_FAILED,
+  CLEAR_FAILURE_MESSAGES
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
 const getActiveUser = state => state.activeUser;
 
 function* fetchUser(action) {
+  yield put({ type: CLEAR_FAILURE_MESSAGES });
+  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
-    yield put({ type: TOGGLE_SPINNER_VISIBILITY });
     const { username, password } = action;
     const { data } = yield call(Api.get,
       '/user?username=' + username + "&password=" + password
@@ -21,15 +24,15 @@ function* fetchUser(action) {
     if (data.users.length === 1) {
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
-      yield put({ type: TOGGLE_SPINNER_VISIBILITY });
       console.log(yield select(getActiveUser));
     } else {
-      alert("Incorrect username or password");
       yield put({ type: SIGN_IN_FAILED });
     }
   } catch (err) {
+    yield put({ type: NETWORK_FAILED });
     console.log(err);
   }
+  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
 }
 
 function* fetchUserSaga() {

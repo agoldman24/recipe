@@ -4,6 +4,8 @@ import RecipeCard from './RecipeCard';
 import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
 
+const errorStyle = { textAlign:'center', color:'#ff2200', paddingTop:'50px' };
+
 const RecipeTab = props => {
   return (
     <div>
@@ -13,7 +15,10 @@ const RecipeTab = props => {
         justify="center"
       >
         <Grid item>
-          <RecipeCard/>
+          {props.networkFailed
+            ? <div style={errorStyle}>Network error</div>
+            : <RecipeCard/>
+          }
         </Grid>
       </Grid>
       {props.isLoggedIn && <RecipeButtons />}
@@ -23,7 +28,8 @@ const RecipeTab = props => {
 
 const mapStateToProps = state => {
   return {
-    isLoggedIn: state.isLoggedIn
+    isLoggedIn: state.isLoggedIn,
+    networkFailed: state.networkFailed
   };
 }
 

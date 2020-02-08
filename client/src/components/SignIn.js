@@ -16,6 +16,8 @@ import { SIGN_UP_TAB, defaultTheme, formTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(formTheme);
 
+const errorStyle = { textAlign:'center', color:'#ff2200' };
+
 const SignIn = props => {
   const classes = useStyles();
   const [username, setUsername] = useState("");
@@ -40,6 +42,10 @@ const SignIn = props => {
             Sign in
           </Typography>
           <form className={classes.form}>
+            {props.loginFailed &&
+              <div style={errorStyle}>Invalid username or password</div>}
+            {props.networkFailed &&
+              <div style={errorStyle}>Network error</div>}
             <TextField
               InputProps={{
                 classes: {
@@ -96,7 +102,10 @@ const SignIn = props => {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    loginFailed: state.loginFailed,
+    networkFailed: state.networkFailed
+  };
 };
 
 const mapDispatchToProps = dispatch => {

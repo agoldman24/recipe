@@ -5,8 +5,14 @@ import {
   SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY,
+  HIDE_SPINNER,
+  EMPTY_FIELDS,
+  USERNAME_EXISTS,
   SET_ACTIVE_USER,
-  SIGN_OUT
+  SIGN_IN_FAILED,
+  SIGN_OUT,
+  NETWORK_FAILED,
+  CLEAR_FAILURE_MESSAGES
 } from '../actions';
 
 const activeTabReduce = (state = StateTree.activeTab, action) => {
@@ -22,6 +28,8 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
     case TOGGLE_SPINNER_VISIBILITY:
       return !state;
+    case HIDE_SPINNER:
+      return false;
     default:
       return state;
   }
@@ -62,6 +70,28 @@ const loginReduce = (state = StateTree.isLoggedIn, action) => {
   }
 }
 
+const loginFailureReduce = (state = StateTree.loginFailed, action) => {
+  switch (action.type) {
+    case SIGN_IN_FAILED:
+      return true;
+    case CLEAR_FAILURE_MESSAGES:
+      return false;
+    default:
+      return state;
+  }
+}
+
+const networkFailureReduce = (state = StateTree.networkFailed, action) => {
+  switch (action.type) {
+    case NETWORK_FAILED:
+      return true;
+    case CLEAR_FAILURE_MESSAGES:
+      return false;
+    default:
+      return state;
+  }
+}
+
 const userReduce = (state = StateTree.activeUser, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
@@ -71,11 +101,37 @@ const userReduce = (state = StateTree.activeUser, action) => {
   }
 }
 
+const usernameExistsReduce = (state = StateTree.usernameExists, action) => {
+  switch (action.type) {
+    case USERNAME_EXISTS:
+      return true;
+    case CLEAR_FAILURE_MESSAGES:
+      return false;
+    default:
+      return state;
+  }
+}
+
+const emptyFieldsReduce = (state = StateTree.emptyFields, action) => {
+  switch (action.type) {
+    case EMPTY_FIELDS:
+      return true;
+    case CLEAR_FAILURE_MESSAGES:
+      return false;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   activeTab: activeTabReduce,
-  isSpinnerVisible: spinnerReduce,
+  activeUser: userReduce,
   activeRecipe: activeRecipeReduce,
   viewedRecipeIds: viewedRecipesReduce,
+  isSpinnerVisible: spinnerReduce,
+  emptyFields: emptyFieldsReduce,
+  usernameExists: usernameExistsReduce,
   isLoggedIn: loginReduce,
-  activeUser: userReduce
+  loginFailed: loginFailureReduce,
+  networkFailed: networkFailureReduce
 });

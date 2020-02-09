@@ -30,7 +30,7 @@ const RecipeCard = props => {
     borderRadius: '0',
     background: '#202020',
     boxShadow: 'none',
-    width: isMobile ? '100vw' : '43vw',
+    width: isMobile ? '100vw' : '30vw',
   };
   const detailedStyle = {
     ...undetailedStyle,
@@ -111,6 +111,13 @@ const RecipeCard = props => {
           height:'50px',
           backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
         }}/>
+        {detailView
+        ? <div style={{padding:'20px'}}>
+            <Typography variant="h5">Directions:</Typography>
+            <Typography variant="h6">{props.directions}</Typography>
+          </div>
+        : null
+        }
       </CardMedia>
     </Card>
   );

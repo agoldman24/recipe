@@ -19,7 +19,8 @@ class RecipeTab extends React.Component {
       <div>
         <Grid
           container
-          justify="center"
+          direction="column"
+          style={{alignItems:'center'}}
         >
           {this.props.networkFailed
             ? <div style={errorStyle}>Network error</div>

@@ -36,7 +36,8 @@ function* fetchRecipe() {
           item: data['strIngredient' + (i + 1)],
           quantity: data['strMeasure' + (i + 1)]
         };
-      })
+      }),
+      timestamp: new Date()
     });
   } catch (err) {
     yield put({ type: NETWORK_FAILED });

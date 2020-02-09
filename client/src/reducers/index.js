@@ -38,12 +38,10 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
 const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
   switch (action.type) {
     case SET_ACTIVE_RECIPE:
-      const { id, name, image, ingredients, directions } = action;
+      const { id, name, image, ingredients, directions, timestamp } = action;
       return {
         ...state,
-        [id]: {
-          id, name, image, ingredients, directions
-        }
+        [id]: { id, name, image, ingredients, directions, timestamp }
       }
     default:
       return state;

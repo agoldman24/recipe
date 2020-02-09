@@ -23,12 +23,15 @@ class RecipeTab extends React.Component {
         >
           {this.props.networkFailed
             ? <div style={errorStyle}>Network error</div>
-            : Object.keys(this.props.activeRecipes).map((id, index, arr) => {
+            : Object.keys(this.props.activeRecipes)
+              .sort((id1, id2) =>
+                new Date(this.props.activeRecipes[id2].timestamp)
+                  - new Date(this.props.activeRecipes[id1].timestamp))
+              .map(id => {
                 const recipe = this.props.activeRecipes[id];
                 return (
-                  <Grid item>
+                  <Grid item key={recipe.id}>
                     <RecipeCard
-                      key={index}
                       name={recipe.name}
                       image={recipe.image}
                       ingredients={recipe.ingredients}

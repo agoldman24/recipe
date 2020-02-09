@@ -10,7 +10,8 @@ export default Object.assign({},
       name: "",
       image: "",
       ingredients: [],
-      directions: ""
+      directions: "",
+      timestamp: ""
     },
     viewedRecipeIds: [],
     isDetailVisible: false,

@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
+import CloseIcon from '@material-ui/icons/Close';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -14,21 +15,35 @@ import { isMobile } from 'react-device-detect';
 import { FETCH_RECIPE_REQUESTED } from '../actions';
 
 const RecipeCard = props => {
-  //const [detailView, toggleDetailView] = useState(false);
+  const [detailView, setDetailView] = useState(false);
+  const toggleDetailView = () => setDetailView(!detailView);
   const fabStyle = {
     background: 'none',
     boxShadow: 'none',
     color: 'black',
   };
+  const iconStyle = {
+    width:'30',
+    height:'30'
+  };
+  const undetailedStyle = {
+    borderRadius: '0',
+    background: '#202020',
+    boxShadow: 'none',
+    width: isMobile ? '100vw' : '43vw',
+  };
+  const detailedStyle = {
+    ...undetailedStyle,
+    width: isMobile ? '100vw' : '60vw',
+    left: isMobile ? '0' : '20vw',
+    height: '100vh',
+    position: 'fixed',
+    overflowY: 'scroll',
+    zIndex: '5',
+    top: '0',
+  };
   return (
-    <Card
-      style={{
-        width: isMobile ? '100vw' : '43vw',
-        borderRadius: '0',
-        background: '#202020',
-        boxShadow: 'none'
-      }}
-    >
+    <Card style={detailView ? detailedStyle : undetailedStyle}>
       <CardHeader
         title={
           <Typography
@@ -49,37 +64,46 @@ const RecipeCard = props => {
       >
         <div
           style={{
-            position:'absolute',top:'0', left:'0',
+            position:'absolute', top:'0', left:'0',
             width:'100%', height:'30%', verticalAlign:'text-top',
             backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
             color:'black', fontWeight:'bold'
           }}
         >
           <div style={{width:'10%', float:'right'}}>
-            <Fab style={{...fabStyle, float:'right'}}>
-              <InfoIcon style={{height:'30', width:'30'}}/>
+            <Fab
+              style={{...fabStyle, float:'right'}}
+              onClick={toggleDetailView}
+            >
+              {detailView
+              ? <CloseIcon style={iconStyle}/>
+              : <InfoIcon style={iconStyle}/>
+              }
             </Fab>
           </div>
           <Fab style={{...fabStyle, float:'left'}}>
-            <FavoriteBorderIcon style={{height:'30', width:'30'}}/>
+            <FavoriteBorderIcon style={iconStyle}/>
           </Fab>
         </div>
-        <div
-          style={{
-            position:'absolute',top:'30%', left:'0',
-            width:'100%', verticalAlign:'text-top'
-          }}
-        >
-          <Fab style={{...fabStyle, color:'white', float:'left'}}>
-            <ArrowBackIosIcon style={{height:'30', width:'30'}}/>
-          </Fab>
-          <Fab
-            style={{...fabStyle, color:'white', float:'right'}}
-            onClick={props.getRandomRecipe}
+        {detailView
+        ? null
+        : <div
+            style={{
+              position:'absolute', top:'30%', left:'0',
+              width:'100%', verticalAlign:'text-top'
+            }}
           >
-            <ArrowForwardIosIcon style={{height:'30', width:'30'}}/>
-          </Fab>
-        </div>
+            <Fab style={{...fabStyle, color:'white', float:'left'}}>
+              <ArrowBackIosIcon style={iconStyle}/>
+            </Fab>
+            <Fab
+              style={{...fabStyle, color:'white', float:'right'}}
+              onClick={props.getRandomRecipe}
+            >
+              <ArrowForwardIosIcon style={iconStyle}/>
+            </Fab>
+          </div>
+        }
         <div style={{
           position:'absolute',
           bottom:'0',

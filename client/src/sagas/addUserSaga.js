@@ -16,9 +16,9 @@ function* addUser(action) {
   try {
     const { firstName, lastName, username, password } = action;
     const { data } = yield call(Api.get,
-      '/username?username=' + username
+      '/doesUsernameExist?username=' + username
     );
-    if (data.users.length > 0) {
+    if (data.usernameExists) {
       yield put({ type: USERNAME_EXISTS });
     } else {
       yield call(Api.post, '/addUser', {

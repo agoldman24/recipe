@@ -33,7 +33,7 @@ function* fetchRecipe() {
       directions: data.strInstructions,
       ingredients: Array(20).fill().map((val, i) => {
         return {
-          name: data['strIngredient' + (i + 1)],
+          item: data['strIngredient' + (i + 1)],
           quantity: data['strMeasure' + (i + 1)]
         };
       })

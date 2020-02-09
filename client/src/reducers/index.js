@@ -35,15 +35,15 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   }
 }
 
-const activeRecipeReduce = (state = StateTree.activeRecipe, action) => {
+const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
   switch (action.type) {
     case SET_ACTIVE_RECIPE:
+      const { id, name, image, ingredients, directions } = action;
       return {
-        id: action.id,
-        name: action.name,
-        image: action.image,
-        ingredients: action.ingredients,
-        directions: action.directions
+        ...state,
+        [id]: {
+          id, name, image, ingredients, directions
+        }
       }
     default:
       return state;
@@ -126,7 +126,7 @@ const emptyFieldsReduce = (state = StateTree.emptyFields, action) => {
 export default combineReducers({
   activeTab: activeTabReduce,
   activeUser: userReduce,
-  activeRecipe: activeRecipeReduce,
+  activeRecipes: activeRecipesReduce,
   viewedRecipeIds: viewedRecipesReduce,
   isSpinnerVisible: spinnerReduce,
   emptyFields: emptyFieldsReduce,

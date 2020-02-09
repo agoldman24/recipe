@@ -4,6 +4,7 @@ export default Object.assign({},
   {
     activeTab: RECIPE_TAB,
     isSpinnerVisible: false,
+    activeRecipes: {},
     activeRecipe: {
       id: "",
       name: "",

@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS } from '../actions';
+import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS, HIDE_SPINNER } from '../actions';
 import { SIGN_IN_TAB, defaultTheme, formTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(formTheme);
@@ -51,7 +51,7 @@ const SignUp = props => {
             {props.emptyFields &&
               <div style={errorStyle}>One or more fields is empty</div>}
             {props.usernameExists &&
-              <div style={errorStyle}>That username already exists, please choose a different one</div>}
+              <div style={errorStyle}>That username already exists, choose a different one</div>}
             {props.networkFailed &&
               <div style={errorStyle}>Network error</div>}
             <Grid container spacing={2}>
@@ -129,8 +129,10 @@ const SignUp = props => {
                   href="#"
                   variant="body2"
                   color="primary"
-                  onClick={() => props.setActiveTab(SIGN_IN_TAB)}
-                >
+                  onClick={() => {
+                    props.hideSpinner();
+                    props.setActiveTab(SIGN_IN_TAB);
+                  }}>
                   Already have an account? Sign in
                 </Link>
               </Grid>
@@ -153,6 +155,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     putEmptyFieldsError: () => dispatch({ type: EMPTY_FIELDS }),
+    hideSpinner: () => dispatch({ type: HIDE_SPINNER }),
     addUser: (firstName, lastName, username, password) => dispatch({
       type: ADD_USER, firstName, lastName, username, password
     }),

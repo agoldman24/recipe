@@ -11,7 +11,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { FETCH_USER, SET_ACTIVE_TAB } from '../actions';
+import { FETCH_USER, SET_ACTIVE_TAB, HIDE_SPINNER } from '../actions';
 import { SIGN_UP_TAB, defaultTheme, formTheme } from '../variables/Constants';
 
 const useStyles = makeStyles(formTheme);
@@ -88,8 +88,10 @@ const SignIn = props => {
                   href="#"
                   variant="body2"
                   color="primary"
-                  onClick={() => props.setActiveTab(SIGN_UP_TAB)}
-                >
+                  onClick={() => {
+                    props.hideSpinner();
+                    props.setActiveTab(SIGN_UP_TAB)
+                  }}>
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -110,6 +112,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    hideSpinner: () => dispatch({ type: HIDE_SPINNER }),
     fetchUser: (username, password) => dispatch({
       type: FETCH_USER, username, password
     }),

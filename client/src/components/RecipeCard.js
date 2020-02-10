@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
-import RecipeDetail from './RecipeDetail';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
@@ -30,86 +29,81 @@ const RecipeCard = props => {
     width: isMobile ? '100vw' : '30vw',
   };
   return (
-    <div>
-      {props.isDetailVisible ? <RecipeDetail {...props}/> : null}
-      <Card style={undetailedStyle}>
-        <CardHeader
-          title={
-            <Typography
-              variant="h4"
-              style={{
-                fontWeight:'bold', fontFamily:'Shadows Into Light'
-              }}
-            >
-              {props.name}
-            </Typography>
-          }
-          style={{background:'white', color:'black'}}
-        />
-        <CardMedia
-          style={{height:"0", paddingTop:"100%", position:'relative'}}
-          image={props.image}
-          children={[]}
+    <Card style={undetailedStyle}>
+      <CardHeader
+        title={
+          <Typography
+            variant="h4"
+            style={{
+              fontWeight:'bold', fontFamily:'Shadows Into Light'
+            }}
+          >
+            {props.name}
+          </Typography>
+        }
+        style={{background:'white', color:'black'}}
+      />
+      <CardMedia
+        style={{height:"0", paddingTop:"100%", position:'relative'}}
+        image={props.image}
+        children={[]}
+      >
+        <div
+          style={{
+            position:'absolute', top:'0', left:'0',
+            width:'100%', height:'30%', verticalAlign:'text-top',
+            backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
+            color:'black', fontWeight:'bold'
+          }}
         >
-          <div
-            style={{
-              position:'absolute', top:'0', left:'0',
-              width:'100%', height:'30%', verticalAlign:'text-top',
-              backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
-              color:'black', fontWeight:'bold'
-            }}
-          >
-            <div style={{width:'10%', float:'right'}}>
-              <Fab
-                style={{...fabStyle, float:'right'}}
-                onClick={props.toggleDetailView}
-              >
-                <InfoIcon style={iconStyle}/>
-              </Fab>
-            </div>
-            <Fab style={{...fabStyle, float:'left'}}>
-              <FavoriteBorderIcon style={iconStyle}/>
-            </Fab>
-          </div>
-          <div
-            style={{
-              position:'absolute', top:'30%', left:'0',
-              width:'100%', verticalAlign:'text-top'
-            }}
-          >
-            <Fab style={{...fabStyle, color:'white', float:'left'}}>
-              <ArrowBackIosIcon style={iconStyle}/>
-            </Fab>
+          <div style={{width:'10%', float:'right'}}>
             <Fab
-              style={{...fabStyle, color:'white', float:'right'}}
-              onClick={props.getRandomRecipe}
+              style={{...fabStyle, float:'right'}}
+              onClick={() => props.toggleDetailView(props.id)}
             >
-              <ArrowForwardIosIcon style={iconStyle}/>
+              <InfoIcon style={iconStyle}/>
             </Fab>
           </div>
-          <div style={{
-            position:'absolute',
-            bottom:'0',
-            width:'100%',
-            height:'50px',
-            backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
-          }}/>
-        </CardMedia>
-      </Card>
-    </div>
+          <Fab style={{...fabStyle, float:'left'}}>
+            <FavoriteBorderIcon style={iconStyle}/>
+          </Fab>
+        </div>
+        <div
+          style={{
+            position:'absolute', top:'30%', left:'0',
+            width:'100%', verticalAlign:'text-top'
+          }}
+        >
+          <Fab style={{...fabStyle, color:'white', float:'left'}}>
+            <ArrowBackIosIcon style={iconStyle}/>
+          </Fab>
+          <Fab
+            style={{...fabStyle, color:'white', float:'right'}}
+            onClick={props.getRandomRecipe}
+          >
+            <ArrowForwardIosIcon style={iconStyle}/>
+          </Fab>
+        </div>
+        <div style={{
+          position:'absolute',
+          bottom:'0',
+          width:'100%',
+          height:'50px',
+          backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
+        }}/>
+      </CardMedia>
+    </Card>
   );
 };
 
 const mapStateToProps = state => {
-  return {
-    isDetailVisible: state.isDetailVisible
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED }),
-    toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS })
+    toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id })
   };
 };
 

@@ -49,10 +49,19 @@ const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
   }
 }
 
-const recipeDetailReduce = (state = StateTree.isDetailVisible, action) => {
+const detailVisibilityReduce = (state = StateTree.isDetailVisible, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !state;
+    default:
+      return state;
+  }
+}
+
+const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
+  switch (action.type) {
+    case TOGGLE_RECIPE_DETAILS:
+      return !!action.id ? action.id : state;
     default:
       return state;
   }
@@ -136,7 +145,8 @@ export default combineReducers({
   activeUser: userReduce,
   activeRecipes: activeRecipesReduce,
   viewedRecipeIds: viewedRecipesReduce,
-  isDetailVisible: recipeDetailReduce,
+  isDetailVisible: detailVisibilityReduce,
+  detailRecipeId: detailRecipeIdReduce,
   isSpinnerVisible: spinnerReduce,
   emptyFields: emptyFieldsReduce,
   usernameExists: usernameExistsReduce,

@@ -28,18 +28,25 @@ router.get("/user", (req, res) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({
       success: true,
-      users: data.filter(d => d.username === username && d.password === password)
+      users: data
+        .filter(d => d.username === username && d.password === password)
+        .map(user => {
+          const { id, username, firstName, lastName } = user;
+          return {
+            id, username, firstName, lastName
+          }
+        })
     });
   });
 });
 
-router.get("/username", (req, res) => {
+router.get("/doesUsernameExist", (req, res) => {
   const { username } = req.query;
   User.find((err, data) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({
       success: true,
-      users: data.filter(d => d.username === username)
+      usernameExists: !!data.filter(d => d.username === username).length
     });
   });
 });

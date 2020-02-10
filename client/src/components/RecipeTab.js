@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import RecipeCard from './RecipeCard';
+import RecipeDetail from './RecipeDetail';
 import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
 import { FETCH_RECIPE_REQUESTED } from '../actions';
@@ -12,9 +13,10 @@ class RecipeTab extends React.Component {
     if (!Object.keys(this.props.activeRecipes).length) {
       this.props.getRandomRecipe();
     }
-  };
+  }
 
   render() {
+    console.log(this.props);
     return (
       <div>
         <Grid
@@ -23,25 +25,33 @@ class RecipeTab extends React.Component {
           style={{alignItems:'center'}}
         >
           {this.props.networkFailed
-            ? <div style={errorStyle}>Network error</div>
-            : Object.keys(this.props.activeRecipes)
-              .sort((id1, id2) =>
-                new Date(this.props.activeRecipes[id2].timestamp)
-                  - new Date(this.props.activeRecipes[id1].timestamp))
-              .map(id => {
-                const recipe = this.props.activeRecipes[id];
-                return (
-                  <Grid item key={recipe.id}>
-                    <RecipeCard
+          ? <div style={errorStyle}>Network error</div>
+          : Object.keys(this.props.activeRecipes)
+            .sort((id1, id2) =>
+              new Date(this.props.activeRecipes[id2].timestamp)
+                - new Date(this.props.activeRecipes[id1].timestamp))
+            .map(id => {
+              const recipe = this.props.activeRecipes[id];
+              return (
+                <Grid item key={recipe.id}>
+                  {this.props.isDetailVisible && this.props.detailRecipeId === id &&
+                    <RecipeDetail
+                      id={id}
                       name={recipe.name}
                       image={recipe.image}
                       ingredients={recipe.ingredients}
                       directions={recipe.directions}
                     />
-                  </Grid>
-                );
-              })
-            }
+                  }
+                  <RecipeCard
+                    id={id}
+                    name={recipe.name}
+                    image={recipe.image}
+                  />
+                </Grid>
+              );
+            })
+          }
         </Grid>
         {this.props.isLoggedIn && <RecipeButtons />}
       </div>
@@ -53,7 +63,9 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: state.isLoggedIn,
     networkFailed: state.networkFailed,
-    activeRecipes: state.activeRecipes
+    activeRecipes: state.activeRecipes,
+    isDetailVisible: state.isDetailVisible,
+    detailRecipeId: state.detailRecipeId
   };
 }
 

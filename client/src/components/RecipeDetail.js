@@ -73,7 +73,7 @@ const RecipeDetail = props => {
             <FavoriteBorderIcon style={iconStyle}/>
           </Fab>
         </div>
-        <div style={{padding:'20px 20px 60px 20px'}}>
+        <div style={{padding:'20px 20px 200px 20px'}}>
           <Typography variant="h5">Directions:</Typography>
           <Typography variant="h6">{props.directions}</Typography>
         </div>

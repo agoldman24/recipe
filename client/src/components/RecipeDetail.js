@@ -28,7 +28,7 @@ const RecipeDetail = props => {
     position: 'fixed',
     overflowY: 'scroll',
     zIndex: '5',
-    top: '0',
+    top: '0'
   };
   return (
     <Card style={detailedStyle}>
@@ -61,7 +61,10 @@ const RecipeDetail = props => {
           <div style={{width:'10%', float:'right'}}>
             <Fab
               style={{...fabStyle, float:'right'}}
-              onClick={props.toggleDetailView}
+              onClick={() => {
+                props.toggleDetailView();
+                document.getElementById('root').style.overflowY = 'scroll';
+              }}
             >
               <CloseIcon style={iconStyle}/>
             </Fab>
@@ -70,7 +73,7 @@ const RecipeDetail = props => {
             <FavoriteBorderIcon style={iconStyle}/>
           </Fab>
         </div>
-        <div style={{padding:'20px'}}>
+        <div style={{padding:'20px 20px 60px 20px'}}>
           <Typography variant="h5">Directions:</Typography>
           <Typography variant="h6">{props.directions}</Typography>
         </div>

@@ -22,7 +22,11 @@ const App = props => {
       <Container
         component="main"
         maxWidth="xs"
-        style={{padding:"50px 0 10px 0"}}
+        style={{
+          padding:"50px 0 10px 0",
+          //height:"100%",
+          //overflowY: props.isDetailVisible ? 'hidden' : 'scroll'
+        }}
       >
         <CssBaseline />
         {props.activeTab === SIGN_UP_TAB && <SignUp />}
@@ -36,7 +40,8 @@ const App = props => {
 const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
-    isSpinnerVisible: state.isSpinnerVisible
+    isSpinnerVisible: state.isSpinnerVisible,
+    isDetailVisible: state.isDetailVisible
   };
 }
 

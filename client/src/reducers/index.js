@@ -4,6 +4,7 @@ import {
   SET_ACTIVE_TAB,
   SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
+  TOGGLE_RECIPE_DETAILS,
   TOGGLE_SPINNER_VISIBILITY,
   HIDE_SPINNER,
   EMPTY_FIELDS,
@@ -43,6 +44,15 @@ const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
         ...state,
         [id]: { id, name, image, ingredients, directions, timestamp }
       }
+    default:
+      return state;
+  }
+}
+
+const recipeDetailReduce = (state = StateTree.isDetailVisible, action) => {
+  switch (action.type) {
+    case TOGGLE_RECIPE_DETAILS:
+      return !state;
     default:
       return state;
   }
@@ -126,6 +136,7 @@ export default combineReducers({
   activeUser: userReduce,
   activeRecipes: activeRecipesReduce,
   viewedRecipeIds: viewedRecipesReduce,
+  isDetailVisible: recipeDetailReduce,
   isSpinnerVisible: spinnerReduce,
   emptyFields: emptyFieldsReduce,
   usernameExists: usernameExistsReduce,

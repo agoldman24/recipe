@@ -56,7 +56,7 @@ router.post("/addUser", (req, res) => {
   const user = new User({ firstName, lastName, username, password });
   user.save(err => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    return res.json({ success: true, user });
   });
 });
 

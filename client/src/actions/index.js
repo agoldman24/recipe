@@ -25,3 +25,7 @@ export const SIGN_OUT = 'SIGN_OUT';
 /* Network actions */
 export const NETWORK_FAILED = 'NETWORK_FAILED';
 export const CLEAR_FAILURE_MESSAGES = 'CLEAR_FAILURE_MESSAGES';
+
+/* Snackbar actions */
+export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';
+export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';

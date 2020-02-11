@@ -30,35 +30,35 @@ const TabPanel = props => {
     }>
       <Paper square>
       {props.isLoggedIn
-        ? <Tabs
-            value={props.activeTab}
-            style={navBarStyle}
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-          >
-            <Tab
-              style={tabStyle}
-              label={<div><SearchIcon style={{verticalAlign:'top'}}/> Search</div>}
-              value={SEARCH_TAB}
-            />
-            <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
-            <DrawerMenu />
-          </Tabs>
-        : <Tabs
-            value={props.activeTab}
-            style={navBarStyle}
-            variant="fullWidth"
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={handleChange}
-          >
-            <Tab style={tabStyle} label="Sign Up" value={SIGN_UP_TAB}/>
-            <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
-            <Tab style={tabStyle} label="Sign In" value={SIGN_IN_TAB}/>
-          </Tabs>
-        }
+      ? <Tabs
+          value={props.activeTab}
+          style={navBarStyle}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={handleChange}
+        >
+          <Tab
+            style={tabStyle}
+            label={<div><SearchIcon style={{verticalAlign:'top'}}/> Search</div>}
+            value={SEARCH_TAB}
+          />
+          <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
+          <DrawerMenu />
+        </Tabs>
+      : <Tabs
+          value={props.activeTab}
+          style={navBarStyle}
+          variant="fullWidth"
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={handleChange}
+        >
+          <Tab style={tabStyle} label="Sign Up" value={SIGN_UP_TAB}/>
+          <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
+          <Tab style={tabStyle} label="Sign In" value={SIGN_IN_TAB}/>
+        </Tabs>
+      }
       </Paper>
     </ThemeProvider>
   );

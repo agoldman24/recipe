@@ -13,7 +13,9 @@ import {
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES
+  CLEAR_FAILURE_MESSAGES,
+  SHOW_SNACKBAR,
+  HIDE_SNACKBAR
 } from '../actions';
 
 const activeTabReduce = (state = StateTree.activeTab, action) => {
@@ -81,6 +83,7 @@ const loginReduce = (state = StateTree.isLoggedIn, action) => {
     case SET_ACTIVE_USER:
       return true;
     case SIGN_OUT:
+      localStorage.clear();
       return false;
     default:
       return state;
@@ -140,6 +143,17 @@ const emptyFieldsReduce = (state = StateTree.emptyFields, action) => {
   }
 }
 
+export const snackbarReduce = (state = StateTree.isSnackbarVisible, action) => {
+  switch (action.type) {
+    case SHOW_SNACKBAR:
+      return true;
+    case HIDE_SNACKBAR:
+      return false;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   activeTab: activeTabReduce,
   activeUser: userReduce,
@@ -152,5 +166,6 @@ export default combineReducers({
   usernameExists: usernameExistsReduce,
   isLoggedIn: loginReduce,
   loginFailed: loginFailureReduce,
-  networkFailed: networkFailureReduce
+  networkFailed: networkFailureReduce,
+  isSnackbarVisible: snackbarReduce
 });

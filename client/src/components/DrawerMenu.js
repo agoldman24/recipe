@@ -12,7 +12,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
-import { SIGN_OUT, SET_ACTIVE_TAB } from '../actions';
+import { SIGN_OUT, SET_ACTIVE_TAB, SHOW_SNACKBAR } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
 const useStyles = makeStyles({
@@ -130,6 +130,7 @@ const mapDispatchToProps = dispatch => {
     signOut: () => {
       dispatch({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       dispatch({ type: SIGN_OUT });
+      dispatch({ type: SHOW_SNACKBAR });
     }
   }
 }

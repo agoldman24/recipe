@@ -2,11 +2,13 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
   ADD_USER,
+  SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   TOGGLE_SPINNER_VISIBILITY,
   USERNAME_EXISTS,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES
+  CLEAR_FAILURE_MESSAGES,
+  SHOW_SNACKBAR
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
@@ -21,10 +23,14 @@ function* addUser(action) {
     if (data.usernameExists) {
       yield put({ type: USERNAME_EXISTS });
     } else {
-      yield call(Api.post, '/addUser', {
+      const { data } = yield call(Api.post, '/addUser', {
         firstName, lastName, username, password, favorites: []
       });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
+      yield put({ type: SET_ACTIVE_USER, user: data.user });
+      yield put({ type: SHOW_SNACKBAR }); 
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
     }
   } catch (err) {
     yield put({ type: NETWORK_FAILED });

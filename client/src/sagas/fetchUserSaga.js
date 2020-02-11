@@ -24,6 +24,8 @@ function* fetchUser(action) {
     if (data.users.length === 1) {
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
       console.log(yield select(getActiveUser));
     } else {
       yield put({ type: SIGN_IN_FAILED });

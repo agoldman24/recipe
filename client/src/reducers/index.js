@@ -21,6 +21,7 @@ import {
 const activeTabReduce = (state = StateTree.activeTab, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
+      document.getElementById('root').scrollTo(0, 0);
       return action.tab;
     default:
       return state;
@@ -143,12 +144,18 @@ const emptyFieldsReduce = (state = StateTree.emptyFields, action) => {
   }
 }
 
-export const snackbarReduce = (state = StateTree.isSnackbarVisible, action) => {
+export const snackbarReduce = (state = StateTree.snackbar, action) => {
   switch (action.type) {
     case SHOW_SNACKBAR:
-      return true;
+      return {
+        isVisible: true,
+        message: action.message
+      };
     case HIDE_SNACKBAR:
-      return false;
+      return {
+        ...state,
+        isVisible: false
+      };
     default:
       return state;
   }
@@ -167,5 +174,5 @@ export default combineReducers({
   isLoggedIn: loginReduce,
   loginFailed: loginFailureReduce,
   networkFailed: networkFailureReduce,
-  isSnackbarVisible: snackbarReduce
+  snackbar: snackbarReduce
 });

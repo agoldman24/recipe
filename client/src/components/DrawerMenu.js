@@ -130,7 +130,7 @@ const mapDispatchToProps = dispatch => {
     signOut: () => {
       dispatch({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       dispatch({ type: SIGN_OUT });
-      dispatch({ type: SHOW_SNACKBAR });
+      dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
     }
   }
 }

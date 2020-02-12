@@ -7,7 +7,8 @@ import {
   SIGN_IN_FAILED,
   TOGGLE_SPINNER_VISIBILITY,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES
+  CLEAR_FAILURE_MESSAGES,
+  SHOW_SNACKBAR
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
@@ -24,8 +25,11 @@ function* fetchUser(action) {
     if (data.users.length === 1) {
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
-      localStorage.setItem("username", username);
-      localStorage.setItem("password", password);
+      if (!localStorage.getItem("username")) {
+        yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
+        localStorage.setItem("username", username);
+        localStorage.setItem("password", password);
+      }
       console.log(yield select(getActiveUser));
     } else {
       yield put({ type: SIGN_IN_FAILED });

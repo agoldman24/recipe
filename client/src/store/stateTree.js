@@ -13,7 +13,10 @@ export default Object.assign({},
   isLoggedIn: !!localStorage.getItem("username"),
   loginFailed: false,
   networkFailed: false,
-  isSnackbarVisible: false,
+  snackbar: {
+    isVisible: false,
+    message: ""
+  },
   activeUser: {
     id: "",
     firstName: "",

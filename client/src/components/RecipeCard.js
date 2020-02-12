@@ -16,7 +16,7 @@ const RecipeCard = props => {
   const fabStyle = {
     background: 'none',
     boxShadow: 'none',
-    color: 'black',
+    color: 'black'
   };
   const iconStyle = {
     width:'30',
@@ -26,7 +26,7 @@ const RecipeCard = props => {
     borderRadius: '0',
     background: '#202020',
     boxShadow: 'none',
-    width: isMobile ? '100vw' : '30vw',
+    width: isMobile ? '100vw' : '30vw'
   };
   return (
     <Card style={undetailedStyle}>

@@ -16,6 +16,7 @@ from '../variables/Constants';
 
 class App extends React.Component {
   componentDidMount() {
+    document.getElementById('root').scrollTo(0, 0);
     if (!!localStorage.getItem("username")) {
       this.props.fetchUser(
         localStorage.getItem("username"),
@@ -27,7 +28,6 @@ class App extends React.Component {
     }
   }
   render() {
-    console.log(this.props.isSnackbarVisible);
     return (
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
@@ -57,7 +57,6 @@ const mapStateToProps = state => {
     activeRecipes: state.activeRecipes,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
-    isSnackbarVisible: state.isSnackbarVisible
   };
 }
 

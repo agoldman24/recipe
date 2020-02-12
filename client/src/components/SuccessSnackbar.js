@@ -2,34 +2,24 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
-import { makeStyles } from '@material-ui/core/styles';
+import Zoom from '@material-ui/core/Zoom';
 import { HIDE_SNACKBAR } from '../actions';
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+function SlideTransition(props) {
+  return <Zoom {...props} />
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(2),
-    },
-  },
-}));
-
 const SuccessSnackbar = props => {
-  const classes = useStyles();
   return (
-    <div className={classes.root}>
+    <div style={{width:'100%'}}>
       <Snackbar
-        open={props.isSnackbarVisible}
-        autoHideDuration={3000}
+        open={props.snackbar.isVisible}
+        autoHideDuration={2000}
+        TransitionComponent={SlideTransition}
         onClose={props.hideSnackbar}
+        style={{top:'0'}}
       >
-        <Alert onClose={props.hideSnackbar} severity="success">
-          This is a success message!
-        </Alert>
+        <MuiAlert>{props.snackbar.message}</MuiAlert>
       </Snackbar>
     </div>
   );
@@ -37,7 +27,7 @@ const SuccessSnackbar = props => {
 
 const mapStateToProps = state => {
   return {
-    isSnackbarVisible: state.isSnackbarVisible
+    snackbar: state.snackbar
   };
 }
 

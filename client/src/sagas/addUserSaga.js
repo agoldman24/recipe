@@ -28,7 +28,7 @@ function* addUser(action) {
       });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       yield put({ type: SET_ACTIVE_USER, user: data.user });
-      yield put({ type: SHOW_SNACKBAR }); 
+      yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" }); 
       localStorage.setItem("username", username);
       localStorage.setItem("password", password);
     }

@@ -6,6 +6,8 @@ const cors = require('cors');
 const path = require('path');
 const getSecret = require("./secret");
 const User = require('./user');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 const app = express();
 const router = express.Router();
@@ -18,45 +20,50 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(cors());
-
-// Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 router.get("/user", (req, res) => {
   const { username, password } = req.query;
-  User.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({
-      success: true,
-      users: data
-        .filter(d => d.username === username && d.password === password)
-        .map(user => {
-          const { id, username, firstName, lastName } = user;
-          return {
-            id, username, firstName, lastName
-          }
-        })
-    });
-  });
-});
-
-router.get("/doesUsernameExist", (req, res) => {
-  const { username } = req.query;
-  User.find((err, data) => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({
-      success: true,
-      usernameExists: !!data.filter(d => d.username === username).length
-    });
+  db.collection("users").findOne({
+    username: username
+  }).then(function (user) {
+    if (!user) {
+      return res.json({ success: false });
+    } else {
+      bcrypt.compare(password, user.password, function (err, result) {
+        if (result) {
+          const { id, username, firstName, lastName, favorites } = user;
+          res.json({
+            success: true,
+            user: { id, username, firstName, lastName, favorites }
+          });
+        } else {
+          return res.json({ success: false });
+        }
+      });
+    }
   });
 });
 
 router.post("/addUser", (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-  const user = new User({ firstName, lastName, username, password });
-  user.save(err => {
-    if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, user });
+  db.collection("users").findOne({
+    username: username
+  }).then(function (user) {
+    if (user) {
+      return res.json({ success: false });
+    } else {
+      bcrypt.hash(password, saltRounds, function (err, hash) {
+        const user = new User({
+          firstName, lastName, username,
+          password: hash
+        });
+        user.save(err => {
+          if (err) return res.json({ success: false, error: err });
+          return res.json({ success: true, user });
+        });
+      });
+    }
   });
 });
 

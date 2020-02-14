@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
   FETCH_USER,
@@ -12,8 +12,6 @@ import {
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
-const getActiveUser = state => state.activeUser;
-
 function* fetchUser(action) {
   yield put({ type: CLEAR_FAILURE_MESSAGES });
   yield put({ type: TOGGLE_SPINNER_VISIBILITY });
@@ -22,15 +20,14 @@ function* fetchUser(action) {
     const { data } = yield call(Api.get,
       '/user?username=' + username + "&password=" + password
     );
-    if (data.users.length === 1) {
+    if (data.success) {
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
-      yield put({ type: SET_ACTIVE_USER, user: data.users[0] });
+      yield put({ type: SET_ACTIVE_USER, user: data.user });
       if (!localStorage.getItem("username")) {
         yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("password", data.password);
       }
-      console.log(yield select(getActiveUser));
     } else {
       yield put({ type: SIGN_IN_FAILED });
     }

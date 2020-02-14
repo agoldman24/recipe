@@ -17,20 +17,17 @@ function* addUser(action) {
   yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const { firstName, lastName, username, password } = action;
-    const { data } = yield call(Api.get,
-      '/doesUsernameExist?username=' + username
-    );
-    if (data.usernameExists) {
+    const { data } = yield call(Api.post, '/addUser', {
+      firstName, lastName, username, password, favorites: []
+    });
+    if (!data.success) {
       yield put({ type: USERNAME_EXISTS });
     } else {
-      const { data } = yield call(Api.post, '/addUser', {
-        firstName, lastName, username, password, favorites: []
-      });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
       yield put({ type: SET_ACTIVE_USER, user: data.user });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" }); 
-      localStorage.setItem("username", username);
-      localStorage.setItem("password", password);
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("password", data.password);
     }
   } catch (err) {
     yield put({ type: NETWORK_FAILED });

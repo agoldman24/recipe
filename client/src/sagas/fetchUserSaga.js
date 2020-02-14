@@ -7,13 +7,11 @@ import {
   SIGN_IN_FAILED,
   TOGGLE_SPINNER_VISIBILITY,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES,
   SHOW_SNACKBAR
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
 function* fetchUser(action) {
-  yield put({ type: CLEAR_FAILURE_MESSAGES });
   yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const { username, password } = action;

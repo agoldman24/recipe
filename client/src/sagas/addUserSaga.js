@@ -7,13 +7,11 @@ import {
   TOGGLE_SPINNER_VISIBILITY,
   USERNAME_EXISTS,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES,
   SHOW_SNACKBAR
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
 function* addUser(action) {
-  yield put({ type: CLEAR_FAILURE_MESSAGES });
   yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const { firstName, lastName, username, password } = action;

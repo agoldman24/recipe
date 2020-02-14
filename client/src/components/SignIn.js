@@ -11,8 +11,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { FETCH_USER, SET_ACTIVE_TAB, HIDE_SPINNER } from '../actions';
 import { SIGN_UP_TAB, formTheme } from '../variables/Constants';
+import { FETCH_USER, SET_ACTIVE_TAB, HIDE_SPINNER, CLEAR_FAILURE_MESSAGES }
+from '../actions';
 
 const useStyles = makeStyles(formTheme);
 
@@ -28,6 +29,7 @@ const SignIn = props => {
 
   const onFormSubmit = (e) => {
     e.preventDefault();
+    props.clearErrorMessages();
     props.fetchUser(username, password);
   }
 
@@ -111,6 +113,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearErrorMessages: () => dispatch({ type: CLEAR_FAILURE_MESSAGES }),
     hideSpinner: () => dispatch({ type: HIDE_SPINNER }),
     fetchUser: (username, password) => dispatch({
       type: FETCH_USER, username, password

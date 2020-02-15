@@ -8,8 +8,6 @@ export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 export const ADD_USER = 'ADD_USER';
 export const FETCH_USER = 'FETCH_USER';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
-export const USERNAME_EXISTS = 'USERNAME_EXISTS';
-export const EMPTY_FIELDS = 'EMPTY_FIELDS';
 
 /* Tab actions */
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
@@ -22,9 +20,11 @@ export const HIDE_SPINNER = 'HIDE_SPINNER';
 export const SIGN_IN_FAILED = 'SIGN_IN_FAILED';
 export const SIGN_OUT = 'SIGN_OUT';
 
-/* Network actions */
+/* Error message actions */
 export const NETWORK_FAILED = 'NETWORK_FAILED';
-export const CLEAR_FAILURE_MESSAGES = 'CLEAR_FAILURE_MESSAGES';
+export const CLEAR_ERROR_MESSAGES = 'CLEAR_ERROR_MESSAGES';
+export const USERNAME_EXISTS = 'USERNAME_EXISTS';
+export const EMPTY_FIELDS = 'EMPTY_FIELDS';
 
 /* Snackbar actions */
 export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';

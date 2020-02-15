@@ -56,7 +56,7 @@ const RecipeTab = props => {
 const mapStateToProps = state => {
   return {
     isLoggedIn: state.isLoggedIn,
-    networkFailed: state.networkFailed,
+    networkFailed: state.errorMessages.networkFailed,
     activeRecipes: state.activeRecipes,
     isDetailVisible: state.isDetailVisible,
     detailRecipeId: state.detailRecipeId

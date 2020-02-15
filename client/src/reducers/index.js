@@ -13,7 +13,7 @@ import {
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES,
+  CLEAR_ERROR_MESSAGES,
   SHOW_SNACKBAR,
   HIDE_SNACKBAR
 } from '../actions';
@@ -91,28 +91,6 @@ const loginReduce = (state = StateTree.isLoggedIn, action) => {
   }
 }
 
-const loginFailureReduce = (state = StateTree.loginFailed, action) => {
-  switch (action.type) {
-    case SIGN_IN_FAILED:
-      return true;
-    case CLEAR_FAILURE_MESSAGES:
-      return false;
-    default:
-      return state;
-  }
-}
-
-const networkFailureReduce = (state = StateTree.networkFailed, action) => {
-  switch (action.type) {
-    case NETWORK_FAILED:
-      return true;
-    case CLEAR_FAILURE_MESSAGES:
-      return false;
-    default:
-      return state;
-  }
-}
-
 const userReduce = (state = StateTree.activeUser, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
@@ -122,25 +100,25 @@ const userReduce = (state = StateTree.activeUser, action) => {
   }
 }
 
-const usernameExistsReduce = (state = StateTree.usernameExists, action) => {
+const errorMessageReduce = (state = StateTree.errorMessages, action) => {
   switch (action.type) {
+    case SIGN_IN_FAILED:
+      return { ...state, loginFailed: true }
+    case NETWORK_FAILED:
+      return { ...state, networkFailed: true }
     case USERNAME_EXISTS:
-      return true;
-    case CLEAR_FAILURE_MESSAGES:
-      return false;
-    default:
-      return state;
-  }
-}
-
-const emptyFieldsReduce = (state = StateTree.emptyFields, action) => {
-  switch (action.type) {
+      return { ...state, usernameExists: true }
     case EMPTY_FIELDS:
-      return true;
-    case CLEAR_FAILURE_MESSAGES:
-      return false;
+      return { ...state, emptyFields: true }
+    case CLEAR_ERROR_MESSAGES:
+      return {
+        loginFailed: false,
+        networkFailed: false,
+        usernameExists: false,
+        emptyFields: false
+      }
     default:
-      return state;
+      return state
   }
 }
 
@@ -166,13 +144,10 @@ export default combineReducers({
   activeUser: userReduce,
   activeRecipes: activeRecipesReduce,
   viewedRecipeIds: viewedRecipesReduce,
-  isDetailVisible: detailVisibilityReduce,
   detailRecipeId: detailRecipeIdReduce,
+  isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,
-  emptyFields: emptyFieldsReduce,
-  usernameExists: usernameExistsReduce,
   isLoggedIn: loginReduce,
-  loginFailed: loginFailureReduce,
-  networkFailed: networkFailureReduce,
+  errorMessages: errorMessageReduce,
   snackbar: snackbarReduce
 });

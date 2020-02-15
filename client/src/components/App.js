@@ -9,9 +9,10 @@ import Spinner from './Spinner';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import RecipeTab from './RecipeTab';
+import SearchTab from './SearchTab';
 import SuccessSnackbar from './SuccessSnackbar';
 import { FETCH_USER, FETCH_RECIPE_REQUESTED } from '../actions';
-import { SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme }
+import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme }
 from '../variables/Constants';
 
 class App extends React.Component {
@@ -35,11 +36,12 @@ class App extends React.Component {
         {this.props.isSpinnerVisible && <Spinner />}
         <SuccessSnackbar/>
         <TabPanel />
+        {this.props.activeTab === SEARCH_TAB && <SearchTab />}
         <BottomBar />
         <Container
           component="main"
           maxWidth="xs"
-          style={{padding:"50px 0 10px 0"}}
+          style={{padding:"50px 0 10px"}}
         >
           <CssBaseline />
           {this.props.activeTab === SIGN_UP_TAB && <SignUp />}

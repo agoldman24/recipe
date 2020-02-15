@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_UP_TAB, formTheme } from '../variables/Constants';
-import { FETCH_USER, SET_ACTIVE_TAB, HIDE_SPINNER, CLEAR_FAILURE_MESSAGES }
+import { FETCH_USER, SET_ACTIVE_TAB, HIDE_SPINNER, CLEAR_ERROR_MESSAGES }
 from '../actions';
 
 const useStyles = makeStyles(formTheme);
@@ -106,14 +106,14 @@ const SignIn = props => {
 
 const mapStateToProps = state => {
   return {
-    loginFailed: state.loginFailed,
-    networkFailed: state.networkFailed
+    loginFailed: state.errorMessages.loginFailed,
+    networkFailed: state.errorMessages.networkFailed
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    clearErrorMessages: () => dispatch({ type: CLEAR_FAILURE_MESSAGES }),
+    clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
     hideSpinner: () => dispatch({ type: HIDE_SPINNER }),
     fetchUser: (username, password) => dispatch({
       type: FETCH_USER, username, password

@@ -6,13 +6,13 @@ import {
   ADD_VIEWED_RECIPE,
   TOGGLE_SPINNER_VISIBILITY,
   NETWORK_FAILED,
-  CLEAR_FAILURE_MESSAGES
+  CLEAR_ERROR_MESSAGES
 } from '../actions';
 
 const getViewedRecipeIds = state => state.viewedRecipeIds;
 
 function* fetchRecipe() {
-  yield put({ type: CLEAR_FAILURE_MESSAGES });
+  yield put({ type: CLEAR_ERROR_MESSAGES });
   yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const viewedRecipeIds = yield select(getViewedRecipeIds);

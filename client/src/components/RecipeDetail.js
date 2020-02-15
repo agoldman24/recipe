@@ -39,7 +39,7 @@ const RecipeDetail = props => {
     marginLeft: '5%',
     width: '90%',
     fontSize: '16px',
-    paddingBottom: '20%',
+    paddingBottom: '30%',
     lineHeight: '2'
   }
   return (

@@ -36,7 +36,7 @@ function* fetchRecipe() {
           item: data['strIngredient' + (i + 1)],
           quantity: data['strMeasure' + (i + 1)]
         };
-      }),
+      }).filter(ingredient => !!ingredient.item),
       timestamp: new Date()
     });
   } catch (err) {

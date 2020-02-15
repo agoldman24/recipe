@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CloseIcon from '@material-ui/icons/Close';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import SimpleTable from './SimpleTable';
 import { isMobile } from 'react-device-detect';
 import { TOGGLE_RECIPE_DETAILS } from '../actions';
 
@@ -30,12 +31,23 @@ const RecipeDetail = props => {
     zIndex: '5',
     top: '0'
   };
+  const titleStyle = {
+    padding: '20px',
+    fontFamily: 'Shadows Into Light',
+  }
+  const sectionStyle = {
+    marginLeft: '5%',
+    width: '90%',
+    fontSize: '16px',
+    paddingBottom: '20%',
+    lineHeight: '2'
+  }
   return (
     <Card style={detailedStyle}>
       <CardHeader
         title={
           <Typography
-            variant="h4"
+            variant="h3"
             style={{
               fontWeight:'bold', fontFamily:'Shadows Into Light'
             }}
@@ -73,10 +85,10 @@ const RecipeDetail = props => {
             <FavoriteBorderIcon style={iconStyle}/>
           </Fab>
         </div>
-        <div style={{padding:'20px 20px 200px 20px'}}>
-          <Typography variant="h5">Directions:</Typography>
-          <Typography variant="h6">{props.directions}</Typography>
-        </div>
+        <Typography style={titleStyle} variant="h3">Ingredients</Typography>
+        <SimpleTable ingredients={props.ingredients}/>
+        <Typography style={titleStyle} variant="h3">Directions</Typography>
+        <Typography style={sectionStyle}>{props.directions}</Typography>
       </CardMedia>
     </Card>
   );

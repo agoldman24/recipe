@@ -8,8 +8,16 @@ const getSecret = require("./secret");
 const User = require('./user');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-
 const app = express();
+const router = express.Router();
+
+mongoose.connect(getSecret("dbUri"), {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+let db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+
 if (process.env.NODE_ENV === 'production') {
   app.use((req, res, next) => {
     if (req.header('x-forwarded-proto') !== 'https')
@@ -18,19 +26,13 @@ if (process.env.NODE_ENV === 'production') {
       next()
   })
 }
-const router = express.Router();
-
-mongoose.connect(getSecret("dbUri"), { useNewUrlParser: true, useUnifiedTopology: true });
-let db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-router.get("/user", (req, res) => {
+router.get("/getUser", (req, res) => {
   const { username, password } = req.query;
   db.collection("users").findOne({
     username: username
@@ -77,11 +79,9 @@ router.post("/addUser", (req, res) => {
 
 app.use("/api", router);
 
-// For any request that doesn't match one above, send back index.html file
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
 
 const port = process.env.PORT || 9000;
-
 app.listen(port, () => console.log(`LISTENING ON PORT ${port}`));

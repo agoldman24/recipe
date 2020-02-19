@@ -16,7 +16,7 @@ function* fetchUser(action) {
   try {
     const { username, password } = action;
     const { data } = yield call(Api.get,
-      '/user?username=' + username + "&password=" + password
+      '/getUser?username=' + username + "&password=" + password
     );
     if (data.success) {
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });

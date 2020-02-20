@@ -48,23 +48,23 @@ export default function RecipeButtons() {
           }}
         />
         <FormControlLabel
-          value="By Others"
+          value="By Friends"
           control={<Radio color="primary" />}
-          label="By Others"
+          label="By Friends"
           labelPlacement="bottom"
           style={{
-            color: value === "By Others"
+            color: value === "By Friends"
               ? defaultTheme.palette.primary.main
               : 'white'
           }}
         />
         <FormControlLabel
-          value="Random"
+          value="Samples"
           control={<Radio color="primary" />}
-          label="Random"
+          label="Samples"
           labelPlacement="bottom"
           style={{
-            color: value === "Random"
+            color: value === "Samples"
               ? defaultTheme.palette.primary.main
               : 'white'
           }}

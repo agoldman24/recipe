@@ -34,9 +34,7 @@ const DrawerMenu = props => {
         break;
       case "Recipe Book":
         break;
-      case "Followers":
-        break;
-      case "Follorwing":
+      case "Friends":
         break;
       case "Sign Out":
         props.signOut();
@@ -52,8 +50,7 @@ const DrawerMenu = props => {
         return <PersonIcon />
       case "Recipe Book":
         return <MenuBookIcon />;
-      case "Followers":
-      case "Following":
+      case "Friends":
         return <PeopleIcon />
       case "Sign Out":
         return <ExitToAppIcon />;
@@ -69,7 +66,7 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Recipe Book', 'Followers', 'Following', 'Sign Out']
+        {['Profile', 'Recipe Book', 'Friends', 'Sign Out']
         .map((text, index) => (
           <ListItem
             button

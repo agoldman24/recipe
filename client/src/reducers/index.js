@@ -5,11 +5,14 @@ import {
   SET_ACTIVE_RECIPE,
   ADD_VIEWED_RECIPE,
   TOGGLE_RECIPE_DETAILS,
-  TOGGLE_SPINNER_VISIBILITY,
-  HIDE_SPINNER,
   EMPTY_FIELDS,
   USERNAME_EXISTS,
+  ADD_USER,
+  GET_USER,
+  GET_ALL_USERS,
+  GET_RECIPE_REQUESTED,
   SET_ACTIVE_USER,
+  POPULATE_USERS,
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
@@ -30,9 +33,18 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
-    case TOGGLE_SPINNER_VISIBILITY:
-      return !state;
-    case HIDE_SPINNER:
+    case ADD_USER:
+    case GET_USER:
+    case GET_ALL_USERS:
+    case GET_RECIPE_REQUESTED:
+      return true;
+    case POPULATE_USERS:
+    case SET_ACTIVE_USER:
+    case SET_ACTIVE_RECIPE:
+    case SET_ACTIVE_TAB:
+    case NETWORK_FAILED:
+    case SIGN_IN_FAILED:
+    case USERNAME_EXISTS:
       return false;
     default:
       return state;
@@ -91,7 +103,16 @@ const loginReduce = (state = StateTree.isLoggedIn, action) => {
   }
 }
 
-const userReduce = (state = StateTree.activeUser, action) => {
+const usersReduce = (state = StateTree.users, action) => {
+  switch (action.type) {
+    case POPULATE_USERS:
+      return action.users;
+    default:
+      return state;
+  }
+}
+
+const activeUserReduce = (state = StateTree.activeUser, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
       return action.user;
@@ -141,7 +162,6 @@ export const snackbarReduce = (state = StateTree.snackbar, action) => {
 
 export default combineReducers({
   activeTab: activeTabReduce,
-  activeUser: userReduce,
   activeRecipes: activeRecipesReduce,
   viewedRecipeIds: viewedRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
@@ -149,5 +169,7 @@ export default combineReducers({
   isSpinnerVisible: spinnerReduce,
   isLoggedIn: loginReduce,
   errorMessages: errorMessageReduce,
-  snackbar: snackbarReduce
+  snackbar: snackbarReduce,
+  users: usersReduce,
+  activeUser: activeUserReduce
 });

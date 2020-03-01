@@ -4,7 +4,6 @@ import {
   ADD_USER,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
-  TOGGLE_SPINNER_VISIBILITY,
   USERNAME_EXISTS,
   NETWORK_FAILED,
   SHOW_SNACKBAR
@@ -12,7 +11,6 @@ import {
 import { RECIPE_TAB } from '../variables/Constants';
 
 function* addUser(action) {
-  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
   try {
     const { firstName, lastName, username, password } = action;
     const { data } = yield call(Api.post, '/addUser', {
@@ -31,7 +29,6 @@ function* addUser(action) {
     yield put({ type: NETWORK_FAILED });
     console.log(err);
   }
-  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
 }
 
 function* addUserSaga() {

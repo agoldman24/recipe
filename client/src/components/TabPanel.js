@@ -5,7 +5,7 @@ import Tab from '@material-ui/core/Tab';
 import DrawerMenu from './DrawerMenu';
 import SearchIcon from '@material-ui/icons/Search';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES, HIDE_SPINNER } from '../actions';
+import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../actions';
 import { connect } from 'react-redux';
 import { SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB, SEARCH_TAB, defaultTheme }
 from '../variables/Constants';
@@ -14,7 +14,6 @@ const TabPanel = props => {
 
   const handleChange = (event, newValue) => {
     props.clearFailureMessages();
-    props.hideSpinner();
     props.setActiveTab(newValue);
   };
 
@@ -67,8 +66,7 @@ const TabPanel = props => {
 const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
-    isLoggedIn: state.isLoggedIn,
-    activeUser: state.activeUser
+    isLoggedIn: state.isLoggedIn
   };
 };
 
@@ -76,7 +74,6 @@ const mapDispatchToProps = dispatch => {
   return {
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab }),
     clearFailureMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
-    hideSpinner: () => dispatch({ type: HIDE_SPINNER })
   }
 };
 

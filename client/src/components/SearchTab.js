@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     marginLeft: isMobile ? '5%' : '10%',
     width: isMobile ? '90%' : '80%',
-    marginTop: '100px'
+    marginTop: '75px'
   },
   searchIcon: {
     width: theme.spacing(7),

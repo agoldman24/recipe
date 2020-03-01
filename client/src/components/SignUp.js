@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_IN_TAB, formTheme } from '../variables/Constants';
-import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS, HIDE_SPINNER, CLEAR_ERROR_MESSAGES }
+import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES }
 from '../actions';
 
 const useStyles = makeStyles(formTheme);
@@ -133,7 +133,6 @@ const SignUp = props => {
                 variant="body2"
                 color="primary"
                 onClick={() => {
-                  props.hideSpinner();
                   props.setActiveTab(SIGN_IN_TAB);
                 }}>
                 Already have an account? Sign in
@@ -158,7 +157,6 @@ const mapDispatchToProps = dispatch => {
   return {
     putEmptyFieldsError: () => dispatch({ type: EMPTY_FIELDS }),
     clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
-    hideSpinner: () => dispatch({ type: HIDE_SPINNER }),
     addUser: (firstName, lastName, username, password) => dispatch({
       type: ADD_USER, firstName, lastName, username, password
     }),

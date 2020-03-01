@@ -42,16 +42,29 @@ router.get("/getUser", (req, res) => {
     } else {
       bcrypt.compare(password, user.password, function (err, result) {
         if (result) {
-          const { id, username, firstName, lastName, favorites } = user;
+          const { _id, username, firstName, lastName } = user;
           res.json({
             success: true,
-            user: { id, username, firstName, lastName, favorites }
+            user: { id: _id, username, firstName, lastName }
           });
         } else {
           return res.json({ success: false });
         }
       });
     }
+  });
+});
+
+router.get("/getAllUsers", (req, res) => {
+  db.collection("users").find({}, {}).toArray().then(function (users) {
+    return res.json({
+      success: true,
+      users: users.reduce((accum, user) => {
+        const { _id, username, firstName, lastName } = user;
+        accum[_id] = { id: _id, username, firstName, lastName }
+        return accum;
+      }, {})
+    });
   });
 });
 

@@ -1,18 +1,16 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
-  FETCH_USER,
+  GET_USER,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   SIGN_IN_FAILED,
-  TOGGLE_SPINNER_VISIBILITY,
   NETWORK_FAILED,
   SHOW_SNACKBAR
 } from '../actions';
 import { RECIPE_TAB } from '../variables/Constants';
 
-function* fetchUser(action) {
-  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
+function* getUser(action) {
   try {
     const { username, password } = action;
     const { data } = yield call(Api.get,
@@ -33,11 +31,10 @@ function* fetchUser(action) {
     yield put({ type: NETWORK_FAILED });
     console.log(err);
   }
-  yield put({ type: TOGGLE_SPINNER_VISIBILITY });
 }
 
-function* fetchUserSaga() {
-  yield takeLatest(FETCH_USER, fetchUser);
+function* getUserSaga() {
+  yield takeLatest(GET_USER, getUser);
 }
 
-export default fetchUserSaga;
+export default getUserSaga;

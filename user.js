@@ -7,7 +7,10 @@ const UserSchema = new Schema(
     lastName: String,
     username: String,
     password: String,
-    favorites: Array
+    friendIds: Array,
+    createdRecipeIds: Array,
+    friendRecipeIds: Array,
+    sampleRecipeIds: Array
   }
 );
 

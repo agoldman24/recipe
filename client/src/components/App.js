@@ -11,7 +11,7 @@ import SignUp from './SignUp';
 import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
 import SuccessSnackbar from './SuccessSnackbar';
-import { FETCH_USER, FETCH_RECIPE_REQUESTED } from '../actions';
+import { GET_USER, GET_ALL_USERS, GET_RECIPE_REQUESTED } from '../actions';
 import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme }
 from '../variables/Constants';
 
@@ -19,7 +19,7 @@ class App extends React.Component {
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
     if (!!localStorage.getItem("username")) {
-      this.props.fetchUser(
+      this.props.getUser(
         localStorage.getItem("username"),
         localStorage.getItem("password")
       );
@@ -27,6 +27,7 @@ class App extends React.Component {
     if (!Object.keys(this.props.activeRecipes).length) {
       this.props.getRandomRecipe();
     }
+    this.props.getAllUsers();
   }
   render() {
     return (
@@ -64,10 +65,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchUser: (username, password) => dispatch({
-      type: FETCH_USER, username, password
+    getUser: (username, password) => dispatch({
+      type: GET_USER, username, password
     }),
-    getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED })
+    getAllUsers: () => dispatch({ type: GET_ALL_USERS }),
+    getRandomRecipe: () => dispatch({ type: GET_RECIPE_REQUESTED })
   };
 }
 

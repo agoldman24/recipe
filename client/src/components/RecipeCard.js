@@ -10,7 +10,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { isMobile } from 'react-device-detect';
-import { FETCH_RECIPE_REQUESTED, TOGGLE_RECIPE_DETAILS } from '../actions';
+import { GET_RECIPE_REQUESTED, TOGGLE_RECIPE_DETAILS } from '../actions';
 
 const RecipeCard = props => {
   const fabStyle = {
@@ -105,7 +105,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRandomRecipe: () => dispatch({ type: FETCH_RECIPE_REQUESTED }),
+    getRandomRecipe: () => dispatch({ type: GET_RECIPE_REQUESTED }),
     toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id })
   };
 };

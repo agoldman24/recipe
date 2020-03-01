@@ -1,20 +1,18 @@
 /* Recipe actions */
-export const FETCH_RECIPE_REQUESTED = 'FETCH_RECIPE_REQUESTED';
+export const GET_RECIPE_REQUESTED = 'GET_RECIPE_REQUESTED';
 export const SET_ACTIVE_RECIPE = 'SET_ACTIVE_RECIPE';
 export const ADD_VIEWED_RECIPE = 'ADD_VIEWED_RECIPE';
 export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 
 /* User actions */
 export const ADD_USER = 'ADD_USER';
-export const FETCH_USER = 'FETCH_USER';
+export const GET_USER = 'GET_USER';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
+export const GET_ALL_USERS = 'GET_ALL_USERS';
+export const POPULATE_USERS = 'POPULATE_USERS';
 
 /* Tab actions */
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
-
-/* Spinner actions */
-export const TOGGLE_SPINNER_VISIBILITY = 'TOGGLE_SPINNER_VISIBILITY';
-export const HIDE_SPINNER = 'HIDE_SPINNER';
 
 /* Sign in/out actions */
 export const SIGN_IN_FAILED = 'SIGN_IN_FAILED';

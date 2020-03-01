@@ -19,10 +19,20 @@ export default Object.assign({},
     loginFailed: false,
     networkFailed: false
   },
+  users: {},
   activeUser: {
     id: "",
+    username: "",
     firstName: "",
-    lastName: "",
-    username: ""
+    lastName: ""
+  },
+  displayUser: {
+    id: "",
+    username: "",
+    firstname: "",
+    lastname: "",
+    friends: {},
+    createdRecipes: {},
+    savedRecipes: {}
   }
 });

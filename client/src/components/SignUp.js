@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
@@ -42,12 +41,11 @@ const SignUp = props => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h4" style={{fontFamily: 'Signika'}}>
           Sign up
         </Typography>
         <form className={classes.form}>
@@ -133,6 +131,7 @@ const SignUp = props => {
                 variant="body2"
                 color="primary"
                 onClick={() => {
+                  props.clearErrorMessages();
                   props.setActiveTab(SIGN_IN_TAB);
                 }}>
                 Already have an account? Sign in

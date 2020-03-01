@@ -59,6 +59,8 @@ const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
         ...state,
         [id]: { id, name, image, ingredients, directions, timestamp }
       }
+    case SIGN_OUT:
+      return {};
     default:
       return state;
   }

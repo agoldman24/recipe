@@ -3,7 +3,6 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import DrawerMenu from './DrawerMenu';
-import SearchIcon from '@material-ui/icons/Search';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../actions';
 import { connect } from 'react-redux';
@@ -37,11 +36,7 @@ const TabPanel = props => {
           textColor="primary"
           onChange={handleChange}
         >
-          <Tab
-            style={tabStyle}
-            label={<div><SearchIcon style={{verticalAlign:'top'}}/> Search</div>}
-            value={SEARCH_TAB}
-          />
+          <Tab style={tabStyle} label={"Users"} value={SEARCH_TAB}/>
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
           <DrawerMenu />
         </Tabs>

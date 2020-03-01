@@ -2,6 +2,7 @@ export const RECIPE_TAB = "RECIPE_TAB";
 export const SIGN_IN_TAB = "SIGN_IN_TAB";
 export const SIGN_UP_TAB = "SIGN_UP_TAB";
 export const SEARCH_TAB = "SEARCH_TAB";
+export const WELCOME_TAB = "WELCOME_TAB";
 
 export const defaultTheme = {
   palette: {
@@ -47,6 +48,7 @@ export const formTheme = theme => ({
     color: '#000000',
     fontWeight: 'bold',
     fontSize: '16px',
+    fontFamily: 'Signika',
     background: defaultTheme.palette.primary.mainGradient
   }
 });

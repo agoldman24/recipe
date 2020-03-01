@@ -1,8 +1,8 @@
-import { RECIPE_TAB } from "../variables/Constants";
+import { WELCOME_TAB } from "../variables/Constants";
 
 export default Object.assign({},
 {
-  activeTab: RECIPE_TAB,
+  activeTab: WELCOME_TAB,
   activeRecipes: {},
   viewedRecipeIds: [],
   detailRecipeId: "",

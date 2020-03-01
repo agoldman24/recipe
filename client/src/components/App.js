@@ -4,16 +4,26 @@ import TabPanel from './TabPanel';
 import BottomBar from './BottomBar';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import HomeIcon from '@material-ui/icons/Home';
+import Fab from '@material-ui/core/Fab';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Spinner from './Spinner';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
+import WelcomeTab from './WelcomeTab';
 import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
 import SuccessSnackbar from './SuccessSnackbar';
-import { GET_USER, GET_ALL_USERS, GET_RECIPE_REQUESTED } from '../actions';
-import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, defaultTheme }
+import { GET_USER, GET_ALL_USERS, SET_ACTIVE_TAB } from '../actions';
+import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, WELCOME_TAB, defaultTheme }
 from '../variables/Constants';
+
+const fabStyle = {
+  float: 'right',
+  background: 'none',
+  boxShadow: 'none',
+  color: 'white',
+};
 
 class App extends React.Component {
   componentDidMount() {
@@ -24,9 +34,6 @@ class App extends React.Component {
         localStorage.getItem("password")
       );
     }
-    if (!Object.keys(this.props.activeRecipes).length) {
-      this.props.getRandomRecipe();
-    }
     this.props.getAllUsers();
   }
   render() {
@@ -34,9 +41,19 @@ class App extends React.Component {
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
       }>
-        {this.props.isSpinnerVisible && <Spinner />}
         <SuccessSnackbar/>
-        <TabPanel />
+        {this.props.activeTab === SIGN_UP_TAB
+        || this.props.activeTab === SIGN_IN_TAB
+        || this.props.activeTab === SEARCH_TAB
+        ? <Fab
+            style={fabStyle}
+            onClick={() => this.props.setActiveTab(WELCOME_TAB)}
+          >
+            <HomeIcon style={{height:'40', width:'40'}}/>
+          </Fab>
+        : null}
+        {this.props.isSpinnerVisible && <Spinner />}
+        {this.props.isLoggedIn && <TabPanel />}
         {this.props.activeTab === SEARCH_TAB && <SearchTab />}
         <BottomBar />
         <Container
@@ -45,6 +62,7 @@ class App extends React.Component {
           style={{padding:"50px 0 10px"}}
         >
           <CssBaseline />
+          {this.props.activeTab === WELCOME_TAB && <WelcomeTab />}
           {this.props.activeTab === SIGN_UP_TAB && <SignUp />}
           {this.props.activeTab === RECIPE_TAB && <RecipeTab />}
           {this.props.activeTab === SIGN_IN_TAB && <SignIn />}
@@ -60,6 +78,7 @@ const mapStateToProps = state => {
     activeRecipes: state.activeRecipes,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
+    isLoggedIn: state.isLoggedIn
   };
 }
 
@@ -69,7 +88,7 @@ const mapDispatchToProps = dispatch => {
       type: GET_USER, username, password
     }),
     getAllUsers: () => dispatch({ type: GET_ALL_USERS }),
-    getRandomRecipe: () => dispatch({ type: GET_RECIPE_REQUESTED })
+    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   };
 }
 

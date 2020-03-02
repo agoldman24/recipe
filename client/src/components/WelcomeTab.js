@@ -15,8 +15,8 @@ const errorStyle = {
 
 const gradientTextStyle = {
   background: defaultTheme.palette.primary.mainGradient,
-	webkitBackgroundClip: 'text',
-	webkitTextFillColor: 'transparent'
+	WebkitBackgroundClip: 'text',
+	WebkitTextFillColor: 'transparent'
 }
 
 const buttonStyle = {
@@ -37,7 +37,7 @@ const WelcomeTab = props => {
     : <Grid
         container
         direction="column"
-        style={{alignItems:'center'}}
+        style={{alignItems:'center', zIndex:'2'}}
       >
         <Grid item style={{marginBottom:'20px'}}>
           <Typography

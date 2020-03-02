@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CloseIcon from '@material-ui/icons/Close';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import SimpleTable from './SimpleTable';
+import IngredientsTable from './IngredientsTable';
 import { isMobile } from 'react-device-detect';
 import { TOGGLE_RECIPE_DETAILS } from '../actions';
 
@@ -86,7 +86,7 @@ const RecipeDetail = props => {
           </Fab>
         </div>
         <Typography style={titleStyle} variant="h3">Ingredients</Typography>
-        <SimpleTable ingredients={props.ingredients}/>
+        <IngredientsTable ingredients={props.ingredients}/>
         <Typography style={titleStyle} variant="h3">Directions</Typography>
         <Typography style={sectionStyle}>{props.directions}</Typography>
       </CardMedia>

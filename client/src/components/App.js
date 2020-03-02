@@ -19,7 +19,8 @@ import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, WELCOME_TAB, defaultT
 from '../variables/Constants';
 
 const fabStyle = {
-  float: 'right',
+  position: 'fixed',
+  right: 10,
   background: 'none',
   boxShadow: 'none',
   color: 'white',

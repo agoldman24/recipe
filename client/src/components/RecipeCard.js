@@ -87,13 +87,13 @@ const RecipeCard = props => {
             <ArrowForwardIosIcon style={iconStyle}/>
           </Fab>
         </div>
-        <div style={{
+        {/* <div style={{
           position:'absolute',
           bottom:'0',
           width:'100%',
           height:'50px',
           backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
-        }}/>
+        }}/> */}
       </CardMedia>
     </Card>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import TabPanel from './TabPanel';
-import BottomBar from './BottomBar';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import HomeIcon from '@material-ui/icons/Home';
@@ -21,6 +20,7 @@ from '../variables/Constants';
 const fabStyle = {
   position: 'fixed',
   right: 10,
+  top: 5,
   background: 'none',
   boxShadow: 'none',
   color: 'white',
@@ -46,6 +46,7 @@ class App extends React.Component {
         {this.props.activeTab === SIGN_UP_TAB
         || this.props.activeTab === SIGN_IN_TAB
         || this.props.activeTab === SEARCH_TAB
+        || (this.props.activeTab === RECIPE_TAB && !this.props.isLoggedIn)
         ? <Fab
             style={fabStyle}
             onClick={() => this.props.setActiveTab(WELCOME_TAB)}
@@ -56,7 +57,6 @@ class App extends React.Component {
         {this.props.isSpinnerVisible && <Spinner />}
         {this.props.isLoggedIn && <TabPanel />}
         {this.props.activeTab === SEARCH_TAB && <SearchTab />}
-        <BottomBar />
         <Container
           component="main"
           maxWidth="xs"

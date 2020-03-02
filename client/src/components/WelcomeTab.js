@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { SET_ACTIVE_TAB } from '../actions';
-import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, defaultTheme }
+import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, defaultTheme }
 from '../variables/Constants';
 
 const errorStyle = {
@@ -37,7 +37,7 @@ const WelcomeTab = props => {
     : <Grid
         container
         direction="column"
-        style={{alignItems:'center', zIndex:'2'}}
+        style={{alignItems:'center'}}
       >
         <Grid item style={{marginBottom:'20px'}}>
           <Typography
@@ -54,7 +54,7 @@ const WelcomeTab = props => {
           <Typography
             variant="h1"
             style={{
-              float:'left', fontFamily:'Glegoo'
+              float:'left', fontFamily:'Open Sans Condensed'
             }}
           >
             Book
@@ -80,12 +80,25 @@ const WelcomeTab = props => {
             variant="outlined"
             style={{
               ...buttonStyle,
-              borderColor: '#ffa200',
-              color: '#ffa200'
+              borderColor: '#ffb700',
+              color: '#ffb700'
             }}
             onClick={() => props.setActiveTab(SIGN_UP_TAB)}
           >
             Sign Up
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            fullWidth
+            variant="outlined"
+            style={{
+              ...buttonStyle,
+              borderColor: '#ff7b00',
+              color: '#ff7b00'
+            }}
+          >
+            About
           </Button>
         </Grid>
         <Grid item>
@@ -99,7 +112,7 @@ const WelcomeTab = props => {
             }}
             onClick={() => props.setActiveTab(SEARCH_TAB)}
           >
-            Search Users
+            Users
           </Button>
         </Grid>
         <Grid item>
@@ -111,8 +124,9 @@ const WelcomeTab = props => {
               borderColor: '#ff2e70',
               color: '#ff2e70'
             }}
+            onClick={() => props.setActiveTab(RECIPE_TAB)}
           >
-            View Samples
+            Samples
           </Button>
         </Grid>
       </Grid>

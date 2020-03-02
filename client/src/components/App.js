@@ -19,6 +19,7 @@ from '../variables/Constants';
 
 const fabStyle = {
   position: 'fixed',
+  right: 5,
   background: 'none',
   boxShadow: 'none',
   color: 'white',

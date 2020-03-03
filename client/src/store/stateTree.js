@@ -24,7 +24,11 @@ export default Object.assign({},
     id: "",
     username: "",
     firstName: "",
-    lastName: ""
+    lastName: "",
+    friendIds: [],
+    createdRecipeIds: [],
+    friendRecipeIds: [],
+    sampleRecipeIds: []
   },
   displayUser: {
     id: "",

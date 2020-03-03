@@ -7,12 +7,6 @@ import { SET_ACTIVE_TAB } from '../actions';
 import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, defaultTheme }
 from '../variables/Constants';
 
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200',
-  paddingTop:'50px'
-};
-
 const gradientTextStyle = {
   background: defaultTheme.palette.primary.mainGradient,
 	WebkitBackgroundClip: 'text',
@@ -31,107 +25,102 @@ const buttonStyle = {
 
 const WelcomeTab = props => {
   return (
-    <div>
-    {props.networkFailed
-    ? <div style={errorStyle}>Network error</div>
-    : <Grid
-        container
-        direction="column"
-        style={{alignItems:'center'}}
-      >
-        <Grid item style={{marginBottom:'20px'}}>
-          <Typography
-            variant="h1"
-            style={{
-              float:'left',
-              fontWeight:'bold',
-              fontFamily:'Shadows Into Light',
-              ...gradientTextStyle
-            }}
-          >
-            Recipe
-          </Typography>
-          <Typography
-            variant="h1"
-            style={{
-              float:'left', fontFamily:'Open Sans Condensed'
-            }}
-          >
-            Book
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            variant="outlined"
-            style={{
-              ...buttonStyle,
-              borderColor: 'yellow',
-              color: 'yellow'
-            }}
-            onClick={() => props.setActiveTab(SIGN_IN_TAB)}
-          >
-            Sign In
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            variant="outlined"
-            style={{
-              ...buttonStyle,
-              borderColor: '#ffb700',
-              color: '#ffb700'
-            }}
-            onClick={() => props.setActiveTab(SIGN_UP_TAB)}
-          >
-            Sign Up
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            variant="outlined"
-            style={{
-              ...buttonStyle,
-              borderColor: '#ff7b00',
-              color: '#ff7b00'
-            }}
-          >
-            About
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            variant="outlined"
-            style={{
-              ...buttonStyle,
-              borderColor: '#ff441f',
-              color: '#ff441f'
-            }}
-            onClick={() => props.setActiveTab(SEARCH_TAB)}
-          >
-            Users
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            variant="outlined"
-            style={{
-              ...buttonStyle,
-              borderColor: '#ff2e70',
-              color: '#ff2e70'
-            }}
-            onClick={() => props.setActiveTab(RECIPE_TAB)}
-          >
-            Samples
-          </Button>
-        </Grid>
+    <Grid
+      container
+      direction="column"
+      style={{alignItems:'center'}}
+    >
+      <Grid item style={{marginBottom:'20px'}}>
+        <Typography
+          variant="h1"
+          style={{
+            float:'left',
+            fontWeight:'bold',
+            fontFamily:'Shadows Into Light',
+            ...gradientTextStyle
+          }}
+        >
+          Recipe
+        </Typography>
+        <Typography
+          variant="h1"
+          style={{
+            float:'left', fontFamily:'Open Sans Condensed'
+          }}
+        >
+          Book
+        </Typography>
       </Grid>
-    }
-    </div>
+      <Grid item>
+        <Button
+          fullWidth
+          variant="outlined"
+          style={{
+            ...buttonStyle,
+            borderColor: 'yellow',
+            color: 'yellow'
+          }}
+          onClick={() => props.setActiveTab(SIGN_IN_TAB)}
+        >
+          Sign In
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          fullWidth
+          variant="outlined"
+          style={{
+            ...buttonStyle,
+            borderColor: '#ffb700',
+            color: '#ffb700'
+          }}
+          onClick={() => props.setActiveTab(SIGN_UP_TAB)}
+        >
+          Sign Up
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          fullWidth
+          variant="outlined"
+          style={{
+            ...buttonStyle,
+            borderColor: '#ff7b00',
+            color: '#ff7b00'
+          }}
+        >
+          About
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          fullWidth
+          variant="outlined"
+          style={{
+            ...buttonStyle,
+            borderColor: '#ff441f',
+            color: '#ff441f'
+          }}
+          onClick={() => props.setActiveTab(SEARCH_TAB)}
+        >
+          Users
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          fullWidth
+          variant="outlined"
+          style={{
+            ...buttonStyle,
+            borderColor: '#ff2e70',
+            color: '#ff2e70'
+          }}
+          onClick={() => props.setActiveTab(RECIPE_TAB)}
+        >
+          Samples
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 

@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_IN_TAB, formTheme } from '../variables/Constants';
-import { ADD_USER, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES }
+import { CREATE_USER, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES }
 from '../actions';
 
 const useStyles = makeStyles(formTheme);
@@ -157,7 +157,7 @@ const mapDispatchToProps = dispatch => {
     putEmptyFieldsError: () => dispatch({ type: EMPTY_FIELDS }),
     clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
     addUser: (firstName, lastName, username, password) => dispatch({
-      type: ADD_USER, firstName, lastName, username, password
+      type: CREATE_USER, firstName, lastName, username, password
     }),
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   }

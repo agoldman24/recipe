@@ -5,7 +5,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
-import BottomBar from './BottomBar';
 import { defaultTheme } from '../variables/Constants';
 
 export default function RecipeButtons() {
@@ -13,7 +12,7 @@ export default function RecipeButtons() {
     position: 'fixed',
     width: '100vw',
     left: '0',
-    bottom: '3vh',
+    bottom: '15px',
     zIndex: '2'
   };
   const fabStyle = {
@@ -31,7 +30,15 @@ export default function RecipeButtons() {
 
   return (
     <div>
-      <BottomBar />
+      <div style={{
+        position:'fixed',
+        width:'100vw',
+        height:'80px',
+        bottom:'0',
+        left:'0',
+        backgroundImage:'linear-gradient(#202020, black)',
+        zIndex:'1'
+      }}/>
       <FormControl component="fieldset" style={radioStyle}>
         <RadioGroup
           value={value}

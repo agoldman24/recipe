@@ -42,11 +42,7 @@ router.get("/getUser", (req, res) => {
     } else {
       bcrypt.compare(password, user.password, function (err, result) {
         if (result) {
-          const { _id, username, firstName, lastName } = user;
-          res.json({
-            success: true,
-            user: { id: _id, username, firstName, lastName }
-          });
+          res.json({ success: true, user });
         } else {
           return res.json({ success: false });
         }
@@ -60,8 +56,11 @@ router.get("/getAllUsers", (req, res) => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
-        const { _id, username, firstName, lastName } = user;
-        accum[_id] = { id: _id, username, firstName, lastName }
+        const derivedUser = { ...user, id: user._id };
+        delete derivedUser._id;
+        delete derivedUser.__v;
+        delete derivedUser.password;
+        accum[user._id] = derivedUser;
         return accum;
       }, {})
     });

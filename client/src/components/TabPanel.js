@@ -29,14 +29,18 @@ const TabPanel = props => {
       <Paper square>
       {props.isLoggedIn
       ? <Tabs
-          value={props.activeTab}
+          value={
+            props.activeTab === SEARCH_TAB || props.activeTab === RECIPE_TAB
+            ? props.activeTab
+            : false
+          }
           style={navBarStyle}
           variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"
           onChange={handleChange}
         >
-          <Tab style={tabStyle} label={"Users"} value={SEARCH_TAB}/>
+          <Tab style={tabStyle} label="Users" value={SEARCH_TAB}/>
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
           <DrawerMenu />
         </Tabs>

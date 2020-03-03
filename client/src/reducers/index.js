@@ -7,6 +7,7 @@ import {
   TOGGLE_RECIPE_DETAILS,
   EMPTY_FIELDS,
   USERNAME_EXISTS,
+  CREATE_USER,
   ADD_USER,
   GET_USER,
   GET_ALL_USERS,
@@ -33,7 +34,7 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
-    case ADD_USER:
+    case CREATE_USER:
     case GET_USER:
     case GET_ALL_USERS:
     case GET_RECIPE_REQUESTED:
@@ -109,6 +110,11 @@ const usersReduce = (state = StateTree.users, action) => {
   switch (action.type) {
     case POPULATE_USERS:
       return action.users;
+    case ADD_USER:
+      return {
+        ...state,
+        [action.user.id]: { ...action.user }
+      };
     default:
       return state;
   }

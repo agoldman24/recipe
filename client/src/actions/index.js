@@ -5,6 +5,7 @@ export const ADD_VIEWED_RECIPE = 'ADD_VIEWED_RECIPE';
 export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 
 /* User actions */
+export const CREATE_USER = 'CREATE_USER';
 export const ADD_USER = 'ADD_USER';
 export const GET_USER = 'GET_USER';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';

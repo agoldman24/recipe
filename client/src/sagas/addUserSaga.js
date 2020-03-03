@@ -1,6 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
+  CREATE_USER,
   ADD_USER,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
@@ -19,8 +20,11 @@ function* addUser(action) {
     if (!data.success) {
       yield put({ type: USERNAME_EXISTS });
     } else {
+      const user = { ...data.user, id: data.user._id };
+      delete user._id; delete user.__v; delete user.password;
+      yield put({ type: ADD_USER, user });
+      yield put({ type: SET_ACTIVE_USER, user });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
-      yield put({ type: SET_ACTIVE_USER, user: data.user });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" }); 
       localStorage.setItem("username", data.username);
       localStorage.setItem("password", data.password);
@@ -32,7 +36,7 @@ function* addUser(action) {
 }
 
 function* addUserSaga() {
-  yield takeLatest(ADD_USER, addUser);
+  yield takeLatest(CREATE_USER, addUser);
 }
 
 export default addUserSaga;

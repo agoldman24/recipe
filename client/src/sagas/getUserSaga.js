@@ -17,8 +17,10 @@ function* getUser(action) {
       '/getUser?username=' + username + "&password=" + password
     );
     if (data.success) {
+      const user = { ...data.user, id: data.user._id };
+      delete user._id; delete user.__v; delete user.password;
+      yield put({ type: SET_ACTIVE_USER, user });
       yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
-      yield put({ type: SET_ACTIVE_USER, user: data.user });
       if (!localStorage.getItem("username")) {
         yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
         localStorage.setItem("username", data.username);

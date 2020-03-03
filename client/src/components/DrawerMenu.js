@@ -13,7 +13,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
 import { SIGN_OUT, SET_ACTIVE_TAB, SHOW_SNACKBAR } from '../actions';
-import { WELCOME_TAB } from '../variables/Constants';
+import { WELCOME_TAB, PROFILE_TAB } from '../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
@@ -90,7 +90,8 @@ const DrawerMenu = props => {
           fontSize:'13px',
           height:'50px',
           borderRadius:'0',
-          opacity: open ? '1.0' : '0.7',
+          color: props.activeTab === PROFILE_TAB ? '#ffe100' : 'white',
+          opacity: open || props.activeTab === PROFILE_TAB ? '1.0' : '0.7',
           background: open
             ? 'linear-gradient(black, #424242)'
             : 'linear-gradient(black, #202020)'
@@ -115,14 +116,15 @@ const DrawerMenu = props => {
 
 const mapStateToProps = state => {
   return {
-    activeUser: state.activeUser
+    activeUser: state.activeUser,
+    activeTab: state.activeTab
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     goToProfile: () => {
-      dispatch({ type: SET_ACTIVE_TAB, tab: false });
+      dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
     },
     signOut: () => {
       dispatch({ type: SET_ACTIVE_TAB, tab: WELCOME_TAB });

@@ -1,21 +1,29 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import TabPanel from './TabPanel';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import HomeIcon from '@material-ui/icons/Home';
 import Fab from '@material-ui/core/Fab';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Spinner from './Spinner';
+import TabPanel from './TabPanel';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import WelcomeTab from './WelcomeTab';
 import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
+import ProfileTab from './ProfileTab';
 import SuccessSnackbar from './SuccessSnackbar';
 import { GET_USER, GET_ALL_USERS, SET_ACTIVE_TAB } from '../actions';
-import { SEARCH_TAB, SIGN_UP_TAB, RECIPE_TAB, SIGN_IN_TAB, WELCOME_TAB, defaultTheme }
-from '../variables/Constants';
+import {
+  SEARCH_TAB,
+  SIGN_UP_TAB,
+  RECIPE_TAB,
+  SIGN_IN_TAB,
+  WELCOME_TAB,
+  PROFILE_TAB,
+  defaultTheme
+} from '../variables/Constants';
 
 const fabStyle = {
   position: 'fixed',
@@ -66,6 +74,7 @@ class App extends React.Component {
           {this.props.activeTab === SIGN_UP_TAB && <SignUp />}
           {this.props.activeTab === RECIPE_TAB && <RecipeTab />}
           {this.props.activeTab === SIGN_IN_TAB && <SignIn />}
+          {this.props.activeTab === PROFILE_TAB && <ProfileTab />}
         </Container>
       </ThemeProvider>
     );

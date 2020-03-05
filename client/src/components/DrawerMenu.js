@@ -32,7 +32,7 @@ const DrawerMenu = props => {
       case "Profile":
         props.goToProfile();
         break;
-      case "Recipe Book":
+      case "Drafts":
         break;
       case "Friends":
         break;
@@ -48,7 +48,7 @@ const DrawerMenu = props => {
     switch (text) {
       case "Profile":
         return <PersonIcon />
-      case "Recipe Book":
+      case "Drafts":
         return <MenuBookIcon />;
       case "Friends":
         return <PeopleIcon />
@@ -66,7 +66,7 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Recipe Book', 'Friends', 'Sign Out']
+        {['Profile', 'Drafts', 'Friends', 'Sign Out']
         .map((text, index) => (
           <ListItem
             button

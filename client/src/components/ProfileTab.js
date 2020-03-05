@@ -16,33 +16,53 @@ const gradientTextStyle = {
 	WebkitTextFillColor: 'transparent'
 }
 
-const ProfileTab = props => {
-  return (
-    <div>
-    {props.networkFailed
-    ? <div style={errorStyle}>Network error</div>
-    : <Grid
-        container
-        direction="column"
-        style={{alignItems:'center'}}
-      >
-        <Grid item style={{marginBottom:'20px'}}>
-          <Typography
-            variant="h1"
-            style={{
-              float:'left',
-              fontWeight:'bold',
-              fontFamily:'Raleway',
-              ...gradientTextStyle
-            }}
-          >
-            Profile
-          </Typography>
-        </Grid>
-      </Grid>
+class ProfileTab extends React.Component {
+  state = { image: null };
+
+  onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = (e) => {
+        this.setState({image: e.target.result});
+      };
+      reader.readAsDataURL(event.target.files[0]);
     }
-    </div>
-  );
+  }
+  render() {
+    return (
+      <div>
+      {this.props.networkFailed
+      ? <div style={errorStyle}>Network error</div>
+      : <Grid
+          container
+          direction="column"
+          style={{alignItems:'center'}}
+        >
+          <Grid item style={{marginBottom:'20px'}}>
+            <Typography
+              variant="h1"
+              style={{
+                float:'left',
+                fontWeight:'bold',
+                fontFamily:'Raleway',
+                ...gradientTextStyle
+              }}
+            >
+              Profile
+            </Typography>
+          </Grid>
+          <Grid item>
+            <input type="file" onChange={this.onImageChange} id="image_input"/>
+          </Grid>
+          <Grid item>
+            {!!this.state.image &&
+            <img src={this.state.image} id="image" alt="Profile"/>}
+          </Grid>
+        </Grid>
+      }
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => {

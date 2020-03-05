@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Avatar from '@material-ui/core/Avatar';
 import { connect } from 'react-redux';
 import { defaultTheme } from '../variables/Constants';
 
@@ -16,18 +17,22 @@ const gradientTextStyle = {
 	WebkitTextFillColor: 'transparent'
 }
 
+const imageStyle = {
+  width: '200px',
+  height: '200px'
+}
+
 class ProfileTab extends React.Component {
   state = { image: null };
 
   onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      let reader = new FileReader();
-      reader.onload = (e) => {
-        this.setState({image: e.target.result});
-      };
-      reader.readAsDataURL(event.target.files[0]);
+      this.setState({
+        image: URL.createObjectURL(event.target.files[0])
+      });
     }
   }
+
   render() {
     return (
       <div>
@@ -56,7 +61,7 @@ class ProfileTab extends React.Component {
           </Grid>
           <Grid item>
             {!!this.state.image &&
-            <img src={this.state.image} id="image" alt="Profile"/>}
+            <Avatar alt="Profile" src={this.state.image} style={imageStyle}/>}
           </Grid>
         </Grid>
       }

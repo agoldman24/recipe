@@ -17,8 +17,18 @@ import { WELCOME_TAB, PROFILE_TAB } from '../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
-    width: 250,
-    paddingTop:'50px'
+    width: 220,
+    paddingTop: '50px',
+    backgroundColor: '#303030',
+    height: '100%'
+  },
+  listItem: {
+    marginLeft: '10px'
+  },
+  listItemText: {
+    fontSize: '20px',
+    fontWeight: 'bold',
+    fontFamily: 'Raleway'
   }
 });
 
@@ -67,15 +77,15 @@ const DrawerMenu = props => {
     >
       <List>
         {['Profile', 'Drafts', 'Friends', 'Sign Out']
-        .map((text, index) => (
+        .map(text => (
           <ListItem
             button
             key={text}
-            style={{marginLeft:'10px'}}
+            className={classes.listItem}
             onClick={() => clickHandler(text)}
           >
             <ListItemIcon>{getIcon(text)}</ListItemIcon>
-            <ListItemText primary={text}/>
+            <ListItemText primary={text} classes={{primary:classes.listItemText}}/>
           </ListItem>
         ))}
       </List>
@@ -93,7 +103,7 @@ const DrawerMenu = props => {
           color: props.activeTab === PROFILE_TAB ? '#ffe100' : 'white',
           opacity: open || props.activeTab === PROFILE_TAB ? '1.0' : '0.7',
           background: open
-            ? 'linear-gradient(black, #424242)'
+            ? 'linear-gradient(black, #303030)'
             : 'linear-gradient(black, #202020)'
         }}
         startIcon={<AccountCircleIcon />}

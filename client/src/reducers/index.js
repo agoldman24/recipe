@@ -14,6 +14,7 @@ import {
   GET_RECIPE_REQUESTED,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
+  SET_PROFILE_IMAGE,
   POPULATE_USERS,
   SIGN_IN_FAILED,
   SIGN_OUT,
@@ -135,6 +136,11 @@ const displayUserReduce = (state = null, action) => {
   switch (action.type) {
     case SET_DISPLAY_USER:
       return action.user;
+    case SET_PROFILE_IMAGE:
+      return {
+        ...state,
+        profileImage: action.image
+      }
     default:
       return state;
   }

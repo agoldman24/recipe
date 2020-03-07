@@ -11,3 +11,24 @@ body {
   height: 100%;
   overflow-y: scroll;
 }
+
+.fileContainer {
+  overflow: hidden;
+  position: relative;
+  font-family: 'Raleway';
+  font-weight: bold;
+  font-size: 16px;
+}
+.fileContainer:hover {
+  cursor: pointer;
+}
+
+.fileContainer [type=file] {
+  cursor: inherit;
+  display: block;
+  filter: alpha(opacity=0);
+  min-height: 100%;
+  min-width: 100%;
+  opacity: 0;
+  position: absolute;
+}

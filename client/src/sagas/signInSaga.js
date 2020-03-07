@@ -4,11 +4,12 @@ import {
   SIGN_IN_REQUESTED,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
+  SET_DISPLAY_USER,
   SIGN_IN_FAILED,
   NETWORK_FAILED,
   SHOW_SNACKBAR
 } from '../actions';
-import { SIGN_IN_TAB, RECIPE_TAB } from '../variables/Constants';
+import { SIGN_IN_TAB, PROFILE_TAB, RECIPE_TAB } from '../variables/Constants';
 
 function* signIn(action) {
   try {
@@ -18,6 +19,9 @@ function* signIn(action) {
       : yield call(Api.get, '/getUserById?id=' + id);
     if (data.success) {
       yield put({ type: SET_ACTIVE_USER, user: data.user });
+      if (localStorage.getItem("activeTab") === PROFILE_TAB) {
+        yield put({ type: SET_DISPLAY_USER, user: data.user });
+      }
       yield put({
         type: SET_ACTIVE_TAB,
         tab: localStorage.getItem("activeTab") === SIGN_IN_TAB

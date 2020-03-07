@@ -37,12 +37,11 @@ class App extends React.Component {
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
     this.props.getAllUsers();
-    // if (!!localStorage.getItem("userId")) {
-    //   this.props.signIn(localStorage.getItem("userId"));
-    // }
-    // if (!!localStorage.getItem("activeTab")) {
-    //   this.props.setActiveTab(localStorage.getItem("activeTab"));
-    // }
+    if (!!localStorage.getItem("userId")) {
+      this.props.signIn(localStorage.getItem("userId"));
+    } else {
+      this.props.setActiveTab(localStorage.getItem("activeTab"));
+    }
   }
   render() {
     return (

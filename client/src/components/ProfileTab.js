@@ -2,8 +2,10 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
+import { SET_PROFILE_IMAGE } from '../actions';
 import { connect } from 'react-redux';
 import { defaultTheme } from '../variables/Constants';
+import "../index.css";
 
 const errorStyle = {
   textAlign:'center',
@@ -18,18 +20,17 @@ const gradientTextStyle = {
 }
 
 const imageStyle = {
-  width: '200px',
-  height: '200px'
+  width: '100px',
+  height: '100px',
+  marginRight: '20px',
+  fontSize: '40px'
 }
 
 class ProfileTab extends React.Component {
-  state = { image: null };
-
+  
   onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      this.setState({
-        image: URL.createObjectURL(event.target.files[0])
-      });
+      this.props.setProfileImage(URL.createObjectURL(event.target.files[0]));
     }
   }
 
@@ -48,29 +49,40 @@ class ProfileTab extends React.Component {
           direction="column"
           style={{alignItems:'center'}}
         >
-          <Grid item style={{marginBottom:'20px'}}>
+          <Grid item>
             <Typography
-              variant="h1"
+              variant="h5"
               style={{
-                float:'left',
                 fontWeight:'bold',
-                fontFamily:'Raleway',
-                ...gradientTextStyle
+                fontFamily:'Raleway'
               }}
             >
-              Profile
+              {username}
             </Typography>
           </Grid>
-          <Grid item>
-            <input type="file" onChange={this.onImageChange} id="image_input"/>
-          </Grid>
-          <Grid item>
-            {!!profileImage
-            ? <Avatar alt="Profile" src={this.state.image} style={imageStyle}/>
-            : <Avatar alt="Profile" style={imageStyle}>
-              {firstName.charAt(0) + lastName.charAt(0)}
-              </Avatar>
-            }
+          <Grid item style={{display:'inline-flex'}}>
+            <div>
+              {!!profileImage
+              ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
+              : <Avatar alt="Profile" style={imageStyle}>
+                {firstName.charAt(0) + lastName.charAt(0)}
+                </Avatar>
+              }
+              <label className="fileContainer">
+                Upload photo
+                <input type="file" onChange={this.onImageChange}/>
+              </label>
+            </div>
+            <Typography
+              variant="h4"
+              style={{
+                fontWeight:'bold',
+                fontFamily:'Raleway',
+                margin:'20px 0'
+              }}
+            >
+              {firstName + " " + lastName}
+            </Typography>
           </Grid>
         </Grid>
       }
@@ -87,7 +99,11 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    setProfileImage: image => {
+      dispatch({ type: SET_PROFILE_IMAGE, image });
+    }
+  };
 };
 
 export default connect(

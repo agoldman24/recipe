@@ -12,6 +12,7 @@ export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
 export const SET_DISPLAY_USER = 'SET_DISPLAY_USER';
 export const GET_ALL_USERS = 'GET_ALL_USERS';
 export const POPULATE_USERS = 'POPULATE_USERS';
+export const SET_PROFILE_IMAGE = 'SET_PROFILE_IMAGE';
 
 /* Tab actions */
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';

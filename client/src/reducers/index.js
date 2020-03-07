@@ -7,12 +7,13 @@ import {
   TOGGLE_RECIPE_DETAILS,
   EMPTY_FIELDS,
   USERNAME_EXISTS,
-  CREATE_USER,
+  SIGN_UP_REQUESTED,
   ADD_USER,
-  GET_USER,
+  SIGN_IN_REQUESTED,
   GET_ALL_USERS,
   GET_RECIPE_REQUESTED,
   SET_ACTIVE_USER,
+  SET_DISPLAY_USER,
   POPULATE_USERS,
   SIGN_IN_FAILED,
   SIGN_OUT,
@@ -22,20 +23,10 @@ import {
   HIDE_SNACKBAR
 } from '../actions';
 
-const activeTabReduce = (state = StateTree.activeTab, action) => {
-  switch (action.type) {
-    case SET_ACTIVE_TAB:
-      document.getElementById('root').scrollTo(0, 0);
-      return action.tab;
-    default:
-      return state;
-  }
-}
-
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
-    case CREATE_USER:
-    case GET_USER:
+    case SIGN_UP_REQUESTED:
+    case SIGN_IN_REQUESTED:
     case GET_ALL_USERS:
     case GET_RECIPE_REQUESTED:
       return true;
@@ -47,6 +38,17 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
       return false;
+    default:
+      return state;
+  }
+}
+
+const activeTabReduce = (state = StateTree.activeTab, action) => {
+  switch (action.type) {
+    case SET_ACTIVE_TAB:
+      document.getElementById('root').scrollTo(0, 0);
+      localStorage.setItem("activeTab", action.tab);
+      return action.tab;
     default:
       return state;
   }
@@ -113,16 +115,25 @@ const usersReduce = (state = StateTree.users, action) => {
     case ADD_USER:
       return {
         ...state,
-        [action.user.id]: { ...action.user }
+        [action.user.id]: action.user
       };
     default:
       return state;
   }
 }
 
-const activeUserReduce = (state = StateTree.activeUser, action) => {
+const activeUserReduce = (state = null, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
+      return action.user;
+    default:
+      return state;
+  }
+}
+
+const displayUserReduce = (state = null, action) => {
+  switch (action.type) {
+    case SET_DISPLAY_USER:
       return action.user;
     default:
       return state;
@@ -179,5 +190,6 @@ export default combineReducers({
   errorMessages: errorMessageReduce,
   snackbar: snackbarReduce,
   users: usersReduce,
-  activeUser: activeUserReduce
+  activeUser: activeUserReduce,
+  displayUser: displayUserReduce
 });

@@ -14,7 +14,7 @@ const SuccessSnackbar = props => {
     <div style={{width:'100%'}}>
       <Snackbar
         open={props.snackbar.isVisible}
-        autoHideDuration={2000}
+        autoHideDuration={1000}
         TransitionComponent={SlideTransition}
         onClose={props.hideSnackbar}
         style={{top:'0'}}

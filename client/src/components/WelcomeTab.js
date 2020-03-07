@@ -23,6 +23,11 @@ const buttonStyle = {
   fontFamily: 'Raleway'
 }
 
+const errorStyle = {
+  textAlign:'center',
+  color:'#ff2200'
+};
+
 const WelcomeTab = props => {
   return (
     <Grid
@@ -51,81 +56,88 @@ const WelcomeTab = props => {
           Book
         </Typography>
       </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          variant="outlined"
-          style={{
-            ...buttonStyle,
-            borderColor: 'yellow',
-            color: 'yellow'
-          }}
-          onClick={() => props.setActiveTab(SIGN_IN_TAB)}
-        >
-          Sign In
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          variant="outlined"
-          style={{
-            ...buttonStyle,
-            borderColor: '#ffb700',
-            color: '#ffb700'
-          }}
-          onClick={() => props.setActiveTab(SIGN_UP_TAB)}
-        >
-          Sign Up
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          variant="outlined"
-          style={{
-            ...buttonStyle,
-            borderColor: '#ff7b00',
-            color: '#ff7b00'
-          }}
-        >
-          About
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          variant="outlined"
-          style={{
-            ...buttonStyle,
-            borderColor: '#ff441f',
-            color: '#ff441f'
-          }}
-          onClick={() => props.setActiveTab(SEARCH_TAB)}
-        >
-          Users
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          variant="outlined"
-          style={{
-            ...buttonStyle,
-            borderColor: '#ff2e70',
-            color: '#ff2e70'
-          }}
-          onClick={() => props.setActiveTab(RECIPE_TAB)}
-        >
-          Samples
-        </Button>
-      </Grid>
+      {props.networkFailed
+      ? <div style={errorStyle}>Network error</div>
+      : <div>
+          <Grid item>
+            <Button
+              fullWidth
+              variant="outlined"
+              style={{
+                ...buttonStyle,
+                borderColor: 'yellow',
+                color: 'yellow'
+              }}
+              onClick={() => props.setActiveTab(SIGN_IN_TAB)}
+            >
+              Sign In
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              fullWidth
+              variant="outlined"
+              style={{
+                ...buttonStyle,
+                borderColor: '#ffb700',
+                color: '#ffb700'
+              }}
+              onClick={() => props.setActiveTab(SIGN_UP_TAB)}
+            >
+              Sign Up
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              fullWidth
+              variant="outlined"
+              style={{
+                ...buttonStyle,
+                borderColor: '#ff7b00',
+                color: '#ff7b00'
+              }}
+            >
+              About
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              fullWidth
+              variant="outlined"
+              style={{
+                ...buttonStyle,
+                borderColor: '#ff441f',
+                color: '#ff441f'
+              }}
+              onClick={() => props.setActiveTab(SEARCH_TAB)}
+            >
+              Users
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              fullWidth
+              variant="outlined"
+              style={{
+                ...buttonStyle,
+                borderColor: '#ff2e70',
+                color: '#ff2e70'
+              }}
+              onClick={() => props.setActiveTab(RECIPE_TAB)}
+            >
+              Samples
+            </Button>
+          </Grid>
+        </div>
+      }
     </Grid>
   );
 }
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    networkFailed: state.errorMessages.networkFailed
+  };
 }
 
 const mapDispatchToProps = dispatch => {

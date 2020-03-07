@@ -32,17 +32,37 @@ app.use(logger("dev"));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client/build')));
 
+const getDerivedUser = user => {
+  const {
+    _id, username, firstName, lastName, profileImage,
+    friendIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+  } = user;
+  return {
+    id: _id, username, firstName, lastName, profileImage,
+    friendIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+  }
+}
+
+router.get("/getUserById", (req, res) => {
+  const { id } = req.query;
+  User.findById(id).then(function(user) {
+    if (!user) {
+      return res.json({ success: false });
+    } else {
+      return res.json({ success: true, user: getDerivedUser(user) });
+    }
+  });
+});
+
 router.get("/getUser", (req, res) => {
   const { username, password } = req.query;
-  db.collection("users").findOne({
-    username: username
-  }).then(function (user) {
+  db.collection("users").findOne({ username }).then(function(user) {
     if (!user) {
       return res.json({ success: false });
     } else {
       bcrypt.compare(password, user.password, function (err, result) {
         if (result) {
-          res.json({ success: true, user });
+          return res.json({ success: true, user: getDerivedUser(user) });
         } else {
           return res.json({ success: false });
         }
@@ -56,18 +76,14 @@ router.get("/getAllUsers", (req, res) => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
-        const derivedUser = { ...user, id: user._id };
-        delete derivedUser._id;
-        delete derivedUser.__v;
-        delete derivedUser.password;
-        accum[user._id] = derivedUser;
+        accum[user._id] = getDerivedUser(user);
         return accum;
       }, {})
     });
   });
 });
 
-router.post("/addUser", (req, res) => {
+router.post("/createUser", (req, res) => {
   const { firstName, lastName, username, password } = req.body;
   db.collection("users").findOne({
     username: username
@@ -78,11 +94,12 @@ router.post("/addUser", (req, res) => {
       bcrypt.hash(password, saltRounds, function (err, hash) {
         const user = new User({
           firstName, lastName, username,
-          password: hash
+          password: hash,
+          profileImage: null
         });
         user.save(err => {
           if (err) return res.json({ success: false, error: err });
-          return res.json({ success: true, user });
+          return res.json({ success: true, user: getDerivedUser(user) });
         });
       });
     }

@@ -5,10 +5,11 @@ export const ADD_VIEWED_RECIPE = 'ADD_VIEWED_RECIPE';
 export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 
 /* User actions */
-export const CREATE_USER = 'CREATE_USER';
+export const SIGN_UP_REQUESTED = 'SIGN_UP_REQUESTED';
 export const ADD_USER = 'ADD_USER';
-export const GET_USER = 'GET_USER';
+export const SIGN_IN_REQUESTED = 'SIGN_IN_REQUESTED';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
+export const SET_DISPLAY_USER = 'SET_DISPLAY_USER';
 export const GET_ALL_USERS = 'GET_ALL_USERS';
 export const POPULATE_USERS = 'POPULATE_USERS';
 

@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_UP_TAB, formTheme } from '../variables/Constants';
-import { GET_USER, SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES }
+import { SIGN_IN_REQUESTED, SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES }
 from '../actions';
 
 const useStyles = makeStyles(formTheme);
@@ -29,7 +29,7 @@ const SignIn = props => {
   const onFormSubmit = (e) => {
     e.preventDefault();
     props.clearErrorMessages();
-    props.getUser(username, password);
+    props.signIn(username, password);
   }
 
   return (
@@ -112,8 +112,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
-    getUser: (username, password) => dispatch({
-      type: GET_USER, username, password
+    signIn: (username, password) => dispatch({
+      type: SIGN_IN_REQUESTED, username, password
     }),
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   }

@@ -3,14 +3,15 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema(
   {
-    firstName: String,
-    lastName: String,
     username: String,
     password: String,
+    firstName: String,
+    lastName: String,
+    profileImage: String | null,
     friendIds: Array,
+    draftRecipeIds: Array,
     createdRecipeIds: Array,
-    friendRecipeIds: Array,
-    sampleRecipeIds: Array
+    savedRecipeIds: Array,
   }
 );
 

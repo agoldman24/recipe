@@ -34,6 +34,11 @@ class ProfileTab extends React.Component {
   }
 
   render() {
+    const {
+      displayUser: {
+        username, firstName, lastName, profileImage
+      }
+    } = this.props;
     return (
       <div>
       {this.props.networkFailed
@@ -60,8 +65,12 @@ class ProfileTab extends React.Component {
             <input type="file" onChange={this.onImageChange} id="image_input"/>
           </Grid>
           <Grid item>
-            {!!this.state.image &&
-            <Avatar alt="Profile" src={this.state.image} style={imageStyle}/>}
+            {!!profileImage
+            ? <Avatar alt="Profile" src={this.state.image} style={imageStyle}/>
+            : <Avatar alt="Profile" style={imageStyle}>
+              {firstName.charAt(0) + lastName.charAt(0)}
+              </Avatar>
+            }
           </Grid>
         </Grid>
       }
@@ -72,6 +81,7 @@ class ProfileTab extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    displayUser: state.displayUser,
     networkFailed: state.errorMessages.networkFailed
   };
 }

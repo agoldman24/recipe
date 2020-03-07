@@ -14,7 +14,7 @@ import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
 import ProfileTab from './ProfileTab';
 import SuccessSnackbar from './SuccessSnackbar';
-import { GET_USER, GET_ALL_USERS, SET_ACTIVE_TAB } from '../actions';
+import { SIGN_IN_REQUESTED, GET_ALL_USERS, SET_ACTIVE_TAB } from '../actions';
 import {
   SEARCH_TAB,
   SIGN_UP_TAB,
@@ -36,13 +36,13 @@ const fabStyle = {
 class App extends React.Component {
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
-    if (!!localStorage.getItem("username")) {
-      this.props.getUser(
-        localStorage.getItem("username"),
-        localStorage.getItem("password")
-      );
-    }
     this.props.getAllUsers();
+    // if (!!localStorage.getItem("userId")) {
+    //   this.props.signIn(localStorage.getItem("userId"));
+    // }
+    // if (!!localStorage.getItem("activeTab")) {
+    //   this.props.setActiveTab(localStorage.getItem("activeTab"));
+    // }
   }
   render() {
     return (
@@ -93,9 +93,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUser: (username, password) => dispatch({
-      type: GET_USER, username, password
-    }),
+    signIn: id => dispatch({ type: SIGN_IN_REQUESTED, id }),
     getAllUsers: () => dispatch({ type: GET_ALL_USERS }),
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   };

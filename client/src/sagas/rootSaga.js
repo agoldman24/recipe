@@ -1,14 +1,16 @@
 import { all } from 'redux-saga/effects';
 import getRecipeSaga from './getRecipeSaga';
-import addUserSaga from './addUserSaga';
-import getUserSaga from './getUserSaga';
+import signUpSaga from './signUpSaga';
+import signInSaga from './signInSaga';
 import getAllUsersSaga from './getAllUsersSaga';
+import getUserDetailSaga from './getUserDetailSaga';
 
 export default function* rootSaga() {
   yield all([
     getRecipeSaga(),
-    getUserSaga(),
-    addUserSaga(),
-    getAllUsersSaga()
+    getAllUsersSaga(),
+    signInSaga(),
+    signUpSaga(),
+    //getUserDetailSaga()
   ])
 }

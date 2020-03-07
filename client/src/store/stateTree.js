@@ -8,7 +8,7 @@ export default Object.assign({},
   detailRecipeId: "",
   isSpinnerVisible: false,
   isDetailVisible: false,
-  isLoggedIn: !!localStorage.getItem("username"),
+  isLoggedIn: false,
   snackbar: {
     isVisible: false,
     message: ""
@@ -25,18 +25,26 @@ export default Object.assign({},
     username: "",
     firstName: "",
     lastName: "",
+    profileImage: null,
     friendIds: [],
+    draftRecipeIds: [],
     createdRecipeIds: [],
-    friendRecipeIds: [],
-    sampleRecipeIds: []
+    savedRecipeIds: []
   },
   displayUser: {
     id: "",
     username: "",
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
+    profileImage: null,
+    friendIds: [],
+    draftRecipeIds: [],
+    createdRecipeIds: [],
+    savedRecipeIds: []
+  },
+  displayUserDetail: {
     friends: {},
-    createdRecipes: {},
+    createRecipes: {},
     savedRecipes: {}
   }
 });

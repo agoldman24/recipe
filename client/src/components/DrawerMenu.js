@@ -8,11 +8,12 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
 import PeopleIcon from '@material-ui/icons/People';
+import CreateIcon from '@material-ui/icons/Create';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
-import { SIGN_OUT, SET_ACTIVE_TAB, SHOW_SNACKBAR } from '../actions';
+import { SIGN_OUT, SET_DISPLAY_USER, SET_ACTIVE_TAB, SHOW_SNACKBAR } from '../actions';
 import { WELCOME_TAB, PROFILE_TAB } from '../variables/Constants';
 
 const useStyles = makeStyles({
@@ -40,11 +41,13 @@ const DrawerMenu = props => {
   const clickHandler = text => {
     switch (text) {
       case "Profile":
-        props.goToProfile();
+        props.goToProfile(props.activeUser);
+        break;
+      case "Friends":
         break;
       case "Drafts":
         break;
-      case "Friends":
+      case "Create":
         break;
       case "Sign Out":
         props.signOut();
@@ -58,10 +61,12 @@ const DrawerMenu = props => {
     switch (text) {
       case "Profile":
         return <PersonIcon />
-      case "Drafts":
-        return <MenuBookIcon />;
       case "Friends":
         return <PeopleIcon />
+      case "Drafts":
+        return <MenuBookIcon />;
+      case "Create":
+        return <CreateIcon />;
       case "Sign Out":
         return <ExitToAppIcon />;
       default:
@@ -76,7 +81,7 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Drafts', 'Friends', 'Sign Out']
+        {['Profile', 'Friends', 'Drafts', 'Create', 'Sign Out']
         .map(text => (
           <ListItem
             button
@@ -100,6 +105,7 @@ const DrawerMenu = props => {
           fontSize:'13px',
           height:'50px',
           borderRadius:'0',
+          borderBottom: props.activeTab === PROFILE_TAB ? '2px solid #ffe100' : 'none',
           color: props.activeTab === PROFILE_TAB ? '#ffe100' : 'white',
           opacity: open || props.activeTab === PROFILE_TAB ? '1.0' : '0.7',
           background: open
@@ -133,7 +139,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToProfile: () => {
+    goToProfile: user => {
+      dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
     },
     signOut: () => {

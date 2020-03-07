@@ -39,8 +39,6 @@ class App extends React.Component {
     this.props.getAllUsers();
     if (!!localStorage.getItem("userId")) {
       this.props.signIn(localStorage.getItem("userId"));
-    } else {
-      this.props.setActiveTab(localStorage.getItem("activeTab"));
     }
   }
   render() {

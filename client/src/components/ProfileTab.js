@@ -27,8 +27,8 @@ const textStyle = {
 }
 
 const imageStyle = {
-  width: '90px',
-  height: '90px',
+  width: '120px',
+  height: '120px',
   marginRight: '20px',
   fontSize: '30px',
   border: '2px solid black'
@@ -56,7 +56,8 @@ class ProfileTab extends React.Component {
     } = this.props;
     return (
       <div style={{
-        width: isMobile ? '100vw' : '30vw',
+        width: isMobile ? '100vw' : '50vw',
+        padding: '50px 0 10px',
         margin: 'auto'
       }}>
       {this.props.networkFailed
@@ -82,17 +83,17 @@ class ProfileTab extends React.Component {
               {!!profileImage
               ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
               : <Avatar alt="Profile" style={imageStyle}>
-                <Grid container direction="column" style={{textAlign:'center'}}>
-                  <Grid item>
-                    {firstName.charAt(0) + lastName.charAt(0)}
+                  <Grid container direction="column" style={{textAlign:'center'}}>
+                    <Grid item>
+                      {firstName.charAt(0) + lastName.charAt(0)}
+                    </Grid>
+                    <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
+                    <label className="fileContainer">
+                      Upload photo
+                      <input type="file" onChange={this.onImageChange}/>
+                    </label>
+                    </Grid>
                   </Grid>
-                  <Grid item style={{lineHeight:'0.2', paddingBottom:'10px'}}>
-                  <label className="fileContainer">
-                    Upload photo
-                    <input type="file" onChange={this.onImageChange}/>
-                  </label>
-                  </Grid>
-                </Grid>
                 </Avatar>
               }
             </div>

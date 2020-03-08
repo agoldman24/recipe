@@ -15,9 +15,8 @@ body {
 .fileContainer {
   overflow: hidden;
   position: relative;
-  font-family: 'Raleway';
-  font-weight: bold;
-  font-size: 11px;
+  font-family: 'Signika';
+  font-size: 12px;
   color: white;
 }
 .fileContainer:hover {

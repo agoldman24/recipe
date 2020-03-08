@@ -61,6 +61,7 @@ class App extends React.Component {
         {this.props.isSpinnerVisible && <Spinner />}
         {this.props.isLoggedIn && <TabPanel />}
         {this.props.activeTab === SEARCH_TAB && <SearchTab />}
+        {this.props.activeTab === PROFILE_TAB && <ProfileTab />}
         <Container
           component="main"
           maxWidth="xs"
@@ -71,7 +72,6 @@ class App extends React.Component {
           {this.props.activeTab === SIGN_UP_TAB && <SignUp />}
           {this.props.activeTab === RECIPE_TAB && <RecipeTab />}
           {this.props.activeTab === SIGN_IN_TAB && <SignIn />}
-          {this.props.activeTab === PROFILE_TAB && <ProfileTab />}
         </Container>
       </ThemeProvider>
     );

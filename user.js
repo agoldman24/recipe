@@ -7,7 +7,7 @@ const UserSchema = new Schema(
     password: String,
     firstName: String,
     lastName: String,
-    profileImage: String | null,
+    profileImage: Buffer | null,
     friendIds: Array,
     draftRecipeIds: Array,
     createdRecipeIds: Array,

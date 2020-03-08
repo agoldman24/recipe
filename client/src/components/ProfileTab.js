@@ -20,11 +20,23 @@ const gradientTextStyle = {
 	WebkitTextFillColor: 'transparent'
 }
 
+const textStyle = {
+  fontWeight:'bold',
+  fontFamily:'Signika',
+  lineHeight: 1
+}
+
 const imageStyle = {
-  width: '100px',
-  height: '100px',
+  width: '90px',
+  height: '90px',
   marginRight: '20px',
-  fontSize: '40px'
+  fontSize: '30px',
+  border: '2px solid black'
+}
+
+const columnStyle = {
+  width: '33.33%',
+  textAlign:'center'
 }
 
 class ProfileTab extends React.Component {
@@ -38,11 +50,15 @@ class ProfileTab extends React.Component {
   render() {
     const {
       displayUser: {
-        username, firstName, lastName, profileImage
+        username, firstName, lastName, profileImage,
+        friendIds, createdRecipeIds, savedRecipeIds
       }
     } = this.props;
     return (
-      <div style={{width: isMobile ? '100vw' : '30vw', margin:'auto'}}>
+      <div style={{
+        width: isMobile ? '100vw' : '30vw',
+        margin: 'auto'
+      }}>
       {this.props.networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <Grid
@@ -50,16 +66,13 @@ class ProfileTab extends React.Component {
           direction="column"
           style={{
             alignItems:'center',
-            //border: '1px solid white'
+            padding: '0 10px'
           }}
         >
           <Grid item>
             <Typography
               variant="h5"
-              style={{
-                fontWeight:'bold',
-                fontFamily:'Raleway'
-              }}
+              style={{...textStyle, fontFamily:'Raleway'}}
             >
               {username}
             </Typography>
@@ -69,24 +82,59 @@ class ProfileTab extends React.Component {
               {!!profileImage
               ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
               : <Avatar alt="Profile" style={imageStyle}>
-                {firstName.charAt(0) + lastName.charAt(0)}
+                <Grid container direction="column" style={{textAlign:'center'}}>
+                  <Grid item>
+                    {firstName.charAt(0) + lastName.charAt(0)}
+                  </Grid>
+                  <Grid item style={{lineHeight:'0.2', paddingBottom:'10px'}}>
+                  <label className="fileContainer">
+                    Upload photo
+                    <input type="file" onChange={this.onImageChange}/>
+                  </label>
+                  </Grid>
+                </Grid>
                 </Avatar>
               }
-              <label className="fileContainer">
-                Upload photo
-                <input type="file" onChange={this.onImageChange}/>
-              </label>
             </div>
             <Typography
-              variant="h4"
               style={{
-                fontWeight:'bold',
-                fontFamily:'Raleway',
-                margin:'20px 0'
+                ...textStyle,
+                fontSize: '24px',
+                margin:'auto'
               }}
             >
               {firstName + " " + lastName}
             </Typography>
+          </Grid>
+          <Grid
+            container
+            direction="row"
+            style={{paddingTop:'20px'}}
+          >
+            <Grid item style={columnStyle}>
+              <Typography style={{...textStyle, fontSize:'40px'}}>
+                {friendIds.length}
+              </Typography>
+              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                Friends
+              </Typography>
+            </Grid>
+            <Grid item style={columnStyle}>
+              <Typography style={{...textStyle, fontSize:'40px'}}>
+                {createdRecipeIds.length}
+              </Typography>
+              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                Created Recipes
+              </Typography>
+            </Grid>
+            <Grid item style={columnStyle}>
+              <Typography style={{...textStyle, fontSize:'40px'}}>
+                {savedRecipeIds.length}
+              </Typography>
+              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                Saved Recipes
+              </Typography>
+            </Grid>
           </Grid>
         </Grid>
       }

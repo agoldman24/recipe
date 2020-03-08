@@ -17,7 +17,8 @@ body {
   position: relative;
   font-family: 'Raleway';
   font-weight: bold;
-  font-size: 16px;
+  font-size: 11px;
+  color: white;
 }
 .fileContainer:hover {
   cursor: pointer;

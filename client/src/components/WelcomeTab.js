@@ -56,7 +56,8 @@ const WelcomeTab = props => {
           Book
         </Typography>
       </Grid>
-      {props.networkFailed
+      {!props.isSpinnerVisible &&
+      (props.networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <div>
           <Grid item>
@@ -129,13 +130,14 @@ const WelcomeTab = props => {
             </Button>
           </Grid>
         </div>
-      }
+      )}
     </Grid>
   );
 }
 
 const mapStateToProps = state => {
   return {
+    isSpinnerVisible: state.isSpinnerVisible,
     networkFailed: state.errorMessages.networkFailed
   };
 }

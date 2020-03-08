@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { SET_PROFILE_IMAGE } from '../actions';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import { defaultTheme } from '../variables/Constants';
 import "../index.css";
 
@@ -27,7 +28,7 @@ const imageStyle = {
 }
 
 class ProfileTab extends React.Component {
-  
+
   onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       this.props.setProfileImage(URL.createObjectURL(event.target.files[0]));
@@ -41,13 +42,16 @@ class ProfileTab extends React.Component {
       }
     } = this.props;
     return (
-      <div>
+      <div style={{width: isMobile ? '100vw' : '30vw', margin:'auto'}}>
       {this.props.networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <Grid
           container
           direction="column"
-          style={{alignItems:'center'}}
+          style={{
+            alignItems:'center',
+            //border: '1px solid white'
+          }}
         >
           <Grid item>
             <Typography

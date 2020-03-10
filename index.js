@@ -26,8 +26,8 @@ if (process.env.NODE_ENV === 'production') {
       next()
   })
 }
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'client/build')));
@@ -103,6 +103,14 @@ router.post("/createUser", (req, res) => {
         });
       });
     }
+  });
+});
+
+router.post('/updateUser', (req, res) => {
+  const { id, imageData } = req.body;
+  User.findByIdAndUpdate(id, { profileImage: imageData }, err => {
+    if (err) return res.json({ success: false, error: err });
+     return res.json({ success: true });
   });
 });
 

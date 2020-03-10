@@ -2,10 +2,10 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import { SET_PROFILE_IMAGE } from '../actions';
+import { SET_PROFILE_IMAGE, UPDATE_USER_REQUESTED } from '../actions';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import { defaultTheme } from '../variables/Constants';
+import FileBase from 'react-file-base64';
 import "../index.css";
 
 const errorStyle = {
@@ -13,12 +13,6 @@ const errorStyle = {
   color:'#ff2200',
   paddingTop:'50px'
 };
-
-const gradientTextStyle = {
-  background: defaultTheme.palette.primary.mainGradient,
-	WebkitBackgroundClip: 'text',
-	WebkitTextFillColor: 'transparent'
-}
 
 const textStyle = {
   fontWeight:'bold',
@@ -41,10 +35,9 @@ const columnStyle = {
 
 class ProfileTab extends React.Component {
 
-  onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      this.props.setProfileImage(URL.createObjectURL(event.target.files[0]));
-    }
+  onImageChange = (files) => {
+    const imageData = files.base64.toString();
+    this.props.updateUser(this.props.displayUser.id, imageData);
   }
 
   render() {
@@ -90,7 +83,9 @@ class ProfileTab extends React.Component {
                     <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
                     <label className="fileContainer">
                       Upload photo
-                      <input type="file" onChange={this.onImageChange}/>
+                      <FileBase
+                        type="file"
+                        onDone={this.onImageChange}/>
                     </label>
                     </Grid>
                   </Grid>
@@ -155,6 +150,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setProfileImage: image => {
       dispatch({ type: SET_PROFILE_IMAGE, image });
+    },
+    updateUser: (id, imageData) => {
+      dispatch({ type: UPDATE_USER_REQUESTED, id, imageData });
     }
   };
 };

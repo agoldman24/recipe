@@ -4,6 +4,9 @@ export const SET_ACTIVE_RECIPE = 'SET_ACTIVE_RECIPE';
 export const ADD_VIEWED_RECIPE = 'ADD_VIEWED_RECIPE';
 export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 
+/* Initialization actions */
+export const HYDRATION_COMPLETE = "HYDRATION_COMPLETE";
+
 /* User actions */
 export const SIGN_UP_REQUESTED = 'SIGN_UP_REQUESTED';
 export const ADD_USER = 'ADD_USER';

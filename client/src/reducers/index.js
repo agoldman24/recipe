@@ -23,7 +23,8 @@ import {
   NETWORK_FAILED,
   CLEAR_ERROR_MESSAGES,
   SHOW_SNACKBAR,
-  HIDE_SNACKBAR
+  HIDE_SNACKBAR,
+  HYDRATION_COMPLETE
 } from '../actions';
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
@@ -35,14 +36,22 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case GET_RECIPE_REQUESTED:
       return true;
     case POPULATE_USERS:
-    case SET_ACTIVE_USER:
     case UPDATE_USER_SUCCEEDED:
     case SET_ACTIVE_RECIPE:
-    case SET_ACTIVE_TAB:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
+    case SHOW_SNACKBAR:
       return false;
+    default:
+      return state;
+  }
+}
+
+const hydrationReduce = (state = StateTree.isHydrated, action) => {
+  switch (action.type) {
+    case HYDRATION_COMPLETE:
+      return true;
     default:
       return state;
   }
@@ -101,18 +110,6 @@ const viewedRecipesReduce = (state = StateTree.viewedRecipeIds, action) => {
   }
 }
 
-const loginReduce = (state = StateTree.isLoggedIn, action) => {
-  switch (action.type) {
-    case SET_ACTIVE_USER:
-      return true;
-    case SIGN_OUT:
-      localStorage.clear();
-      return false;
-    default:
-      return state;
-  }
-}
-
 const usersReduce = (state = StateTree.users, action) => {
   switch (action.type) {
     case POPULATE_USERS:
@@ -130,7 +127,11 @@ const usersReduce = (state = StateTree.users, action) => {
 const activeUserReduce = (state = null, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
+      localStorage.setItem("activeUserId", action.user.id);
       return action.user;
+    case SIGN_OUT:
+      localStorage.clear();
+      return null;
     default:
       return state;
   }
@@ -139,6 +140,7 @@ const activeUserReduce = (state = null, action) => {
 const displayUserReduce = (state = null, action) => {
   switch (action.type) {
     case SET_DISPLAY_USER:
+      localStorage.setItem("displayUserId", action.user.id);
       return action.user;
     case SET_PROFILE_IMAGE:
       return {
@@ -196,7 +198,7 @@ export default combineReducers({
   detailRecipeId: detailRecipeIdReduce,
   isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,
-  isLoggedIn: loginReduce,
+  isHydrated: hydrationReduce,
   errorMessages: errorMessageReduce,
   snackbar: snackbarReduce,
   users: usersReduce,

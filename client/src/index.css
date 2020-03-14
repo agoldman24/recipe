@@ -19,7 +19,8 @@ body {
   font-size: 12px;
   color: white;
 }
-.fileContainer:hover {
+.fileContainer:hover,
+.userTableRow:hover {
   cursor: pointer;
 }
 

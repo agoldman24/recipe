@@ -25,8 +25,7 @@ function* signUp(action) {
       yield put({ type: SET_ACTIVE_USER, user: data.user });
       yield put({ type: SET_DISPLAY_USER, user: data.user });
       yield put({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
-      yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" }); 
-      localStorage.setItem("userId", data.user.id);
+      yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" });
     }
   } catch (err) {
     yield put({ type: NETWORK_FAILED });

@@ -112,9 +112,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
-    signIn: (username, password) => dispatch({
-      type: SIGN_IN_REQUESTED, username, password
-    }),
+    signIn: (username, password) => {
+      dispatch({ type: SIGN_IN_REQUESTED, username, password });
+    },
     setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
   }
 };

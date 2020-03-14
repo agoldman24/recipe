@@ -17,7 +17,7 @@ function* getAllUsers() {
 }
 
 function* getAllUsersSaga() {
-  yield takeLatest(GET_ALL_USERS, getAllUsers);
+  return yield takeLatest(GET_ALL_USERS, getAllUsers);
 }
 
 export default getAllUsersSaga;

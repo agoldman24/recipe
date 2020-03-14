@@ -43,9 +43,10 @@ class ProfileTab extends React.Component {
   render() {
     const {
       displayUser: {
-        username, firstName, lastName, profileImage,
+        id, username, firstName, lastName, profileImage,
         friendIds, createdRecipeIds, savedRecipeIds
-      }
+      },
+      activeUser
     } = this.props;
     return (
       <div style={{
@@ -66,7 +67,7 @@ class ProfileTab extends React.Component {
           <Grid item>
             <Typography
               variant="h5"
-              style={{...textStyle, fontFamily:'Raleway'}}
+              style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
             >
               {username}
             </Typography>
@@ -78,15 +79,17 @@ class ProfileTab extends React.Component {
               : <Avatar alt="Profile" style={imageStyle}>
                   <Grid container direction="column" style={{textAlign:'center'}}>
                     <Grid item>
-                      {firstName.charAt(0) + lastName.charAt(0)}
+                      {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
                     </Grid>
                     <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
-                    <label className="fileContainer">
-                      Upload photo
-                      <FileBase
-                        type="file"
-                        onDone={this.onImageChange}/>
-                    </label>
+                    {!!activeUser && activeUser.id === id &&
+                      <label className="fileContainer">
+                        Upload photo
+                        <FileBase
+                          type="file"
+                          onDone={this.onImageChange}/>
+                      </label>
+                    }
                     </Grid>
                   </Grid>
                 </Avatar>
@@ -142,6 +145,7 @@ class ProfileTab extends React.Component {
 const mapStateToProps = state => {
   return {
     displayUser: state.displayUser,
+    activeUser: state.activeUser,
     networkFailed: state.errorMessages.networkFailed
   };
 }

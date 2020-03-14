@@ -63,7 +63,7 @@ class RecipeTab extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isLoggedIn: state.isLoggedIn,
+    isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
     activeRecipes: state.activeRecipes,
     isDetailVisible: state.isDetailVisible,

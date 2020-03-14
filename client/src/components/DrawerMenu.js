@@ -41,7 +41,7 @@ const DrawerMenu = props => {
   const clickHandler = text => {
     switch (text) {
       case "Profile":
-        props.goToProfile(props.activeUser);
+        props.visitUserProfile(props.activeUser);
         break;
       case "Friends":
         break;
@@ -105,9 +105,9 @@ const DrawerMenu = props => {
           fontSize:'13px',
           height:'50px',
           borderRadius:'0',
-          borderBottom: props.activeTab === PROFILE_TAB ? '2px solid #ffe100' : 'none',
-          color: props.activeTab === PROFILE_TAB ? '#ffe100' : 'white',
-          opacity: open || props.activeTab === PROFILE_TAB ? '1.0' : '0.7',
+          borderBottom: props.activeUserProfile ? '2px solid #ffe100' : 'none',
+          color: props.activeUserProfile ? '#ffe100' : 'white',
+          opacity: open || props.activeUserProfile ? '1.0' : '0.7',
           background: open
             ? 'linear-gradient(black, #303030)'
             : 'linear-gradient(black, #202020)'
@@ -133,13 +133,15 @@ const DrawerMenu = props => {
 const mapStateToProps = state => {
   return {
     activeUser: state.activeUser,
-    activeTab: state.activeTab
+    activeUserProfile: state.activeTab === PROFILE_TAB
+      && !!state.activeUser && !!state.displayUser
+      && state.activeUser.id === state.displayUser.id
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    goToProfile: user => {
+    visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
     },

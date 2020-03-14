@@ -36,7 +36,6 @@ const useStyles = makeStyles(theme => ({
 const SearchTab = props => {
   const classes = useStyles();
   const [searchVal, setSearchVal] = React.useState("");
-  console.log(searchVal);
   return (
     <div>
     <div className={classes.search}>

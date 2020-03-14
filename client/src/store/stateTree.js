@@ -8,7 +8,7 @@ export default Object.assign({},
   detailRecipeId: "",
   isSpinnerVisible: false,
   isDetailVisible: false,
-  isLoggedIn: false,
+  isHydrated: false,
   snackbar: {
     isVisible: false,
     message: ""

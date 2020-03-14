@@ -29,11 +29,7 @@ const TabPanel = props => {
       <Paper square>
       {props.isLoggedIn
       ? <Tabs
-          value={
-            props.activeTab === SEARCH_TAB || props.activeTab === RECIPE_TAB
-            ? props.activeTab
-            : false
-          }
+          value={props.highlightTab ? props.activeTab : false}
           style={navBarStyle}
           variant="fullWidth"
           indicatorColor="primary"
@@ -65,7 +61,8 @@ const TabPanel = props => {
 const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
-    isLoggedIn: state.isLoggedIn
+    isLoggedIn: !!state.activeUser,
+    highlightTab: state.activeTab === SEARCH_TAB || state.activeTab === RECIPE_TAB
   };
 };
 

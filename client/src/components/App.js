@@ -108,7 +108,7 @@ const mapStateToProps = state => {
     isHydrated: state.isHydrated,
     users: state.users,
     isLoggedIn: !!state.activeUser,
-    showHomeButton: state.activeTab !== WELCOME_TAB && !!state.activeUser
+    showHomeButton: state.activeTab !== WELCOME_TAB && !state.activeUser
   };
 }
 

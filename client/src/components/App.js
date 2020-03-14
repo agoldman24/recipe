@@ -50,12 +50,15 @@ class App extends React.Component {
   componentDidUpdate() {
     if (!this.props.isHydrated && Object.keys(this.props.users).length) {
       if (!!localStorage.getItem("activeTab")) {
+        console.log(localStorage.getItem("activeTab"));
         if (localStorage.getItem("activeTab") === PROFILE_TAB) {
           this.props.setDisplayUser(
             this.props.users[localStorage.getItem("displayUserId")]
           );
         }
         this.props.setActiveTab(localStorage.getItem("activeTab"));
+      } else {
+        this.props.setActiveTab(WELCOME_TAB);
       }
       this.props.hydrate();
     }

@@ -43,8 +43,9 @@ class App extends React.Component {
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
     this.props.getAllUsers();
-    if (!!localStorage.getItem("activeUserId")) {
-      this.props.signIn(localStorage.getItem("activeUserId"));
+    const activeUserId = localStorage.getItem("activeUserId");
+    if (!!activeUserId && activeUserId !== "null") {
+      this.props.signIn(activeUserId);
     }
   }
   componentDidUpdate() {

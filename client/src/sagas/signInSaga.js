@@ -18,7 +18,7 @@ function* signIn(action) {
       : yield call(Api.get, '/getUserById?id=' + id);
     if (data.success) {
       yield put({ type: SET_ACTIVE_USER, user: data.user });
-      if (!localStorage.getItem("activeUserId")) {
+      if (!localStorage.getItem("activeUserId") || localStorage.getItem("activeUserId") === "null") {
         yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
         yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
       }

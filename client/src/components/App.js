@@ -49,13 +49,14 @@ class App extends React.Component {
   }
   componentDidUpdate() {
     if (!this.props.isHydrated && Object.keys(this.props.users).length) {
-      if (localStorage.getItem("activeTab") !== null) {
-        if (localStorage.getItem("activeTab") === PROFILE_TAB) {
+      const activeTab = localStorage.getItem("activeTab");
+      if (!!activeTab && activeTab !== "null") {
+        if (activeTab === PROFILE_TAB) {
           this.props.setDisplayUser(
             this.props.users[localStorage.getItem("displayUserId")]
           );
         }
-        this.props.setActiveTab(localStorage.getItem("activeTab"));
+        this.props.setActiveTab(activeTab);
       } else {
         this.props.setActiveTab(WELCOME_TAB);
       }

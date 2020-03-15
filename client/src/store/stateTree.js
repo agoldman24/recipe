@@ -3,12 +3,10 @@ import { WELCOME_TAB } from "../variables/Constants";
 export default Object.assign({},
 {
   activeTab: WELCOME_TAB,
-  activeRecipes: {},
-  viewedRecipeIds: [],
-  detailRecipeId: "",
   isSpinnerVisible: false,
   isDetailVisible: false,
   isHydrated: false,
+  tabHistory: [],
   snackbar: {
     isVisible: false,
     message: ""
@@ -46,5 +44,18 @@ export default Object.assign({},
     friends: {},
     createRecipes: {},
     savedRecipes: {}
-  }
+  },
+  recipe: {
+    id: "",
+    name: "",
+    image: null,
+    ingredients: [],
+    directions: ""
+  },
+  ingredient: {
+    item: "",
+    quantity: ""
+  },
+  displayRecipes: {},
+  detailRecipeId: ""
 });

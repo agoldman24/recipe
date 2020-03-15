@@ -1,7 +1,6 @@
 /* Recipe actions */
 export const GET_RECIPE_REQUESTED = 'GET_RECIPE_REQUESTED';
-export const SET_ACTIVE_RECIPE = 'SET_ACTIVE_RECIPE';
-export const ADD_VIEWED_RECIPE = 'ADD_VIEWED_RECIPE';
+export const APPEND_DISPLAY_RECIPES = 'APPEND_DISPLAY_RECIPES';
 export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 
 /* Initialization actions */

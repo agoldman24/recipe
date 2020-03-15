@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { isMobile } from 'react-device-detect';
@@ -67,9 +68,11 @@ const RecipeCard = props => {
               <InfoIcon style={iconStyle}/>
             </Fab>
           </div>
-          <Fab style={{...fabStyle, float:'left'}}>
-            <FavoriteBorderIcon style={iconStyle}/>
-          </Fab>
+          {props.isLoggedIn &&
+            <Fab style={{...fabStyle, float:'left'}}>
+              <FavoriteIcon style={iconStyle}/>
+            </Fab>
+          }
         </div>
         <div
           style={{
@@ -87,20 +90,22 @@ const RecipeCard = props => {
             <ArrowForwardIosIcon style={iconStyle}/>
           </Fab>
         </div>
-        {/* <div style={{
+        <div style={{
           position:'absolute',
           bottom:'0',
           width:'100%',
           height:'50px',
           backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
-        }}/> */}
+        }}/>
       </CardMedia>
     </Card>
   );
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    isLoggedIn: !!state.activeUser
+  };
 };
 
 const mapDispatchToProps = dispatch => {

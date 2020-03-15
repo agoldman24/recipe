@@ -2,8 +2,7 @@ import { combineReducers } from 'redux';
 import StateTree from '../store/stateTree';
 import {
   SET_ACTIVE_TAB,
-  SET_ACTIVE_RECIPE,
-  ADD_VIEWED_RECIPE,
+  APPEND_DISPLAY_RECIPES,
   TOGGLE_RECIPE_DETAILS,
   EMPTY_FIELDS,
   USERNAME_EXISTS,
@@ -37,7 +36,7 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
       return true;
     case POPULATE_USERS:
     case UPDATE_USER_SUCCEEDED:
-    case SET_ACTIVE_RECIPE:
+    case APPEND_DISPLAY_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
@@ -68,13 +67,12 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
   }
 }
 
-const activeRecipesReduce = (state = StateTree.activeRecipes, action) => {
+const displayRecipesReduce = (state = StateTree.displayRecipes, action) => {
   switch (action.type) {
-    case SET_ACTIVE_RECIPE:
-      const { id, name, image, ingredients, directions, timestamp } = action;
+    case APPEND_DISPLAY_RECIPES:
       return {
         ...state,
-        [id]: { id, name, image, ingredients, directions, timestamp }
+        ...action.recipes
       }
     case SIGN_OUT:
       return {};
@@ -96,15 +94,6 @@ const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !!action.id ? action.id : state;
-    default:
-      return state;
-  }
-}
-
-const viewedRecipesReduce = (state = StateTree.viewedRecipeIds, action) => {
-  switch (action.type) {
-    case ADD_VIEWED_RECIPE:
-      return [ ...state, action.id ];
     default:
       return state;
   }
@@ -193,8 +182,7 @@ export const snackbarReduce = (state = StateTree.snackbar, action) => {
 
 export default combineReducers({
   activeTab: activeTabReduce,
-  activeRecipes: activeRecipesReduce,
-  viewedRecipeIds: viewedRecipesReduce,
+  displayRecipes: displayRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
   isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,

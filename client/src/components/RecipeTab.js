@@ -14,7 +14,7 @@ const errorStyle = {
 
 class RecipeTab extends React.Component {
   componentDidMount() {
-    if (!Object.keys(this.props.activeRecipes).length) {
+    if (!Object.keys(this.props.displayRecipes).length) {
       this.props.getRandomRecipe();
     }
   }
@@ -29,17 +29,18 @@ class RecipeTab extends React.Component {
         >
           {this.props.networkFailed
           ? <div style={errorStyle}>Network error</div>
-          : Object.keys(this.props.activeRecipes)
-            .sort((id1, id2) =>
-              new Date(this.props.activeRecipes[id2].timestamp)
-                - new Date(this.props.activeRecipes[id1].timestamp))
-            .map(id => {
-              const recipe = this.props.activeRecipes[id];
+          : Object.values(this.props.displayRecipes)
+            // Object.keys(this.props.activeRecipes)
+            // .sort((id1, id2) =>
+            //   new Date(this.props.activeRecipes[id2].timestamp)
+            //     - new Date(this.props.activeRecipes[id1].timestamp))
+            .map(recipe => {
               return (
                 <Grid item key={recipe.id}>
-                  {this.props.isDetailVisible && this.props.detailRecipeId === id &&
+                  {this.props.isDetailVisible &&
+                    this.props.detailRecipeId === recipe.id &&
                     <RecipeDetail
-                      id={id}
+                      id={recipe.id}
                       name={recipe.name}
                       image={recipe.image}
                       ingredients={recipe.ingredients}
@@ -47,7 +48,7 @@ class RecipeTab extends React.Component {
                     />
                   }
                   <RecipeCard
-                    id={id}
+                    id={recipe.id}
                     name={recipe.name}
                     image={recipe.image}
                   />
@@ -65,7 +66,7 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
-    activeRecipes: state.activeRecipes,
+    displayRecipes: state.displayRecipes,
     isDetailVisible: state.isDetailVisible,
     detailRecipeId: state.detailRecipeId
   };

@@ -1,41 +1,20 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
-import Api from '../api/recipeUrl';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import Api from '../api/siteUrl';
+
 import {
   GET_RECIPE_REQUESTED,
-  SET_ACTIVE_RECIPE,
-  ADD_VIEWED_RECIPE,
+  APPEND_DISPLAY_RECIPES,
   NETWORK_FAILED,
   CLEAR_ERROR_MESSAGES
 } from '../actions';
 
-const getViewedRecipeIds = state => state.viewedRecipeIds;
-
 function* getRecipe() {
   yield put({ type: CLEAR_ERROR_MESSAGES });
   try {
-    const viewedRecipeIds = yield select(getViewedRecipeIds);
-    let result, data;
-    for(;;) {
-      result = yield call(Api.get);
-      data = result.data.meals[0];
-      if (!viewedRecipeIds.includes(data.idMeal)) {
-        break;
-      }
-    }
-    yield put({ type: ADD_VIEWED_RECIPE, id: data.idMeal });
+    const { data } = yield call(Api.get, '/getSamples');
     yield put({
-      type: SET_ACTIVE_RECIPE,
-      id: data.idMeal,
-      name: data.strMeal,
-      image: data.strMealThumb,
-      directions: data.strInstructions,
-      ingredients: Array(20).fill().map((val, i) => {
-        return {
-          item: data['strIngredient' + (i + 1)],
-          quantity: data['strMeasure' + (i + 1)]
-        };
-      }).filter(ingredient => !!ingredient.item),
-      timestamp: new Date()
+      type: APPEND_DISPLAY_RECIPES,
+      recipes: data.recipes
     });
   } catch (err) {
     yield put({ type: NETWORK_FAILED });

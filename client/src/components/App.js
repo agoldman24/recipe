@@ -102,7 +102,6 @@ class App extends React.Component {
 const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
-    activeRecipes: state.activeRecipes,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
     isHydrated: state.isHydrated,

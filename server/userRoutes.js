@@ -75,10 +75,18 @@ exports.createUser = (req, res) => {
   });
 }
 
-exports.updateUser = (req, res) => {
+exports.updateProfileImage = (req, res) => {
   const { id, imageData } = req.body;
   User.findByIdAndUpdate(id, { profileImage: imageData }, err => {
     if (err) return res.json({ success: false, error: err });
-     return res.json({ success: true });
+    return res.json({ success: true });
+  });
+}
+
+exports.updateSavedRecipeIds = (req, res) => {
+  const { id, savedRecipeIds } = req.body;
+  User.findByIdAndUpdate(id, { savedRecipeIds }, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
   });
 }

@@ -10,7 +10,7 @@ import {
   ADD_USER,
   SIGN_IN_REQUESTED,
   GET_ALL_USERS,
-  GET_RECIPE_REQUESTED,
+  GET_RECIPES_REQUESTED,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
   SET_PROFILE_IMAGE,
@@ -32,7 +32,7 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_REQUESTED:
     case GET_ALL_USERS:
     case UPDATE_USER_REQUESTED:
-    case GET_RECIPE_REQUESTED:
+    case GET_RECIPES_REQUESTED:
       return true;
     case POPULATE_USERS:
     case UPDATE_USER_SUCCEEDED:

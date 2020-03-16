@@ -2,13 +2,13 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 
 import {
-  GET_RECIPE_REQUESTED,
+  GET_RECIPES_REQUESTED,
   APPEND_DISPLAY_RECIPES,
   NETWORK_FAILED,
   CLEAR_ERROR_MESSAGES
 } from '../actions';
 
-function* getRecipe() {
+function* getRecipes() {
   yield put({ type: CLEAR_ERROR_MESSAGES });
   try {
     const { data } = yield call(Api.get, '/getSamples');
@@ -22,8 +22,8 @@ function* getRecipe() {
   }
 }
 
-function* getRecipeSaga() {
-  yield takeLatest(GET_RECIPE_REQUESTED, getRecipe);
+function* getRecipesSaga() {
+  yield takeLatest(GET_RECIPES_REQUESTED, getRecipes);
 }
 
-export default getRecipeSaga;
+export default getRecipesSaga;

@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery, select } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
   NETWORK_FAILED,
@@ -7,16 +7,39 @@ import {
   SET_ACTIVE_USER,
   SET_DISPLAY_USER
 } from '../actions';
+import {
+  PROFILE_IMAGE,
+  SAVED_RECIPE
+} from '../variables/Constants';
+
+const getActiveUser = state => state.activeUser
 
 function* updateUser(action) {
   try {
-    yield call(Api.post, '/updateUser', {
-      id: action.id,
-      imageData: action.imageData
-    });
+    switch (action.updateType) {
+      case PROFILE_IMAGE:
+        yield call(Api.post, '/updateProfileImage', {
+          id: action.id,
+          imageData: action.imageData
+        });
+        break;
+      case SAVED_RECIPE:
+        const user = yield select(getActiveUser);
+        yield call(Api.post, '/updateSavedRecipeIds', {
+          id: action.id,
+          savedRecipeIds: [
+            ...user.savedRecipeIds,
+            action.recipeId
+          ]
+        });
+      default:
+        break;
+    }
     const { data } = yield call(Api.get, '/getUserById?id=' + action.id);
     yield put({ type: SET_ACTIVE_USER, user: data.user });
-    yield put({ type: SET_DISPLAY_USER, user: data.user });
+    if (action.updateType === PROFILE_IMAGE) {
+      yield put({ type: SET_DISPLAY_USER, user: data.user });
+    }
     yield put({ type: UPDATE_USER_SUCCEEDED });
   } catch (err) {
     yield put({ type: NETWORK_FAILED });
@@ -25,7 +48,7 @@ function* updateUser(action) {
 }
 
 function* updateUserSaga() {
-  yield takeLatest(UPDATE_USER_REQUESTED, updateUser);
+  yield takeEvery(UPDATE_USER_REQUESTED, updateUser);
 }
 
 export default updateUserSaga;

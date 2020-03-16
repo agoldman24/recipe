@@ -1,5 +1,5 @@
 import { all } from 'redux-saga/effects';
-import getRecipeSaga from './getRecipeSaga';
+import getRecipesSaga from './getRecipesSaga';
 import signUpSaga from './signUpSaga';
 import signInSaga from './signInSaga';
 import updateUserSaga from './updateUserSaga';
@@ -8,7 +8,7 @@ import getUserDetailSaga from './getUserDetailSaga';
 
 export default function* rootSaga() {
   yield all([
-    getRecipeSaga(),
+    getRecipesSaga(),
     getAllUsersSaga(),
     signInSaga(),
     signUpSaga(),

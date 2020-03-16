@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import { SET_PROFILE_IMAGE, UPDATE_USER_REQUESTED } from '../actions';
+import { PROFILE_IMAGE } from '../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import FileBase from 'react-file-base64';
@@ -156,7 +157,11 @@ const mapDispatchToProps = dispatch => {
       dispatch({ type: SET_PROFILE_IMAGE, image });
     },
     updateUser: (id, imageData) => {
-      dispatch({ type: UPDATE_USER_REQUESTED, id, imageData });
+      dispatch({
+        type: UPDATE_USER_REQUESTED,
+        updateType: PROFILE_IMAGE,
+        id, imageData
+      });
     }
   };
 };

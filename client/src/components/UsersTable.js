@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import '../index.css';
 import { SET_DISPLAY_USER, SET_ACTIVE_TAB } from '../actions';
 import { PROFILE_TAB } from '../variables/Constants';
@@ -16,11 +17,13 @@ const useStyles = makeStyles({
     marginLeft: isMobile ? '5%' : '10%',
     width: isMobile ? '90%' : '80%',
     margin: '125px 0 200px'
-  },
-  cell: {
-    fontSize:'16px'
   }
 });
+
+const textStyle = {
+  fontSize:'16px',
+  float:'left'
+}
 
 const UsersTable = props => {
   const classes = useStyles();
@@ -39,8 +42,9 @@ const UsersTable = props => {
                 setSelectedId(user.id);
                 props.visitUserProfile(user);
               }}>
-              <TableCell className={classes.cell} component="th" scope="row">
-                {user.firstName + " " + user.lastName}
+              <TableCell component="th" scope="row">
+                <Typography style={textStyle}>{user.firstName + " " + user.lastName}</Typography>
+                <Typography style={{...textStyle, color:'grey', paddingLeft:'10px'}}>{user.username}</Typography>
               </TableCell>
             </TableRow>
           ))}

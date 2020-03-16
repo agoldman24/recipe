@@ -8,10 +8,8 @@ import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { isMobile } from 'react-device-detect';
-import { GET_RECIPE_REQUESTED, TOGGLE_RECIPE_DETAILS } from '../actions';
+import { TOGGLE_RECIPE_DETAILS } from '../actions';
 
 const RecipeCard = props => {
   const fabStyle = {
@@ -70,7 +68,7 @@ const RecipeCard = props => {
           </div>
           {props.isLoggedIn &&
             <Fab style={{...fabStyle, float:'left'}}>
-              <FavoriteIcon style={iconStyle}/>
+              <FavoriteBorderIcon style={iconStyle}/>
             </Fab>
           }
         </div>
@@ -80,15 +78,6 @@ const RecipeCard = props => {
             width:'100%', verticalAlign:'text-top'
           }}
         >
-          <Fab style={{...fabStyle, color:'white', float:'left'}}>
-            <ArrowBackIosIcon style={iconStyle}/>
-          </Fab>
-          <Fab
-            style={{...fabStyle, color:'white', float:'right'}}
-            onClick={props.getRandomRecipe}
-          >
-            <ArrowForwardIosIcon style={iconStyle}/>
-          </Fab>
         </div>
         <div style={{
           position:'absolute',
@@ -110,7 +99,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRandomRecipe: () => dispatch({ type: GET_RECIPE_REQUESTED }),
     toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id })
   };
 };

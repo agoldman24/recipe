@@ -4,7 +4,7 @@ import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
-import { GET_RECIPE_REQUESTED } from '../actions';
+import { GET_RECIPES_REQUESTED } from '../actions';
 
 const errorStyle = {
   textAlign:'center',
@@ -74,7 +74,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRandomRecipe: () => dispatch({ type: GET_RECIPE_REQUESTED }),
+    getRandomRecipe: () => dispatch({ type: GET_RECIPES_REQUESTED }),
   };
 };
 

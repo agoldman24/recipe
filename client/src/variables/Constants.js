@@ -4,6 +4,8 @@ export const SIGN_UP_TAB = "SIGN_UP_TAB";
 export const SEARCH_TAB = "SEARCH_TAB";
 export const WELCOME_TAB = "WELCOME_TAB";
 export const PROFILE_TAB = "PROFILE_TAB";
+export const PROFILE_IMAGE = "PROFILE_IMAGE";
+export const SAVED_RECIPE = "SAVED_RECIPE";
 
 export const defaultTheme = {
   palette: {

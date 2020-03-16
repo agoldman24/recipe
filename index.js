@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
-const cors = require('cors');
-const path = require('path');
+const cors = require("cors");
+const path = require("path");
 const userRoutes = require('./server/userRoutes');
 const recipeRoutes = require('./server/recipeRoutes');
 const app = express();
@@ -26,7 +26,8 @@ router.get("/getUserById", userRoutes.getUserById);
 router.get("/getUser", userRoutes.getUser);
 router.get("/getAllUsers", userRoutes.getAllUsers);
 router.post("/createUser", userRoutes.createUser);
-router.post('/updateUser', userRoutes.updateUser);
+router.post('/updateProfileImage', userRoutes.updateProfileImage);
+router.post('/updateSavedRecipeIds', userRoutes.updateSavedRecipeIds);
 
 router.post("/createRecipe", recipeRoutes.createRecipe);
 router.get("/getSamples", recipeRoutes.getSamples);

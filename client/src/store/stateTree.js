@@ -43,7 +43,8 @@ export default Object.assign({},
   displayUserDetail: {
     friends: {},
     createRecipes: {},
-    savedRecipes: {}
+    savedRecipes: {},
+    activeDetail: ""
   },
   recipe: {
     id: "",

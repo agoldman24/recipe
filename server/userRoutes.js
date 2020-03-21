@@ -1,5 +1,6 @@
 const User = require('./user');
 const db = require('./database');
+const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -25,9 +26,24 @@ exports.getUserById = (req, res) => {
   });
 }
 
+exports.getUsersByIds = (req, res) => {
+  const idArray = req.query.ids.split(',');
+  db.collection("users").find(
+    { _id: { $in: idArray.map(id => ObjectID(id)) } }
+  ).toArray().then(function(users) {
+    return res.json({
+      success: true,
+      user: users.reduce((accum, user) => {
+        accum[user._id] = getDerivedUser(user);
+        return accum;
+      }, {})
+    })
+  })
+}
+
 exports.getUser = (req, res) => {
   const { username, password } = req.query;
-  db.collection("users").findOne({ username }).then(function(user) {
+  db.collection("users").findOne({ username }).then(function (user) {
     if (!user) {
       return res.json({ success: false });
     } else {

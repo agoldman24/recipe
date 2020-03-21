@@ -5,7 +5,10 @@ export const SEARCH_TAB = "SEARCH_TAB";
 export const WELCOME_TAB = "WELCOME_TAB";
 export const PROFILE_TAB = "PROFILE_TAB";
 export const PROFILE_IMAGE = "PROFILE_IMAGE";
-export const SAVED_RECIPE = "SAVED_RECIPE";
+export const SAVED_RECIPE_IDS = "SAVED_RECIPE_IDS";
+export const FRIENDS = "FRIENDS";
+export const CREATED_RECIPES = "CREATED RECIPES";
+export const SAVED_RECIPES = "SAVED_RECIPES";
 
 export const defaultTheme = {
   palette: {

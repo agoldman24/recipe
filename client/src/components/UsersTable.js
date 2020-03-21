@@ -36,7 +36,7 @@ const UsersTable = props => {
           {props.users.map(user => (
             <TableRow
               key={user.id}
-              className="userTableRow"
+              className="clickable"
               selected={selectedId === user.id}
               onClick={() => {
                 setSelectedId(user.id);

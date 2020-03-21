@@ -12,7 +12,7 @@ export default function* rootSaga() {
     getAllUsersSaga(),
     signInSaga(),
     signUpSaga(),
-    updateUserSaga()
-    //getUserDetailSaga()
+    updateUserSaga(),
+    getUserDetailSaga()
   ])
 }

@@ -20,7 +20,7 @@ body {
   color: white;
 }
 .fileContainer:hover,
-.userTableRow:hover {
+.clickable:hover {
   cursor: pointer;
 }
 

@@ -9,7 +9,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { isMobile } from 'react-device-detect';
-import { TOGGLE_RECIPE_DETAILS } from '../actions';
+import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../actions';
+import { SAVED_RECIPE_IDS } from '../variables/Constants';
 
 const RecipeCard = props => {
   const fabStyle = {
@@ -66,10 +67,16 @@ const RecipeCard = props => {
               <InfoIcon style={iconStyle}/>
             </Fab>
           </div>
-          {props.isLoggedIn &&
-            <Fab style={{...fabStyle, float:'left'}}>
-              <FavoriteBorderIcon style={iconStyle}/>
+          {props.isLoggedIn
+          ? <Fab style={{...fabStyle, float:'left'}}>
+              {props.savedRecipeIds.includes(props.id)
+              ? <FavoriteIcon onClick={() => props.updateSavedRecipes(
+                props.activeUser.id, props.id, false)} style={iconStyle}/>
+              : <FavoriteBorderIcon onClick={() => props.updateSavedRecipes(
+                props.activeUser.id, props.id, true)} style={iconStyle}/>
+              }
             </Fab>
+          : null
           }
         </div>
         <div
@@ -93,13 +100,20 @@ const RecipeCard = props => {
 
 const mapStateToProps = state => {
   return {
-    isLoggedIn: !!state.activeUser
+    isLoggedIn: !!state.activeUser,
+    activeUser: state.activeUser,
+    savedRecipeIds: !!state.activeUser ? state.activeUser.savedRecipeIds : null
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id })
+    toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id }),
+    updateSavedRecipes: (id, recipeId, keep) => dispatch({
+      type: UPDATE_USER_REQUESTED,
+      updateType: SAVED_RECIPE_IDS,
+      id, recipeId, keep
+    })
   };
 };
 

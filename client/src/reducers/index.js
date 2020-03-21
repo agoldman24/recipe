@@ -13,6 +13,9 @@ import {
   GET_RECIPES_REQUESTED,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
+  GET_USER_DETAIL_REQUESTED,
+  GET_USER_DETAIL_SUCCEEDED,
+  SET_DISPLAY_USER_DETAIL,
   SET_PROFILE_IMAGE,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
@@ -33,9 +36,11 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case GET_ALL_USERS:
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
+    case GET_USER_DETAIL_REQUESTED:
       return true;
     case POPULATE_USERS:
     case UPDATE_USER_SUCCEEDED:
+    case GET_USER_DETAIL_SUCCEEDED:
     case APPEND_DISPLAY_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
@@ -141,6 +146,16 @@ const displayUserReduce = (state = null, action) => {
   }
 }
 
+const displayUserDetailReduce = (state = null, action) => {
+  switch (action.type) {
+    case SET_DISPLAY_USER_DETAIL:
+      const { friends, createdRecipes, savedRecipes, activeDetail } = action;
+      return { friends, createdRecipes, savedRecipes, activeDetail };
+    default:
+      return state;
+  }
+}
+
 const errorMessageReduce = (state = StateTree.errorMessages, action) => {
   switch (action.type) {
     case SIGN_IN_FAILED:
@@ -191,5 +206,6 @@ export default combineReducers({
   snackbar: snackbarReduce,
   users: usersReduce,
   activeUser: activeUserReduce,
-  displayUser: displayUserReduce
+  displayUser: displayUserReduce,
+  displayUserDetail: displayUserDetailReduce
 });

@@ -2,8 +2,14 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import { SET_PROFILE_IMAGE, UPDATE_USER_REQUESTED } from '../actions';
-import { PROFILE_IMAGE } from '../variables/Constants';
+import RecipeList from './RecipeList';
+import {
+  SET_PROFILE_IMAGE,
+  UPDATE_USER_REQUESTED,
+  GET_USER_DETAIL_REQUESTED,
+  SET_ACTIVE_DETAIL
+} from '../actions';
+import { PROFILE_IMAGE, FRIENDS, CREATED_RECIPES, SAVED_RECIPES } from '../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import FileBase from 'react-file-base64';
@@ -57,86 +63,107 @@ class ProfileTab extends React.Component {
       }}>
       {this.props.networkFailed
       ? <div style={errorStyle}>Network error</div>
-      : <Grid
-          container
-          direction="column"
-          style={{
-            alignItems:'center',
-            padding: '0 10px'
-          }}
-        >
-          <Grid item>
-            <Typography
-              variant="h5"
-              style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
-            >
-              {username}
-            </Typography>
-          </Grid>
-          <Grid item style={{display:'inline-flex'}}>
-            <div>
-              {!!profileImage
-              ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
-              : <Avatar alt="Profile" style={imageStyle}>
-                  <Grid container direction="column" style={{textAlign:'center'}}>
-                    <Grid item>
-                      {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
-                    </Grid>
-                    <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
-                    {!!activeUser && activeUser.id === id &&
-                      <label className="fileContainer">
-                        Upload photo
-                        <FileBase
-                          type="file"
-                          onDone={this.onImageChange}/>
-                      </label>
-                    }
-                    </Grid>
-                  </Grid>
-                </Avatar>
-              }
-            </div>
-            <Typography
-              style={{
-                ...textStyle,
-                fontSize: '24px',
-                margin:'auto'
-              }}
-            >
-              {firstName + " " + lastName}
-            </Typography>
-          </Grid>
+      : <div>
           <Grid
             container
-            direction="row"
-            style={{paddingTop:'20px'}}
+            direction="column"
+            style={{
+              alignItems:'center',
+              padding: '0 10px'
+            }}
           >
-            <Grid item style={columnStyle}>
-              <Typography style={{...textStyle, fontSize:'40px'}}>
-                {friendIds.length}
-              </Typography>
-              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                Friends
-              </Typography>
-            </Grid>
-            <Grid item style={columnStyle}>
-              <Typography style={{...textStyle, fontSize:'40px'}}>
-                {createdRecipeIds.length}
-              </Typography>
-              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                Created Recipes
+            <Grid item>
+              <Typography
+                variant="h5"
+                style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
+              >
+                {username}
               </Typography>
             </Grid>
-            <Grid item style={columnStyle}>
-              <Typography style={{...textStyle, fontSize:'40px'}}>
-                {savedRecipeIds.length}
+            <Grid item style={{display:'inline-flex'}}>
+              <div>
+                {!!profileImage
+                ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
+                : <Avatar alt="Profile" style={imageStyle}>
+                    <Grid container direction="column" style={{textAlign:'center'}}>
+                      <Grid item>
+                        {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
+                      </Grid>
+                      <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
+                      {!!activeUser && activeUser.id === id &&
+                        <label className="fileContainer">
+                          Upload photo
+                          <FileBase
+                            type="file"
+                            onDone={this.onImageChange}/>
+                        </label>
+                      }
+                      </Grid>
+                    </Grid>
+                  </Avatar>
+                }
+              </div>
+              <Typography
+                style={{
+                  ...textStyle,
+                  fontSize: '24px',
+                  margin:'auto'
+                }}
+              >
+                {firstName + " " + lastName}
               </Typography>
-              <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                Saved Recipes
-              </Typography>
+            </Grid>
+            <Grid
+              container
+              direction="row"
+              style={{paddingTop:'20px'}}
+            >
+              <Grid item className="clickable" style={columnStyle} onClick={() => {
+                  this.props.getUserDetail(FRIENDS);
+                }}>
+                <Typography style={{...textStyle, fontSize:'40px'}}>
+                  {friendIds.length}
+                </Typography>
+                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                  Friends
+                </Typography>
+              </Grid>
+              <Grid item className="clickable" style={columnStyle} onClick={() => {
+                  this.props.getUserDetail(CREATED_RECIPES);
+                }}>
+                <Typography style={{...textStyle, fontSize:'40px'}}>
+                  {createdRecipeIds.length}
+                </Typography>
+                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                  Created Recipes
+                </Typography>
+              </Grid>
+              <Grid item className="clickable" style={columnStyle} onClick={() => {
+                  this.props.getUserDetail(SAVED_RECIPES);
+                }}>
+                <Typography style={{...textStyle, fontSize:'40px'}}>
+                  {savedRecipeIds.length}
+                </Typography>
+                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                  Saved Recipes
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+          {!!this.props.displayUserDetail &&
+            <div>
+              {this.props.displayUserDetail.activeDetail === FRIENDS &&
+                <div>Friends</div>
+              }
+              {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
+                <div>Created Recipes</div>
+              }
+              {this.props.displayUserDetail.activeDetail === SAVED_RECIPES &&
+                <RecipeList recipes={this.props.displayUserDetail.savedRecipes} />
+              }
+            </div>
+          }
+        </div>
       }
       </div>
     );
@@ -146,6 +173,7 @@ class ProfileTab extends React.Component {
 const mapStateToProps = state => {
   return {
     displayUser: state.displayUser,
+    displayUserDetail: state.displayUserDetail,
     activeUser: state.activeUser,
     networkFailed: state.errorMessages.networkFailed
   };
@@ -162,6 +190,12 @@ const mapDispatchToProps = dispatch => {
         updateType: PROFILE_IMAGE,
         id, imageData
       });
+    },
+    getUserDetail: activeDetail => {
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail })
+    },
+    setActiveDetail: detail => {
+      dispatch({ type: SET_ACTIVE_DETAIL, detail })
     }
   };
 };

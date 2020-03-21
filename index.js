@@ -26,11 +26,13 @@ router.get("/getUserById", userRoutes.getUserById);
 router.get("/getUser", userRoutes.getUser);
 router.get("/getAllUsers", userRoutes.getAllUsers);
 router.post("/createUser", userRoutes.createUser);
-router.post('/updateProfileImage', userRoutes.updateProfileImage);
-router.post('/updateSavedRecipeIds', userRoutes.updateSavedRecipeIds);
+router.post("/updateProfileImage", userRoutes.updateProfileImage);
+router.post("/updateSavedRecipeIds", userRoutes.updateSavedRecipeIds);
+router.get("/getUsersByIds", userRoutes.getUsersByIds);
 
 router.post("/createRecipe", recipeRoutes.createRecipe);
 router.get("/getSamples", recipeRoutes.getSamples);
+router.get("/getRecipesByIds", recipeRoutes.getRecipesByIds);
 
 app.use("/api", router);
 

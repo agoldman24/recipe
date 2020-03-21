@@ -9,7 +9,7 @@ import {
 } from '../actions';
 import {
   PROFILE_IMAGE,
-  SAVED_RECIPE
+  SAVED_RECIPE_IDS
 } from '../variables/Constants';
 
 const getActiveUser = state => state.activeUser
@@ -23,15 +23,18 @@ function* updateUser(action) {
           imageData: action.imageData
         });
         break;
-      case SAVED_RECIPE:
+      case SAVED_RECIPE_IDS:
         const user = yield select(getActiveUser);
         yield call(Api.post, '/updateSavedRecipeIds', {
           id: action.id,
-          savedRecipeIds: [
-            ...user.savedRecipeIds,
-            action.recipeId
-          ]
+          savedRecipeIds: action.keep
+          ? [
+              ...user.savedRecipeIds,
+              action.recipeId
+            ]
+          : user.savedRecipeIds.filter(id => id !== action.recipeId)
         });
+        break;
       default:
         break;
     }

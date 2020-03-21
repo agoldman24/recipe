@@ -109,6 +109,8 @@ const usersReduce = (state = StateTree.users, action) => {
     case POPULATE_USERS:
       return action.users;
     case ADD_USER:
+    case SET_ACTIVE_USER:
+    case SET_DISPLAY_USER:
       return {
         ...state,
         [action.user.id]: action.user
@@ -148,6 +150,8 @@ const displayUserReduce = (state = null, action) => {
 
 const displayUserDetailReduce = (state = null, action) => {
   switch (action.type) {
+    case SET_DISPLAY_USER:
+      return null;
     case SET_DISPLAY_USER_DETAIL:
       const { friends, createdRecipes, savedRecipes, activeDetail } = action;
       return { friends, createdRecipes, savedRecipes, activeDetail };

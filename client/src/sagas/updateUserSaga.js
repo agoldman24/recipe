@@ -12,10 +12,13 @@ import {
   SAVED_RECIPE_IDS
 } from '../variables/Constants';
 
-const getActiveUser = state => state.activeUser
+const getActiveUser = state => state.activeUser;
+const getDisplayUser = state => state.displayUser;
 
 function* updateUser(action) {
   try {
+    const activeUser = yield select(getActiveUser);
+    const displayUser = yield select(getDisplayUser);
     switch (action.updateType) {
       case PROFILE_IMAGE:
         yield call(Api.post, '/updateProfileImage', {
@@ -24,15 +27,14 @@ function* updateUser(action) {
         });
         break;
       case SAVED_RECIPE_IDS:
-        const user = yield select(getActiveUser);
         yield call(Api.post, '/updateSavedRecipeIds', {
           id: action.id,
           savedRecipeIds: action.keep
           ? [
-              ...user.savedRecipeIds,
+              ...activeUser.savedRecipeIds,
               action.recipeId
             ]
-          : user.savedRecipeIds.filter(id => id !== action.recipeId)
+          : activeUser.savedRecipeIds.filter(id => id !== action.recipeId)
         });
         break;
       default:
@@ -40,7 +42,7 @@ function* updateUser(action) {
     }
     const { data } = yield call(Api.get, '/getUserById?id=' + action.id);
     yield put({ type: SET_ACTIVE_USER, user: data.user });
-    if (action.updateType === PROFILE_IMAGE) {
+    if (activeUser.id === displayUser.id) {
       yield put({ type: SET_DISPLAY_USER, user: data.user });
     }
     yield put({ type: UPDATE_USER_SUCCEEDED });

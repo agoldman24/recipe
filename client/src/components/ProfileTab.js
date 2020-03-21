@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import RecipeList from './RecipeList';
+import UsersTable from './UsersTable';
 import {
   SET_PROFILE_IMAGE,
   UPDATE_USER_REQUESTED,
@@ -153,13 +154,13 @@ class ProfileTab extends React.Component {
           {!!this.props.displayUserDetail &&
             <div>
               {this.props.displayUserDetail.activeDetail === FRIENDS &&
-                <div>Friends</div>
+                <UsersTable users={Object.values(this.props.displayUserDetail.friends)}/>
               }
               {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
-                <div>Created Recipes</div>
+                <RecipeList recipes={this.props.displayUserDetail.createdRecipes}/>
               }
               {this.props.displayUserDetail.activeDetail === SAVED_RECIPES &&
-                <RecipeList recipes={this.props.displayUserDetail.savedRecipes} />
+                <RecipeList recipes={this.props.displayUserDetail.savedRecipes}/>
               }
             </div>
           }

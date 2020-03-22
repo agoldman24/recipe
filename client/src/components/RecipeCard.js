@@ -68,22 +68,23 @@ const RecipeCard = props => {
             </Fab>
           </div>
           {props.isLoggedIn
-          ? <Fab style={{...fabStyle, float:'left'}}>
-              {props.savedRecipeIds.includes(props.id)
-              ? <FavoriteIcon
-                  onClick={() => props.updateSavedRecipes(
-                    props.activeUser.id, props.id, false
-                  )}
-                  style={iconStyle}
-                />
-              : <FavoriteBorderIcon
-                  onClick={() => props.updateSavedRecipes(
-                    props.activeUser.id, props.id, true
-                  )}
-                  style={iconStyle}
-                />
-              }
-            </Fab>
+          ? props.savedRecipeIds.includes(props.id)
+            ? <Fab
+                onClick={() => props.updateSavedRecipes(
+                  props.activeUser.id, props.id, false
+                )}
+                style={{...fabStyle, float:'left'}}
+              >
+                <FavoriteIcon style={iconStyle}/>
+              </Fab>
+            : <Fab
+                onClick={() => props.updateSavedRecipes(
+                  props.activeUser.id, props.id, true
+                )}
+                style={{...fabStyle, float:'left'}}
+              >
+                <FavoriteBorderIcon style={iconStyle}/>
+              </Fab>
           : null
           }
         </div>

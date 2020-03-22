@@ -9,14 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import '../index.css';
-import { SET_DISPLAY_USER, SET_ACTIVE_TAB } from '../actions';
-import { PROFILE_TAB } from '../variables/Constants';
+import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../actions';
+import { PROFILE_TAB, FRIENDS } from '../variables/Constants';
 
 const useStyles = makeStyles({
   table: {
     marginLeft: isMobile ? '5%' : '10%',
-    width: isMobile ? '90%' : '80%',
-    margin: '125px 0 200px'
+    width: isMobile ? '90%' : '80%'
   }
 });
 
@@ -63,6 +62,7 @@ const mapDispatchToProps = dispatch => {
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user });
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FRIENDS });
     }
   }
 }

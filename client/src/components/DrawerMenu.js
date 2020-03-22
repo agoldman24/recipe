@@ -7,14 +7,19 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import PersonIcon from '@material-ui/icons/Person';
-import PeopleIcon from '@material-ui/icons/People';
 import CreateIcon from '@material-ui/icons/Create';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
-import { SIGN_OUT, SET_DISPLAY_USER, SET_ACTIVE_TAB, SHOW_SNACKBAR } from '../actions';
-import { WELCOME_TAB, PROFILE_TAB } from '../variables/Constants';
+import {
+  SIGN_OUT,
+  SET_DISPLAY_USER,
+  SET_ACTIVE_TAB,
+  SHOW_SNACKBAR,
+  GET_USER_DETAIL_REQUESTED
+} from '../actions';
+import { WELCOME_TAB, PROFILE_TAB, FRIENDS } from '../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
@@ -43,8 +48,6 @@ const DrawerMenu = props => {
       case "Profile":
         props.visitUserProfile(props.activeUser);
         break;
-      case "Friends":
-        break;
       case "Drafts":
         break;
       case "Create":
@@ -61,8 +64,6 @@ const DrawerMenu = props => {
     switch (text) {
       case "Profile":
         return <PersonIcon />
-      case "Friends":
-        return <PeopleIcon />
       case "Drafts":
         return <MenuBookIcon />;
       case "Create":
@@ -81,7 +82,7 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Friends', 'Drafts', 'Create', 'Sign Out']
+        {['Profile', 'Drafts', 'Create', 'Sign Out']
         .map(text => (
           <ListItem
             button
@@ -144,6 +145,7 @@ const mapDispatchToProps = dispatch => {
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FRIENDS });
     },
     signOut: () => {
       dispatch({ type: SET_ACTIVE_TAB, tab: WELCOME_TAB });

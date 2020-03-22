@@ -9,12 +9,6 @@ import {
 
 const getDisplayUser = state => state.displayUser;
 
-// const generateQueryString = ids => {
-//   return ids.reduce((accum, id) => {
-//     accum += 
-//   }, "")
-// }
-
 function* getUserDetail(action) {
   try {
     const displayUser = yield select(getDisplayUser);

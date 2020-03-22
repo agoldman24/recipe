@@ -33,7 +33,7 @@ exports.getUsersByIds = (req, res) => {
   ).toArray().then(function(users) {
     return res.json({
       success: true,
-      user: users.reduce((accum, user) => {
+      users: users.reduce((accum, user) => {
         accum[user._id] = getDerivedUser(user);
         return accum;
       }, {})
@@ -105,4 +105,13 @@ exports.updateSavedRecipeIds = (req, res) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true });
   });
+}
+
+exports.updateFriendIds = (req, res) => {
+  const { id, friendIds } = req.body;
+  console.log("friendIds:", friendIds);
+  User.findByIdAndUpdate(id, { friendIds }, err => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true });
+  })
 }

@@ -1,7 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
+import Fab from '@material-ui/core/Fab';
+import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
 import {
@@ -10,7 +13,14 @@ import {
   GET_USER_DETAIL_REQUESTED,
   SET_ACTIVE_DETAIL
 } from '../actions';
-import { PROFILE_IMAGE, FRIENDS, CREATED_RECIPES, SAVED_RECIPES } from '../variables/Constants';
+import {
+  PROFILE_IMAGE,
+  FRIENDS,
+  CREATED_RECIPES,
+  SAVED_RECIPES,
+  FRIEND_IDS,
+  gradientTextStyle2
+} from '../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import FileBase from 'react-file-base64';
@@ -25,7 +35,7 @@ const errorStyle = {
 const textStyle = {
   fontWeight:'bold',
   fontFamily:'Signika',
-  lineHeight: 1
+  lineHeight: 1,
 }
 
 const imageStyle = {
@@ -38,14 +48,36 @@ const imageStyle = {
 
 const columnStyle = {
   width: '33.33%',
-  textAlign:'center'
+  textAlign: 'center'
 }
+
+const unselected = {
+  paddingBottom: '10px'
+}
+
+const selected = {
+  paddingBottom: '10px',
+  borderBottom:'2px solid #ffc800'
+}
+
+const fabStyle = {
+  background: 'none',
+  boxShadow: 'none',
+  color: 'white',
+  top: '-50px',
+  left: '80px'
+};
+
+const iconStyle = {
+  width:'25',
+  height:'25'
+};
 
 class ProfileTab extends React.Component {
 
   onImageChange = (files) => {
     const imageData = files.base64.toString();
-    this.props.updateUser(this.props.displayUser.id, imageData);
+    this.props.updateProfileImage(this.props.activeUser.id, imageData);
   }
 
   render() {
@@ -84,7 +116,16 @@ class ProfileTab extends React.Component {
             <Grid item style={{display:'inline-flex'}}>
               <div>
                 {!!profileImage
-                ? <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
+                ? <div style={{height:'120px'}}>
+                    <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
+                    {!!this.props.activeUser &&
+                      this.props.activeUser.id === this.props.displayUser.id &&
+                        <Fab style={fabStyle} className="fileContainer">
+                          <AddAPhotoIcon style={iconStyle}/>
+                          <FileBase type="file" onDone={this.onImageChange}/>
+                        </Fab>
+                    }
+                  </div>
                 : <Avatar alt="Profile" style={imageStyle}>
                     <Grid container direction="column" style={{textAlign:'center'}}>
                       <Grid item>
@@ -94,9 +135,7 @@ class ProfileTab extends React.Component {
                       {!!activeUser && activeUser.id === id &&
                         <label className="fileContainer">
                           Upload photo
-                          <FileBase
-                            type="file"
-                            onDone={this.onImageChange}/>
+                          <FileBase type="file" onDone={this.onImageChange}/>
                         </label>
                       }
                       </Grid>
@@ -114,55 +153,119 @@ class ProfileTab extends React.Component {
                 {firstName + " " + lastName}
               </Typography>
             </Grid>
+            {!!this.props.activeUser
+              ? this.props.activeUser.id === this.props.displayUser.id
+                ? <Button>Edit Profile</Button>
+                : this.props.activeUser.friendIds.includes(this.props.displayUser.id)
+                  ? <Button
+                      onClick={() => {
+                        this.props.updateFriendIds(
+                          this.props.activeUser.id,
+                          this.props.displayUser.id,
+                          false
+                        )
+                      }}
+                    >
+                      Remove Friend
+                    </Button>
+                  : <Button
+                      onClick={() => {
+                        this.props.updateFriendIds(
+                          this.props.activeUser.id,
+                          this.props.displayUser.id,
+                          true
+                        )
+                      }}
+                    >
+                      Add Friend
+                    </Button>
+              : null
+            }
+          </Grid>
+          {!!this.props.displayUserDetail &&
+          <div>
             <Grid
               container
               direction="row"
-              style={{paddingTop:'20px'}}
+              style={{padding:'20px 0'}}
             >
               <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.getUserDetail(FRIENDS);
+                  this.props.setActiveDetail(FRIENDS);
                 }}>
-                <Typography style={{...textStyle, fontSize:'40px'}}>
-                  {friendIds.length}
-                </Typography>
-                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                  Friends
-                </Typography>
+                {this.props.displayUserDetail.activeDetail === FRIENDS
+                ? <div style={selected}>
+                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                      {friendIds.length}
+                    </Typography>
+                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Friends
+                    </Typography>
+                  </div>
+                : <div style={unselected}>
+                    <Typography style={{...textStyle, fontSize:'40px'}}>
+                      {friendIds.length}
+                    </Typography>
+                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Friends
+                    </Typography>
+                  </div>
+                }
               </Grid>
               <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.getUserDetail(CREATED_RECIPES);
+                  this.props.setActiveDetail(CREATED_RECIPES);
                 }}>
-                <Typography style={{...textStyle, fontSize:'40px'}}>
-                  {createdRecipeIds.length}
-                </Typography>
-                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                  Created Recipes
-                </Typography>
+                {this.props.displayUserDetail.activeDetail === CREATED_RECIPES
+                ? <div style={selected}>
+                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                      {createdRecipeIds.length}
+                    </Typography>
+                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Created Recipes
+                    </Typography>
+                  </div>
+                : <div style={unselected}>
+                    <Typography style={{...textStyle, fontSize:'40px'}}>
+                      {createdRecipeIds.length}
+                    </Typography>
+                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Created Recipes
+                    </Typography>
+                  </div>
+                }
               </Grid>
               <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.getUserDetail(SAVED_RECIPES);
+                  this.props.setActiveDetail(SAVED_RECIPES);
                 }}>
-                <Typography style={{...textStyle, fontSize:'40px'}}>
-                  {savedRecipeIds.length}
-                </Typography>
-                <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                  Saved Recipes
-                </Typography>
+                {this.props.displayUserDetail.activeDetail === SAVED_RECIPES
+                ? <div style={selected}>
+                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                      {savedRecipeIds.length}
+                    </Typography>
+                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Saved Recipes
+                    </Typography>
+                  </div>
+                : <div style={unselected}>
+                    <Typography style={{...textStyle, fontSize:'40px'}}>
+                      {savedRecipeIds.length}
+                    </Typography>
+                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Saved Recipes
+                    </Typography>
+                  </div>
+                }
               </Grid>
             </Grid>
-          </Grid>
-          {!!this.props.displayUserDetail &&
-            <div>
-              {this.props.displayUserDetail.activeDetail === FRIENDS &&
-                <UsersTable users={Object.values(this.props.displayUserDetail.friends)}/>
-              }
-              {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
-                <RecipeList recipes={this.props.displayUserDetail.createdRecipes}/>
-              }
-              {this.props.displayUserDetail.activeDetail === SAVED_RECIPES &&
-                <RecipeList recipes={this.props.displayUserDetail.savedRecipes}/>
-              }
-            </div>
+            {this.props.displayUserDetail.activeDetail === FRIENDS &&
+              <UsersTable users={Object.values(this.props.displayUserDetail.friends)}/>
+            }
+            {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
+              <RecipeList recipes={this.props.displayUserDetail.createdRecipes}/>
+            }
+            {this.props.displayUserDetail.activeDetail === SAVED_RECIPES &&
+              <RecipeList recipes={this.props.displayUserDetail.savedRecipes}/>
+            }
+          </div>
           }
         </div>
       }
@@ -185,12 +288,19 @@ const mapDispatchToProps = dispatch => {
     setProfileImage: image => {
       dispatch({ type: SET_PROFILE_IMAGE, image });
     },
-    updateUser: (id, imageData) => {
+    updateProfileImage: (id, imageData) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,
         updateType: PROFILE_IMAGE,
         id, imageData
       });
+    },
+    updateFriendIds: (id, friendId, keep) => {
+      dispatch({
+        type: UPDATE_USER_REQUESTED,
+        updateType: FRIEND_IDS,
+        id, friendId, keep
+      })
     },
     getUserDetail: activeDetail => {
       dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail })

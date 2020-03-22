@@ -4,14 +4,8 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { SET_ACTIVE_TAB } from '../actions';
-import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, defaultTheme }
+import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, gradientTextStyle }
 from '../variables/Constants';
-
-const gradientTextStyle = {
-  background: defaultTheme.palette.primary.mainGradient,
-	WebkitBackgroundClip: 'text',
-	WebkitTextFillColor: 'transparent'
-}
 
 const buttonStyle = {
   marginTop: '10px',

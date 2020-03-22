@@ -16,6 +16,7 @@ import {
   GET_USER_DETAIL_REQUESTED,
   GET_USER_DETAIL_SUCCEEDED,
   SET_DISPLAY_USER_DETAIL,
+  SET_ACTIVE_DETAIL,
   SET_PROFILE_IMAGE,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
@@ -153,8 +154,12 @@ const displayUserDetailReduce = (state = null, action) => {
     case SET_DISPLAY_USER:
       return null;
     case SET_DISPLAY_USER_DETAIL:
+      localStorage.setItem("activeDetail", action.activeDetail);
       const { friends, createdRecipes, savedRecipes, activeDetail } = action;
       return { friends, createdRecipes, savedRecipes, activeDetail };
+    case SET_ACTIVE_DETAIL:
+      localStorage.setItem("activeDetail", action.detail);
+      return { ...state, activeDetail: action.detail };
     default:
       return state;
   }

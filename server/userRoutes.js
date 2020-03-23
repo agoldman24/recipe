@@ -7,11 +7,11 @@ const saltRounds = 10;
 const getDerivedUser = user => {
   const {
     _id, username, firstName, lastName, profileImage,
-    friendIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+    followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
   } = user;
   return {
     id: _id, username, firstName, lastName, profileImage,
-    friendIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+    followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
   }
 }
 
@@ -93,25 +93,32 @@ exports.createUser = (req, res) => {
 
 exports.updateProfileImage = (req, res) => {
   const { id, imageData } = req.body;
-  User.findByIdAndUpdate(id, { profileImage: imageData }, err => {
+  User.findByIdAndUpdate(id, { profileImage: imageData }, { new: true }, (err, user) => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    return res.json({ success: true, user: getDerivedUser(user) });
   });
 }
 
 exports.updateSavedRecipeIds = (req, res) => {
   const { id, savedRecipeIds } = req.body;
-  User.findByIdAndUpdate(id, { savedRecipeIds }, err => {
+  User.findByIdAndUpdate(id, { savedRecipeIds }, { new: true }, (err, user) => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    return res.json({ success: true, user: getDerivedUser(user) });
   });
 }
 
-exports.updateFriendIds = (req, res) => {
-  const { id, friendIds } = req.body;
-  console.log("friendIds:", friendIds);
-  User.findByIdAndUpdate(id, { friendIds }, err => {
+exports.updateFollowerIds = (req, res) => {
+  const { id, followerIds } = req.body;
+  User.findByIdAndUpdate(id, { followerIds }, { new: true }, (err, user) => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true });
+    return res.json({ success: true, user: getDerivedUser(user) });
+  })
+}
+
+exports.updateFollowingIds = (req, res) => {
+  const { id, followingIds } = req.body;
+  User.findByIdAndUpdate(id, { followingIds }, { new: true }, (err, user) => {
+    if (err) return res.json({ success: false, error: err });
+    return res.json({ success: true, user: getDerivedUser(user) });
   })
 }

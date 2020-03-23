@@ -10,7 +10,8 @@ const UserSchema = new Schema(
     profileImage: {
       type: String
     },
-    friendIds: Array,
+    followerIds: Array,
+    followingIds: Array,
     draftRecipeIds: Array,
     createdRecipeIds: Array,
     savedRecipeIds: Array,

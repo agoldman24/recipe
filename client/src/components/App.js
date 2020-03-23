@@ -29,7 +29,7 @@ import {
   SIGN_IN_TAB,
   WELCOME_TAB,
   PROFILE_TAB,
-  FRIENDS,
+  FOLLOWING,
   defaultTheme
 } from '../variables/Constants';
 
@@ -51,7 +51,7 @@ class App extends React.Component {
     }
   }
   componentDidUpdate() {
-    if (!this.props.isHydrated && Object.keys(this.props.users).length) {
+    if (this.props.usersFetched && !this.props.isHydrated && Object.keys(this.props.users).length) {
       const activeTab = localStorage.getItem("activeTab");
       const activeDetail = localStorage.getItem("activeDetail");
       if (!!activeTab && activeTab !== "null") {
@@ -60,7 +60,7 @@ class App extends React.Component {
             this.props.users[localStorage.getItem("displayUserId")]
           );
           if (!activeDetail || activeDetail === "null") {
-            localStorage.setItem("activeDetail", FRIENDS);
+            localStorage.setItem("activeDetail", FOLLOWING);
           }
           this.props.getUserDetail(localStorage.getItem("activeDetail"));
         }
@@ -111,6 +111,7 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
+    usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
     users: state.users,
     isLoggedIn: !!state.activeUser,

@@ -11,9 +11,10 @@ import {
 import {
   PROFILE_IMAGE,
   SAVED_RECIPE_IDS,
-  FRIEND_IDS
+  FOLLOWING_IDS
 } from '../variables/Constants';
 
+const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
 const getActiveDetail = state => state.displayUserDetail.activeDetail;
@@ -22,40 +23,54 @@ function* updateUser(action) {
   try {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
+    const activeDetail = yield select(getActiveDetail);
+    let res, res2;
     switch (action.updateType) {
       case PROFILE_IMAGE:
-        yield call(Api.post, '/updateProfileImage', {
+        res = yield call(Api.post, '/updateProfileImage', {
           id: action.id,
           imageData: action.imageData
         });
+        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        yield put({ type: SET_DISPLAY_USER, user: res.data.user });
+        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
         break;
       case SAVED_RECIPE_IDS:
-        yield call(Api.post, '/updateSavedRecipeIds', {
+        res = yield call(Api.post, '/updateSavedRecipeIds', {
           id: action.id,
           savedRecipeIds: action.keep
           ? [ ...activeUser.savedRecipeIds, action.recipeId ]
           : activeUser.savedRecipeIds.filter(id => id !== action.recipeId)
         });
+        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        if (activeUser.id === displayUser.id) {
+          yield put({ type: SET_DISPLAY_USER, user: res.data.user });
+        }
+        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
         break;
-      case FRIEND_IDS:
-        yield call(Api.post, '/updateFriendIds', {
+      case FOLLOWING_IDS:
+        const users = yield select(getUsers);
+        const friend = users[action.friendId];
+        res = yield call(Api.post, '/updateFollowingIds', {
           id: action.id,
-          friendIds: action.keep
-          ? [ ...activeUser.friendIds, action.friendId ]
-          : activeUser.friendIds.filter(id => id !== action.friendId)
+          followingIds: action.keep
+          ? [ ...activeUser.followingIds, action.friendId ]
+          : activeUser.followingIds.filter(id => id !== action.friendId)
         });
+        res2 = yield call(Api.post, '/updateFollowerIds', {
+          id: action.friendId,
+          followerIds: action.keep
+          ? [ ...friend.followerIds, action.id ]
+          : friend.followerIds.filter(id => id !== action.id)
+        });
+        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        yield put({ type: SET_DISPLAY_USER, user: res2.data.user });
+        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
         break;
       default:
         break;
     }
-    const { data } = yield call(Api.get, '/getUserById?id=' + action.id);
     yield put({ type: UPDATE_USER_SUCCEEDED });
-    yield put({ type: SET_ACTIVE_USER, user: data.user });
-    if (activeUser.id === displayUser.id) {
-      const activeDetail = yield select(getActiveDetail);
-      yield put({ type: SET_DISPLAY_USER, user: data.user });
-      yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
-    }
   } catch (err) {
     yield put({ type: NETWORK_FAILED });
     console.log(err);

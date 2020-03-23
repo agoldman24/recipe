@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import CheckIcon from '@material-ui/icons/Check';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
 import {
@@ -15,10 +16,11 @@ import {
 } from '../actions';
 import {
   PROFILE_IMAGE,
-  FRIENDS,
+  FOLLOWERS,
+  FOLLOWING,
   CREATED_RECIPES,
   SAVED_RECIPES,
-  FRIEND_IDS,
+  FOLLOWING_IDS,
   gradientTextStyle2
 } from '../variables/Constants';
 import { connect } from 'react-redux';
@@ -47,7 +49,7 @@ const imageStyle = {
 }
 
 const columnStyle = {
-  width: '33.33%',
+  width: '25%',
   textAlign: 'center'
 }
 
@@ -73,6 +75,13 @@ const iconStyle = {
   height:'25'
 };
 
+const buttonStyle = {
+  border: '1px solid white',
+  fontSize: '14px',
+  padding: '2px',
+  width: isMobile ? '90%' : '50%'
+};
+
 class ProfileTab extends React.Component {
 
   onImageChange = (files) => {
@@ -84,7 +93,7 @@ class ProfileTab extends React.Component {
     const {
       displayUser: {
         id, username, firstName, lastName, profileImage,
-        friendIds, createdRecipeIds, savedRecipeIds
+        followerIds, followingIds, createdRecipeIds, savedRecipeIds
       },
       activeUser
     } = this.props;
@@ -113,7 +122,7 @@ class ProfileTab extends React.Component {
                 {username}
               </Typography>
             </Grid>
-            <Grid item style={{display:'inline-flex'}}>
+            <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
               <div>
                 {!!profileImage
                 ? <div style={{height:'120px'}}>
@@ -155,29 +164,50 @@ class ProfileTab extends React.Component {
             </Grid>
             {!!this.props.activeUser
               ? this.props.activeUser.id === this.props.displayUser.id
-                ? <Button>Edit Profile</Button>
-                : this.props.activeUser.friendIds.includes(this.props.displayUser.id)
-                  ? <Button
-                      onClick={() => {
-                        this.props.updateFriendIds(
-                          this.props.activeUser.id,
-                          this.props.displayUser.id,
-                          false
-                        )
-                      }}
-                    >
-                      Remove Friend
-                    </Button>
+                ? <Button style={buttonStyle}>Edit Profile</Button>
+                : this.props.activeUser.followingIds.includes(this.props.displayUser.id)
+                  ? <div style={{width:'100%'}}>
+                      <Button
+                        onClick={() => {
+                          this.props.updateFollowingIds(
+                            this.props.activeUser.id,
+                            this.props.displayUser.id,
+                            false
+                          )
+                        }}
+                        style={{
+                          ...buttonStyle,
+                          float:'right', margin:'0 10%'
+                        }}
+                      >
+                        Unfollow
+                      </Button>
+                      <Typography
+                        style={{
+                          float:'right', fontSize:'16px', color:'#00d412'
+                        }}
+                      >
+                        Following
+                        <CheckIcon
+                          style={{
+                            ...iconStyle,
+                            verticalAlign:'top',
+                            marginLeft:'5px',
+                            color:'#00d412'
+                          }}/>
+                      </Typography>
+                    </div>
                   : <Button
                       onClick={() => {
-                        this.props.updateFriendIds(
+                        this.props.updateFollowingIds(
                           this.props.activeUser.id,
                           this.props.displayUser.id,
                           true
                         )
                       }}
+                      style={buttonStyle}
                     >
-                      Add Friend
+                      Follow
                     </Button>
               : null
             }
@@ -190,23 +220,45 @@ class ProfileTab extends React.Component {
               style={{padding:'20px 0'}}
             >
               <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.setActiveDetail(FRIENDS);
+                  this.props.setActiveDetail(FOLLOWERS);
                 }}>
-                {this.props.displayUserDetail.activeDetail === FRIENDS
+                {this.props.displayUserDetail.activeDetail === FOLLOWERS
                 ? <div style={selected}>
                     <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                      {friendIds.length}
+                      {followerIds.length}
                     </Typography>
                     <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Friends
+                      Followers
                     </Typography>
                   </div>
                 : <div style={unselected}>
                     <Typography style={{...textStyle, fontSize:'40px'}}>
-                      {friendIds.length}
+                      {followerIds.length}
                     </Typography>
                     <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Friends
+                      Followers
+                    </Typography>
+                  </div>
+                }
+              </Grid>
+              <Grid item className="clickable" style={columnStyle} onClick={() => {
+                  this.props.setActiveDetail(FOLLOWING);
+                }}>
+                {this.props.displayUserDetail.activeDetail === FOLLOWING
+                ? <div style={selected}>
+                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                      {followingIds.length}
+                    </Typography>
+                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Following
+                    </Typography>
+                  </div>
+                : <div style={unselected}>
+                    <Typography style={{...textStyle, fontSize:'40px'}}>
+                      {followingIds.length}
+                    </Typography>
+                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                      Following
                     </Typography>
                   </div>
                 }
@@ -256,8 +308,11 @@ class ProfileTab extends React.Component {
                 }
               </Grid>
             </Grid>
-            {this.props.displayUserDetail.activeDetail === FRIENDS &&
-              <UsersTable users={Object.values(this.props.displayUserDetail.friends)}/>
+            {this.props.displayUserDetail.activeDetail === FOLLOWERS &&
+              <UsersTable users={Object.values(this.props.displayUserDetail.followers)}/>
+            }
+            {this.props.displayUserDetail.activeDetail === FOLLOWING &&
+              <UsersTable users={Object.values(this.props.displayUserDetail.following)}/>
             }
             {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
               <RecipeList recipes={this.props.displayUserDetail.createdRecipes}/>
@@ -295,10 +350,10 @@ const mapDispatchToProps = dispatch => {
         id, imageData
       });
     },
-    updateFriendIds: (id, friendId, keep) => {
+    updateFollowingIds: (id, friendId, keep) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,
-        updateType: FRIEND_IDS,
+        updateType: FOLLOWING_IDS,
         id, friendId, keep
       })
     },

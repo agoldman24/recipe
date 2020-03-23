@@ -5,12 +5,13 @@ import {
   ADD_USER,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
+  SET_DISPLAY_USER_DETAIL,
   SET_ACTIVE_TAB,
   USERNAME_EXISTS,
   NETWORK_FAILED,
   SHOW_SNACKBAR
 } from '../actions';
-import { PROFILE_TAB } from '../variables/Constants';
+import { PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
 
 function* signUp(action) {
   try {
@@ -24,6 +25,14 @@ function* signUp(action) {
       yield put({ type: ADD_USER, user: data.user });
       yield put({ type: SET_ACTIVE_USER, user: data.user });
       yield put({ type: SET_DISPLAY_USER, user: data.user });
+      yield put({
+        type: SET_DISPLAY_USER_DETAIL,
+        followers: {},
+        following: {},
+        createdRecipes: {},
+        savedRecipes: {},
+        activeDetail: FOLLOWERS
+      })
       yield put({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" });
     }

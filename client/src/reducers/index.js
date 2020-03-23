@@ -155,8 +155,8 @@ const displayUserDetailReduce = (state = null, action) => {
       return null;
     case SET_DISPLAY_USER_DETAIL:
       localStorage.setItem("activeDetail", action.activeDetail);
-      const { friends, createdRecipes, savedRecipes, activeDetail } = action;
-      return { friends, createdRecipes, savedRecipes, activeDetail };
+      const { followers, following, createdRecipes, savedRecipes, activeDetail } = action;
+      return { followers, following, createdRecipes, savedRecipes, activeDetail };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
       return { ...state, activeDetail: action.detail };
@@ -204,12 +204,22 @@ export const snackbarReduce = (state = StateTree.snackbar, action) => {
   }
 }
 
+const usersFetchedReduce = (state = false, action) => {
+  switch (action.type) {
+    case POPULATE_USERS:
+      return true;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   activeTab: activeTabReduce,
   displayRecipes: displayRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
   isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,
+  usersFetched: usersFetchedReduce,
   isHydrated: hydrationReduce,
   errorMessages: errorMessageReduce,
   snackbar: snackbarReduce,

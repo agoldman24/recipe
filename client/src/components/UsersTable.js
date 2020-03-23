@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import '../index.css';
 import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../actions';
-import { PROFILE_TAB, FRIENDS } from '../variables/Constants';
+import { PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
 
 const useStyles = makeStyles({
   table: {
@@ -62,7 +62,7 @@ const mapDispatchToProps = dispatch => {
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user });
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FRIENDS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
     }
   }
 }

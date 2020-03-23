@@ -19,7 +19,7 @@ import {
   SHOW_SNACKBAR,
   GET_USER_DETAIL_REQUESTED
 } from '../actions';
-import { WELCOME_TAB, PROFILE_TAB, FRIENDS } from '../variables/Constants';
+import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
@@ -145,7 +145,7 @@ const mapDispatchToProps = dispatch => {
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FRIENDS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
     },
     signOut: () => {
       dispatch({ type: SET_ACTIVE_TAB, tab: WELCOME_TAB });

@@ -12,20 +12,24 @@ const getDisplayUser = state => state.displayUser;
 function* getUserDetail(action) {
   try {
     const displayUser = yield select(getDisplayUser);
-    const res1 = !!displayUser.friendIds.length
-      ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.friendIds)
+    const res1 = !!displayUser.followerIds.length
+      ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followerIds)
       : { data: { users: {} } };
-    const res2 = !!displayUser.createdRecipeIds.length
+    const res2 = !!displayUser.followingIds.length
+      ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followingIds)
+      : { data: { users: {} } };
+    const res3 = !!displayUser.createdRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.createdRecipeIds)
       : { data: { recipes: {} } };
-    const res3 = !!displayUser.savedRecipeIds.length
+    const res4 = !!displayUser.savedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.savedRecipeIds)
       : { data: { recipes: {} } };;
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
-      friends: res1.data.users,
-      createdRecipes: res2.data.recipes,
-      savedRecipes: res3.data.recipes,
+      followers: res1.data.users,
+      following: res2.data.users,
+      createdRecipes: res3.data.recipes,
+      savedRecipes: res4.data.recipes,
       activeDetail: action.activeDetail
     });
     yield put({ type: GET_USER_DETAIL_SUCCEEDED })

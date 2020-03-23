@@ -177,7 +177,9 @@ class ProfileTab extends React.Component {
                         }}
                         style={{
                           ...buttonStyle,
-                          float:'right', margin:'0 10%'
+                          float:'right',
+                          margin: isMobile ? '0 5%' : '0 10%',
+                          width: isMobile ? '60%' : '50%'
                         }}
                       >
                         Unfollow

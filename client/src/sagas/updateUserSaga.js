@@ -39,8 +39,8 @@ function* updateUser(action) {
         inside of ProfileTab pull image data from displayUserDetail instead of
         displayUser. While data is being fetched inside ProfileTab, display a
         temporary avatar containing just the initials of the display user.
-        Instead of the actions, dispatch one UPDATE_DISPLAY_USER_DETAIL with
-        image data as the payload */
+        Instead of the below actions, dispatch one UPDATE_DISPLAY_USER_DETAIL
+        with image data as the payload */
         yield put({ type: SET_DISPLAY_USER, user: res.data.user });
         yield put({
           type: GET_USER_DETAIL_REQUESTED,

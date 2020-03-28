@@ -6,7 +6,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CloseIcon from '@material-ui/icons/Close';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import IngredientsTable from './IngredientsTable';
 import { isMobile } from 'react-device-detect';
 import { TOGGLE_RECIPE_DETAILS } from '../actions';
@@ -81,9 +80,6 @@ const RecipeDetail = props => {
               <CloseIcon style={iconStyle}/>
             </Fab>
           </div>
-          <Fab style={{...fabStyle, float:'left'}}>
-            <FavoriteBorderIcon style={iconStyle}/>
-          </Fab>
         </div>
         <Typography style={titleStyle} variant="h3">Ingredients</Typography>
         <IngredientsTable ingredients={props.ingredients}/>

@@ -30,9 +30,8 @@ import {
   HIDE_SNACKBAR
 } from '../actions';
 import {
-  SAVED_RECIPES,
   PROFILE_TAB,
-  PROFILE_IMAGE,
+  SAVED_RECIPES,
   FOLLOWERS,
 } from '../variables/Constants';
 
@@ -145,6 +144,23 @@ const displayUserReduce = (state = null, action) => {
     case SET_DISPLAY_USER:
       localStorage.setItem("displayUserId", action.user.id);
       return action.user;
+    case UPDATE_DISPLAY_USER_DETAIL:
+      switch (action.updateType) {
+        case SAVED_RECIPES:
+          return {
+            ...state,
+            savedRecipeIds: action.keep
+            ? [ ...state.savedRecipeIds, action.recipe.id ]
+            : state.savedRecipeIds.filter(id => id !== action.recipe.id)
+          }
+        case FOLLOWERS:
+          return {
+            ...state,
+            followerIds: action.keep
+            ? [ ...state.followerIds, action.user.id ]
+            : state.followerIds.filter(id => id !== action.user.id)
+          }
+      }
     case SET_ACTIVE_TAB:
       if (action.tab !== PROFILE_TAB) {
         return null;
@@ -190,11 +206,6 @@ const displayUserDetailReduce = (state = null, action) => {
                 accum[id] = state.followers[id];
                 return accum;
               }, {})
-          }
-        case PROFILE_IMAGE:
-          return {
-            ...state,
-            profileImage: action.imageData
           }
         default:
           throw new Error('Invalid update type');

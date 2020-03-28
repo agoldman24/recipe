@@ -6,25 +6,28 @@ import {
   UPDATE_USER_SUCCEEDED,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
-  GET_USER_DETAIL_REQUESTED
+  GET_USER_DETAIL_REQUESTED,
+  UPDATE_DISPLAY_USER_DETAIL
 } from '../actions';
 import {
   PROFILE_IMAGE,
   SAVED_RECIPE_IDS,
-  FOLLOWING_IDS
+  SAVED_RECIPES,
+  FOLLOWING_IDS,
+  FOLLOWERS
 } from '../variables/Constants';
 
 const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
-const getActiveDetail = state => state.displayUserDetail.activeDetail;
+const getDisplayUserDetail = state => state.displayUserDetail;
 
 function* updateUser(action) {
   try {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
-    const activeDetail = yield select(getActiveDetail);
-    let res, res2;
+    const displayUserDetail = yield select(getDisplayUserDetail);
+    let res;
     switch (action.updateType) {
       case PROFILE_IMAGE:
         res = yield call(Api.post, '/updateProfileImage', {
@@ -32,8 +35,17 @@ function* updateUser(action) {
           imageData: action.imageData
         });
         yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        /* TODO: refactor displayUser object to not contain image data and then
+        inside of ProfileTab pull image data from displayUserDetail instead of
+        displayUser. While data is being fetched inside ProfileTab, display a
+        temporary avatar containing just the initials of the display user.
+        Instead of the actions, dispatch one UPDATE_DISPLAY_USER_DETAIL with
+        image data as the payload */
         yield put({ type: SET_DISPLAY_USER, user: res.data.user });
-        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
+        yield put({
+          type: GET_USER_DETAIL_REQUESTED,
+          activeDetail: displayUserDetail.activeDetail
+        });
         break;
       case SAVED_RECIPE_IDS:
         res = yield call(Api.post, '/updateSavedRecipeIds', {
@@ -43,10 +55,14 @@ function* updateUser(action) {
           : activeUser.savedRecipeIds.filter(id => id !== action.recipeId)
         });
         yield put({ type: SET_ACTIVE_USER, user: res.data.user });
-        if (activeUser.id === displayUser.id) {
-          yield put({ type: SET_DISPLAY_USER, user: res.data.user });
+        if (!!displayUser && activeUser.id === displayUser.id) {
+          yield put({
+            type: UPDATE_DISPLAY_USER_DETAIL,
+            updateType: SAVED_RECIPES,
+            recipe: displayUserDetail.savedRecipes[action.recipeId],
+            keep: action.keep
+          });
         }
-        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
         break;
       case FOLLOWING_IDS:
         const users = yield select(getUsers);
@@ -57,15 +73,19 @@ function* updateUser(action) {
           ? [ ...activeUser.followingIds, action.friendId ]
           : activeUser.followingIds.filter(id => id !== action.friendId)
         });
-        res2 = yield call(Api.post, '/updateFollowerIds', {
+        yield call(Api.post, '/updateFollowerIds', {
           id: action.friendId,
           followerIds: action.keep
           ? [ ...friend.followerIds, action.id ]
           : friend.followerIds.filter(id => id !== action.id)
         });
         yield put({ type: SET_ACTIVE_USER, user: res.data.user });
-        yield put({ type: SET_DISPLAY_USER, user: res2.data.user });
-        yield put({ type: GET_USER_DETAIL_REQUESTED, activeDetail });
+        yield put({
+          type: UPDATE_DISPLAY_USER_DETAIL,
+          updateType: FOLLOWERS,
+          user: users[action.id],
+          keep: action.keep
+        });
         break;
       default:
         break;

@@ -23,7 +23,7 @@ function* getUserDetail(action) {
       : { data: { recipes: {} } };
     const res4 = !!displayUser.savedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.savedRecipeIds)
-      : { data: { recipes: {} } };;
+      : { data: { recipes: {} } };
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
       followers: res1.data.users,

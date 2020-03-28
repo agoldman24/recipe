@@ -9,7 +9,6 @@ import CheckIcon from '@material-ui/icons/Check';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
 import {
-  SET_PROFILE_IMAGE,
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
   SET_ACTIVE_DETAIL
@@ -342,9 +341,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setProfileImage: image => {
-      dispatch({ type: SET_PROFILE_IMAGE, image });
-    },
     updateProfileImage: (id, imageData) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,

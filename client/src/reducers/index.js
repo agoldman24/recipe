@@ -1,47 +1,53 @@
 import { combineReducers } from 'redux';
 import StateTree from '../store/stateTree';
 import {
-  SET_ACTIVE_TAB,
-  APPEND_DISPLAY_RECIPES,
-  TOGGLE_RECIPE_DETAILS,
-  EMPTY_FIELDS,
-  USERNAME_EXISTS,
-  SIGN_UP_REQUESTED,
-  ADD_USER,
-  SIGN_IN_REQUESTED,
   GET_ALL_USERS,
-  GET_RECIPES_REQUESTED,
-  SET_ACTIVE_USER,
-  SET_DISPLAY_USER,
-  GET_USER_DETAIL_REQUESTED,
-  GET_USER_DETAIL_SUCCEEDED,
-  SET_DISPLAY_USER_DETAIL,
-  SET_ACTIVE_DETAIL,
-  SET_PROFILE_IMAGE,
+  SIGN_UP_REQUESTED,
+  SIGN_IN_REQUESTED,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
+  GET_USER_DETAIL_REQUESTED,
+  GET_USER_DETAIL_SUCCEEDED,
   POPULATE_USERS,
+  ADD_USER,
+  SET_ACTIVE_USER,
+  SET_DISPLAY_USER,
+  SET_DISPLAY_USER_DETAIL,
+  SET_ACTIVE_DETAIL,
+  UPDATE_DISPLAY_USER_DETAIL,
+  GET_RECIPES_REQUESTED,
+  APPEND_DISPLAY_RECIPES,
+  TOGGLE_RECIPE_DETAILS,
+  SET_ACTIVE_TAB,
+  HYDRATION_COMPLETE,
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
   CLEAR_ERROR_MESSAGES,
+  USERNAME_EXISTS,
+  EMPTY_FIELDS,
   SHOW_SNACKBAR,
-  HIDE_SNACKBAR,
-  HYDRATION_COMPLETE
+  HIDE_SNACKBAR
 } from '../actions';
+import {
+  SAVED_RECIPES,
+  PROFILE_TAB,
+  PROFILE_IMAGE,
+  FOLLOWERS,
+} from '../variables/Constants';
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
+    case GET_ALL_USERS:
     case SIGN_UP_REQUESTED:
     case SIGN_IN_REQUESTED:
-    case GET_ALL_USERS:
+    case GET_USER_DETAIL_REQUESTED:
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
-    case GET_USER_DETAIL_REQUESTED:
       return true;
     case POPULATE_USERS:
-    case UPDATE_USER_SUCCEEDED:
     case GET_USER_DETAIL_SUCCEEDED:
+    case UPDATE_USER_SUCCEEDED:
     case APPEND_DISPLAY_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
@@ -139,10 +145,11 @@ const displayUserReduce = (state = null, action) => {
     case SET_DISPLAY_USER:
       localStorage.setItem("displayUserId", action.user.id);
       return action.user;
-    case SET_PROFILE_IMAGE:
-      return {
-        ...state,
-        profileImage: action.image
+    case SET_ACTIVE_TAB:
+      if (action.tab !== PROFILE_TAB) {
+        return null;
+      } else {
+        return state;
       }
     default:
       return state;
@@ -160,6 +167,38 @@ const displayUserDetailReduce = (state = null, action) => {
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
       return { ...state, activeDetail: action.detail };
+    case UPDATE_DISPLAY_USER_DETAIL:
+      switch (action.updateType) {
+        case SAVED_RECIPES:
+          return {
+            ...state,
+            savedRecipes: action.keep
+            ? { ...state.savedRecipes, [action.recipe.id]: action.recipe }
+            : Object.keys(state.savedRecipes).filter(id => id !== action.recipe.id)
+              .reduce((accum, id) => {
+                accum[id] = state.savedRecipes[id];
+                return accum;
+              }, {})
+          }
+        case FOLLOWERS:
+          return {
+            ...state,
+            followers: action.keep
+            ? { ...state.followers, [action.user.id]: action.user }
+            : Object.keys(state.followers).filter(id => id !== action.user.id)
+              .reduce((accum, id) => {
+                accum[id] = state.followers[id];
+                return accum;
+              }, {})
+          }
+        case PROFILE_IMAGE:
+          return {
+            ...state,
+            profileImage: action.imageData
+          }
+        default:
+          throw new Error('Invalid update type');
+      }
     default:
       return state;
   }

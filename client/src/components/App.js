@@ -68,7 +68,7 @@ class App extends React.Component {
       } else {
         this.props.setActiveTab(WELCOME_TAB);
       }
-      this.props.hydrate();
+      this.props.completeHydrate();
     }
   }
 
@@ -128,7 +128,7 @@ const mapDispatchToProps = dispatch => {
     getUserDetail: activeDetail => dispatch({
       type: GET_USER_DETAIL_REQUESTED, activeDetail
     }),
-    hydrate: () => dispatch({ type: HYDRATION_COMPLETE })
+    completeHydrate: () => dispatch({ type: HYDRATION_COMPLETE })
   };
 }
 

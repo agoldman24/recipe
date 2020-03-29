@@ -7,9 +7,7 @@ const UserSchema = new Schema(
     password: String,
     firstName: String,
     lastName: String,
-    profileImage: {
-      type: String
-    },
+    profileImageId: String,
     followerIds: Array,
     followingIds: Array,
     draftRecipeIds: Array,

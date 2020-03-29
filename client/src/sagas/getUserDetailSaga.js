@@ -12,6 +12,9 @@ const getDisplayUser = state => state.displayUser;
 function* getUserDetail(action) {
   try {
     const displayUser = yield select(getDisplayUser);
+    const res0 = !!displayUser.profileImageId
+      ? yield call(Api.get, '/getImageById?id=' + displayUser.profileImageId)
+      : { data: { image: { data: null } } };
     const res1 = !!displayUser.followerIds.length
       ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followerIds)
       : { data: { users: {} } };
@@ -26,6 +29,7 @@ function* getUserDetail(action) {
       : { data: { recipes: {} } };
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
+      profileImage: res0.data.image.data,
       followers: res1.data.users,
       following: res2.data.users,
       createdRecipes: res3.data.recipes,

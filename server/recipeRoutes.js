@@ -20,7 +20,7 @@ exports.createRecipe = (req, res) => {
   } = req.body;
   const recipe = new Recipe({
     name, image, ingredients, directions,
-    authorName, authorId, isSreample
+    authorName, authorId, isSample
   });
   recipe.save(err => {
     if (err) return res.json({ success: false, error: err });

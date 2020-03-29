@@ -44,9 +44,10 @@ export default Object.assign({},
     savedRecipeIds: []
   },
   displayUserDetail: {
+    profileImage: null,
     followers: {},
     following: {},
-    createRecipes: {},
+    createdRecipes: {},
     savedRecipes: {},
     activeDetail: ""
   },

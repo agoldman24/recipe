@@ -33,6 +33,7 @@ import {
   PROFILE_TAB,
   SAVED_RECIPES,
   FOLLOWERS,
+  PROFILE_IMAGE,
 } from '../variables/Constants';
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
@@ -131,6 +132,16 @@ const activeUserReduce = (state = null, action) => {
     case SET_ACTIVE_USER:
       localStorage.setItem("activeUserId", action.user.id);
       return action.user;
+    case UPDATE_DISPLAY_USER_DETAIL:
+      switch (action.updateType) {
+        case PROFILE_IMAGE:
+          return {
+            ...state,
+            profileImageId: action.profileImageId
+          }
+        default:
+          return state;
+      }
     case SIGN_OUT:
       localStorage.clear();
       return null;
@@ -160,6 +171,13 @@ const displayUserReduce = (state = null, action) => {
             ? [ ...state.followerIds, action.user.id ]
             : state.followerIds.filter(id => id !== action.user.id)
           }
+        case PROFILE_IMAGE:
+          return {
+            ...state,
+            profileImageId: action.profileImageId
+          }
+        default:
+          return state;
       }
     case SET_ACTIVE_TAB:
       if (action.tab !== PROFILE_TAB) {
@@ -178,11 +196,18 @@ const displayUserDetailReduce = (state = null, action) => {
       return null;
     case SET_DISPLAY_USER_DETAIL:
       localStorage.setItem("activeDetail", action.activeDetail);
-      const { followers, following, createdRecipes, savedRecipes, activeDetail } = action;
-      return { followers, following, createdRecipes, savedRecipes, activeDetail };
+      const {
+        profileImage, followers, following, createdRecipes, savedRecipes, activeDetail
+      } = action;
+      return {
+        profileImage, followers, following, createdRecipes, savedRecipes, activeDetail
+      };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
-      return { ...state, activeDetail: action.detail };
+      return {
+        ...state,
+        activeDetail: action.detail
+      };
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
         case SAVED_RECIPES:
@@ -207,8 +232,19 @@ const displayUserDetailReduce = (state = null, action) => {
                 return accum;
               }, {})
           }
+        case PROFILE_IMAGE:
+          return {
+            ...state,
+            profileImage: action.data
+          }
         default:
           throw new Error('Invalid update type');
+      }
+    case SET_ACTIVE_TAB:
+      if (action.tab !== PROFILE_TAB) {
+        return null;
+      } else {
+        return state;
       }
     default:
       return state;

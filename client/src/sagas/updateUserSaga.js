@@ -27,25 +27,38 @@ function* updateUser(action) {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
     const displayUserDetail = yield select(getDisplayUserDetail);
-    let res;
+    let res, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE_IMAGE:
-        res = yield call(Api.post, '/updateProfileImage', {
-          id: action.id,
-          imageData: action.imageData
-        });
-        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        if (!profileImageId) {
+          res = yield call(Api.post, '/createImage', {
+            data: action.data
+          });
+          profileImageId = res.data.image.id;
+          yield call(Api.post, '/updateProfileImageId', {
+            id: activeUser.id,
+            profileImageId
+          });
+        } else {
+          yield call(Api.post, '/updateImage', {
+            id: profileImageId,
+            data: action.data
+          });
+        }
+        /* In reducer file, handle this action in three functions:
+        activeUser, displayUser, and displayUserDetail */
+        yield put({
+          type: UPDATE_DISPLAY_USER_DETAIL,
+          updateType: PROFILE_IMAGE, 
+          data: action.data,
+          profileImageId
+        })
         /* TODO: refactor displayUser object to not contain image data and then
         inside of ProfileTab pull image data from displayUserDetail instead of
         displayUser. While data is being fetched inside ProfileTab, display a
         temporary avatar containing just the initials of the display user.
         Instead of the below actions, dispatch one UPDATE_DISPLAY_USER_DETAIL
         with image data as the payload */
-        yield put({ type: SET_DISPLAY_USER, user: res.data.user });
-        yield put({
-          type: GET_USER_DETAIL_REQUESTED,
-          activeDetail: displayUserDetail.activeDetail
-        });
         break;
       case SAVED_RECIPE_IDS:
         res = yield call(Api.post, '/updateSavedRecipeIds', {

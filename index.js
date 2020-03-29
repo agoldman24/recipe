@@ -5,6 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const userRoutes = require('./server/userRoutes');
 const recipeRoutes = require('./server/recipeRoutes');
+const imageRoutes = require('./server/imageRoutes');
 const app = express();
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get("/getUsersByIds", userRoutes.getUsersByIds);
 router.get("/getUser", userRoutes.getUser);
 router.get("/getAllUsers", userRoutes.getAllUsers);
 router.post("/createUser", userRoutes.createUser);
-router.post("/updateProfileImage", userRoutes.updateProfileImage);
+router.post("/updateProfileImageId", userRoutes.updateProfileImageId);
 router.post("/updateSavedRecipeIds", userRoutes.updateSavedRecipeIds);
 router.post("/updateFollowerIds", userRoutes.updateFollowerIds);
 router.post("/updateFollowingIds", userRoutes.updateFollowingIds);
@@ -35,6 +36,10 @@ router.post("/updateFollowingIds", userRoutes.updateFollowingIds);
 router.get("/getSamples", recipeRoutes.getSamples);
 router.get("/getRecipesByIds", recipeRoutes.getRecipesByIds);
 router.post("/createRecipe", recipeRoutes.createRecipe);
+
+router.get("/getImageById", imageRoutes.getImageById);
+router.post("/createImage", imageRoutes.createImage);
+router.post("/updateImage", imageRoutes.updateImage);
 
 app.use("/api", router);
 

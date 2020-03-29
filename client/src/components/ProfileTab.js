@@ -83,18 +83,21 @@ const buttonStyle = {
 
 class ProfileTab extends React.Component {
 
-  onImageChange = (files) => {
-    const imageData = files.base64.toString();
-    this.props.updateProfileImage(this.props.activeUser.id, imageData);
+  onImageChange = files => {
+    const data = files.base64.toString();
+    this.props.updateProfileImage(this.props.activeUser.id, data);
   }
 
   render() {
     const {
       displayUser: {
-        id, username, firstName, lastName, profileImage,
-        followerIds, followingIds, createdRecipeIds, savedRecipeIds
+        id, username, firstName, lastName, followerIds,
+        followingIds, createdRecipeIds, savedRecipeIds
       },
-      activeUser
+      displayUserDetail,
+      activeUser,
+      networkFailed,
+      updateFollowingIds
     } = this.props;
     return (
       <div style={{
@@ -102,7 +105,7 @@ class ProfileTab extends React.Component {
         padding: '50px 0 10px',
         margin: 'auto'
       }}>
-      {this.props.networkFailed
+      {networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <div>
           <Grid
@@ -123,15 +126,18 @@ class ProfileTab extends React.Component {
             </Grid>
             <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
               <div>
-                {!!profileImage
+                {!!displayUserDetail && !!displayUserDetail.profileImage
                 ? <div style={{height:'120px'}}>
-                    <Avatar alt="Profile" src={profileImage} style={imageStyle}/>
-                    {!!this.props.activeUser &&
-                      this.props.activeUser.id === this.props.displayUser.id &&
-                        <Fab style={fabStyle} className="fileContainer">
-                          <AddAPhotoIcon style={iconStyle}/>
-                          <FileBase type="file" onDone={this.onImageChange}/>
-                        </Fab>
+                    <Avatar
+                      alt="Profile"
+                      src={displayUserDetail.profileImage}
+                      style={imageStyle}
+                    />
+                    {!!activeUser && activeUser.id === id &&
+                      <Fab style={fabStyle} className="fileContainer">
+                        <AddAPhotoIcon style={iconStyle}/>
+                        <FileBase type="file" onDone={this.onImageChange}/>
+                      </Fab>
                     }
                   </div>
                 : <Avatar alt="Profile" style={imageStyle}>
@@ -161,19 +167,13 @@ class ProfileTab extends React.Component {
                 {firstName + " " + lastName}
               </Typography>
             </Grid>
-            {!!this.props.activeUser
-              ? this.props.activeUser.id === this.props.displayUser.id
+            {!!activeUser
+              ? activeUser.id === id
                 ? <Button style={buttonStyle}>Edit Profile</Button>
-                : this.props.activeUser.followingIds.includes(this.props.displayUser.id)
+                : activeUser.followingIds.includes(id)
                   ? <div style={{width:'100%'}}>
                       <Button
-                        onClick={() => {
-                          this.props.updateFollowingIds(
-                            this.props.activeUser.id,
-                            this.props.displayUser.id,
-                            false
-                          )
-                        }}
+                        onClick={() => updateFollowingIds(activeUser.id, id, false)}
                         style={{
                           ...buttonStyle,
                           float:'right',
@@ -199,13 +199,7 @@ class ProfileTab extends React.Component {
                       </Typography>
                     </div>
                   : <Button
-                      onClick={() => {
-                        this.props.updateFollowingIds(
-                          this.props.activeUser.id,
-                          this.props.displayUser.id,
-                          true
-                        )
-                      }}
+                      onClick={() => updateFollowingIds(activeUser.id, id, true)}
                       style={buttonStyle}
                     >
                       Follow
@@ -213,7 +207,7 @@ class ProfileTab extends React.Component {
               : null
             }
           </Grid>
-          {!!this.props.displayUserDetail &&
+          {!!displayUserDetail &&
           <div>
             <Grid
               container
@@ -223,7 +217,7 @@ class ProfileTab extends React.Component {
               <Grid item className="clickable" style={columnStyle} onClick={() => {
                   this.props.setActiveDetail(FOLLOWERS);
                 }}>
-                {this.props.displayUserDetail.activeDetail === FOLLOWERS
+                {displayUserDetail.activeDetail === FOLLOWERS
                 ? <div style={selected}>
                     <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                       {followerIds.length}
@@ -245,7 +239,7 @@ class ProfileTab extends React.Component {
               <Grid item className="clickable" style={columnStyle} onClick={() => {
                   this.props.setActiveDetail(FOLLOWING);
                 }}>
-                {this.props.displayUserDetail.activeDetail === FOLLOWING
+                {displayUserDetail.activeDetail === FOLLOWING
                 ? <div style={selected}>
                     <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                       {followingIds.length}
@@ -267,7 +261,7 @@ class ProfileTab extends React.Component {
               <Grid item className="clickable" style={columnStyle} onClick={() => {
                   this.props.setActiveDetail(CREATED_RECIPES);
                 }}>
-                {this.props.displayUserDetail.activeDetail === CREATED_RECIPES
+                {displayUserDetail.activeDetail === CREATED_RECIPES
                 ? <div style={selected}>
                     <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                       {createdRecipeIds.length}
@@ -289,7 +283,7 @@ class ProfileTab extends React.Component {
               <Grid item className="clickable" style={columnStyle} onClick={() => {
                   this.props.setActiveDetail(SAVED_RECIPES);
                 }}>
-                {this.props.displayUserDetail.activeDetail === SAVED_RECIPES
+                {displayUserDetail.activeDetail === SAVED_RECIPES
                 ? <div style={selected}>
                     <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                       {savedRecipeIds.length}
@@ -309,17 +303,17 @@ class ProfileTab extends React.Component {
                 }
               </Grid>
             </Grid>
-            {this.props.displayUserDetail.activeDetail === FOLLOWERS &&
-              <UsersTable users={Object.values(this.props.displayUserDetail.followers)}/>
+            {displayUserDetail.activeDetail === FOLLOWERS &&
+              <UsersTable users={Object.values(displayUserDetail.followers)}/>
             }
-            {this.props.displayUserDetail.activeDetail === FOLLOWING &&
-              <UsersTable users={Object.values(this.props.displayUserDetail.following)}/>
+            {displayUserDetail.activeDetail === FOLLOWING &&
+              <UsersTable users={Object.values(displayUserDetail.following)}/>
             }
-            {this.props.displayUserDetail.activeDetail === CREATED_RECIPES &&
-              <RecipeList recipes={this.props.displayUserDetail.createdRecipes}/>
+            {displayUserDetail.activeDetail === CREATED_RECIPES &&
+              <RecipeList recipes={displayUserDetail.createdRecipes}/>
             }
-            {this.props.displayUserDetail.activeDetail === SAVED_RECIPES &&
-              <RecipeList recipes={this.props.displayUserDetail.savedRecipes}/>
+            {displayUserDetail.activeDetail === SAVED_RECIPES &&
+              <RecipeList recipes={displayUserDetail.savedRecipes}/>
             }
           </div>
           }
@@ -341,11 +335,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProfileImage: (id, imageData) => {
+    updateProfileImage: (id, data) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,
         updateType: PROFILE_IMAGE,
-        id, imageData
+        id, data
       });
     },
     updateFollowingIds: (id, friendId, keep) => {

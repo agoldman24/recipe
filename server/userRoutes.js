@@ -6,11 +6,11 @@ const saltRounds = 10;
 
 const getDerivedUser = user => {
   const {
-    _id, username, firstName, lastName, profileImage,
+    _id, username, firstName, lastName, profileImageId,
     followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
   } = user;
   return {
-    id: _id, username, firstName, lastName, profileImage,
+    id: _id, username, firstName, lastName, profileImageId,
     followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
   }
 }
@@ -80,7 +80,7 @@ exports.createUser = (req, res) => {
         const user = new User({
           firstName, lastName, username,
           password: hash,
-          profileImage: null
+          profileImageId: null
         });
         user.save(err => {
           if (err) return res.json({ success: false, error: err });
@@ -91,9 +91,9 @@ exports.createUser = (req, res) => {
   });
 }
 
-exports.updateProfileImage = (req, res) => {
-  const { id, imageData } = req.body;
-  User.findByIdAndUpdate(id, { profileImage: imageData }, { new: true }, (err, user) => {
+exports.updateProfileImageId = (req, res) => {
+  const { id, profileImageId } = req.body;
+  User.findByIdAndUpdate(id, { profileImageId }, { new: true }, (err, user) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, user: getDerivedUser(user) });
   });

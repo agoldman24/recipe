@@ -6,15 +6,17 @@ import {
   SET_DISPLAY_USER_DETAIL,
   NETWORK_FAILED
 } from '../actions';
+import { b64toBlob } from '../utilities/imageConverter';
 
 const getDisplayUser = state => state.displayUser;
+const getDisplayUserDetail = state => state.displayUserDetail;
 
 function* getUserDetail(action) {
   try {
     const displayUser = yield select(getDisplayUser);
     const res0 = !!displayUser.profileImageId
       ? yield call(Api.get, '/getImageById?id=' + displayUser.profileImageId)
-      : { data: { image: { data: null } } };
+      : null;
     const res1 = !!displayUser.followerIds.length
       ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followerIds)
       : { data: { users: {} } };
@@ -27,9 +29,15 @@ function* getUserDetail(action) {
     const res4 = !!displayUser.savedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.savedRecipeIds)
       : { data: { recipes: {} } };
+    const displayUserDetail = yield select(getDisplayUserDetail);
+    if (!!displayUserDetail && !!displayUserDetail.profileImage) {
+      URL.revokeObjectURL(displayUserDetail.profileImage);
+    }
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
-      profileImage: res0.data.image.data,
+      profileImage: !!displayUser.profileImageId
+        ? URL.createObjectURL(b64toBlob(res0.data.image.data))
+        : null,
       followers: res1.data.users,
       following: res2.data.users,
       createdRecipes: res3.data.recipes,

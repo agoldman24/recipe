@@ -235,13 +235,16 @@ const displayUserDetailReduce = (state = null, action) => {
         case PROFILE_IMAGE:
           return {
             ...state,
-            profileImage: action.data
+            profileImage: action.imageUrl
           }
         default:
           throw new Error('Invalid update type');
       }
     case SET_ACTIVE_TAB:
       if (action.tab !== PROFILE_TAB) {
+        if (!!state && !!state.profileImage) {
+          URL.revokeObjectURL(state.profileImage);
+        }
         return null;
       } else {
         return state;

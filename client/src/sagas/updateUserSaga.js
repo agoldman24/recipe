@@ -5,8 +5,6 @@ import {
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
   SET_ACTIVE_USER,
-  SET_DISPLAY_USER,
-  GET_USER_DETAIL_REQUESTED,
   UPDATE_DISPLAY_USER_DETAIL
 } from '../actions';
 import {
@@ -16,6 +14,7 @@ import {
   FOLLOWING_IDS,
   FOLLOWERS
 } from '../variables/Constants';
+import { b64toBlob } from '../utilities/imageConverter';
 
 const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
@@ -45,20 +44,12 @@ function* updateUser(action) {
             data: action.data
           });
         }
-        /* In reducer file, handle this action in three functions:
-        activeUser, displayUser, and displayUserDetail */
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: PROFILE_IMAGE, 
-          data: action.data,
+          imageUrl: URL.createObjectURL(b64toBlob(action.data)),
           profileImageId
-        })
-        /* TODO: refactor displayUser object to not contain image data and then
-        inside of ProfileTab pull image data from displayUserDetail instead of
-        displayUser. While data is being fetched inside ProfileTab, display a
-        temporary avatar containing just the initials of the display user.
-        Instead of the below actions, dispatch one UPDATE_DISPLAY_USER_DETAIL
-        with image data as the payload */
+        });
         break;
       case SAVED_RECIPE_IDS:
         res = yield call(Api.post, '/updateSavedRecipeIds', {

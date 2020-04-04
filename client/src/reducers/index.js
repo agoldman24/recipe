@@ -111,6 +111,18 @@ const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
   }
 }
 
+const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) => {
+  switch (action.type) {
+    case APPEND_DISPLAY_RECIPES:
+      if (action.recipes.length < 10) {
+        return true;
+      }
+      return false;
+    default:
+      return state;
+  }
+}
+
 const usersReduce = (state = StateTree.users, action) => {
   switch (action.type) {
     case POPULATE_USERS:
@@ -306,6 +318,7 @@ export default combineReducers({
   activeTab: activeTabReduce,
   displayRecipes: displayRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
+  allRecipesFetched: allRecipesFetchedReduce,
   isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,
   usersFetched: usersFetchedReduce,

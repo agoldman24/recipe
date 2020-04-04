@@ -29,13 +29,16 @@ exports.createRecipe = (req, res) => {
 }
 
 exports.getSamples = (req, res) => {
-  db.collection("recipes").aggregate([
-    { $match: { isSample: true } },
-    { $sample: { size: 10 } }
-  ]).toArray().then(recipes => {
+  const idArray = !!req.query.ids
+    ? req.query.ids.split(',').map(id => ObjectID(id))
+    : [];
+  db.collection("recipes").find(
+    { _id: { $nin: idArray.map(id => ObjectID(id)) } },
+    { isSample: true }
+  ).toArray().then(recipes => {
     return res.json({
       success: true,
-      recipes: recipes.reduce((accum, recipe) => {
+      recipes: recipes.sort(() => 0.5 - Math.random()).slice(1, 10).reduce((accum, recipe) => {
         accum[recipe._id] = getDerivedRecipe(recipe);
         return accum;
       }, {})

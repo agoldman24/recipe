@@ -1,8 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
+import { GET_RECIPES_REQUESTED } from '../actions';
 
 const RecipeList = props => {
   return (
@@ -38,6 +40,15 @@ const RecipeList = props => {
           );
         })
       }
+      {!props.allRecipesFetched &&
+        <Link
+          href="#"
+          style={{ fontSize:'16px', paddingTop:'40px' }}
+          onClick={props.getSampleRecipes}
+        >
+          Load more recipes
+        </Link>
+      }
     </Grid>
   );
 }
@@ -46,12 +57,15 @@ const mapStateToProps = state => {
   return {
     networkFailed: state.errorMessages.networkFailed,
     isDetailVisible: state.isDetailVisible,
-    detailRecipeId: state.detailRecipeId
+    detailRecipeId: state.detailRecipeId,
+    allRecipesFetched: state.allRecipesFetched
   };
 }
 
 const mapDispatchToProps = dispatch => {
-  return {};
+  return {
+    getSampleRecipes: () => dispatch({ type: GET_RECIPES_REQUESTED }),
+  };
 };
 
 export default connect(

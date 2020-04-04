@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 
 import {
@@ -8,10 +8,15 @@ import {
   CLEAR_ERROR_MESSAGES
 } from '../actions';
 
+const getDisplayRecipes = state => state.displayRecipes;
+
 function* getRecipes() {
   yield put({ type: CLEAR_ERROR_MESSAGES });
   try {
-    const { data } = yield call(Api.get, '/getSamples');
+    const displayRecipes = yield select(getDisplayRecipes);
+    const { data } = !!Object.keys(displayRecipes).length
+      ? yield call(Api.get, '/getSamples?ids=' + Object.keys(displayRecipes))
+      : yield call(Api.get, '/getSamples');
     yield put({
       type: APPEND_DISPLAY_RECIPES,
       recipes: data.recipes

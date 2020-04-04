@@ -13,7 +13,7 @@ const errorStyle = {
 class RecipeTab extends React.Component {
   componentDidMount() {
     if (!Object.keys(this.props.displayRecipes).length) {
-      this.props.getRandomRecipe();
+      this.props.getSampleRecipes();
     }
   }
   render() {
@@ -43,7 +43,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRandomRecipe: () => dispatch({ type: GET_RECIPES_REQUESTED }),
+    getSampleRecipes: () => dispatch({ type: GET_RECIPES_REQUESTED }),
   };
 };
 

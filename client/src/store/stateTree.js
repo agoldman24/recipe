@@ -63,5 +63,6 @@ export default Object.assign({},
     quantity: ""
   },
   displayRecipes: {},
-  detailRecipeId: ""
+  detailRecipeId: "",
+  allRecipesFetched: false
 });

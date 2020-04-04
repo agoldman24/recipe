@@ -62,7 +62,10 @@ export default Object.assign({},
     item: "",
     quantity: ""
   },
-  displayRecipes: {},
+  sampleRecipes: {},
   detailRecipeId: "",
-  allRecipesFetched: false
+  allRecipesFetched: {
+    samples: false,
+    saved: false
+  }
 });

@@ -16,7 +16,8 @@ import {
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
-  APPEND_DISPLAY_RECIPES,
+  APPEND_SAMPLE_RECIPES,
+  APPEND_SAVED_RECIPES,
   TOGGLE_RECIPE_DETAILS,
   SET_ACTIVE_TAB,
   HYDRATION_COMPLETE,
@@ -48,7 +49,8 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case POPULATE_USERS:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
-    case APPEND_DISPLAY_RECIPES:
+    case APPEND_SAMPLE_RECIPES:
+    case APPEND_SAVED_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
@@ -79,9 +81,9 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
   }
 }
 
-const displayRecipesReduce = (state = StateTree.displayRecipes, action) => {
+const sampleRecipesReduce = (state = StateTree.sampleRecipes, action) => {
   switch (action.type) {
-    case APPEND_DISPLAY_RECIPES:
+    case APPEND_SAMPLE_RECIPES:
       return {
         ...state,
         ...action.recipes
@@ -106,18 +108,6 @@ const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !!action.id ? action.id : state;
-    default:
-      return state;
-  }
-}
-
-const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) => {
-  switch (action.type) {
-    case APPEND_DISPLAY_RECIPES:
-      if (action.recipes.length < 10) {
-        return true;
-      }
-      return false;
     default:
       return state;
   }
@@ -220,6 +210,14 @@ const displayUserDetailReduce = (state = null, action) => {
         ...state,
         activeDetail: action.detail
       };
+    case APPEND_SAVED_RECIPES:
+      return {
+        ...state,
+        savedRecipes: {
+          ...state.savedRecipes,
+          ...action.recipes
+        }
+      }
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
         case SAVED_RECIPES:
@@ -258,9 +256,8 @@ const displayUserDetailReduce = (state = null, action) => {
           URL.revokeObjectURL(state.profileImage);
         }
         return null;
-      } else {
-        return state;
       }
+      return state;
     default:
       return state;
   }
@@ -314,11 +311,50 @@ const usersFetchedReduce = (state = false, action) => {
   }
 }
 
+const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) => {
+  switch (action.type) {
+    case APPEND_SAMPLE_RECIPES:
+      if (Object.keys(action.recipes).length < 10) {
+        console.log('hello')
+        return {
+          ...state,
+          samples: true
+        };
+      }
+      return state;
+    case APPEND_SAVED_RECIPES:
+      if (Object.keys(action.recipes).length < 10) {
+        return {
+          ...state,
+          saved: true
+        };
+      }
+      return state;
+    case SET_DISPLAY_USER_DETAIL:
+      if (Object.keys(action.savedRecipes).length < 10) {
+        return {
+          ...state,
+          saved: true
+        };
+      }
+      return state;
+    case SET_ACTIVE_TAB:
+      if (action.tab !== PROFILE_TAB) {
+        return {
+          ...state,
+          saved: false
+        };
+      }
+      return state;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   activeTab: activeTabReduce,
-  displayRecipes: displayRecipesReduce,
+  sampleRecipes: sampleRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
-  allRecipesFetched: allRecipesFetchedReduce,
   isDetailVisible: detailVisibilityReduce,
   isSpinnerVisible: spinnerReduce,
   usersFetched: usersFetchedReduce,
@@ -328,5 +364,6 @@ export default combineReducers({
   users: usersReduce,
   activeUser: activeUserReduce,
   displayUser: displayUserReduce,
-  displayUserDetail: displayUserDetailReduce
+  displayUserDetail: displayUserDetailReduce,
+  allRecipesFetched: allRecipesFetchedReduce
 });

@@ -3,6 +3,7 @@ import RecipeList from './RecipeList';
 import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
 import { GET_RECIPES_REQUESTED } from '../actions';
+import { SAMPLES } from '../variables/Constants';
 
 const errorStyle = {
   textAlign:'center',
@@ -12,7 +13,7 @@ const errorStyle = {
 
 class RecipeTab extends React.Component {
   componentDidMount() {
-    if (!Object.keys(this.props.displayRecipes).length) {
+    if (!Object.keys(this.props.sampleRecipes).length) {
       this.props.getSampleRecipes();
     }
   }
@@ -23,7 +24,7 @@ class RecipeTab extends React.Component {
         ? <div style={errorStyle}>Network error</div>
         : <div>
             {this.props.isLoggedIn && <RecipeButtons />}
-            <RecipeList recipes={this.props.displayRecipes}/>
+            <RecipeList recipes={this.props.sampleRecipes}/>
           </div>
         }
       </div>
@@ -35,7 +36,7 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
-    displayRecipes: state.displayRecipes,
+    sampleRecipes: state.sampleRecipes,
     isDetailVisible: state.isDetailVisible,
     detailRecipeId: state.detailRecipeId
   };
@@ -43,7 +44,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSampleRecipes: () => dispatch({ type: GET_RECIPES_REQUESTED }),
+    getSampleRecipes: () => dispatch({
+      type: GET_RECIPES_REQUESTED,
+      requestType: SAMPLES
+    }),
   };
 };
 

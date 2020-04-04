@@ -5,6 +5,7 @@ import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
 import { GET_RECIPES_REQUESTED } from '../actions';
+import { RECIPE_TAB, PROFILE_TAB, SAMPLES, SAVED_RECIPES } from "../variables/Constants";
 
 const RecipeList = props => {
   return (
@@ -44,7 +45,13 @@ const RecipeList = props => {
         <Link
           href="#"
           style={{ fontSize:'16px', paddingTop:'40px' }}
-          onClick={props.getSampleRecipes}
+          onClick={() => {
+            props.getRecipes(
+              props.activeTab,
+              props.displayUser,
+              props.displayUserDetail
+            )
+          }}
         >
           Load more recipes
         </Link>
@@ -58,13 +65,26 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     isDetailVisible: state.isDetailVisible,
     detailRecipeId: state.detailRecipeId,
-    allRecipesFetched: state.allRecipesFetched
+    activeTab: state.activeTab,
+    displayUser: state.displayUser,
+    displayUserDetail: state.displayUserDetail,
+    allRecipesFetched:
+      (state.activeTab === RECIPE_TAB && state.allRecipesFetched.samples)
+      || (state.activeTab === PROFILE_TAB && state.allRecipesFetched.saved)
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getSampleRecipes: () => dispatch({ type: GET_RECIPES_REQUESTED }),
+    getRecipes: (activeTab, displayUser, displayUserDetail) => dispatch({
+      type: GET_RECIPES_REQUESTED,
+      requestType: activeTab === RECIPE_TAB ? SAMPLES : SAVED_RECIPES,
+      ids: activeTab === RECIPE_TAB
+        ? null
+        : displayUser.savedRecipeIds.filter(id =>
+            !Object.keys(displayUserDetail.savedRecipes).includes(id)
+          )
+    }),
   };
 };
 

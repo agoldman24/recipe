@@ -5,7 +5,7 @@ import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
 import { GET_RECIPES_REQUESTED } from '../actions';
-import { RECIPE_TAB, PROFILE_TAB, SAMPLES, SAVED_RECIPES } from "../variables/Constants";
+import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../variables/Constants";
 
 const RecipeList = props => {
   return (
@@ -14,32 +14,26 @@ const RecipeList = props => {
       direction="column"
       style={{alignItems:'center', paddingBottom:'100px'}}
     >
-      {Object.values(props.recipes)
-        // Object.keys(this.props.activeRecipes)
-        // .sort((id1, id2) =>
-        //   new Date(this.props.activeRecipes[id2].timestamp)
-        //     - new Date(this.props.activeRecipes[id1].timestamp))
-        .map(recipe => {
-          return (
-            <Grid item key={recipe.id}>
-              {props.isDetailVisible &&
-                props.detailRecipeId === recipe.id &&
-                <RecipeDetail
-                  id={recipe.id}
-                  name={recipe.name}
-                  image={recipe.image}
-                  ingredients={recipe.ingredients}
-                  directions={recipe.directions}
-                />
-              }
-              <RecipeCard
+      {props.recipes.map(recipe => {
+        return (
+          <Grid item key={recipe.id}>
+            {props.isDetailVisible && props.detailRecipeId === recipe.id &&
+              <RecipeDetail
                 id={recipe.id}
                 name={recipe.name}
                 image={recipe.image}
+                ingredients={recipe.ingredients}
+                directions={recipe.directions}
               />
-            </Grid>
-          );
-        })
+            }
+            <RecipeCard
+              id={recipe.id}
+              name={recipe.name}
+              image={recipe.image}
+            />
+          </Grid>
+        );
+      })
       }
       {!props.allRecipesFetched &&
         <Link
@@ -68,9 +62,11 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
-    allRecipesFetched:
-      (state.activeTab === RECIPE_TAB && state.allRecipesFetched.samples)
-      || (state.activeTab === PROFILE_TAB && state.allRecipesFetched.saved)
+    allRecipesFetched: (state.activeTab === RECIPE_TAB && state.allRecipesFetched.samples)
+    || (!!state.displayUserDetail && 
+      ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
+      || (state.displayUserDetail.activeDetail === SAVED_RECIPES && state.allRecipesFetched.saved))
+    )
   };
 }
 
@@ -81,9 +77,10 @@ const mapDispatchToProps = dispatch => {
       requestType: activeTab === RECIPE_TAB ? SAMPLES : SAVED_RECIPES,
       ids: activeTab === RECIPE_TAB
         ? null
-        : displayUser.savedRecipeIds.filter(id =>
-            !Object.keys(displayUserDetail.savedRecipes).includes(id)
+        : displayUser.savedRecipeIds.filter(obj =>
+            !Object.keys(displayUserDetail.savedRecipes).includes(obj.id)
           )
+          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
     }),
   };
 };

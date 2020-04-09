@@ -27,7 +27,10 @@ function* getUserDetail(action) {
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.createdRecipeIds)
       : { data: { recipes: {} } };
     const res4 = !!displayUser.savedRecipeIds.length
-      ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.savedRecipeIds)
+      ? yield call(Api.get, '/getRecipesByIds?'
+          + 'ids=' + displayUser.savedRecipeIds.map(obj => obj.id)
+          + '&timestamps=' + displayUser.savedRecipeIds.map(obj => obj.timestamp)
+        )
       : { data: { recipes: {} } };
     const displayUserDetail = yield select(getDisplayUserDetail);
     if (!!displayUserDetail && !!displayUserDetail.profileImage) {

@@ -66,6 +66,7 @@ export default Object.assign({},
   detailRecipeId: "",
   allRecipesFetched: {
     samples: false,
+    created: false,
     saved: false
   }
 });

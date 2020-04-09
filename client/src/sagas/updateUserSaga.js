@@ -55,8 +55,14 @@ function* updateUser(action) {
         res = yield call(Api.post, '/updateSavedRecipeIds', {
           id: action.id,
           savedRecipeIds: action.keep
-          ? [ ...activeUser.savedRecipeIds, action.recipeId ]
-          : activeUser.savedRecipeIds.filter(id => id !== action.recipeId)
+          ? [
+              ...activeUser.savedRecipeIds,
+              {
+                id: action.recipeId,
+                timestamp: Date.now()
+              }
+            ]
+          : activeUser.savedRecipeIds.filter(obj => obj.id !== action.recipeId)
         });
         yield put({ type: SET_ACTIVE_USER, user: res.data.user });
         if (!!displayUser && activeUser.id === displayUser.id) {

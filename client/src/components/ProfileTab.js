@@ -310,10 +310,14 @@ class ProfileTab extends React.Component {
               <UsersTable users={Object.values(displayUserDetail.following)}/>
             }
             {displayUserDetail.activeDetail === CREATED_RECIPES &&
-              <RecipeList recipes={displayUserDetail.createdRecipes}/>
+              <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
             }
             {displayUserDetail.activeDetail === SAVED_RECIPES &&
-              <RecipeList recipes={displayUserDetail.savedRecipes}/>
+              <RecipeList recipes={
+                Object.values(displayUserDetail.savedRecipes).sort((r1, r2) => {
+                  return r2.timestamp - r1.timestamp;
+                })
+              }/>
             }
           </div>
           }

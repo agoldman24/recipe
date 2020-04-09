@@ -111,7 +111,9 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
-    savedRecipeIds: !!state.activeUser ? state.activeUser.savedRecipeIds : null
+    savedRecipeIds: !!state.activeUser
+      ? state.activeUser.savedRecipeIds.map(obj => obj.id)
+      : null
   };
 };
 

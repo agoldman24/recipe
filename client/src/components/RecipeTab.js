@@ -24,7 +24,7 @@ class RecipeTab extends React.Component {
         ? <div style={errorStyle}>Network error</div>
         : <div>
             {this.props.isLoggedIn && <RecipeButtons />}
-            <RecipeList recipes={this.props.sampleRecipes}/>
+            <RecipeList recipes={Object.values(this.props.sampleRecipes)}/>
           </div>
         }
       </div>

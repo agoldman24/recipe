@@ -28,7 +28,10 @@ function* getRecipes(action) {
         break;
       case SAVED_RECIPES:
         res = !!action.ids.length
-          ? yield call(Api.get, '/getRecipesByIds?ids=' + action.ids)
+          ? yield call(Api.get, '/getRecipesByIds?'
+              + 'ids=' + action.ids.map(obj => obj.id)
+              + '&timestamps=' + action.ids.map(obj => obj.timestamp)
+            )
           : { data: { recipes: {} } }
         yield put({
           type: APPEND_SAVED_RECIPES,

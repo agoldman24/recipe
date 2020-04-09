@@ -163,8 +163,14 @@ const displayUserReduce = (state = null, action) => {
           return {
             ...state,
             savedRecipeIds: action.keep
-            ? [ ...state.savedRecipeIds, action.recipe.id ]
-            : state.savedRecipeIds.filter(id => id !== action.recipe.id)
+            ? [
+                ...state.savedRecipeIds,
+                {
+                  id: action.recipe.id,
+                  timestamp: Date.now()
+                }
+              ]
+            : state.savedRecipeIds.filter(obj => obj.id !== action.recipe.id)
           }
         case FOLLOWERS:
           return {
@@ -314,34 +320,26 @@ const usersFetchedReduce = (state = false, action) => {
 const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
-      if (Object.keys(action.recipes).length < 10) {
-        console.log('hello')
-        return {
-          ...state,
-          samples: true
-        };
-      }
-      return state;
+      return {
+        ...state,
+        samples: Object.keys(action.recipes).length < 10
+      };
     case APPEND_SAVED_RECIPES:
-      if (Object.keys(action.recipes).length < 10) {
-        return {
-          ...state,
-          saved: true
-        };
-      }
-      return state;
+      return {
+        ...state,
+        saved: Object.keys(action.recipes).length < 10
+      };
     case SET_DISPLAY_USER_DETAIL:
-      if (Object.keys(action.savedRecipes).length < 10) {
-        return {
-          ...state,
-          saved: true
-        };
-      }
-      return state;
+      return {
+        ...state,
+        created: Object.keys(action.createdRecipes).length < 10,
+        saved: Object.keys(action.savedRecipes).length < 10
+      };
     case SET_ACTIVE_TAB:
       if (action.tab !== PROFILE_TAB) {
         return {
           ...state,
+          creatd: false,
           saved: false
         };
       }

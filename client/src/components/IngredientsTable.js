@@ -21,8 +21,8 @@ const IngredientsTable = props => {
     <TableContainer>
       <Table className={classes.table} aria-label="simple table">
         <TableBody>
-          {props.ingredients.map(ingredient => (
-            <TableRow key={ingredient.item}>
+          {props.ingredients.map((ingredient, index) => (
+            <TableRow key={index}>
               <TableCell style={cellStyle} component="th" scope="row">
                 {ingredient.item}
               </TableCell>

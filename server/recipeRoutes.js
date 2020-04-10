@@ -48,20 +48,29 @@ exports.getSamples = (req, res) => {
 
 exports.getRecipesByIds = (req, res) => {
   const ids = req.query.ids.split(',').map(id => ObjectID(id));
-  const timestamps = req.query.timestamps.split(',');
-  const timestampMap = ids.reduce((accum, id, index) => {
-    accum[id] = timestamps[index];
+  const timestamps = req.query.timestamps.split(',')
+    .map((timestamp, index) => {
+      return {
+        timestamp,
+        id: ids[index]
+      }
+    });
+  const sortedArray = timestamps
+    .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+    .slice(0, 10);
+  const idTimeMap = sortedArray.reduce((accum, obj) => {
+    accum[obj.id] = obj.timestamp;
     return accum;
   }, {});
   db.collection("recipes").find(
-    { _id: { $in: ids } }
+    { _id: { $in: Object.keys(idTimeMap) } }
   ).toArray().then(recipes => {
     return res.json({
       success: true,
-      recipes: recipes.slice(0, 10).reduce((accum, recipe) => {
+      recipes: recipes.reduce((accum, recipe) => {
         accum[recipe._id] = {
           ...getDerivedRecipe(recipe),
-          timestamp: parseInt(timestampMap[recipe._id])
+          timestamp: parseInt(idTimeMap[recipe._id])
         };
         return accum;
       }, {})

@@ -47,7 +47,7 @@ exports.getSamples = (req, res) => {
 }
 
 exports.getRecipesByIds = (req, res) => {
-  const ids = req.query.ids.split(',').map(id => ObjectID(id));
+  const ids = req.query.ids.split(',');
   const timestamps = req.query.timestamps.split(',')
     .map((timestamp, index) => {
       return {
@@ -63,7 +63,7 @@ exports.getRecipesByIds = (req, res) => {
     return accum;
   }, {});
   db.collection("recipes").find(
-    { _id: { $in: Object.keys(idTimeMap) } }
+    { _id: { $in: Object.keys(idTimeMap).map(id => ObjectID(id)) } }
   ).toArray().then(recipes => {
     return res.json({
       success: true,

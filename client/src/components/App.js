@@ -2,11 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import HomeIcon from '@material-ui/icons/Home';
-import Fab from '@material-ui/core/Fab';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Spinner from './Spinner';
-import TabPanel from './TabPanel';
+import NavigationMenu from './NavigationMenu';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import WelcomeTab from './WelcomeTab';
@@ -34,14 +32,6 @@ import {
   FOLLOWING,
   defaultTheme
 } from '../variables/Constants';
-
-const fabStyle = {
-  position: 'fixed',
-  right: 5,
-  background: 'none',
-  boxShadow: 'none',
-  color: 'white',
-};
 
 class App extends React.Component {
   componentDidMount() {
@@ -79,17 +69,9 @@ class App extends React.Component {
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
       }>
+        <NavigationMenu/>
         <SuccessSnackbar/>
-        {this.props.showHomeButton &&
-          <Fab
-            style={fabStyle}
-            onClick={() => this.props.setActiveTab(WELCOME_TAB)}
-          >
-            <HomeIcon style={{height:'40', width:'40'}}/>
-          </Fab>
-        }
         {this.props.isSpinnerVisible && <Spinner/>}
-        {this.props.isLoggedIn && <TabPanel/>}
         {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
         {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
         <Container
@@ -116,9 +98,7 @@ const mapStateToProps = state => {
     isDetailVisible: state.isDetailVisible,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
-    users: state.users,
-    isLoggedIn: !!state.activeUser,
-    showHomeButton: state.activeTab !== WELCOME_TAB && !state.activeUser
+    users: state.users
   };
 }
 

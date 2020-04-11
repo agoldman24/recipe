@@ -10,6 +10,7 @@ import TabPanel from './TabPanel';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import WelcomeTab from './WelcomeTab';
+import AboutTab from './AboutTab';
 import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
 import ProfileTab from './ProfileTab';
@@ -28,6 +29,7 @@ import {
   RECIPE_TAB,
   SIGN_IN_TAB,
   WELCOME_TAB,
+  ABOUT_TAB,
   PROFILE_TAB,
   FOLLOWING,
   defaultTheme
@@ -86,20 +88,21 @@ class App extends React.Component {
             <HomeIcon style={{height:'40', width:'40'}}/>
           </Fab>
         }
-        {this.props.isSpinnerVisible && <Spinner />}
-        {this.props.isLoggedIn && <TabPanel />}
-        {this.props.activeTab === SEARCH_TAB && <SearchTab />}
-        {this.props.activeTab === PROFILE_TAB && <ProfileTab />}
+        {this.props.isSpinnerVisible && <Spinner/>}
+        {this.props.isLoggedIn && <TabPanel/>}
+        {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
+        {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
         <Container
           component="main"
           maxWidth="xs"
           style={{padding:"50px 0 10px"}}
         >
           <CssBaseline />
-          {this.props.activeTab === WELCOME_TAB && <WelcomeTab />}
-          {this.props.activeTab === SIGN_UP_TAB && <SignUp />}
-          {this.props.activeTab === RECIPE_TAB && <RecipeTab />}
-          {this.props.activeTab === SIGN_IN_TAB && <SignIn />}
+          {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
+          {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
+          {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
+          {this.props.activeTab === RECIPE_TAB && <RecipeTab/>}
+          {this.props.activeTab === SIGN_IN_TAB && <SignIn/>}
         </Container>
       </ThemeProvider>
     );

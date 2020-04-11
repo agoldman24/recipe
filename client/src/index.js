@@ -17,7 +17,7 @@ sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App style={{overflowY:'hidden'}}/>
+    <App/>
   </Provider>,
   document.getElementById('root')
 );

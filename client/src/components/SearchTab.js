@@ -9,9 +9,10 @@ import { connect } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
-    marginLeft: isMobile ? '5%' : '10%',
+    left: 0,
     width: isMobile ? '90%' : '80%',
-    marginTop: '75px'
+    marginLeft: isMobile ? '5%' : '10%',
+    marginTop: '25px'
   },
   searchIcon: {
     position: 'absolute',
@@ -53,7 +54,7 @@ const SearchTab = props => {
       >
       </InputBase>
     </div>
-    <div style={{padding: '60px 0'}}/>
+    <div style={{padding: '40px 0'}}/>
     <UsersTable
       users={
         props.usersArray.filter(user =>

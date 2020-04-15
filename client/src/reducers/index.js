@@ -28,7 +28,8 @@ import {
   USERNAME_EXISTS,
   EMPTY_FIELDS,
   SHOW_SNACKBAR,
-  HIDE_SNACKBAR
+  HIDE_SNACKBAR,
+  TOGGLE_DRAWER_MENU
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -108,6 +109,15 @@ const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !!action.id ? action.id : state;
+    default:
+      return state;
+  }
+}
+
+const drawerMenuReduce = (state = StateTree.isDrawerMenuVisible, action) => {
+  switch (action.type) {
+    case TOGGLE_DRAWER_MENU:
+      return !state;
     default:
       return state;
   }
@@ -354,6 +364,7 @@ export default combineReducers({
   sampleRecipes: sampleRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
   isDetailVisible: detailVisibilityReduce,
+  isDrawerMenuVisible: drawerMenuReduce,
   isSpinnerVisible: spinnerReduce,
   usersFetched: usersFetchedReduce,
   isHydrated: hydrationReduce,

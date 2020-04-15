@@ -12,7 +12,7 @@ const RecipeList = props => {
     <Grid
       container
       direction="column"
-      style={{alignItems:'center', paddingBottom:'100px'}}
+      style={{alignItems:'center', paddingBottom:'30px'}}
     >
       {props.recipes.map(recipe => {
         return (
@@ -38,7 +38,7 @@ const RecipeList = props => {
       {!props.allRecipesFetched &&
         <Link
           href="#"
-          style={{ fontSize:'16px', paddingTop:'40px' }}
+          style={{ fontSize:'16px', paddingTop:'20px' }}
           onClick={() => {
             props.getRecipes(
               props.activeTab,

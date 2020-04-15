@@ -8,10 +8,8 @@ import DrawerMenu from './DrawerMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../actions';
 import { connect } from 'react-redux';
-import {
-  SIGN_UP_TAB, SIGN_IN_TAB, RECIPE_TAB,
-  SEARCH_TAB, WELCOME_TAB, defaultTheme
-} from '../variables/Constants';
+import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB, defaultTheme }
+from '../variables/Constants';
 
 const NavigationMenu = props => {
 

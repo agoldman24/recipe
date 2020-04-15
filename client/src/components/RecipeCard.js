@@ -59,10 +59,7 @@ const RecipeCard = props => {
           <div style={{width:'10%', float:'right'}}>
             <Fab
               style={{...fabStyle, float:'right'}}
-              onClick={() => {
-                props.toggleDetailView(props.id);
-                document.getElementById('root').style.overflowY = 'hidden';
-              }}
+              onClick={() => props.toggleDetailView(props.id)}
             >
               <InfoIcon style={iconStyle}/>
             </Fab>

@@ -102,7 +102,7 @@ class ProfileTab extends React.Component {
     return (
       <div style={{
         width: isMobile ? '100vw' : '50vw',
-        padding: '50px 0 10px',
+        // padding: '50px 0 10px',
         margin: 'auto'
       }}>
       {networkFailed

@@ -26,7 +26,7 @@ const RecipeDetail = props => {
     left: isMobile ? '0' : '20vw',
     height: '100vh',
     position: 'fixed',
-    overflowY: 'scroll',
+    overflowY: 'auto',
     zIndex: '5',
     top: '0'
   };
@@ -72,10 +72,7 @@ const RecipeDetail = props => {
           <div style={{width:'10%', float:'right'}}>
             <Fab
               style={{...fabStyle, float:'right'}}
-              onClick={() => {
-                props.toggleDetailView();
-                document.getElementById('root').style.overflowY = 'scroll';
-              }}
+              onClick={props.toggleDetailView}
             >
               <CloseIcon style={iconStyle}/>
             </Fab>

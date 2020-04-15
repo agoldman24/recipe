@@ -23,8 +23,8 @@ class RecipeTab extends React.Component {
         {this.props.networkFailed
         ? <div style={errorStyle}>Network error</div>
         : <div>
-            {this.props.isLoggedIn && <RecipeButtons />}
             <RecipeList recipes={Object.values(this.props.sampleRecipes)}/>
+            {this.props.isLoggedIn && <RecipeButtons />}
           </div>
         }
       </div>

@@ -72,14 +72,20 @@ class App extends React.Component {
         <NavigationMenu/>
         <SuccessSnackbar/>
         {this.props.isSpinnerVisible && <Spinner/>}
-        {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
-        {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
         <Container
           component="main"
-          maxWidth="xs"
-          style={{padding:"50px 0 10px"}}
+          style={{
+            position:'relative',
+            top:'50px',
+            height: this.props.isLoggedIn && this.props.activeTab === RECIPE_TAB
+              ? 'calc(100vh - 130px)'
+              : 'calc(100vh - 50px)',
+            overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+          }}
         >
           <CssBaseline />
+          {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
+          {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
           {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
           {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
           {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
@@ -94,6 +100,7 @@ class App extends React.Component {
 const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
+    isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
     usersFetched: state.usersFetched,

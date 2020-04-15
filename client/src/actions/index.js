@@ -38,6 +38,7 @@ export const CLEAR_ERROR_MESSAGES = 'CLEAR_ERROR_MESSAGES';
 export const USERNAME_EXISTS = 'USERNAME_EXISTS';
 export const EMPTY_FIELDS = 'EMPTY_FIELDS';
 
-/* Snackbar actions */
+/* UI toggling actions */
 export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';
 export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';
+export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';

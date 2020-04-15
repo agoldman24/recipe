@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -74,6 +75,7 @@ class App extends React.Component {
         {this.props.isSpinnerVisible && <Spinner/>}
         <Container
           component="main"
+          maxWidth={isMobile ? "xs" : "none"}
           style={{
             position:'relative',
             top:'50px',

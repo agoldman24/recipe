@@ -4,6 +4,7 @@ import Link from '@material-ui/core/Link';
 import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../actions';
 import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../variables/Constants";
 
@@ -12,7 +13,7 @@ const RecipeList = props => {
     <Grid
       container
       direction="column"
-      style={{alignItems:'center', paddingBottom:'30px'}}
+      style={{alignItems:'center', paddingBottom: isMobile? '100px' : '30px'}}
     >
       {props.recipes.map(recipe => {
         return (

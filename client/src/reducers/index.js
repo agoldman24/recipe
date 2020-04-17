@@ -332,18 +332,18 @@ const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) =>
     case APPEND_SAMPLE_RECIPES:
       return {
         ...state,
-        samples: Object.keys(action.recipes).length < 10
+        samples: Object.keys(action.recipes).length < 9
       };
     case APPEND_SAVED_RECIPES:
       return {
         ...state,
-        saved: Object.keys(action.recipes).length < 10
+        saved: Object.keys(action.recipes).length < 9
       };
     case SET_DISPLAY_USER_DETAIL:
       return {
         ...state,
-        created: Object.keys(action.createdRecipes).length < 10,
-        saved: Object.keys(action.savedRecipes).length < 10
+        created: Object.keys(action.createdRecipes).length < 9,
+        saved: Object.keys(action.savedRecipes).length < 9
       };
     case SET_ACTIVE_TAB:
       if (action.tab !== PROFILE_TAB) {

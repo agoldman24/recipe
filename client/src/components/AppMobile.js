@@ -24,30 +24,30 @@ import {
   defaultTheme
 } from '../variables/Constants';
 
-const AppMobile = () => {
+const AppMobile = props => {
   return (
     <ThemeProvider theme={
       createMuiTheme(defaultTheme)
     }>
       <NavigationMenu/>
       <SuccessSnackbar/>
-      {this.props.isSpinnerVisible && <Spinner/>}
-      {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
-      {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
+      {props.isSpinnerVisible && <Spinner/>}
+      {props.activeTab === PROFILE_TAB && <ProfileTab/>}
+      {props.activeTab === SEARCH_TAB && <SearchTab/>}
       <Container
         component="main"
         maxWidth="xs"
         style={{
           padding: '50px 0 10px',
-          overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+          overflowY: props.isDetailVisible ? 'hidden' : 'auto'
         }}
       >
         <CssBaseline />
-        {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
-        {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
-        {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
-        {this.props.activeTab === RECIPE_TAB && <RecipeTab/>}
-        {this.props.activeTab === SIGN_IN_TAB && <SignIn/>}
+        {props.activeTab === WELCOME_TAB && <WelcomeTab/>}
+        {props.activeTab === ABOUT_TAB && <AboutTab/>}
+        {props.activeTab === SIGN_UP_TAB && <SignUp/>}
+        {props.activeTab === RECIPE_TAB && <RecipeTab/>}
+        {props.activeTab === SIGN_IN_TAB && <SignIn/>}
       </Container>
     </ThemeProvider>
   );

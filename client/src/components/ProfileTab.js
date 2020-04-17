@@ -78,8 +78,13 @@ const buttonStyle = {
   border: '1px solid white',
   fontSize: '14px',
   padding: '2px',
-  width: isMobile ? '90%' : '50%'
+  width: isMobile ? '90%' : '40%'
 };
+
+const tableStyle = {
+  width: isMobile ? '100%' : '60%',
+  margin: 'auto'
+}
 
 class ProfileTab extends React.Component {
 
@@ -100,11 +105,7 @@ class ProfileTab extends React.Component {
       updateFollowingIds
     } = this.props;
     return (
-      <div style={{
-        width: isMobile ? '100vw' : '50vw',
-        padding: isMobile ? '50px 0 10px' : 0,
-        margin: 'auto'
-      }}>
+      <div>
       {networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <div>
@@ -171,14 +172,14 @@ class ProfileTab extends React.Component {
               ? activeUser.id === id
                 ? <Button style={buttonStyle}>Edit Profile</Button>
                 : activeUser.followingIds.includes(id)
-                  ? <div style={{width:'100%'}}>
+                  ? <div style={{width: isMobile ? '100%' : '50%'}}>
                       <Button
                         onClick={() => updateFollowingIds(activeUser.id, id, false)}
                         style={{
                           ...buttonStyle,
                           float:'right',
-                          margin: isMobile ? '0 5%' : '0 10%',
-                          width: isMobile ? '60%' : '50%'
+                          margin: '0 5%',
+                          width: '60%'
                         }}
                       >
                         Unfollow
@@ -212,7 +213,11 @@ class ProfileTab extends React.Component {
             <Grid
               container
               direction="row"
-              style={{padding:'20px 0'}}
+              style={{
+                width: isMobile ? '100%' : '50%',
+                margin: 'auto',
+                paddingTop: '20px'
+              }}
             >
               <Grid item className="clickable" style={columnStyle} onClick={() => {
                   this.props.setActiveDetail(FOLLOWERS);
@@ -304,10 +309,14 @@ class ProfileTab extends React.Component {
               </Grid>
             </Grid>
             {displayUserDetail.activeDetail === FOLLOWERS &&
-              <UsersTable users={Object.values(displayUserDetail.followers)}/>
+              <div style={tableStyle}>
+                <UsersTable users={Object.values(displayUserDetail.followers)}/>
+              </div>
             }
             {displayUserDetail.activeDetail === FOLLOWING &&
-              <UsersTable users={Object.values(displayUserDetail.following)}/>
+              <div style={tableStyle}>
+                <UsersTable users={Object.values(displayUserDetail.followers)}/>
+              </div>
             }
             {displayUserDetail.activeDetail === CREATED_RECIPES &&
               <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>

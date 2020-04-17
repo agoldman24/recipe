@@ -38,7 +38,7 @@ exports.getSamples = (req, res) => {
   ).toArray().then(recipes => {
     return res.json({
       success: true,
-      recipes: recipes.sort(() => 0.5 - Math.random()).slice(0, 10).reduce((accum, recipe) => {
+      recipes: recipes.sort(() => 0.5 - Math.random()).slice(0, 9).reduce((accum, recipe) => {
         accum[recipe._id] = getDerivedRecipe(recipe);
         return accum;
       }, {})
@@ -57,7 +57,7 @@ exports.getRecipesByIds = (req, res) => {
     });
   const sortedArray = timestamps
     .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-    .slice(0, 10);
+    .slice(0, 9);
   const idTimeMap = sortedArray.reduce((accum, obj) => {
     accum[obj.id] = obj.timestamp;
     return accum;

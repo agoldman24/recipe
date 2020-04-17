@@ -10,48 +10,54 @@ import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../variable
 
 const RecipeList = props => {
   return (
-    <Grid
-      container
-      direction="column"
-      style={{alignItems:'center', paddingBottom: isMobile? '100px' : '30px'}}
-    >
-      {props.recipes.map(recipe => {
-        return (
-          <Grid item key={recipe.id}>
-            {props.isDetailVisible && props.detailRecipeId === recipe.id &&
-              <RecipeDetail
+    <div style={{paddingBottom: isMobile? '100px' : '30px'}}>
+      <Grid
+        container
+        direction={isMobile ? "column" : "row"}
+        justify="center"
+      >
+        {props.recipes.map(recipe => {
+          return (
+            <Grid item key={recipe.id}
+              style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
+            >
+              {props.isDetailVisible && props.detailRecipeId === recipe.id &&
+                <RecipeDetail
+                  id={recipe.id}
+                  name={recipe.name}
+                  image={recipe.image}
+                  ingredients={recipe.ingredients}
+                  directions={recipe.directions}
+                />
+              }
+              <RecipeCard
                 id={recipe.id}
                 name={recipe.name}
                 image={recipe.image}
-                ingredients={recipe.ingredients}
-                directions={recipe.directions}
               />
-            }
-            <RecipeCard
-              id={recipe.id}
-              name={recipe.name}
-              image={recipe.image}
-            />
-          </Grid>
-        );
-      })
-      }
+            </Grid>
+          );
+        })
+        }
+      </Grid>
       {!props.allRecipesFetched &&
-        <Link
-          href="#"
-          style={{ fontSize:'16px', paddingTop:'20px' }}
-          onClick={() => {
-            props.getRecipes(
-              props.activeTab,
-              props.displayUser,
-              props.displayUserDetail
-            )
-          }}
-        >
-          Load more recipes
-        </Link>
+        <div style={{width:'100%', textAlign:'center', paddingTop:'20px'}}>
+          <Link
+            href="#"
+            style={{fontSize:'16px'}}
+            onClick={() => {
+              props.getRecipes(
+                props.activeTab,
+                props.displayUser,
+                props.displayUserDetail
+              )
+            }}
+          >
+            Load more recipes
+          </Link>
+        </div>
       }
-    </Grid>
+    </div>
   );
 }
 

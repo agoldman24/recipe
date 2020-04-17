@@ -20,7 +20,7 @@ const useStyles = makeStyles({
 });
 
 const textStyle = {
-  fontSize:'16px',
+  fontSize: '16px',
   float:'left'
 }
 

@@ -315,7 +315,7 @@ class ProfileTab extends React.Component {
             }
             {displayUserDetail.activeDetail === FOLLOWING &&
               <div style={tableStyle}>
-                <UsersTable users={Object.values(displayUserDetail.followers)}/>
+                <UsersTable users={Object.values(displayUserDetail.following)}/>
               </div>
             }
             {displayUserDetail.activeDetail === CREATED_RECIPES &&

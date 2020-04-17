@@ -10,7 +10,7 @@ import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../variable
 
 const RecipeList = props => {
   return (
-    <div style={{paddingBottom: isMobile? '100px' : '30px'}}>
+    <div style={{paddingBottom: isMobile ? '100px' : '30px'}}>
       <Grid
         container
         direction={isMobile ? "column" : "row"}

@@ -4,7 +4,6 @@ import { isMobile } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import AppMobile from './AppMobile';
 import Spinner from './Spinner';
 import NavigationMenu from './NavigationMenu';
 import SignIn from './SignIn';
@@ -67,37 +66,41 @@ class App extends React.Component {
   }
 
   render() {
-    return isMobile
-      ? <AppMobile/>
-      : (
-        <ThemeProvider theme={
-          createMuiTheme(defaultTheme)
-        }>
-          <NavigationMenu/>
-          <SuccessSnackbar/>
-          {this.props.isSpinnerVisible && <Spinner/>}
-          <Container
-            component="main"
-            style={{
-              position:'relative',
-              top:'50px',
-              height: this.props.isLoggedIn && this.props.activeTab === RECIPE_TAB
-                ? 'calc(100vh - 130px)'
-                : 'calc(100vh - 50px)',
-              overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
-            }}
-          >
-            <CssBaseline />
-            {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
-            {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
-            {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
-            {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
-            {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
-            {this.props.activeTab === RECIPE_TAB && <RecipeTab/>}
-            {this.props.activeTab === SIGN_IN_TAB && <SignIn/>}
-          </Container>
-        </ThemeProvider>
-      );
+    const desktopStyle = {
+      position:'relative',
+      top:'50px',
+      height: this.props.isLoggedIn && this.props.activeTab === RECIPE_TAB
+        ? 'calc(100vh - 130px)'
+        : 'calc(100vh - 50px)',
+      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+    };
+    const mobileStyle = {
+      padding: '50px 0 10px',
+      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+    };
+    return (
+      <ThemeProvider theme={
+        createMuiTheme(defaultTheme)
+      }>
+        <NavigationMenu/>
+        <SuccessSnackbar/>
+        {this.props.isSpinnerVisible && <Spinner/>}
+        <Container
+          component="main"
+          maxWidth={isMobile ? "xs" : "none"}
+          style={isMobile ? mobileStyle : desktopStyle}
+        >
+          <CssBaseline />
+          {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
+          {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
+          {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
+          {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
+          {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
+          {this.props.activeTab === RECIPE_TAB && <RecipeTab/>}
+          {this.props.activeTab === SIGN_IN_TAB && <SignIn/>}
+        </Container>
+      </ThemeProvider>
+    );
   }
 }
 

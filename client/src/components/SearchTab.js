@@ -10,9 +10,9 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
     left: 0,
+    marginTop: '25px',
     width: isMobile ? '90%' : '80%',
     marginLeft: isMobile ? '5%' : '10%',
-    marginTop: isMobile? '100px' : '25px'
   },
   searchIcon: {
     position: 'absolute',

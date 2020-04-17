@@ -86,6 +86,7 @@ class App extends React.Component {
         <SuccessSnackbar/>
         {this.props.isSpinnerVisible && <Spinner/>}
         <Container
+          id="container"
           component="main"
           maxWidth={isMobile ? "xs" : "none"}
           style={isMobile ? mobileStyle : desktopStyle}

@@ -13,6 +13,7 @@ const errorStyle = {
 
 class RecipeTab extends React.Component {
   componentDidMount() {
+    window.scrollTo(0, 0);
     if (!Object.keys(this.props.sampleRecipes).length) {
       this.props.getSampleRecipes();
     }

@@ -45,12 +45,13 @@ const RecipeList = props => {
           <Link
             href="#"
             style={{fontSize:'16px'}}
-            onClick={() => {
+            onClick={e => {
+              e.preventDefault();
               props.getRecipes(
                 props.activeTab,
                 props.displayUser,
                 props.displayUserDetail
-              )
+              );
             }}
           >
             Load more recipes

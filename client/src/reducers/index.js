@@ -75,6 +75,7 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       document.getElementById('root').scrollTo(0, 0);
+      console.log('scroll');
       localStorage.setItem("activeTab", action.tab);
       return action.tab;
     default:

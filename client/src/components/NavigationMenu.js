@@ -42,7 +42,7 @@ const NavigationMenu = props => {
       <Paper square>
       {props.isLoggedIn
       ? <Tabs
-          value={props.highlightTab ? props.activeTab : false}
+          value={props.highlightTab ? props.activeTab.name : false}
           style={navBarStyle}
           variant="fullWidth"
           indicatorColor="primary"
@@ -53,7 +53,7 @@ const NavigationMenu = props => {
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
           <DrawerMenu />
         </Tabs>
-      : props.activeTab !== WELCOME_TAB
+      : props.activeTab.name !== WELCOME_TAB
         ? <div style={navBarStyle}>
             <Fab
               style={fabStyle}
@@ -73,13 +73,18 @@ const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
-    highlightTab: state.activeTab === SEARCH_TAB || state.activeTab === RECIPE_TAB
+    highlightTab: state.activeTab.name === SEARCH_TAB
+      || state.activeTab.name === RECIPE_TAB
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab }),
+    setActiveTab: name => dispatch({
+      type: SET_ACTIVE_TAB,
+      currentTab: null,
+      newTab: { name }
+    }),
     clearFailureMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
   }
 };

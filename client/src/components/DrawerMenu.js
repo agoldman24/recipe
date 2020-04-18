@@ -146,7 +146,7 @@ const mapStateToProps = state => {
   return {
     isDrawerMenuVisible: state.isDrawerMenuVisible,
     activeUser: state.activeUser,
-    activeUserProfile: state.activeTab === PROFILE_TAB
+    activeUserProfile: state.activeTab.name === PROFILE_TAB
       && !!state.activeUser && !!state.displayUser
       && state.activeUser.id === state.displayUser.id
   }
@@ -157,11 +157,19 @@ const mapDispatchToProps = dispatch => {
     toggleDrawerMenu: () => dispatch({ type: TOGGLE_DRAWER_MENU }),
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
-      dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: PROFILE_TAB }
+      });
       dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
     },
     signOut: () => {
-      dispatch({ type: SET_ACTIVE_TAB, tab: WELCOME_TAB });
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: WELCOME_TAB }
+      });
       dispatch({ type: SIGN_OUT });
       dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
     }

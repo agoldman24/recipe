@@ -20,7 +20,11 @@ function* signIn(action) {
       const activeUserId = localStorage.getItem("activeUserId");
       yield put({ type: SET_ACTIVE_USER, user: data.user });
       if (!activeUserId || activeUserId === "null") {
-        yield put({ type: SET_ACTIVE_TAB, tab: RECIPE_TAB });
+        yield put({
+          type: SET_ACTIVE_TAB,
+          currentTab: null,
+          newTab: { name: RECIPE_TAB }
+        });
         yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
       }
     } else {

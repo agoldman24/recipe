@@ -13,6 +13,8 @@ export const FOLLOWERS = "FOLLOWERS";
 export const CREATED_RECIPES = "CREATED RECIPES";
 export const SAVED_RECIPES = "SAVED_RECIPES";
 export const SAMPLES = "SAMPLES";
+export const PUSH = "PUSH";
+export const POP = "POP";
 
 export const defaultTheme = {
   palette: {

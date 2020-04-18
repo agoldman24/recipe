@@ -141,7 +141,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
+    setActiveTab: name => dispatch({
+      type: SET_ACTIVE_TAB,
+      currentTab: null,
+      newTab: { name }
+    })
   };
 };
 

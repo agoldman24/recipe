@@ -159,7 +159,11 @@ const mapDispatchToProps = dispatch => {
     signUp: (firstName, lastName, username, password) => dispatch({
       type: SIGN_UP_REQUESTED, firstName, lastName, username, password
     }),
-    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab })
+    setActiveTab: name => dispatch({
+      type: SET_ACTIVE_TAB,
+      currentTab: null,
+      newTab: { name }
+    })
   }
 };
 

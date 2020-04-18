@@ -34,7 +34,11 @@ function* signUp(action) {
         savedRecipes: {},
         activeDetail: FOLLOWERS
       })
-      yield put({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
+      yield put({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: PROFILE_TAB }
+      });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" });
     }
   } catch (err) {

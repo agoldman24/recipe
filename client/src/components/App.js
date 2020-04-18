@@ -45,10 +45,10 @@ class App extends React.Component {
   }
   componentDidUpdate() {
     if (this.props.usersFetched && !this.props.isHydrated && Object.keys(this.props.users).length) {
-      const activeTab = localStorage.getItem("activeTab");
+      const activeTabName = localStorage.getItem("activeTab");
       const activeDetail = localStorage.getItem("activeDetail");
-      if (!!activeTab && activeTab !== "null") {
-        if (activeTab === PROFILE_TAB) {
+      if (!!activeTabName && activeTabName !== "null") {
+        if (activeTabName === PROFILE_TAB) {
           this.props.setDisplayUser(
             this.props.users[localStorage.getItem("displayUserId")]
           );
@@ -57,7 +57,7 @@ class App extends React.Component {
           }
           this.props.getUserDetail(localStorage.getItem("activeDetail"));
         }
-        this.props.setActiveTab(activeTab);
+        this.props.setActiveTab(activeTabName);
       } else {
         this.props.setActiveTab(WELCOME_TAB);
       }
@@ -69,7 +69,7 @@ class App extends React.Component {
     const desktopStyle = {
       position:'relative',
       top:'50px',
-      height: this.props.isLoggedIn && this.props.activeTab === RECIPE_TAB
+      height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 130px)'
         : 'calc(100vh - 50px)',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
@@ -88,17 +88,17 @@ class App extends React.Component {
         <Container
           id="container"
           component="main"
-          maxWidth={isMobile ? "xs" : "none"}
+          maxWidth={isMobile ? "xs" : false}
           style={isMobile ? mobileStyle : desktopStyle}
         >
           <CssBaseline />
-          {this.props.activeTab === SEARCH_TAB && <SearchTab/>}
-          {this.props.activeTab === PROFILE_TAB && <ProfileTab/>}
-          {this.props.activeTab === WELCOME_TAB && <WelcomeTab/>}
-          {this.props.activeTab === ABOUT_TAB && <AboutTab/>}
-          {this.props.activeTab === SIGN_UP_TAB && <SignUp/>}
-          {this.props.activeTab === RECIPE_TAB && <RecipeTab/>}
-          {this.props.activeTab === SIGN_IN_TAB && <SignIn/>}
+          {this.props.activeTab.name === SEARCH_TAB && <SearchTab/>}
+          {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
+          {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
+          {this.props.activeTab.name === ABOUT_TAB && <AboutTab/>}
+          {this.props.activeTab.name === SIGN_UP_TAB && <SignUp/>}
+          {this.props.activeTab.name === RECIPE_TAB && <RecipeTab/>}
+          {this.props.activeTab.name === SIGN_IN_TAB && <SignIn/>}
         </Container>
       </ThemeProvider>
     );
@@ -121,7 +121,11 @@ const mapDispatchToProps = dispatch => {
   return {
     signIn: id => dispatch({ type: SIGN_IN_REQUESTED, id }),
     getAllUsers: () => dispatch({ type: GET_ALL_USERS }),
-    setActiveTab: tab => dispatch({ type: SET_ACTIVE_TAB, tab }),
+    setActiveTab: name => dispatch({
+      type: SET_ACTIVE_TAB, 
+      currentTab: null,
+      newTab: { name }
+    }),
     setDisplayUser: user => dispatch({ type: SET_DISPLAY_USER, user }),
     getUserDetail: activeDetail => dispatch({
       type: GET_USER_DETAIL_REQUESTED, activeDetail

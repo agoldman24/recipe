@@ -5,13 +5,16 @@ import Button from '@material-ui/core/Button';
 import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
 import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
-  SET_ACTIVE_DETAIL
+  SET_ACTIVE_DETAIL,
+  SET_ACTIVE_TAB,
+  SET_DISPLAY_USER
 } from '../actions';
 import {
   PROFILE_IMAGE,
@@ -20,6 +23,8 @@ import {
   CREATED_RECIPES,
   SAVED_RECIPES,
   FOLLOWING_IDS,
+  PROFILE_TAB,
+  POP,
   gradientTextStyle2
 } from '../variables/Constants';
 import { connect } from 'react-redux';
@@ -61,12 +66,19 @@ const selected = {
   borderBottom:'2px solid #ffc800'
 }
 
-const fabStyle = {
+const photoButtonStyle = {
   background: 'none',
   boxShadow: 'none',
   color: 'white',
   top: '-50px',
   left: '80px'
+};
+
+const backButtonStyle = {
+  background: 'none',
+  boxShadow: 'none',
+  color: 'white',
+  position: 'fixed', top: '40px', left: '10px'
 };
 
 const iconStyle = {
@@ -117,6 +129,21 @@ class ProfileTab extends React.Component {
               padding: '0 10px'
             }}
           >
+            {!!this.props.tabHistory.length &&
+              <Fab
+                style={backButtonStyle}
+                onClick={() => {
+                  const tabHistory = this.props.tabHistory;
+                  const { displayUserId } = tabHistory[tabHistory.length - 1];
+                  if (!!displayUserId) {
+                    this.props.setDisplayUser(this.props.users[displayUserId]);
+                  }
+                  this.props.setActiveTab(tabHistory[tabHistory.length - 1]);
+                }}
+              >
+                <ArrowBackIosIcon/>
+              </Fab>
+            }
             <Grid item>
               <Typography
                 variant="h5"
@@ -135,7 +162,7 @@ class ProfileTab extends React.Component {
                       style={imageStyle}
                     />
                     {!!activeUser && activeUser.id === id &&
-                      <Fab style={fabStyle} className="fileContainer">
+                      <Fab style={photoButtonStyle} className="fileContainer">
                         <AddAPhotoIcon style={iconStyle}/>
                         <FileBase type="file" onDone={this.onImageChange}/>
                       </Fab>
@@ -339,6 +366,8 @@ class ProfileTab extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    tabHistory: state.tabHistory,
+    users: state.users,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     activeUser: state.activeUser,
@@ -362,11 +391,20 @@ const mapDispatchToProps = dispatch => {
         id, friendId, keep
       })
     },
-    getUserDetail: activeDetail => {
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail })
-    },
     setActiveDetail: detail => {
       dispatch({ type: SET_ACTIVE_DETAIL, detail })
+    },
+    setDisplayUser: user => {
+      dispatch({ type: SET_DISPLAY_USER, user });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+    },
+    setActiveTab: newTab => {
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: { name: PROFILE_TAB },
+        newTab,
+        operation: POP
+      })
     }
   };
 };

@@ -70,7 +70,8 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
-    allRecipesFetched: (state.activeTab === RECIPE_TAB && state.allRecipesFetched.samples)
+    allRecipesFetched:
+    (state.activeTab.name === RECIPE_TAB && state.allRecipesFetched.samples)
     || (!!state.displayUserDetail && 
       ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
       || (state.displayUserDetail.activeDetail === SAVED_RECIPES && state.allRecipesFetched.saved))
@@ -82,8 +83,8 @@ const mapDispatchToProps = dispatch => {
   return {
     getRecipes: (activeTab, displayUser, displayUserDetail) => dispatch({
       type: GET_RECIPES_REQUESTED,
-      requestType: activeTab === RECIPE_TAB ? SAMPLES : SAVED_RECIPES,
-      ids: activeTab === RECIPE_TAB
+      requestType: activeTab.name === RECIPE_TAB ? SAMPLES : SAVED_RECIPES,
+      ids: activeTab.name === RECIPE_TAB
         ? null
         : displayUser.savedRecipeIds.filter(obj =>
             !Object.keys(displayUserDetail.savedRecipes).includes(obj.id)

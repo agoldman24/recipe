@@ -10,7 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import '../index.css';
 import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../actions';
-import { PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
+import { PROFILE_TAB, FOLLOWERS, PUSH } from '../variables/Constants';
 
 const useStyles = makeStyles({
   table: {
@@ -39,7 +39,7 @@ const UsersTable = props => {
               selected={selectedId === user.id}
               onClick={() => {
                 setSelectedId(user.id);
-                props.visitUserProfile(user);
+                props.visitUserProfile(user, props.activeTab, props.displayUser);
               }}>
               <TableCell component="th" scope="row">
                 <Typography style={textStyle}>{user.firstName + " " + user.lastName}</Typography>
@@ -54,14 +54,25 @@ const UsersTable = props => {
 }
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    activeTab: state.activeTab,
+    displayUser: state.displayUser
+  };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    visitUserProfile: user => {
+    visitUserProfile: (user, currentTab, displayUser) => {
       dispatch({ type: SET_DISPLAY_USER, user });
-      dispatch({ type: SET_ACTIVE_TAB, tab: PROFILE_TAB });
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: {
+          name: currentTab.name,
+          displayUserId: !!displayUser ? displayUser.id : null
+        },
+        newTab: { name: PROFILE_TAB },
+        operation: PUSH
+      });
       dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
     }
   }

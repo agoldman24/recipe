@@ -36,6 +36,7 @@ import {
   SAVED_RECIPES,
   FOLLOWERS,
   PROFILE_IMAGE,
+  PUSH,
 } from '../variables/Constants';
 
 const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
@@ -76,8 +77,21 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
     case SET_ACTIVE_TAB:
       document.getElementById('root').scrollTo(0, 0);
       document.getElementById('container').scrollTo(0, 0);
-      localStorage.setItem("activeTab", action.tab);
-      return action.tab;
+      localStorage.setItem("activeTab", action.newTab.name);
+      return action.newTab;
+    default:
+      return state;
+  }
+}
+
+const tabHistoryReduce = (state = StateTree.tabHistory, action) => {
+  switch (action.type) {
+    case SET_ACTIVE_TAB:
+      return !!action.currentTab
+        ? action.operation === PUSH
+          ? [ ...state, action.currentTab ]
+          : state.filter((tab, index) => index < state.length - 1)
+        : []
     default:
       return state;
   }
@@ -199,7 +213,7 @@ const displayUserReduce = (state = null, action) => {
           return state;
       }
     case SET_ACTIVE_TAB:
-      if (action.tab !== PROFILE_TAB) {
+      if (action.newTab.name !== PROFILE_TAB) {
         return null;
       } else {
         return state;
@@ -268,7 +282,7 @@ const displayUserDetailReduce = (state = null, action) => {
           throw new Error('Invalid update type');
       }
     case SET_ACTIVE_TAB:
-      if (action.tab !== PROFILE_TAB) {
+      if (action.newTab.name !== PROFILE_TAB) {
         if (!!state && !!state.profileImage) {
           URL.revokeObjectURL(state.profileImage);
         }
@@ -347,7 +361,7 @@ const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) =>
         saved: Object.keys(action.savedRecipes).length < 9
       };
     case SET_ACTIVE_TAB:
-      if (action.tab !== PROFILE_TAB) {
+      if (action.newTab.name !== PROFILE_TAB) {
         return {
           ...state,
           creatd: false,
@@ -362,6 +376,7 @@ const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) =>
 
 export default combineReducers({
   activeTab: activeTabReduce,
+  tabHistory: tabHistoryReduce,
   sampleRecipes: sampleRecipesReduce,
   detailRecipeId: detailRecipeIdReduce,
   isDetailVisible: detailVisibilityReduce,

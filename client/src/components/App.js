@@ -13,6 +13,7 @@ import AboutTab from './AboutTab';
 import RecipeTab from './RecipeTab';
 import SearchTab from './SearchTab';
 import ProfileTab from './ProfileTab';
+import ScrollButton from './ScrollButton';
 import SuccessSnackbar from './SuccessSnackbar';
 import {
   SIGN_IN_REQUESTED,
@@ -35,8 +36,12 @@ import {
 } from '../variables/Constants';
 
 class App extends React.Component {
+  state = {
+    showScrollButton: false
+  }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
+    document.getElementById('container').addEventListener('scroll', this.handleScroll);
     this.props.getAllUsers();
     const activeUserId = localStorage.getItem("activeUserId");
     if (!!activeUserId && activeUserId !== "null") {
@@ -64,6 +69,11 @@ class App extends React.Component {
       this.props.completeHydrate();
     }
   }
+  handleScroll = () => {
+    this.setState({
+      showScrollButton: !!document.getElementById('container').scrollTop
+    });
+  }
 
   render() {
     const desktopStyle = {
@@ -78,12 +88,14 @@ class App extends React.Component {
       padding: '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
+    
     return (
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
       }>
         <NavigationMenu/>
         <SuccessSnackbar/>
+        {this.state.showScrollButton && <ScrollButton/>}
         {this.props.isSpinnerVisible && <Spinner/>}
         <Container
           id="container"

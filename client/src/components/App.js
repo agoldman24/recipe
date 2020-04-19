@@ -41,7 +41,11 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
-    document.getElementById('container').addEventListener('scroll', this.handleScroll);
+    if (isMobile) {
+      window.addEventListener('scroll', this.handleScroll);
+    } else {
+      document.getElementById('container').addEventListener('scroll', this.handleScroll);
+    }
     this.props.getAllUsers();
     const activeUserId = localStorage.getItem("activeUserId");
     if (!!activeUserId && activeUserId !== "null") {
@@ -70,9 +74,12 @@ class App extends React.Component {
     }
   }
   handleScroll = () => {
-    this.setState({
-      showScrollButton: !!document.getElementById('container').scrollTop
-    });
+    const isScrollButtonVisible = isMobile
+      ? !!window.scrollY
+      : !!document.getElementById('container').scrollTop
+    if (isScrollButtonVisible !== this.state.showScrollButton) {
+      this.setState({ showScrollButton: isScrollButtonVisible });
+    }
   }
 
   render() {

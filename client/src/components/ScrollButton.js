@@ -3,15 +3,6 @@ import Button from '@material-ui/core/Button';
 import { defaultTheme } from '../variables/Constants';
 import { isMobile } from 'react-device-detect';
 
-function smoothScroll(dist, time) {
-  const distStep = dist / time;
-  for (let currTime = 0; currTime <= time; currTime++) {
-    window.setTimeout(function() {
-      window.scrollBy(0, -distStep*5)
-    }.bind(this), 5);
-  }
-}
-
 export default function ScrollButton() {
   const buttonStyle = {
     color: 'black',
@@ -31,7 +22,7 @@ export default function ScrollButton() {
         style={buttonStyle}
         onClick={() => {
           if (isMobile) {
-            smoothScroll(window.scrollY, 1000);
+            window.scrollTo(0, 0);
           } else {
             document.getElementById('container').scroll({
               top: 0, left: 0, behavior: 'smooth'

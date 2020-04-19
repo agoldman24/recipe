@@ -6,7 +6,9 @@ import { isMobile } from 'react-device-detect';
 function smoothScroll(dist, time) {
   const distStep = dist / time;
   for (let currTime = 0; currTime <= time; currTime++) {
-    window.setTimeout(() => window.scrollBy(0, -distStep*5), 5);
+    window.setTimeout(function() {
+      window.scrollBy(0, -distStep*5)
+    }.bind(this), 5);
   }
 }
 

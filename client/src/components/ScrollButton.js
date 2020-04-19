@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { defaultTheme } from '../variables/Constants';
+import { isMobile } from 'react-device-detect';
 
 export default function ScrollButton() {
   const buttonStyle = {
@@ -20,9 +21,13 @@ export default function ScrollButton() {
       <Button
         style={buttonStyle}
         onClick={() => {
-          document.getElementById('container').scroll({
-            top: 0, left: 0, behavior: 'smooth'
-          })
+          if (isMobile) {
+            window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+          } else {
+            document.getElementById('container').scroll({
+              top: 0, left: 0, behavior: 'smooth'
+            });
+          }
         }}
       >
         Scroll to top

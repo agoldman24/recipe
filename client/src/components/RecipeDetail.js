@@ -20,7 +20,7 @@ const RecipeDetail = props => {
     width:'30',
     height:'30'
   };
-  const detailedStyle = {
+  const detailStyle = {
     borderRadius: '0',
     width: isMobile ? '100vw' : '60vw',
     left: isMobile ? '0' : '20vw',
@@ -42,7 +42,7 @@ const RecipeDetail = props => {
     lineHeight: '2'
   }
   return (
-    <Card style={detailedStyle}>
+    <Card style={detailStyle}>
       <CardHeader
         title={
           <Typography

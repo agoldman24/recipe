@@ -72,6 +72,7 @@ class App extends React.Component {
       }
       this.props.completeHydrate();
     }
+    document.getElementById('root').style.overflowY = this.props.isDetailVisible ? 'hidden' : 'initial';
   }
   handleScroll = () => {
     const isScrollButtonVisible = isMobile
@@ -83,6 +84,10 @@ class App extends React.Component {
   }
 
   render() {
+    const mobileStyle = {
+      padding: '50px 0 10px',
+      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+    };
     const desktopStyle = {
       position:'relative',
       top:'50px',
@@ -91,11 +96,6 @@ class App extends React.Component {
         : 'calc(100vh - 50px)',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
-    const mobileStyle = {
-      padding: '50px 0 10px',
-      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
-    };
-    
     return (
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)

@@ -21,13 +21,8 @@ export default function ScrollButton() {
       <Button
         style={buttonStyle}
         onClick={() => {
-          if (isMobile) {
-            window.scrollTo(0, 0);
-          } else {
-            document.getElementById('container').scroll({
-              top: 0, left: 0, behavior: 'smooth'
-            });
-          }
+          const id = isMobile ? 'root' : 'container';
+          document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
         }}
       >
         Scroll to top

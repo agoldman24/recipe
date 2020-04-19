@@ -2,7 +2,7 @@ import { WELCOME_TAB } from "../variables/Constants";
 
 export default Object.assign({},
 {
-  activeTab: WELCOME_TAB,
+  activeTab: { name: WELCOME_TAB },
   isSpinnerVisible: false,
   isDetailVisible: false,
   isDrawerMenuVisible: false,

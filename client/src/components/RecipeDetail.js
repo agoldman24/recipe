@@ -72,7 +72,10 @@ const RecipeDetail = props => {
           <div style={{width:'10%', float:'right'}}>
             <Fab
               style={{...fabStyle, float:'right'}}
-              onClick={props.toggleDetailView}
+              onClick={() => {
+                props.toggleDetailView();
+                document.getElementById('root').style.overflowY = 'auto';
+              }}
             >
               <CloseIcon style={iconStyle}/>
             </Fab>

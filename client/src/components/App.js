@@ -41,11 +41,8 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
-    if (isMobile) {
-      window.addEventListener('scroll', this.handleScroll);
-    } else {
-      document.getElementById('container').addEventListener('scroll', this.handleScroll);
-    }
+    const id = isMobile ? 'root' : 'container';
+    document.getElementById(id).addEventListener('scroll', this.handleScroll);
     this.props.getAllUsers();
     const activeUserId = localStorage.getItem("activeUserId");
     if (!!activeUserId && activeUserId !== "null") {
@@ -72,12 +69,10 @@ class App extends React.Component {
       }
       this.props.completeHydrate();
     }
-    document.getElementById('root').style.overflowY = this.props.isDetailVisible ? 'hidden' : 'initial';
   }
   handleScroll = () => {
-    const isScrollButtonVisible = isMobile
-      ? !!window.scrollY
-      : !!document.getElementById('container').scrollTop
+    const id = isMobile ? 'root' : 'container';
+    const isScrollButtonVisible = !!document.getElementById(id).scrollTop;
     if (isScrollButtonVisible !== this.state.showScrollButton) {
       this.setState({ showScrollButton: isScrollButtonVisible });
     }

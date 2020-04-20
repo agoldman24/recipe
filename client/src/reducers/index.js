@@ -10,6 +10,7 @@ import {
   GET_USER_DETAIL_SUCCEEDED,
   POPULATE_USERS,
   ADD_USER,
+  UPDATE_USER,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
   SET_DISPLAY_USER_DETAIL,
@@ -143,8 +144,10 @@ const usersReduce = (state = StateTree.users, action) => {
     case POPULATE_USERS:
       return action.users;
     case ADD_USER:
+    case UPDATE_USER:
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
+    case UPDATE_DISPLAY_USER_DETAIL:
       return {
         ...state,
         [action.user.id]: action.user

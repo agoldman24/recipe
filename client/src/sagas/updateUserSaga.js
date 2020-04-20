@@ -4,6 +4,7 @@ import {
   NETWORK_FAILED,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
+  UPDATE_USER,
   SET_ACTIVE_USER,
   UPDATE_DISPLAY_USER_DETAIL
 } from '../actions';
@@ -26,7 +27,7 @@ function* updateUser(action) {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
     const displayUserDetail = yield select(getDisplayUserDetail);
-    let res, profileImageId = activeUser.profileImageId;
+    let res, res2, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE_IMAGE:
         if (!profileImageId) {
@@ -83,7 +84,7 @@ function* updateUser(action) {
           ? [ ...activeUser.followingIds, action.friendId ]
           : activeUser.followingIds.filter(id => id !== action.friendId)
         });
-        yield call(Api.post, '/updateFollowerIds', {
+        res2 = yield call(Api.post, '/updateFollowerIds', {
           id: action.friendId,
           followerIds: action.keep
           ? [ ...friend.followerIds, action.id ]
@@ -93,9 +94,10 @@ function* updateUser(action) {
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: FOLLOWERS,
-          user: users[action.id],
+          user: res.data.user,
           keep: action.keep
         });
+        yield put({ type: UPDATE_USER, user: res2.data.user });
         break;
       default:
         break;

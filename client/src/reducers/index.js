@@ -274,7 +274,13 @@ const displayUserDetailReduce = (state = null, action) => {
               .reduce((accum, id) => {
                 accum[id] = state.followers[id];
                 return accum;
-              }, {})
+              }, {}),
+            following: Object.keys(state.following).includes(action.user.id)
+            ? {
+                ...state.following,
+                [action.user.id]: action.user
+              }
+            : state.following
           }
         case PROFILE_IMAGE:
           return {

@@ -27,7 +27,7 @@ function* updateUser(action) {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
     const displayUserDetail = yield select(getDisplayUserDetail);
-    let res, profileImageId = activeUser.profileImageId;
+    let res, res2, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE_IMAGE:
         if (!profileImageId) {
@@ -84,7 +84,7 @@ function* updateUser(action) {
           ? [ ...activeUser.followingIds, action.friendId ]
           : activeUser.followingIds.filter(id => id !== action.friendId)
         });
-        yield call(Api.post, '/updateFollowerIds', {
+        res2 = yield call(Api.post, '/updateFollowerIds', {
           id: action.friendId,
           followerIds: action.keep
           ? [ ...friend.followerIds, action.id ]

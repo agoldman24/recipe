@@ -9,6 +9,17 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
+import { makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -98,270 +109,316 @@ const tableStyle = {
   margin: 'auto'
 }
 
-class ProfileTab extends React.Component {
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: 'relative',
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+}));
 
-  onImageChange = files => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const ProfileTab = props => {
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const onImageChange = files => {
     const data = files.base64.toString();
-    this.props.updateProfileImage(this.props.activeUser.id, data);
+    props.updateProfileImage(props.activeUser.id, data);
   }
 
-  render() {
-    const {
-      displayUser: {
-        id, username, firstName, lastName, followerIds,
-        followingIds, createdRecipeIds, savedRecipeIds
-      },
-      displayUserDetail,
-      activeUser,
-      networkFailed,
-      updateFollowingIds
-    } = this.props;
-    return (
-      <div>
-      {networkFailed
-      ? <div style={errorStyle}>Network error</div>
-      : <div>
-          <Grid
-            container
-            direction="column"
-            style={{
-              alignItems:'center',
-              padding: '0 10px'
-            }}
-          >
-            {!!this.props.tabHistory.length &&
-              <Fab
-                style={backButtonStyle}
-                onClick={() => {
-                  const tabHistory = this.props.tabHistory;
-                  const { displayUserId } = tabHistory[tabHistory.length - 1];
-                  if (!!displayUserId) {
-                    this.props.setDisplayUser(this.props.users[displayUserId]);
-                  }
-                  this.props.setActiveTab(tabHistory[tabHistory.length - 1]);
-                }}
-              >
-                <ArrowBackIosIcon/>
-              </Fab>
-            }
-            <Grid item>
-              <Typography
-                variant="h5"
-                style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
-              >
-                {username}
-              </Typography>
-            </Grid>
-            <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
-              <div>
-                {!!displayUserDetail && !!displayUserDetail.profileImage
-                ? <div style={{height:'120px'}}>
-                    <Avatar
-                      alt="Profile"
-                      src={displayUserDetail.profileImage}
-                      style={imageStyle}
-                    />
-                    {!!activeUser && activeUser.id === id &&
-                      <Fab style={photoButtonStyle} className="fileContainer">
-                        <AddAPhotoIcon style={iconStyle}/>
-                        <FileBase type="file" onDone={this.onImageChange}/>
-                      </Fab>
-                    }
-                  </div>
-                : <Avatar alt="Profile" style={imageStyle}>
-                    <Grid container direction="column" style={{textAlign:'center'}}>
-                      <Grid item>
-                        {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
-                      </Grid>
-                      <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
-                      {!!activeUser && activeUser.id === id &&
-                        <label className="fileContainer">
-                          Upload photo
-                          <FileBase type="file" onDone={this.onImageChange}/>
-                        </label>
-                      }
-                      </Grid>
-                    </Grid>
-                  </Avatar>
+  const {
+    displayUser: {
+      id, username, firstName, lastName, followerIds,
+      followingIds, createdRecipeIds, savedRecipeIds
+    },
+    displayUserDetail,
+    activeUser,
+    networkFailed,
+    updateFollowingIds
+  } = props;
+  return (
+    <div>
+    {networkFailed
+    ? <div style={errorStyle}>Network error</div>
+    : <div>
+        <Grid
+          container
+          direction="column"
+          style={{
+            alignItems:'center',
+            padding: '0 10px'
+          }}
+        >
+          {!!props.tabHistory.length &&
+            <Fab
+              style={backButtonStyle}
+              onClick={() => {
+                const tabHistory = props.tabHistory;
+                const { displayUserId } = tabHistory[tabHistory.length - 1];
+                if (!!displayUserId) {
+                  props.setDisplayUser(props.users[displayUserId]);
                 }
-              </div>
-              <Typography
-                style={{
-                  ...textStyle,
-                  fontSize: '24px',
-                  margin:'auto'
-                }}
-              >
-                {firstName + " " + lastName}
-              </Typography>
-            </Grid>
-            {!!activeUser
-              ? activeUser.id === id
-                ? <Button style={buttonStyle}>Edit Profile</Button>
-                : activeUser.followingIds.includes(id)
-                  ? <div style={{width: isMobile ? '100%' : '50%'}}>
-                      <Button
-                        onClick={() => updateFollowingIds(activeUser.id, id, false)}
-                        style={{
-                          ...buttonStyle,
-                          float:'right',
-                          margin: '0 5%',
-                          width: '60%'
-                        }}
-                      >
-                        Unfollow
-                      </Button>
-                      <Typography
-                        style={{
-                          float:'right', fontSize:'16px', color:'#00d412'
-                        }}
-                      >
-                        Following
-                        <CheckIcon
-                          style={{
-                            ...iconStyle,
-                            verticalAlign:'top',
-                            marginLeft:'5px',
-                            color:'#00d412'
-                          }}/>
-                      </Typography>
-                    </div>
-                  : <Button
-                      onClick={() => updateFollowingIds(activeUser.id, id, true)}
-                      style={buttonStyle}
-                    >
-                      Follow
-                    </Button>
-              : null
-            }
-          </Grid>
-          {!!displayUserDetail &&
-          <div>
-            <Grid
-              container
-              direction="row"
-              style={{
-                width: isMobile ? '100%' : '50%',
-                margin: 'auto',
-                paddingTop: '20px'
+                props.setActiveTab(tabHistory[tabHistory.length - 1]);
               }}
             >
-              <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.setActiveDetail(FOLLOWERS);
-                }}>
-                {displayUserDetail.activeDetail === FOLLOWERS
-                ? <div style={selected}>
-                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                      {followerIds.length}
-                    </Typography>
-                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Followers
-                    </Typography>
-                  </div>
-                : <div style={unselected}>
-                    <Typography style={{...textStyle, fontSize:'40px'}}>
-                      {followerIds.length}
-                    </Typography>
-                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Followers
-                    </Typography>
-                  </div>
-                }
-              </Grid>
-              <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.setActiveDetail(FOLLOWING);
-                }}>
-                {displayUserDetail.activeDetail === FOLLOWING
-                ? <div style={selected}>
-                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                      {followingIds.length}
-                    </Typography>
-                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+              <ArrowBackIosIcon/>
+            </Fab>
+          }
+          <Grid item>
+            <Typography
+              variant="h5"
+              style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
+            >
+              {username}
+            </Typography>
+          </Grid>
+          <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
+            <div>
+              {!!displayUserDetail && !!displayUserDetail.profileImage
+              ? <div style={{height:'120px'}}>
+                  <Avatar
+                    alt="Profile"
+                    src={displayUserDetail.profileImage}
+                    style={imageStyle}
+                  />
+                  {!!activeUser && activeUser.id === id &&
+                    <Fab style={photoButtonStyle} className="fileContainer">
+                      <AddAPhotoIcon style={iconStyle}/>
+                      <FileBase type="file" onDone={onImageChange}/>
+                    </Fab>
+                  }
+                </div>
+              : <Avatar alt="Profile" style={imageStyle}>
+                  <Grid container direction="column" style={{textAlign:'center'}}>
+                    <Grid item>
+                      {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
+                    </Grid>
+                    <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
+                    {!!activeUser && activeUser.id === id &&
+                      <label className="fileContainer">
+                        Upload photo
+                        <FileBase type="file" onDone={onImageChange}/>
+                      </label>
+                    }
+                    </Grid>
+                  </Grid>
+                </Avatar>
+              }
+            </div>
+            <Typography
+              style={{
+                ...textStyle,
+                fontSize: '24px',
+                margin:'auto'
+              }}
+            >
+              {firstName + " " + lastName}
+            </Typography>
+          </Grid>
+          {!!activeUser
+            ? activeUser.id === id
+              ? <Button style={buttonStyle} onClick={handleClickOpen}>Edit Profile</Button>
+              : activeUser.followingIds.includes(id)
+                ? <div style={{width: isMobile ? '100%' : '50%'}}>
+                    <Button
+                      onClick={() => updateFollowingIds(activeUser.id, id, false)}
+                      style={{
+                        ...buttonStyle,
+                        float:'right',
+                        margin: '0 5%',
+                        width: '60%'
+                      }}
+                    >
+                      Unfollow
+                    </Button>
+                    <Typography
+                      style={{
+                        float:'right', fontSize:'16px', color:'#00d412'
+                      }}
+                    >
                       Following
+                      <CheckIcon
+                        style={{
+                          ...iconStyle,
+                          verticalAlign:'top',
+                          marginLeft:'5px',
+                          color:'#00d412'
+                        }}/>
                     </Typography>
                   </div>
-                : <div style={unselected}>
-                    <Typography style={{...textStyle, fontSize:'40px'}}>
-                      {followingIds.length}
-                    </Typography>
-                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Following
-                    </Typography>
-                  </div>
-                }
-              </Grid>
-              <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.setActiveDetail(CREATED_RECIPES);
-                }}>
-                {displayUserDetail.activeDetail === CREATED_RECIPES
-                ? <div style={selected}>
-                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                      {createdRecipeIds.length}
-                    </Typography>
-                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Created Recipes
-                    </Typography>
-                  </div>
-                : <div style={unselected}>
-                    <Typography style={{...textStyle, fontSize:'40px'}}>
-                      {createdRecipeIds.length}
-                    </Typography>
-                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Created Recipes
-                    </Typography>
-                  </div>
-                }
-              </Grid>
-              <Grid item className="clickable" style={columnStyle} onClick={() => {
-                  this.props.setActiveDetail(SAVED_RECIPES);
-                }}>
-                {displayUserDetail.activeDetail === SAVED_RECIPES
-                ? <div style={selected}>
-                    <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                      {savedRecipeIds.length}
-                    </Typography>
-                    <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Saved Recipes
-                    </Typography>
-                  </div>
-                : <div style={unselected}>
-                    <Typography style={{...textStyle, fontSize:'40px'}}>
-                      {savedRecipeIds.length}
-                    </Typography>
-                    <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                      Saved Recipes
-                    </Typography>
-                  </div>
-                }
-              </Grid>
+                : <Button
+                    onClick={() => updateFollowingIds(activeUser.id, id, true)}
+                    style={buttonStyle}
+                  >
+                    Follow
+                  </Button>
+            : null
+          }
+        </Grid>
+        {!!displayUserDetail &&
+        <div>
+          <Grid
+            container
+            direction="row"
+            style={{
+              width: isMobile ? '100%' : '50%',
+              margin: 'auto',
+              paddingTop: '20px'
+            }}
+          >
+            <Grid item className="clickable" style={columnStyle} onClick={() => {
+                props.setActiveDetail(FOLLOWERS);
+              }}>
+              {displayUserDetail.activeDetail === FOLLOWERS
+              ? <div style={selected}>
+                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                    {followerIds.length}
+                  </Typography>
+                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Followers
+                  </Typography>
+                </div>
+              : <div style={unselected}>
+                  <Typography style={{...textStyle, fontSize:'40px'}}>
+                    {followerIds.length}
+                  </Typography>
+                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Followers
+                  </Typography>
+                </div>
+              }
             </Grid>
-            {displayUserDetail.activeDetail === FOLLOWERS &&
-              <div style={tableStyle}>
-                <UsersTable users={Object.values(displayUserDetail.followers)}/>
-              </div>
-            }
-            {displayUserDetail.activeDetail === FOLLOWING &&
-              <div style={tableStyle}>
-                <UsersTable users={Object.values(displayUserDetail.following)}/>
-              </div>
-            }
-            {displayUserDetail.activeDetail === CREATED_RECIPES &&
-              <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
-            }
-            {displayUserDetail.activeDetail === SAVED_RECIPES &&
-              <RecipeList recipes={
-                Object.values(displayUserDetail.savedRecipes).sort((r1, r2) => {
-                  return r2.timestamp - r1.timestamp;
-                })
-              }/>
-            }
-          </div>
+            <Grid item className="clickable" style={columnStyle} onClick={() => {
+                props.setActiveDetail(FOLLOWING);
+              }}>
+              {displayUserDetail.activeDetail === FOLLOWING
+              ? <div style={selected}>
+                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                    {followingIds.length}
+                  </Typography>
+                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Following
+                  </Typography>
+                </div>
+              : <div style={unselected}>
+                  <Typography style={{...textStyle, fontSize:'40px'}}>
+                    {followingIds.length}
+                  </Typography>
+                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Following
+                  </Typography>
+                </div>
+              }
+            </Grid>
+            <Grid item className="clickable" style={columnStyle} onClick={() => {
+                props.setActiveDetail(CREATED_RECIPES);
+              }}>
+              {displayUserDetail.activeDetail === CREATED_RECIPES
+              ? <div style={selected}>
+                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                    {createdRecipeIds.length}
+                  </Typography>
+                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Created Recipes
+                  </Typography>
+                </div>
+              : <div style={unselected}>
+                  <Typography style={{...textStyle, fontSize:'40px'}}>
+                    {createdRecipeIds.length}
+                  </Typography>
+                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Created Recipes
+                  </Typography>
+                </div>
+              }
+            </Grid>
+            <Grid item className="clickable" style={columnStyle} onClick={() => {
+                props.setActiveDetail(SAVED_RECIPES);
+              }}>
+              {displayUserDetail.activeDetail === SAVED_RECIPES
+              ? <div style={selected}>
+                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
+                    {savedRecipeIds.length}
+                  </Typography>
+                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Saved Recipes
+                  </Typography>
+                </div>
+              : <div style={unselected}>
+                  <Typography style={{...textStyle, fontSize:'40px'}}>
+                    {savedRecipeIds.length}
+                  </Typography>
+                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                    Saved Recipes
+                  </Typography>
+                </div>
+              }
+            </Grid>
+          </Grid>
+          {displayUserDetail.activeDetail === FOLLOWERS &&
+            <div style={tableStyle}>
+              <UsersTable users={Object.values(displayUserDetail.followers)}/>
+            </div>
+          }
+          {displayUserDetail.activeDetail === FOLLOWING &&
+            <div style={tableStyle}>
+              <UsersTable users={Object.values(displayUserDetail.following)}/>
+            </div>
+          }
+          {displayUserDetail.activeDetail === CREATED_RECIPES &&
+            <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
+          }
+          {displayUserDetail.activeDetail === SAVED_RECIPES &&
+            <RecipeList recipes={
+              Object.values(displayUserDetail.savedRecipes).sort((r1, r2) => {
+                return r2.timestamp - r1.timestamp;
+              })
+            }/>
           }
         </div>
-      }
+        }
+        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+          <AppBar className={classes.appBar}>
+            <Toolbar>
+              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h6" className={classes.title}>
+                Sound
+              </Typography>
+              <Button autoFocus color="inherit" onClick={handleClose}>
+                save
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <List>
+            <ListItem button>
+              <ListItemText primary="Phone ringtone" secondary="Titania" />
+            </ListItem>
+            <Divider />
+            <ListItem button>
+              <ListItemText primary="Default notification ringtone" secondary="Tethys" />
+            </ListItem>
+          </List>
+        </Dialog>
       </div>
-    );
-  }
+    }
+    </div>
+  );
 }
 
 const mapStateToProps = state => {

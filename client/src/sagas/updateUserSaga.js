@@ -27,7 +27,7 @@ function* updateUser(action) {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
     const displayUserDetail = yield select(getDisplayUserDetail);
-    let res, res2, profileImageId = activeUser.profileImageId;
+    let res, res2, user, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE_IMAGE:
         if (!profileImageId) {
@@ -35,21 +35,23 @@ function* updateUser(action) {
             data: action.data
           });
           profileImageId = res.data.image.id;
-          yield call(Api.post, '/updateProfileImageId', {
+          res2 = yield call(Api.post, '/updateProfileImageId', {
             id: activeUser.id,
             profileImageId
           });
+          user = res2.data.user;
         } else {
           yield call(Api.post, '/updateImage', {
             id: profileImageId,
             data: action.data
           });
+          user = activeUser;
         }
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: PROFILE_IMAGE, 
           imageUrl: URL.createObjectURL(b64toBlob(action.data)),
-          profileImageId
+          profileImageId, user
         });
         break;
       case SAVED_RECIPE_IDS:

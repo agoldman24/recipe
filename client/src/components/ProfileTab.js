@@ -2,24 +2,17 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
 import Fab from '@material-ui/core/Fab';
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
 import RecipeList from './RecipeList';
 import UsersTable from './UsersTable';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItem from '@material-ui/core/ListItem';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
+import ProfileAvatar from './ProfileAvatar';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -36,11 +29,11 @@ import {
   FOLLOWING_IDS,
   PROFILE_TAB,
   POP,
+  defaultTheme,
   gradientTextStyle2
 } from '../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import FileBase from 'react-file-base64';
 import "../index.css";
 
 const errorStyle = {
@@ -53,14 +46,6 @@ const textStyle = {
   fontWeight:'bold',
   fontFamily:'Signika',
   lineHeight: 1,
-}
-
-const imageStyle = {
-  width: '120px',
-  height: '120px',
-  marginRight: '20px',
-  fontSize: '30px',
-  border: '2px solid black'
 }
 
 const columnStyle = {
@@ -76,14 +61,6 @@ const selected = {
   paddingBottom: '10px',
   borderBottom:'2px solid #ffc800'
 }
-
-const photoButtonStyle = {
-  background: 'none',
-  boxShadow: 'none',
-  color: 'white',
-  top: '-50px',
-  left: '80px'
-};
 
 const backButtonStyle = {
   background: 'none',
@@ -112,9 +89,15 @@ const tableStyle = {
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
+    background: '#424242'
   },
   title: {
     marginLeft: theme.spacing(2),
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'Raleway',
+    fontSize: '20px',
     flex: 1,
   },
 }));
@@ -134,11 +117,6 @@ const ProfileTab = props => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const onImageChange = files => {
-    const data = files.base64.toString();
-    props.updateProfileImage(props.activeUser.id, data);
-  }
 
   const {
     displayUser: {
@@ -187,38 +165,7 @@ const ProfileTab = props => {
             </Typography>
           </Grid>
           <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
-            <div>
-              {!!displayUserDetail && !!displayUserDetail.profileImage
-              ? <div style={{height:'120px'}}>
-                  <Avatar
-                    alt="Profile"
-                    src={displayUserDetail.profileImage}
-                    style={imageStyle}
-                  />
-                  {!!activeUser && activeUser.id === id &&
-                    <Fab style={photoButtonStyle} className="fileContainer">
-                      <AddAPhotoIcon style={iconStyle}/>
-                      <FileBase type="file" onDone={onImageChange}/>
-                    </Fab>
-                  }
-                </div>
-              : <Avatar alt="Profile" style={imageStyle}>
-                  <Grid container direction="column" style={{textAlign:'center'}}>
-                    <Grid item>
-                      {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
-                    </Grid>
-                    <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
-                    {!!activeUser && activeUser.id === id &&
-                      <label className="fileContainer">
-                        Upload photo
-                        <FileBase type="file" onDone={onImageChange}/>
-                      </label>
-                    }
-                    </Grid>
-                  </Grid>
-                </Avatar>
-              }
-            </div>
+            <ProfileAvatar />
             <Typography
               style={{
                 ...textStyle,
@@ -391,29 +338,41 @@ const ProfileTab = props => {
           }
         </div>
         }
-        <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
+        <Dialog
+          fullScreen open={open} onClose={handleClose}
+          TransitionComponent={Transition}
+        >
           <AppBar className={classes.appBar}>
             <Toolbar>
-              <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-                <CloseIcon />
-              </IconButton>
+              <Button
+                edge="start"
+                onClick={handleClose}
+                aria-label="close"
+                style={{color:'white'}}
+              >
+                Cancel
+              </Button>
               <Typography variant="h6" className={classes.title}>
-                Sound
+                Edit Profile
               </Typography>
-              <Button autoFocus color="inherit" onClick={handleClose}>
-                save
+              <Button style={{color:'white'}} onClick={handleClose}>
+                Save
               </Button>
             </Toolbar>
           </AppBar>
-          <List>
-            <ListItem button>
-              <ListItemText primary="Phone ringtone" secondary="Titania" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Default notification ringtone" secondary="Tethys" />
-            </ListItem>
-          </List>
+          <Grid
+            container
+            direction="column"
+            style={{
+              width: '100%',
+              height: '100%',
+              background: defaultTheme.palette.background.default
+            }}
+          >
+            <Grid item style={{margin:'auto'}}>
+              <ProfileAvatar/>
+            </Grid>
+          </Grid>
         </Dialog>
       </div>
     }

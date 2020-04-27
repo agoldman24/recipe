@@ -377,6 +377,7 @@ const profileEditorReduce = (state = StateTree.profileEditor, action) => {
           lastName: action.lastName
         }
       }
+      return state;
     default:
       return state;
   }

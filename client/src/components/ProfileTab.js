@@ -390,7 +390,7 @@ const ProfileTab = props => {
                 Edit Profile
               </Typography>
               <Button
-                style={{color:'white'}}
+                style={{color: updateOccurred ? 'white' : 'grey'}}
                 onClick={handleSave}
                 disabled={!updateOccurred}
               >

@@ -1,16 +1,12 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Fab';
-import AddAPhotoIcon from '@material-ui/icons/AddAPhoto';
 import Spinner from './Spinner';
 import {
   TOGGLE_PROFILE_EDITOR,
   START_FILE_UPLOAD,
-  UPDATE_PROFILE_EDITOR,
-  UPDATE_USER_REQUESTED
+  UPDATE_PROFILE_EDITOR
 } from '../actions';
-import { PROFILE } from '../variables/Constants';
 import { connect } from 'react-redux';
 import FileBase from 'react-file-base64';
 import "../index.css";
@@ -24,11 +20,9 @@ const imageStyle = {
 }
 
 const editPhotoButtonStyle = {
-  background: 'none',
-  boxShadow: 'none',
+  top: '5px',
   color: 'white',
-  width: '200px',
-  borderRadius: '10px'
+  fontSize: '16px'
 };
 
 const ProfileAvatar = props => {
@@ -54,7 +48,7 @@ const ProfileAvatar = props => {
     <div>
       {isSpinnerVisible && <Spinner/>}
       {profileImageLoaded
-      ? <div style={{height:'120px'}}>
+      ? <div style={{height:'120px', textAlign:'center'}}>
           <Avatar
             alt="Profile"
             src={
@@ -65,10 +59,10 @@ const ProfileAvatar = props => {
             style={imageStyle}
           />
           {!!profileEditor &&
-            <Button style={editPhotoButtonStyle} className="fileContainer">
+            <label style={editPhotoButtonStyle} className="fileContainer">
               Change Profile Photo
               <FileBase type="file" onDone={onImageChange}/>
-            </Button>
+            </label>
           }
         </div>
       : <Avatar alt="Profile" style={imageStyle}>

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { b64toBlob } from '../utilities/imageConverter';
 import StateTree from '../store/stateTree';
 import {
   GET_ALL_USERS,
@@ -30,13 +31,16 @@ import {
   EMPTY_FIELDS,
   SHOW_SNACKBAR,
   HIDE_SNACKBAR,
-  TOGGLE_DRAWER_MENU
+  TOGGLE_DRAWER_MENU,
+  TOGGLE_PROFILE_EDITOR,
+  UPDATE_PROFILE_EDITOR,
+  START_FILE_UPLOAD,
 } from '../actions';
 import {
   PROFILE_TAB,
   SAVED_RECIPES,
   FOLLOWERS,
-  PROFILE_IMAGE,
+  PROFILE,
   PUSH,
 } from '../variables/Constants';
 
@@ -48,6 +52,7 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_REQUESTED:
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
+    case START_FILE_UPLOAD:
       return true;
     case POPULATE_USERS:
     case GET_USER_DETAIL_SUCCEEDED:
@@ -58,6 +63,7 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
+    case UPDATE_PROFILE_EDITOR:
       return false;
     default:
       return state;
@@ -164,7 +170,7 @@ const activeUserReduce = (state = null, action) => {
       return action.user;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
-        case PROFILE_IMAGE:
+        case PROFILE:
           return {
             ...state,
             profileImageId: action.profileImageId
@@ -207,7 +213,7 @@ const displayUserReduce = (state = null, action) => {
             ? [ ...state.followerIds, action.user.id ]
             : state.followerIds.filter(id => id !== action.user.id)
           }
-        case PROFILE_IMAGE:
+        case PROFILE:
           return {
             ...state,
             profileImageId: action.profileImageId
@@ -282,10 +288,10 @@ const displayUserDetailReduce = (state = null, action) => {
               }
             : state.following
           }
-        case PROFILE_IMAGE:
+        case PROFILE:
           return {
             ...state,
-            profileImage: action.imageUrl
+            profileImage: URL.createObjectURL(b64toBlob(action.data))
           }
         default:
           throw new Error('Invalid update type');
@@ -342,7 +348,41 @@ export const snackbarReduce = (state = StateTree.snackbar, action) => {
   }
 }
 
-const usersFetchedReduce = (state = false, action) => {
+const profileEditorReduce = (state = StateTree.profileEditor, action) => {
+  switch (action.type) {
+    case TOGGLE_PROFILE_EDITOR:
+      return !!action.firstName
+        ? {
+            firstName: action.firstName,
+            lastName: action.lastName,
+            profileImage: action.profileImage
+          }
+        : null;
+    case UPDATE_PROFILE_EDITOR:
+      if (!!action.imageData) {
+        return {
+          ...state,
+          profileImage: URL.createObjectURL(b64toBlob(action.imageData))
+        }
+      }
+      else if (!!action.firstName) {
+        return {
+          ...state,
+          firstName: action.firstName
+        }
+      }
+      else if (!!action.lastName) {
+        return {
+          ...state,
+          lastName: action.lastName
+        }
+      }
+    default:
+      return state;
+  }
+}
+
+const usersFetchedReduce = (state = StateTree.usersFetched, action) => {
   switch (action.type) {
     case POPULATE_USERS:
       return true;
@@ -391,6 +431,7 @@ export default combineReducers({
   isDetailVisible: detailVisibilityReduce,
   isDrawerMenuVisible: drawerMenuReduce,
   isSpinnerVisible: spinnerReduce,
+  profileEditor: profileEditorReduce,
   usersFetched: usersFetchedReduce,
   isHydrated: hydrationReduce,
   errorMessages: errorMessageReduce,

@@ -28,7 +28,7 @@ router.get("/getUsersByIds", userRoutes.getUsersByIds);
 router.get("/getUser", userRoutes.getUser);
 router.get("/getAllUsers", userRoutes.getAllUsers);
 router.post("/createUser", userRoutes.createUser);
-router.post("/updateProfileImageId", userRoutes.updateProfileImageId);
+router.post("/updateProfile", userRoutes.updateProfile);
 router.post("/updateSavedRecipeIds", userRoutes.updateSavedRecipeIds);
 router.post("/updateFollowerIds", userRoutes.updateFollowerIds);
 router.post("/updateFollowingIds", userRoutes.updateFollowingIds);

@@ -91,9 +91,16 @@ exports.createUser = (req, res) => {
   });
 }
 
-exports.updateProfileImageId = (req, res) => {
-  const { id, profileImageId } = req.body;
-  User.findByIdAndUpdate(id, { profileImageId }, { new: true }, (err, user) => {
+exports.updateProfile = (req, res) => {
+  const { id, profileImageId, firstName, lastName } = req.body;
+  const profileImageIdUpdate = !!profileImageId ? { profileImageId } : {};
+  const firstNameUpdate = !!firstName ? { firstName } : {};
+  const lastNameUpdate = !!lastName ? { lastName } : {};
+  User.findByIdAndUpdate(id, {
+    ...profileImageIdUpdate,
+    ...firstNameUpdate,
+    ...lastNameUpdate
+  }, { new: true }, (err, user) => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, user: getDerivedUser(user) });
   });

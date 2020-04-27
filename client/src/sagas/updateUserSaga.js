@@ -9,13 +9,12 @@ import {
   UPDATE_DISPLAY_USER_DETAIL
 } from '../actions';
 import {
-  PROFILE_IMAGE,
+  PROFILE,
   SAVED_RECIPE_IDS,
   SAVED_RECIPES,
   FOLLOWING_IDS,
   FOLLOWERS
 } from '../variables/Constants';
-import { b64toBlob } from '../utilities/imageConverter';
 
 const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
@@ -29,13 +28,14 @@ function* updateUser(action) {
     const displayUserDetail = yield select(getDisplayUserDetail);
     let res, res2, user, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
-      case PROFILE_IMAGE:
+      case PROFILE:
+        const { imageData, firstName, lastName } = action;
         if (!profileImageId) {
           res = yield call(Api.post, '/createImage', {
-            data: action.data
+            data: imageData
           });
           profileImageId = res.data.image.id;
-          res2 = yield call(Api.post, '/updateProfileImageId', {
+          res2 = yield call(Api.post, '/updateProfile', {
             id: activeUser.id,
             profileImageId
           });
@@ -43,14 +43,14 @@ function* updateUser(action) {
         } else {
           yield call(Api.post, '/updateImage', {
             id: profileImageId,
-            data: action.data
+            data: imageData
           });
           user = activeUser;
         }
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
-          updateType: PROFILE_IMAGE, 
-          imageUrl: URL.createObjectURL(b64toBlob(action.data)),
+          updateType: PROFILE, 
+          data: imageData,
           profileImageId, user
         });
         break;

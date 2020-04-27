@@ -18,16 +18,17 @@ import {
   GET_USER_DETAIL_REQUESTED,
   SET_ACTIVE_DETAIL,
   SET_ACTIVE_TAB,
-  SET_DISPLAY_USER
+  SET_DISPLAY_USER,
+  TOGGLE_PROFILE_EDITOR
 } from '../actions';
 import {
-  PROFILE_IMAGE,
   FOLLOWERS,
   FOLLOWING,
   CREATED_RECIPES,
   SAVED_RECIPES,
   FOLLOWING_IDS,
   PROFILE_TAB,
+  PROFILE,
   POP,
   defaultTheme,
   gradientTextStyle2
@@ -108,14 +109,39 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProfileTab = props => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    props.toggleProfileEditor(
+      props.displayUser.firstName,
+      props.displayUser.lastName,
+      props.displayUserDetail.profileImage
+    );
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const statesEqual = () => {
+    if (!props.profileEditor) {
+      return true;
+    }
+    return props.profileEditor.profileImage === props.displayUserDetail.profileImage
+  }
+
+  const handleSave = () => {
+    if (updateOccurred) {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', props.profileEditor.profileImage, true);
+      xhr.responseType = 'blob';
+      xhr.onload = function() {
+        if (this.status === 200) {
+          const reader = new FileReader();
+          reader.readAsDataURL(this.response); 
+          reader.onloadend = function() {
+            props.updateUserProfile(reader.result);
+          }
+        }
+      };
+      xhr.send();
+    }
+    props.toggleProfileEditor();
   };
 
   const {
@@ -128,6 +154,8 @@ const ProfileTab = props => {
     networkFailed,
     updateFollowingIds
   } = props;
+  const updateOccurred = !statesEqual();
+
   return (
     <div>
     {networkFailed
@@ -170,7 +198,8 @@ const ProfileTab = props => {
               style={{
                 ...textStyle,
                 fontSize: '24px',
-                margin:'auto'
+                margin: 'auto',
+                marginLeft: '20px'
               }}
             >
               {firstName + " " + lastName}
@@ -178,7 +207,12 @@ const ProfileTab = props => {
           </Grid>
           {!!activeUser
             ? activeUser.id === id
-              ? <Button style={buttonStyle} onClick={handleClickOpen}>Edit Profile</Button>
+              ? <Button
+                  style={buttonStyle}
+                  onClick={handleClickOpen}
+                >
+                  Edit Profile
+                </Button>
               : activeUser.followingIds.includes(id)
                 ? <div style={{width: isMobile ? '100%' : '50%'}}>
                     <Button
@@ -339,14 +373,14 @@ const ProfileTab = props => {
         </div>
         }
         <Dialog
-          fullScreen open={open} onClose={handleClose}
+          fullScreen open={!!props.profileEditor}
           TransitionComponent={Transition}
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Button
                 edge="start"
-                onClick={handleClose}
+                onClick={() => props.toggleProfileEditor()}
                 aria-label="close"
                 style={{color:'white'}}
               >
@@ -355,7 +389,11 @@ const ProfileTab = props => {
               <Typography variant="h6" className={classes.title}>
                 Edit Profile
               </Typography>
-              <Button style={{color:'white'}} onClick={handleClose}>
+              <Button
+                style={{color:'white'}}
+                onClick={handleSave}
+                disabled={!updateOccurred}
+              >
                 Save
               </Button>
             </Toolbar>
@@ -387,19 +425,13 @@ const mapStateToProps = state => {
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     activeUser: state.activeUser,
+    profileEditor: state.profileEditor,
     networkFailed: state.errorMessages.networkFailed
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateProfileImage: (id, data) => {
-      dispatch({
-        type: UPDATE_USER_REQUESTED,
-        updateType: PROFILE_IMAGE,
-        id, data
-      });
-    },
     updateFollowingIds: (id, friendId, keep) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,
@@ -420,6 +452,19 @@ const mapDispatchToProps = dispatch => {
         currentTab: { name: PROFILE_TAB },
         newTab,
         operation: POP
+      })
+    },
+    toggleProfileEditor: (firstName, lastName, profileImage) => {
+      dispatch({
+        type: TOGGLE_PROFILE_EDITOR,
+        firstName, lastName, profileImage
+      });
+    },
+    updateUserProfile: imageData => {
+      dispatch({
+        type: UPDATE_USER_REQUESTED,
+        updateType: PROFILE,
+        imageData
       })
     }
   };

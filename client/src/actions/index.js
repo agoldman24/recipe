@@ -26,9 +26,6 @@ export const TOGGLE_RECIPE_DETAILS = 'TOGGLE_RECIPE_DETAILS';
 /* Tab actions */
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 
-/* Initialization actions */
-export const HYDRATION_COMPLETE = "HYDRATION_COMPLETE";
-
 /* Sign in/out actions */
 export const SIGN_IN_FAILED = 'SIGN_IN_FAILED';
 export const SIGN_OUT = 'SIGN_OUT';
@@ -43,3 +40,11 @@ export const EMPTY_FIELDS = 'EMPTY_FIELDS';
 export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';
 export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';
 export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
+export const TOGGLE_PROFILE_EDITOR = 'TOGGLE_PROFILE_EDITOR';
+
+/* Loading spinner actions */
+export const START_FILE_UPLOAD = 'START_FILE_UPLOAD';
+export const HYDRATION_COMPLETE = "HYDRATION_COMPLETE";
+
+/* Profile Editor actions */
+export const UPDATE_PROFILE_EDITOR = 'UPDATE_PROFILE_EDITOR';

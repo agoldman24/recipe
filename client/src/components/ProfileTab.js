@@ -109,14 +109,23 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProfileTab = props => {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    props.toggleProfileEditor(
-      props.displayUser.firstName,
-      props.displayUser.lastName,
-      props.displayUserDetail.profileImage
-    );
+    setOpen(!open);
+    setTimeout(() => {
+      props.toggleProfileEditor(
+        props.displayUser.firstName,
+        props.displayUser.lastName,
+        props.displayUserDetail.profileImage
+      )
+    }, 1);
   };
+
+  const handleClickClose = () => {
+    setOpen(!open);
+    props.toggleProfileEditor();
+  }
 
   const statesEqual = () => {
     if (!props.profileEditor) {
@@ -373,14 +382,14 @@ const ProfileTab = props => {
         </div>
         }
         <Dialog
-          fullScreen open={!!props.profileEditor}
+          fullScreen open={open}
           TransitionComponent={Transition}
         >
           <AppBar className={classes.appBar}>
             <Toolbar>
               <Button
                 edge="start"
-                onClick={() => props.toggleProfileEditor()}
+                onClick={handleClickClose}
                 aria-label="close"
                 style={{color:'white'}}
               >

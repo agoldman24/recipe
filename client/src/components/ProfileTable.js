@@ -46,7 +46,7 @@ const ProfileTable = props => {
             <TableCell style={cellStyle}>
               <TextField
                 variant="outlined"
-                style={{width:'200px'}}
+                style={{width:'200px', fontSize:'16px'}}
                 value={firstName}
                 onChange={e => {
                   setFirstName(e.target.value);
@@ -62,7 +62,7 @@ const ProfileTable = props => {
             <TableCell style={cellStyle}>
               <TextField
                 variant="outlined"
-                fullWidth
+                style={{width:'200px', fontSize:'16px'}}
                 value={lastName}
                 onChange={e => {
                   setLastName(e.target.value);
@@ -78,7 +78,7 @@ const ProfileTable = props => {
             <TableCell style={cellStyle}>
               <TextField
                 variant="outlined"
-                fullWidth
+                style={{width:'200px', fontSize:'16px'}}
                 value={username}
                 onChange={e => {
                   setUsername(e.target.value);

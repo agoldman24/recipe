@@ -10,12 +10,9 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import '../index.css';
 import { UPDATE_PROFILE_EDITOR } from '../actions';
+import { formTheme } from '../variables/Constants';
 
-const useStyles = makeStyles({
-  table: {
-    margin: '50px 0'
-  }
-});
+const useStyles = makeStyles(formTheme);
 
 const cellStyle = {
   padding: '5px',
@@ -45,8 +42,12 @@ const ProfileTable = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
+                InputProps={{
+                  classes: {
+                    input: classes.inputText
+                  }
+                }}
                 variant="outlined"
-                style={{width:'200px', fontSize:'16px'}}
                 value={firstName}
                 onChange={e => {
                   setFirstName(e.target.value);
@@ -61,8 +62,12 @@ const ProfileTable = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
+                InputProps={{
+                  classes: {
+                    input: classes.inputText
+                  }
+                }}
                 variant="outlined"
-                style={{width:'200px', fontSize:'16px'}}
                 value={lastName}
                 onChange={e => {
                   setLastName(e.target.value);
@@ -77,8 +82,12 @@ const ProfileTable = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
+                InputProps={{
+                  classes: {
+                    input: classes.inputText
+                  }
+                }}
                 variant="outlined"
-                style={{width:'200px', fontSize:'16px'}}
                 value={username}
                 onChange={e => {
                   setUsername(e.target.value);

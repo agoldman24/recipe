@@ -74,5 +74,8 @@ export const formTheme = theme => ({
     fontSize: '16px',
     fontFamily: 'Signika',
     background: defaultTheme.palette.primary.mainGradient
+  },
+  table: {
+    margin: '50px 0'
   }
 });

@@ -47,11 +47,11 @@ exports.getUser = (req, res) => {
     if (!user) {
       return res.json({ success: false });
     } else {
-      bcrypt.compare(password, user.password, function (err, result) {
+      bcrypt.compare(password, user.password, function (error, result) {
         if (result) {
           return res.json({ success: true, user: getDerivedUser(user) });
         } else {
-          return res.json({ success: false });
+          return res.json({ success: false, error });
         }
       });
     }
@@ -76,14 +76,14 @@ exports.createUser = (req, res) => {
     if (user) {
       return res.json({ success: false });
     } else {
-      bcrypt.hash(password, saltRounds, function (err, hash) {
+      bcrypt.hash(password, saltRounds, function (error, hash) {
         const user = new User({
           firstName, lastName, username,
           password: hash,
           profileImageId: null
         });
-        user.save(err => {
-          if (err) return res.json({ success: false, error: err });
+        user.save(error => {
+          if (error) return res.json({ success: false, error });
           return res.json({ success: true, user: getDerivedUser(user) });
         });
       });
@@ -92,40 +92,42 @@ exports.createUser = (req, res) => {
 }
 
 exports.updateProfile = (req, res) => {
-  const { id, profileImageId, firstName, lastName } = req.body;
+  const { id, profileImageId, firstName, lastName, username } = req.body;
   const profileImageIdUpdate = !!profileImageId ? { profileImageId } : {};
   const firstNameUpdate = !!firstName ? { firstName } : {};
   const lastNameUpdate = !!lastName ? { lastName } : {};
+  const usernameUpdate = !!username ? { username } : {};
   User.findByIdAndUpdate(id, {
     ...profileImageIdUpdate,
     ...firstNameUpdate,
-    ...lastNameUpdate
-  }, { new: true }, (err, user) => {
-    if (err) return res.json({ success: false, error: err });
+    ...lastNameUpdate,
+    ...usernameUpdate
+  }, { new: true }, (error, user) => {
+    if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getDerivedUser(user) });
   });
 }
 
 exports.updateSavedRecipeIds = (req, res) => {
   const { id, savedRecipeIds } = req.body;
-  User.findByIdAndUpdate(id, { savedRecipeIds }, { new: true }, (err, user) => {
-    if (err) return res.json({ success: false, error: err });
+  User.findByIdAndUpdate(id, { savedRecipeIds }, { new: true }, (error, user) => {
+    if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getDerivedUser(user) });
   });
 }
 
 exports.updateFollowerIds = (req, res) => {
   const { id, followerIds } = req.body;
-  User.findByIdAndUpdate(id, { followerIds }, { new: true }, (err, user) => {
-    if (err) return res.json({ success: false, error: err });
+  User.findByIdAndUpdate(id, { followerIds }, { new: true }, (error, user) => {
+    if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getDerivedUser(user) });
   })
 }
 
 exports.updateFollowingIds = (req, res) => {
   const { id, followingIds } = req.body;
-  User.findByIdAndUpdate(id, { followingIds }, { new: true }, (err, user) => {
-    if (err) return res.json({ success: false, error: err });
+  User.findByIdAndUpdate(id, { followingIds }, { new: true }, (error, user) => {
+    if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getDerivedUser(user) });
   })
 }

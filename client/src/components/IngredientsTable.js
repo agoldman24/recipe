@@ -23,9 +23,7 @@ const IngredientsTable = props => {
         <TableBody>
           {props.ingredients.map((ingredient, index) => (
             <TableRow key={index}>
-              <TableCell style={cellStyle} component="th" scope="row">
-                {ingredient.item}
-              </TableCell>
+              <TableCell style={cellStyle}>{ingredient.item}</TableCell>
               <TableCell style={cellStyle}>{ingredient.quantity}</TableCell>
             </TableRow>
           ))}

@@ -13,6 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from './ProfileAvatar';
+import ProfileTable from './ProfileTable';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -117,6 +118,7 @@ const ProfileTab = props => {
       props.toggleProfileEditor(
         props.displayUser.firstName,
         props.displayUser.lastName,
+        props.displayUser.username,
         props.displayUserDetail.profileImage
       )
     }, 1);
@@ -132,25 +134,44 @@ const ProfileTab = props => {
       return true;
     }
     return props.profileEditor.profileImage === props.displayUserDetail.profileImage
+      && props.profileEditor.firstName === props.displayUser.firstName
+      && props.profileEditor.lastName === props.displayUser.lastName
+      && props.profileEditor.username === props.displayUser.username
   }
 
   const handleSave = () => {
+    handleClickClose();
     if (updateOccurred) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', props.profileEditor.profileImage, true);
-      xhr.responseType = 'blob';
-      xhr.onload = function() {
-        if (this.status === 200) {
-          const reader = new FileReader();
-          reader.readAsDataURL(this.response); 
-          reader.onloadend = function() {
-            props.updateUserProfile(reader.result);
+      const imageData = props.profileEditor.profileImage !== props.displayUserDetail.profileImage
+        ? props.profileEditor.profileImage
+        : null;
+      const firstName = props.profileEditor.firstName !== props.displayUser.firstName
+        ? props.profileEditor.firstName
+        : null;
+      const lastName = props.profileEditor.lastName !== props.displayUser.lastName
+        ? props.profileEditor.lastName
+        : null;
+      const username = props.profileEditor.username !== props.displayUser.username
+        ? props.profileEditor.username
+        : null;
+      if (!!imageData) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', imageData, true);
+        xhr.responseType = 'blob';
+        xhr.onload = function() {
+          if (this.status === 200) {
+            const reader = new FileReader();
+            reader.readAsDataURL(this.response); 
+            reader.onloadend = function() {
+              props.updateProfile(reader.result, firstName, lastName, username);
+            }
           }
-        }
-      };
-      xhr.send();
+        };
+        xhr.send();
+      } else {
+        props.updateProfile(imageData, firstName, lastName, username);
+      }
     }
-    props.toggleProfileEditor();
   };
 
   const {
@@ -418,6 +439,7 @@ const ProfileTab = props => {
           >
             <Grid item style={{margin:'auto'}}>
               <ProfileAvatar/>
+              <ProfileTable/>
             </Grid>
           </Grid>
         </Dialog>
@@ -463,17 +485,17 @@ const mapDispatchToProps = dispatch => {
         operation: POP
       })
     },
-    toggleProfileEditor: (firstName, lastName, profileImage) => {
+    toggleProfileEditor: (firstName, lastName, username, profileImage) => {
       dispatch({
         type: TOGGLE_PROFILE_EDITOR,
-        firstName, lastName, profileImage
+        firstName, lastName, username, profileImage
       });
     },
-    updateUserProfile: imageData => {
+    updateProfile: (imageData, firstName, lastName, username) => {
       dispatch({
         type: UPDATE_USER_REQUESTED,
         updateType: PROFILE,
-        imageData
+        imageData, firstName, lastName, username
       })
     }
   };

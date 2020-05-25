@@ -41,7 +41,7 @@ const UsersTable = props => {
                 setSelectedId(user.id);
                 props.visitUserProfile(user, props.activeTab, props.displayUser);
               }}>
-              <TableCell component="th" scope="row">
+              <TableCell>
                 <Typography style={textStyle}>{user.firstName + " " + user.lastName}</Typography>
                 <Typography style={{...textStyle, color:'grey', paddingLeft:'10px'}}>{user.username}</Typography>
               </TableCell>

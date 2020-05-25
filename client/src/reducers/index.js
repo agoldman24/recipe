@@ -173,7 +173,10 @@ const activeUserReduce = (state = null, action) => {
         case PROFILE:
           return {
             ...state,
-            profileImageId: action.profileImageId
+            profileImageId: action.user.profileImageId,
+            firstName: action.user.firstName,
+            lastName: action.user.lastName,
+            username: action.user.username
           }
         default:
           return state;
@@ -216,7 +219,10 @@ const displayUserReduce = (state = null, action) => {
         case PROFILE:
           return {
             ...state,
-            profileImageId: action.profileImageId
+            profileImageId: action.user.profileImageId,
+            firstName: action.user.firstName,
+            lastName: action.user.lastName,
+            username: action.user.username
           }
         default:
           return state;
@@ -264,34 +270,36 @@ const displayUserDetailReduce = (state = null, action) => {
           return {
             ...state,
             savedRecipes: action.keep
-            ? { ...state.savedRecipes, [action.recipe.id]: action.recipe }
-            : Object.keys(state.savedRecipes).filter(id => id !== action.recipe.id)
-              .reduce((accum, id) => {
-                accum[id] = state.savedRecipes[id];
-                return accum;
-              }, {})
+              ? { ...state.savedRecipes, [action.recipe.id]: action.recipe }
+              : Object.keys(state.savedRecipes).filter(id => id !== action.recipe.id)
+                .reduce((accum, id) => {
+                  accum[id] = state.savedRecipes[id];
+                  return accum;
+                }, {})
           }
         case FOLLOWERS:
           return {
             ...state,
             followers: action.keep
-            ? { ...state.followers, [action.user.id]: action.user }
-            : Object.keys(state.followers).filter(id => id !== action.user.id)
-              .reduce((accum, id) => {
-                accum[id] = state.followers[id];
-                return accum;
-              }, {}),
+              ? { ...state.followers, [action.user.id]: action.user }
+              : Object.keys(state.followers).filter(id => id !== action.user.id)
+                .reduce((accum, id) => {
+                  accum[id] = state.followers[id];
+                  return accum;
+                }, {}),
             following: Object.keys(state.following).includes(action.user.id)
-            ? {
-                ...state.following,
-                [action.user.id]: action.user
-              }
-            : state.following
+              ? {
+                  ...state.following,
+                  [action.user.id]: action.user
+                }
+              : state.following
           }
         case PROFILE:
           return {
             ...state,
-            profileImage: URL.createObjectURL(b64toBlob(action.data))
+            profileImage: !!action.imageData
+              ? URL.createObjectURL(b64toBlob(action.imageData))
+              : state.profileImage
           }
         default:
           throw new Error('Invalid update type');
@@ -355,6 +363,7 @@ const profileEditorReduce = (state = StateTree.profileEditor, action) => {
         ? {
             firstName: action.firstName,
             lastName: action.lastName,
+            username: action.username,
             profileImage: action.profileImage
           }
         : null;
@@ -375,6 +384,12 @@ const profileEditorReduce = (state = StateTree.profileEditor, action) => {
         return {
           ...state,
           lastName: action.lastName
+        }
+      }
+      else if (!!action.username) {
+        return {
+          ...state,
+          username: action.username
         }
       }
       return state;

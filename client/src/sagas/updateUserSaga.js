@@ -29,29 +29,42 @@ function* updateUser(action) {
     let res, res2, user, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE:
-        const { imageData, firstName, lastName } = action;
-        if (!profileImageId) {
-          res = yield call(Api.post, '/createImage', {
-            data: imageData
-          });
-          profileImageId = res.data.image.id;
+        const { imageData, firstName, lastName, username } = action;
+        if (!!imageData) {
+          if (!profileImageId) {
+            res = yield call(Api.post, '/createImage', {
+              data: imageData
+            });
+            profileImageId = res.data.image.id;
+          }
+          else {
+            yield call(Api.post, '/updateImage', {
+              id: profileImageId,
+              data: imageData
+            });
+            if (!firstName && !lastName && !username) {
+              user = activeUser;
+            } else {
+              res2 = yield call(Api.post, '/updateProfile', {
+                id: activeUser.id,
+                profileImageId, firstName, lastName, username
+              });
+              user = res2.data.user;
+            }
+          }
+        } else {
+          console.log("frontend username:", username);
           res2 = yield call(Api.post, '/updateProfile', {
             id: activeUser.id,
-            profileImageId
+            profileImageId, firstName, lastName, username
           });
           user = res2.data.user;
-        } else {
-          yield call(Api.post, '/updateImage', {
-            id: profileImageId,
-            data: imageData
-          });
-          user = activeUser;
+          console.log("user:", user);
         }
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: PROFILE, 
-          data: imageData,
-          profileImageId, user
+          imageData, user
         });
         break;
       case SAVED_RECIPE_IDS:

@@ -8,9 +8,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
-import '../index.css';
-import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../actions';
-import { PROFILE_TAB, FOLLOWERS, PUSH } from '../variables/Constants';
+import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../../actions';
+import { PROFILE_TAB, FOLLOWERS, PUSH } from '../../variables/Constants';
+import '../../index.css';
 
 const useStyles = makeStyles({
   table: {

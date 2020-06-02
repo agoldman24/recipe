@@ -5,7 +5,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
-import { defaultTheme } from '../variables/Constants';
+import { defaultTheme } from '../../styles';
 
 export default function RecipeButtons() {
   const radioStyle = {

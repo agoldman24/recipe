@@ -59,7 +59,6 @@ function* updateUser(action) {
             profileImageId, firstName, lastName, username
           });
           user = res2.data.user;
-          console.log("user:", user);
         }
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,

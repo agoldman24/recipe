@@ -9,8 +9,8 @@ import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { isMobile } from 'react-device-detect';
-import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../actions';
-import { SAVED_RECIPE_IDS } from '../variables/Constants';
+import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
+import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 
 const RecipeCard = props => {
   const fabStyle = {

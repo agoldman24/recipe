@@ -4,17 +4,17 @@ import { isMobile } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Spinner from './Spinner';
-import NavigationMenu from './NavigationMenu';
-import SignIn from './SignIn';
-import SignUp from './SignUp';
-import WelcomeTab from './WelcomeTab';
-import AboutTab from './AboutTab';
-import RecipeTab from './RecipeTab';
-import SearchTab from './SearchTab';
-import ProfileTab from './ProfileTab';
-import ScrollButton from './ScrollButton';
-import SuccessSnackbar from './SuccessSnackbar';
+import Spinner from './popups/Spinner';
+import NavigationMenu from './menus/NavigationMenu';
+import SignInTab from './tabs/SignInTab';
+import SignUpTab from './tabs/SignUpTab';
+import WelcomeTab from './tabs/WelcomeTab';
+import AboutTab from './tabs/AboutTab';
+import RecipeTab from './recipes/RecipeTab';
+import SearchTab from './tabs/SearchTab';
+import ProfileTab from './profile/ProfileTab';
+import ScrollButton from './popups/ScrollButton';
+import SuccessSnackbar from './popups/SuccessSnackbar';
 import {
   SIGN_IN_REQUESTED,
   GET_ALL_USERS,
@@ -31,9 +31,9 @@ import {
   WELCOME_TAB,
   ABOUT_TAB,
   PROFILE_TAB,
-  FOLLOWING,
-  defaultTheme
+  FOLLOWING
 } from '../variables/Constants';
+import { defaultTheme } from '../styles';
 
 class App extends React.Component {
   state = {
@@ -110,9 +110,9 @@ class App extends React.Component {
           {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
           {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
           {this.props.activeTab.name === ABOUT_TAB && <AboutTab/>}
-          {this.props.activeTab.name === SIGN_UP_TAB && <SignUp/>}
+          {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
           {this.props.activeTab.name === RECIPE_TAB && <RecipeTab/>}
-          {this.props.activeTab.name === SIGN_IN_TAB && <SignIn/>}
+          {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}
         </Container>
       </ThemeProvider>
     );

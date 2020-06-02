@@ -6,9 +6,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
-import IngredientsTable from './IngredientsTable';
+import IngredientsTable from '../tables/IngredientsTable';
 import { isMobile } from 'react-device-detect';
-import { TOGGLE_RECIPE_DETAILS } from '../actions';
+import { TOGGLE_RECIPE_DETAILS } from '../../actions';
 
 const RecipeDetail = props => {
   const fabStyle = {

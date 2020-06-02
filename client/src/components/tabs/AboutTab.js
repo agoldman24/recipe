@@ -1,10 +1,9 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { connect } from 'react-redux';
-import { gradientTextStyle } from '../variables/Constants';
+import { gradientTextStyle } from '../../styles';
 
-const AboutTab = props => {
+export default function AboutTab() {
   return (
     <Grid
       container
@@ -29,16 +28,3 @@ const AboutTab = props => {
     </Grid>
   );
 }
-
-const mapStateToProps = state => {
-  return {};
-}
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AboutTab);

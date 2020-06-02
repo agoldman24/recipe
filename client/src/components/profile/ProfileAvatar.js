@@ -1,15 +1,15 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
-import Spinner from './Spinner';
+import Spinner from '../popups/Spinner';
 import {
   TOGGLE_PROFILE_EDITOR,
   START_FILE_UPLOAD,
   UPDATE_PROFILE_EDITOR
-} from '../actions';
+} from '../../actions';
 import { connect } from 'react-redux';
 import FileBase from 'react-file-base64';
-import "../index.css";
+import "../../index.css";
 
 const imageStyle = {
   width: '120px',

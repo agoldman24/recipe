@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import UsersTable from './UsersTable';
+import UsersTable from '../tables/UsersTable';
 import { connect } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({

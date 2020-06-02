@@ -3,11 +3,9 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import { SET_ACTIVE_TAB } from '../actions';
-import {
-  SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB,
-  RECIPE_TAB, ABOUT_TAB, gradientTextStyle
-} from '../variables/Constants';
+import { SET_ACTIVE_TAB } from '../../actions';
+import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
+import { gradientTextStyle } from "../../styles";
 
 const buttonStyle = {
   marginTop: '10px',

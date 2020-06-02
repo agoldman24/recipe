@@ -2,8 +2,8 @@ import React from 'react';
 import RecipeList from './RecipeList';
 import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
-import { GET_RECIPES_REQUESTED } from '../actions';
-import { SAMPLES } from '../variables/Constants';
+import { GET_RECIPES_REQUESTED } from '../../actions';
+import { SAMPLES } from '../../variables/Constants';
 
 const errorStyle = {
   textAlign:'center',

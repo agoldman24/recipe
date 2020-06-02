@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Zoom from '@material-ui/core/Zoom';
-import { HIDE_SNACKBAR } from '../actions';
+import { HIDE_SNACKBAR } from '../../actions';
 
 function SlideTransition(props) {
   return <Zoom {...props} />

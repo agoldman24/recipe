@@ -6,10 +6,10 @@ import HomeIcon from '@material-ui/icons/Home';
 import Fab from '@material-ui/core/Fab';
 import DrawerMenu from './DrawerMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../actions';
+import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
 import { connect } from 'react-redux';
-import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB, defaultTheme }
-from '../variables/Constants';
+import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB } from '../../variables/Constants';
+import { defaultTheme } from '../../styles';
 
 const NavigationMenu = props => {
 

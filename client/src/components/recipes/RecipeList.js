@@ -5,8 +5,8 @@ import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import { GET_RECIPES_REQUESTED } from '../actions';
-import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../variables/Constants";
+import { GET_RECIPES_REQUESTED } from '../../actions';
+import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../../variables/Constants";
 
 const RecipeList = props => {
   return (

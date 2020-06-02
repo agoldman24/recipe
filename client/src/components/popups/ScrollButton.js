@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { defaultTheme } from '../variables/Constants';
+import { defaultTheme } from '../../styles';
 import { isMobile } from 'react-device-detect';
 
 export default function ScrollButton() {

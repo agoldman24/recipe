@@ -19,8 +19,8 @@ import {
   SHOW_SNACKBAR,
   GET_USER_DETAIL_REQUESTED,
   TOGGLE_DRAWER_MENU
-} from '../actions';
-import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
+} from '../../actions';
+import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../../variables/Constants';
 
 const useStyles = makeStyles({
   list: {

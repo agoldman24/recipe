@@ -5,8 +5,8 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
-import RecipeList from './RecipeList';
-import UsersTable from './UsersTable';
+import RecipeList from '../recipes/RecipeList';
+import UsersTable from '../tables/UsersTable';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -21,7 +21,7 @@ import {
   SET_ACTIVE_TAB,
   SET_DISPLAY_USER,
   TOGGLE_PROFILE_EDITOR
-} from '../actions';
+} from '../../actions';
 import {
   FOLLOWERS,
   FOLLOWING,
@@ -30,63 +30,31 @@ import {
   FOLLOWING_IDS,
   PROFILE_TAB,
   PROFILE,
-  POP,
-  defaultTheme,
-  gradientTextStyle2
-} from '../variables/Constants';
+  POP
+} from '../../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import "../index.css";
-
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200',
-  paddingTop:'50px'
-};
-
-const textStyle = {
-  fontWeight:'bold',
-  fontFamily:'Signika',
-  lineHeight: 1,
-}
-
-const columnStyle = {
-  width: '25%',
-  textAlign: 'center'
-}
-
-const unselected = {
-  paddingBottom: '10px'
-}
-
-const selected = {
-  paddingBottom: '10px',
-  borderBottom:'2px solid #ffc800'
-}
-
-const backButtonStyle = {
-  background: 'none',
-  boxShadow: 'none',
-  color: 'white',
-  position: 'fixed', top: '40px', left: '10px'
-};
-
-const iconStyle = {
-  width:'25',
-  height:'25'
-};
-
-const buttonStyle = {
-  border: '1px solid white',
-  fontSize: '14px',
-  padding: '2px',
-  width: isMobile ? '90%' : '40%'
-};
-
-const tableStyle = {
-  width: isMobile ? '100%' : '60%',
-  margin: 'auto'
-}
+import "../../index.css";
+import {
+  defaultTheme,
+  gridStyle,
+  errorStyle,
+  textStyle,
+  gradientTextStyle2,
+  usernameStyle,
+  nameBoxStyle,
+  nameStyle,
+  columnStyle,
+  unselected,
+  selected,
+  buttonStyle,
+  backButtonStyle,
+  unfollowButtonStyle,
+  followingButtonStyle,
+  checkIconStyle,
+  tableStyle,
+  rowStyle
+} from "../../styles";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -194,10 +162,7 @@ const ProfileTab = props => {
         <Grid
           container
           direction="column"
-          style={{
-            alignItems:'center',
-            padding: '0 10px'
-          }}
+          style={gridStyle}
         >
           {!!props.tabHistory.length &&
             <Fab
@@ -215,25 +180,11 @@ const ProfileTab = props => {
             </Fab>
           }
           <Grid item>
-            <Typography
-              variant="h5"
-              style={{...textStyle, fontFamily:'Raleway', padding:'10px 0'}}
-            >
-              {username}
-            </Typography>
+            <Typography variant="h5" style={usernameStyle}>{username}</Typography>
           </Grid>
-          <Grid item style={{display:'inline-flex', paddingBottom:'20px'}}>
+          <Grid item style={nameBoxStyle}>
             <ProfileAvatar />
-            <Typography
-              style={{
-                ...textStyle,
-                fontSize: '24px',
-                margin: 'auto',
-                marginLeft: '20px'
-              }}
-            >
-              {firstName + " " + lastName}
-            </Typography>
+            <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
           </Grid>
           {!!activeUser
             ? activeUser.id === id
@@ -247,28 +198,13 @@ const ProfileTab = props => {
                 ? <div style={{width: isMobile ? '100%' : '50%'}}>
                     <Button
                       onClick={() => updateFollowingIds(activeUser.id, id, false)}
-                      style={{
-                        ...buttonStyle,
-                        float:'right',
-                        margin: '0 5%',
-                        width: '60%'
-                      }}
+                      style={unfollowButtonStyle}
                     >
                       Unfollow
                     </Button>
-                    <Typography
-                      style={{
-                        float:'right', fontSize:'16px', color:'#00d412'
-                      }}
-                    >
+                    <Typography style={followingButtonStyle}>
                       Following
-                      <CheckIcon
-                        style={{
-                          ...iconStyle,
-                          verticalAlign:'top',
-                          marginLeft:'5px',
-                          color:'#00d412'
-                        }}/>
+                      <CheckIcon style={checkIconStyle}/>
                     </Typography>
                   </div>
                 : <Button
@@ -285,21 +221,17 @@ const ProfileTab = props => {
           <Grid
             container
             direction="row"
-            style={{
-              width: isMobile ? '100%' : '50%',
-              margin: 'auto',
-              paddingTop: '20px'
-            }}
+            style={rowStyle}
           >
             <Grid item className="clickable" style={columnStyle} onClick={() => {
-                props.setActiveDetail(FOLLOWERS);
-              }}>
+              props.setActiveDetail(FOLLOWERS);
+            }}>
               {displayUserDetail.activeDetail === FOLLOWERS
               ? <div style={selected}>
                   <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                     {followerIds.length}
                   </Typography>
-                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
+                  <Typography style={{ ...textStyle, color:'#ffc800', fontSize:'16px', fontWeight:'normal'}}>
                     Followers
                   </Typography>
                 </div>
@@ -336,8 +268,8 @@ const ProfileTab = props => {
               }
             </Grid>
             <Grid item className="clickable" style={columnStyle} onClick={() => {
-                props.setActiveDetail(CREATED_RECIPES);
-              }}>
+              props.setActiveDetail(CREATED_RECIPES);
+            }}>
               {displayUserDetail.activeDetail === CREATED_RECIPES
               ? <div style={selected}>
                   <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
@@ -358,8 +290,8 @@ const ProfileTab = props => {
               }
             </Grid>
             <Grid item className="clickable" style={columnStyle} onClick={() => {
-                props.setActiveDetail(SAVED_RECIPES);
-              }}>
+              props.setActiveDetail(SAVED_RECIPES);
+            }}>
               {displayUserDetail.activeDetail === SAVED_RECIPES
               ? <div style={selected}>
                   <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>

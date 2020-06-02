@@ -10,9 +10,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { SIGN_IN_TAB, formTheme } from '../variables/Constants';
-import { SIGN_UP_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES }
-from '../actions';
+import { SIGN_IN_TAB } from '../../variables/Constants';
+import { SIGN_UP_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES } from '../../actions';
+import { formTheme } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
 
@@ -22,7 +22,7 @@ const errorStyle = {
   paddingBottom:'15px'
 };
  
-const SignUp = props => {
+const SignUpTab = props => {
   const classes = useStyles();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -170,4 +170,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SignUp);
+)(SignUpTab);

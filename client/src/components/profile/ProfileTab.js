@@ -13,7 +13,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from './ProfileAvatar';
-import ProfileTable from './ProfileTable';
+import ProfileEditor from './ProfileEditor';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -231,7 +231,7 @@ const ProfileTab = props => {
                   <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
                     {followerIds.length}
                   </Typography>
-                  <Typography style={{ ...textStyle, color:'#ffc800', fontSize:'16px', fontWeight:'normal'}}>
+                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
                     Followers
                   </Typography>
                 </div>
@@ -371,7 +371,7 @@ const ProfileTab = props => {
           >
             <Grid item style={{margin:'auto'}}>
               <ProfileAvatar/>
-              <ProfileTable/>
+              <ProfileEditor/>
             </Grid>
           </Grid>
         </Dialog>

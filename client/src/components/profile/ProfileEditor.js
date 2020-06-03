@@ -26,7 +26,7 @@ const textStyle = {
   width:'80px'
 };
 
-const ProfileTable = props => {
+const ProfileEditor = props => {
   const classes = useStyles();
   const [firstName, setFirstName] = React.useState(props.activeUser.firstName);
   const [lastName, setLastName] = React.useState(props.activeUser.lastName);
@@ -119,4 +119,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProfileTable);
+)(ProfileEditor);

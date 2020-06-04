@@ -76,8 +76,9 @@ export const gradientTextStyle = {
 }
 
 export const gradientTextStyle2 = {
-  ...gradientTextStyle,
-  background: 'linear-gradient(to top right, yellow, #ff4000)'
+  background: 'linear-gradient(to top right, yellow, #ff4000)',
+  WebkitBackgroundClip: 'text',
+	WebkitTextFillColor: 'transparent'
 }
 
 export const usernameStyle = {

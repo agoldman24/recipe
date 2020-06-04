@@ -5,8 +5,6 @@ import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
-import RecipeList from '../recipes/RecipeList';
-import UsersTable from '../tables/UsersTable';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -14,6 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from './ProfileAvatar';
 import ProfileEditor from './ProfileEditor';
+import ProfileDetailsGrid from './ProfileDetailsGrid';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -24,9 +23,6 @@ import {
 } from '../../actions';
 import {
   FOLLOWERS,
-  FOLLOWING,
-  CREATED_RECIPES,
-  SAVED_RECIPES,
   FOLLOWING_IDS,
   PROFILE_TAB,
   PROFILE,
@@ -39,21 +35,14 @@ import {
   defaultTheme,
   gridStyle,
   errorStyle,
-  textStyle,
-  gradientTextStyle2,
   usernameStyle,
   nameBoxStyle,
   nameStyle,
-  columnStyle,
-  unselected,
-  selected,
   buttonStyle,
   backButtonStyle,
   unfollowButtonStyle,
   followingButtonStyle,
-  checkIconStyle,
-  tableStyle,
-  rowStyle
+  checkIconStyle
 } from "../../styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -143,15 +132,13 @@ const ProfileTab = props => {
   };
 
   const {
-    displayUser: {
-      id, username, firstName, lastName, followerIds,
-      followingIds, createdRecipeIds, savedRecipeIds
-    },
+    displayUser: { id, username, firstName, lastName },
     displayUserDetail,
     activeUser,
     networkFailed,
     updateFollowingIds
   } = props;
+  
   const updateOccurred = !statesEqual();
 
   return (
@@ -217,122 +204,11 @@ const ProfileTab = props => {
           }
         </Grid>
         {!!displayUserDetail &&
-        <div>
-          <Grid
-            container
-            direction="row"
-            style={rowStyle}
-          >
-            <Grid item className="clickable" style={columnStyle} onClick={() => {
-              props.setActiveDetail(FOLLOWERS);
-            }}>
-              {displayUserDetail.activeDetail === FOLLOWERS
-              ? <div style={selected}>
-                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                    {followerIds.length}
-                  </Typography>
-                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Followers
-                  </Typography>
-                </div>
-              : <div style={unselected}>
-                  <Typography style={{...textStyle, fontSize:'40px'}}>
-                    {followerIds.length}
-                  </Typography>
-                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Followers
-                  </Typography>
-                </div>
-              }
-            </Grid>
-            <Grid item className="clickable" style={columnStyle} onClick={() => {
-                props.setActiveDetail(FOLLOWING);
-              }}>
-              {displayUserDetail.activeDetail === FOLLOWING
-              ? <div style={selected}>
-                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                    {followingIds.length}
-                  </Typography>
-                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Following
-                  </Typography>
-                </div>
-              : <div style={unselected}>
-                  <Typography style={{...textStyle, fontSize:'40px'}}>
-                    {followingIds.length}
-                  </Typography>
-                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Following
-                  </Typography>
-                </div>
-              }
-            </Grid>
-            <Grid item className="clickable" style={columnStyle} onClick={() => {
-              props.setActiveDetail(CREATED_RECIPES);
-            }}>
-              {displayUserDetail.activeDetail === CREATED_RECIPES
-              ? <div style={selected}>
-                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                    {createdRecipeIds.length}
-                  </Typography>
-                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Created Recipes
-                  </Typography>
-                </div>
-              : <div style={unselected}>
-                  <Typography style={{...textStyle, fontSize:'40px'}}>
-                    {createdRecipeIds.length}
-                  </Typography>
-                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Created Recipes
-                  </Typography>
-                </div>
-              }
-            </Grid>
-            <Grid item className="clickable" style={columnStyle} onClick={() => {
-              props.setActiveDetail(SAVED_RECIPES);
-            }}>
-              {displayUserDetail.activeDetail === SAVED_RECIPES
-              ? <div style={selected}>
-                  <Typography style={{...gradientTextStyle2, ...textStyle, fontSize:'40px'}}>
-                    {savedRecipeIds.length}
-                  </Typography>
-                  <Typography style={{ color:'#ffc800', ...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Saved Recipes
-                  </Typography>
-                </div>
-              : <div style={unselected}>
-                  <Typography style={{...textStyle, fontSize:'40px'}}>
-                    {savedRecipeIds.length}
-                  </Typography>
-                  <Typography style={{...textStyle, fontSize:'16px', fontWeight:'normal'}}>
-                    Saved Recipes
-                  </Typography>
-                </div>
-              }
-            </Grid>
-          </Grid>
-          {displayUserDetail.activeDetail === FOLLOWERS &&
-            <div style={tableStyle}>
-              <UsersTable users={Object.values(displayUserDetail.followers)}/>
-            </div>
-          }
-          {displayUserDetail.activeDetail === FOLLOWING &&
-            <div style={tableStyle}>
-              <UsersTable users={Object.values(displayUserDetail.following)}/>
-            </div>
-          }
-          {displayUserDetail.activeDetail === CREATED_RECIPES &&
-            <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
-          }
-          {displayUserDetail.activeDetail === SAVED_RECIPES &&
-            <RecipeList recipes={
-              Object.values(displayUserDetail.savedRecipes).sort((r1, r2) => {
-                return r2.timestamp - r1.timestamp;
-              })
-            }/>
-          }
-        </div>
+          <ProfileDetailsGrid
+            displayUser={props.displayUser}
+            displayUserDetail={props.displayUserDetail}
+            setActiveDetail={props.setActiveDetail}
+          />
         }
         <Dialog
           fullScreen open={open}

@@ -112,6 +112,30 @@ export const selected = {
   borderBottom:'2px solid #ffc800'
 }
 
+export const highlightedNumberStyle = {
+  ...gradientTextStyle2,
+  ...textStyle,
+  fontSize:'40px'
+};
+
+export const unhighlightedNumberStyle = {
+  ...textStyle,
+  fontSize:'40px'
+};
+
+export const highlightedTextStyle = {
+  ...textStyle,
+  fontSize:'16px',
+  fontWeight:'normal',
+  color:'#ffc800'
+};
+
+export const unhighlightedTextStyle = {
+  ...textStyle,
+  fontSize:'16px',
+  fontWeight:'normal'
+};
+
 export const buttonStyle = {
   border: '1px solid white',
   fontSize: '14px',

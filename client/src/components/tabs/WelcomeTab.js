@@ -121,7 +121,7 @@ const WelcomeTab = props => {
               }}
               onClick={() => props.setActiveTab(RECIPE_TAB)}
             >
-              Samples
+              Recipes
             </Button>
           </Grid>
         </div>

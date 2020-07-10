@@ -1,5 +1,7 @@
 import React, { createRef } from 'react';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
+import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -25,8 +27,14 @@ const actionButtonStyle = {
   float:'right',
   height:'40%',
   width:'30%',
-  margin:'40px 5% 0 0'
+  margin:'35px 5% 0 0'
 }
+
+const styles = theme => ({
+  button: {
+    textTransform: 'none'
+  }
+})
 
 class RecipeDetail extends React.Component {
   constructor() {
@@ -70,8 +78,14 @@ class RecipeDetail extends React.Component {
                 <Fab
                   style={{...fabStyle, float:'right'}}
                   onClick={() => {
-                    this.props.toggleDetailView();
-                    document.getElementById('root').style.overflowY = 'auto';
+                    if (this.props.addRowMode ||
+                      (this.tableRef.current && this.tableRef.current.state.lastEditingRow)
+                    ) {
+                      alert('You have unsaved changes!');
+                    } else {
+                      this.props.toggleDetailView();
+                      document.getElementById('root').style.overflowY = 'auto';
+                    }
                   }}
                 >
                   <CloseRoundedIcon style={blackIconStyle} />
@@ -85,9 +99,11 @@ class RecipeDetail extends React.Component {
                   startIcon={<SaveIcon/>}
                   style={{
                     ...actionButtonStyle,
+                    width: isMobile ? '35%' : '30%',
                     border: '1px solid rgba(255, 255, 255, 0.3)' // todo: replace with disabled logic
                   }}
                   disabled={true}
+                  className={this.props.classes.button}
                 >
                   Save
                 </Button>
@@ -95,6 +111,7 @@ class RecipeDetail extends React.Component {
                   startIcon={<AddIcon/>}
                   style={actionButtonStyle}
                   onClick={() => this.props.toggleAddRowMode()}
+                  className={this.props.classes.button}
                 >
                   Add
                 </Button>
@@ -105,6 +122,7 @@ class RecipeDetail extends React.Component {
               ingredients={this.props.ingredients}
               isEditable={!!this.props.activeUser}
               addRowMode={this.props.addRowMode}
+              toggleAddRowMode={this.props.toggleAddRowMode}
             />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
             <Typography style={sectionStyle}>{this.props.directions}</Typography>
@@ -133,4 +151,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RecipeDetail);
+)(withStyles(styles)(RecipeDetail));

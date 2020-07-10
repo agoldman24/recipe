@@ -231,7 +231,7 @@ export const undetailedStyle = {
 };
 
 export const titleStyle = {
-  padding: '20px',
+  padding: isMobile ? '20px 20px 20px 10px' : '20px',
   fontFamily: 'Shadows Into Light',
   width: '50%'
 }

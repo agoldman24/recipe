@@ -18,15 +18,17 @@ const columns = [
   }
 });
 
-const IngredientsTable = ({ tableRef, ingredients, isEditable, addRowMode }) => {
+const IngredientsTable = ({
+  tableRef, ingredients, isEditable, addRowMode, toggleAddRowMode
+}) => {
   const classes = useStyles();
-
+  
   let editable = !isEditable ? null : {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
         resolve();
       }),
-    onRowDelete: (newData, oldData) =>
+    onRowDelete: oldData =>
       new Promise((resolve, reject) => {
         resolve();
       })
@@ -35,10 +37,12 @@ const IngredientsTable = ({ tableRef, ingredients, isEditable, addRowMode }) => 
     tableRef.current.state.showAddRow = true;
     editable = {
       ...editable,
-      onRowAdd: (newData, oldData) =>
+      onRowAdd: newData =>
         new Promise((resolve, reject) => {
+          toggleAddRowMode();
           resolve();
         }),
+      onRowAddCancelled: () => toggleAddRowMode()
     }
   }
   return (
@@ -50,7 +54,6 @@ const IngredientsTable = ({ tableRef, ingredients, isEditable, addRowMode }) => 
       components={{
         Container: props => <Paper {...props} elevation={0}/>,
         EditField: props => {
-        console.log(props);
         return <TextField
           value={props.value}
           label={props.columnDef.title}

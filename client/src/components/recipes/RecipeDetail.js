@@ -1,19 +1,38 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import SaveIcon from '@material-ui/icons/Save';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import IngredientsTable from '../tables/IngredientsTable';
-import { TOGGLE_RECIPE_DETAILS, LOAD_RECIPE_DETAILS_FINISHED } from '../../actions';
+import {
+  TOGGLE_RECIPE_DETAILS,
+  LOAD_RECIPE_DETAILS_FINISHED,
+  TOGGLE_ADD_ROW_MODE
+} from '../../actions';
 import {
   fabStyle, blackIconStyle, darkBackgroundStyle,
-  detailStyle, titleStyle, sectionStyle
+  detailStyle, titleStyle, sectionStyle, buttonStyle
 } from '../../styles';
 
+const actionButtonStyle = {
+  ...buttonStyle,
+  float:'right',
+  height:'40%',
+  width:'30%',
+  margin:'40px 5% 0 0'
+}
+
 class RecipeDetail extends React.Component {
+  constructor() {
+    super();
+    this.tableRef = createRef();
+  }
   componentDidMount() {
     this.props.loadRecipeDetailsFinished();
   }
@@ -59,8 +78,34 @@ class RecipeDetail extends React.Component {
                 </Fab>
               </div>
             </div>
-            <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
-            <IngredientsTable ingredients={this.props.ingredients} isEditable={!!this.props.activeUser}/>
+            <div style={{width:'100%', display:'flex'}}>
+              <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
+              <div style={{width:'50%'}}>
+                <Button
+                  startIcon={<SaveIcon/>}
+                  style={{
+                    ...actionButtonStyle,
+                    border: '1px solid rgba(255, 255, 255, 0.3)' // todo: replace with disabled logic
+                  }}
+                  disabled={true}
+                >
+                  Save
+                </Button>
+                <Button
+                  startIcon={<AddIcon/>}
+                  style={actionButtonStyle}
+                  onClick={() => this.props.toggleAddRowMode()}
+                >
+                  Add
+                </Button>
+              </div>
+            </div>
+            <IngredientsTable
+              tableRef={this.tableRef}
+              ingredients={this.props.ingredients}
+              isEditable={!!this.props.activeUser}
+              addRowMode={this.props.addRowMode}
+            />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
             <Typography style={sectionStyle}>{this.props.directions}</Typography>
           </CardMedia>
@@ -72,14 +117,16 @@ class RecipeDetail extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    activeUser: state.activeUser
+    activeUser: state.activeUser,
+    addRowMode: state.addRowMode
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
-    loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED })
+    loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_ADD_ROW_MODE })
   };
 };
 

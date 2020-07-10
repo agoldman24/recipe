@@ -36,7 +36,8 @@ import {
   UPDATE_PROFILE_EDITOR,
   START_FILE_UPLOAD,
   LOAD_RECIPE_DETAILS_START,
-  LOAD_RECIPE_DETAILS_FINISHED
+  LOAD_RECIPE_DETAILS_FINISHED,
+  TOGGLE_ADD_ROW_MODE
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -443,6 +444,15 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
   }
 }
 
+const addRowMode = (state = false, action) => {
+  switch (action.type) {
+    case TOGGLE_ADD_ROW_MODE:
+      return !state;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   activeTab,
   tabHistory,
@@ -460,5 +470,6 @@ export default combineReducers({
   activeUser,
   displayUser,
   displayUserDetail,
-  allRecipesFetched
+  allRecipesFetched,
+  addRowMode
 });

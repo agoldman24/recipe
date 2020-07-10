@@ -233,6 +233,7 @@ export const undetailedStyle = {
 export const titleStyle = {
   padding: '20px',
   fontFamily: 'Shadows Into Light',
+  width: '50%'
 }
 
 export const sectionStyle = {

@@ -186,3 +186,59 @@ export const rowStyle = {
   margin: 'auto',
   paddingTop: '20px'
 }
+
+export const fabStyle = {
+  background: 'none',
+  boxShadow: 'none',
+  color: 'black',
+};
+
+export const blackIconStyle = {
+  width:'30',
+  height:'30',
+  position:'fixed',
+  background:'black',
+  color:'white',
+  borderRadius:'50px'
+};
+
+export const darkBackgroundStyle = {
+  position:'fixed',
+  top:'0',
+  left:'0',
+  height:'100vh',
+  width:'100vw',
+  zIndex:'4',
+  background:'rgba(0,0,0,0.7)'
+}
+
+export const detailStyle = {
+  borderRadius: '0',
+  width: isMobile ? '100vw' : '60vw',
+  left: isMobile ? '0' : '20vw',
+  height: '100vh',
+  position: 'fixed',
+  overflowY: 'auto',
+  zIndex: '5',
+  top: '0'
+};
+
+export const undetailedStyle = {
+  borderRadius: '0',
+  background: '#202020',
+  boxShadow: 'none',
+  width: isMobile ? '100vw' : '30vw'
+};
+
+export const titleStyle = {
+  padding: '20px',
+  fontFamily: 'Shadows Into Light',
+}
+
+export const sectionStyle = {
+  marginLeft: '5%',
+  width: '90%',
+  fontSize: '16px',
+  paddingBottom: '50%',
+  lineHeight: '2'
+}

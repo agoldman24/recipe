@@ -53,7 +53,6 @@ function* updateUser(action) {
             }
           }
         } else {
-          console.log("frontend username:", username);
           res2 = yield call(Api.post, '/updateProfile', {
             id: activeUser.id,
             profileImageId, firstName, lastName, username

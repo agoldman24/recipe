@@ -35,6 +35,8 @@ import {
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
   START_FILE_UPLOAD,
+  LOAD_RECIPE_DETAILS_START,
+  LOAD_RECIPE_DETAILS_FINISHED
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -53,6 +55,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
     case START_FILE_UPLOAD:
+    case LOAD_RECIPE_DETAILS_START:
       return true;
     case POPULATE_USERS:
     case GET_USER_DETAIL_SUCCEEDED:
@@ -64,6 +67,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
     case UPDATE_PROFILE_EDITOR:
+    case LOAD_RECIPE_DETAILS_FINISHED:
       return false;
     default:
       return state;
@@ -154,7 +158,6 @@ const users = (state = StateTree.users, action) => {
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:
-      console.log("action:", action);
       return {
         ...state,
         [action.user.id]: action.user

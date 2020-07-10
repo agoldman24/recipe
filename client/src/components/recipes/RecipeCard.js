@@ -8,26 +8,16 @@ import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { isMobile } from 'react-device-detect';
-import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
+import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
 import { SAVED_RECIPE_IDS } from '../../variables/Constants';
+import { fabStyle, undetailedStyle } from '../../styles';
+
+const iconStyle = {
+  width:'30',
+  height:'30'
+};
 
 const RecipeCard = props => {
-  const fabStyle = {
-    background: 'none',
-    boxShadow: 'none',
-    color: 'black'
-  };
-  const iconStyle = {
-    width:'30',
-    height:'30'
-  };
-  const undetailedStyle = {
-    borderRadius: '0',
-    background: '#202020',
-    boxShadow: 'none',
-    width: isMobile ? '100vw' : '30vw'
-  };
   return (
     <Card style={undetailedStyle}>
       <CardHeader
@@ -60,7 +50,8 @@ const RecipeCard = props => {
             <Fab
               style={{...fabStyle, float:'right'}}
               onClick={() => {
-                props.toggleDetailView(props.id);
+                props.loadRecipeDetailsStart();
+                setTimeout(() => props.toggleDetailView(props.id), 1);
                 document.getElementById('root').style.overflowY = 'hidden';
               }}
             >
@@ -119,6 +110,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    loadRecipeDetailsStart: () => dispatch({ type: LOAD_RECIPE_DETAILS_START }),
     toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id }),
     updateSavedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,

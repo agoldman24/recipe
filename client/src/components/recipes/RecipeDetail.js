@@ -7,115 +7,79 @@ import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import IngredientsTable from '../tables/IngredientsTable';
-import { isMobile } from 'react-device-detect';
-import { TOGGLE_RECIPE_DETAILS } from '../../actions';
+import { TOGGLE_RECIPE_DETAILS, LOAD_RECIPE_DETAILS_FINISHED } from '../../actions';
+import {
+  fabStyle, blackIconStyle, darkBackgroundStyle,
+  detailStyle, titleStyle, sectionStyle
+} from '../../styles';
 
-const RecipeDetail = props => {
-  const fabStyle = {
-    background: 'none',
-    boxShadow: 'none',
-    color: 'black',
-  };
-  const iconStyle = {
-    width:'30',
-    height:'30'
-  };
-  const darkBackgroundStyle = {
-    position:'fixed',
-    top:'0',
-    left:'0',
-    height:'100vh',
-    width:'100vw',
-    zIndex:'4',
-    background:'rgba(0,0,0,0.7)'
+class RecipeDetail extends React.Component {
+  componentDidMount() {
+    this.props.loadRecipeDetailsFinished();
   }
-  const detailStyle = {
-    borderRadius: '0',
-    width: isMobile ? '100vw' : '60vw',
-    left: isMobile ? '0' : '20vw',
-    height: '100vh',
-    position: 'fixed',
-    overflowY: 'auto',
-    zIndex: '5',
-    top: '0'
-  };
-  const titleStyle = {
-    padding: '20px',
-    fontFamily: 'Shadows Into Light',
-  }
-  const sectionStyle = {
-    marginLeft: '5%',
-    width: '90%',
-    fontSize: '16px',
-    paddingBottom: '50%',
-    lineHeight: '2'
-  }
-  return (
-    <div style={darkBackgroundStyle}>
-      <Card style={detailStyle}>
-        <CardHeader
-          title={
-            <Typography
-              variant="h3"
-              style={{
-                fontWeight:'bold', fontFamily:'Shadows Into Light'
-              }}
-            >
-              {props.name}
-            </Typography>
-          }
-          style={{background:'white', color:'black'}}
-        />
-        <CardMedia
-          style={{height:"0", paddingTop:"100%", position:'relative'}}
-          image={props.image}
-          children={[]}
-        >
-          <div
-            style={{
-              position:'absolute', top:'0', left:'0',
-              width:'100%', height:'30%', verticalAlign:'text-top',
-              backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
-              color:'black', fontWeight:'bold'
-            }}
-          >
-            <div style={{width:'10%', float:'right'}}>
-              <Fab
-                style={{...fabStyle, float:'right'}}
-                onClick={() => {
-                  props.toggleDetailView();
-                  document.getElementById('root').style.overflowY = 'auto';
+  render() {
+    return (
+      <div style={darkBackgroundStyle}>
+        <Card style={detailStyle}>
+          <CardHeader
+            title={
+              <Typography
+                variant="h3"
+                style={{
+                  fontWeight:'bold', fontFamily:'Shadows Into Light'
                 }}
               >
-                <CloseRoundedIcon
-                  style={{
-                    ...iconStyle,
-                    position:'fixed',
-                    background:'black',
-                    color:'white',
-                    borderRadius:'50px'
+                {this.props.name}
+              </Typography>
+            }
+            style={{background:'white', color:'black'}}
+          />
+          <CardMedia
+            style={{height:"0", paddingTop:"100%", position:'relative'}}
+            image={this.props.image}
+            children={[]}
+          >
+            <div
+              style={{
+                position:'absolute', top:'0', left:'0', zIndex: '99',
+                width:'100%', height:'30%', verticalAlign:'text-top',
+                backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
+                color:'black', fontWeight:'bold'
+              }}
+            >
+              <div style={{width:'10%', float:'right'}}>
+                <Fab
+                  style={{...fabStyle, float:'right'}}
+                  onClick={() => {
+                    this.props.toggleDetailView();
+                    document.getElementById('root').style.overflowY = 'auto';
                   }}
-                />
-              </Fab>
+                >
+                  <CloseRoundedIcon style={blackIconStyle} />
+                </Fab>
+              </div>
             </div>
-          </div>
-          <Typography style={titleStyle} variant="h3">Ingredients</Typography>
-          <IngredientsTable ingredients={props.ingredients}/>
-          <Typography style={titleStyle} variant="h3">Directions</Typography>
-          <Typography style={sectionStyle}>{props.directions}</Typography>
-        </CardMedia>
-      </Card>
-    </div>
-  );
+            <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
+            <IngredientsTable ingredients={this.props.ingredients} isEditable={!!this.props.activeUser}/>
+            <Typography style={titleStyle} variant="h3">Directions</Typography>
+            <Typography style={sectionStyle}>{this.props.directions}</Typography>
+          </CardMedia>
+        </Card>
+      </div>
+    );
+  }
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    activeUser: state.activeUser
+  };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS })
+    toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
+    loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED })
   };
 };
 

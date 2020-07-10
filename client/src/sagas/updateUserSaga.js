@@ -79,13 +79,15 @@ function* updateUser(action) {
             ]
           : activeUser.savedRecipeIds.filter(obj => obj.id !== action.recipeId)
         });
-        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        user = res.data.user;
+        yield put({ type: SET_ACTIVE_USER, user });
         if (!!displayUser && activeUser.id === displayUser.id) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: SAVED_RECIPES,
             recipe: displayUserDetail.savedRecipes[action.recipeId],
-            keep: action.keep
+            keep: action.keep,
+            user
           });
         }
         break;
@@ -104,14 +106,15 @@ function* updateUser(action) {
           ? [ ...friend.followerIds, action.id ]
           : friend.followerIds.filter(id => id !== action.id)
         });
+        user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user: res.data.user });
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: FOLLOWERS,
-          user: res.data.user,
-          keep: action.keep
+          keep: action.keep,
+          user
         });
-        yield put({ type: UPDATE_USER, user: res2.data.user });
+        yield put({ type: UPDATE_USER, user });
         break;
       default:
         break;

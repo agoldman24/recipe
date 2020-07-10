@@ -44,7 +44,7 @@ import {
   PUSH,
 } from '../variables/Constants';
 
-const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
+const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
     case GET_ALL_USERS:
     case SIGN_UP_REQUESTED:
@@ -70,7 +70,7 @@ const spinnerReduce = (state = StateTree.isSpinnerVisible, action) => {
   }
 }
 
-const hydrationReduce = (state = StateTree.isHydrated, action) => {
+const isHydrated = (state = StateTree.isHydrated, action) => {
   switch (action.type) {
     case HYDRATION_COMPLETE:
       return true;
@@ -79,7 +79,7 @@ const hydrationReduce = (state = StateTree.isHydrated, action) => {
   }
 }
 
-const activeTabReduce = (state = StateTree.activeTab, action) => {
+const activeTab = (state = StateTree.activeTab, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       document.getElementById('root').scrollTo(0, 0);
@@ -91,7 +91,7 @@ const activeTabReduce = (state = StateTree.activeTab, action) => {
   }
 }
 
-const tabHistoryReduce = (state = StateTree.tabHistory, action) => {
+const tabHistory = (state = StateTree.tabHistory, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       return !!action.currentTab
@@ -104,7 +104,7 @@ const tabHistoryReduce = (state = StateTree.tabHistory, action) => {
   }
 }
 
-const sampleRecipesReduce = (state = StateTree.sampleRecipes, action) => {
+const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
       return {
@@ -118,7 +118,7 @@ const sampleRecipesReduce = (state = StateTree.sampleRecipes, action) => {
   }
 }
 
-const detailVisibilityReduce = (state = StateTree.isDetailVisible, action) => {
+const isDetailVisible = (state = StateTree.isDetailVisible, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !state;
@@ -127,7 +127,7 @@ const detailVisibilityReduce = (state = StateTree.isDetailVisible, action) => {
   }
 }
 
-const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
+const detailRecipeId = (state = StateTree.detailRecipeId, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !!action.id ? action.id : state;
@@ -136,7 +136,7 @@ const detailRecipeIdReduce = (state = StateTree.detailRecipeId, action) => {
   }
 }
 
-const drawerMenuReduce = (state = StateTree.isDrawerMenuVisible, action) => {
+const isDrawerMenuVisible = (state = StateTree.isDrawerMenuVisible, action) => {
   switch (action.type) {
     case TOGGLE_DRAWER_MENU:
       return !state;
@@ -145,7 +145,7 @@ const drawerMenuReduce = (state = StateTree.isDrawerMenuVisible, action) => {
   }
 }
 
-const usersReduce = (state = StateTree.users, action) => {
+const users = (state = StateTree.users, action) => {
   switch (action.type) {
     case POPULATE_USERS:
       return action.users;
@@ -154,6 +154,7 @@ const usersReduce = (state = StateTree.users, action) => {
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:
+      console.log("action:", action);
       return {
         ...state,
         [action.user.id]: action.user
@@ -163,7 +164,7 @@ const usersReduce = (state = StateTree.users, action) => {
   }
 }
 
-const activeUserReduce = (state = null, action) => {
+const activeUser = (state = null, action) => {
   switch (action.type) {
     case SET_ACTIVE_USER:
       localStorage.setItem("activeUserId", action.user.id);
@@ -189,7 +190,7 @@ const activeUserReduce = (state = null, action) => {
   }
 }
 
-const displayUserReduce = (state = null, action) => {
+const displayUser = (state = null, action) => {
   switch (action.type) {
     case SET_DISPLAY_USER:
       localStorage.setItem("displayUserId", action.user.id);
@@ -238,7 +239,7 @@ const displayUserReduce = (state = null, action) => {
   }
 }
 
-const displayUserDetailReduce = (state = null, action) => {
+const displayUserDetail = (state = null, action) => {
   switch (action.type) {
     case SET_DISPLAY_USER:
       return null;
@@ -317,7 +318,7 @@ const displayUserDetailReduce = (state = null, action) => {
   }
 }
 
-const errorMessageReduce = (state = StateTree.errorMessages, action) => {
+const errorMessages = (state = StateTree.errorMessages, action) => {
   switch (action.type) {
     case SIGN_IN_FAILED:
       return { ...state, loginFailed: true }
@@ -339,7 +340,7 @@ const errorMessageReduce = (state = StateTree.errorMessages, action) => {
   }
 }
 
-export const snackbarReduce = (state = StateTree.snackbar, action) => {
+export const snackbar = (state = StateTree.snackbar, action) => {
   switch (action.type) {
     case SHOW_SNACKBAR:
       return {
@@ -356,7 +357,7 @@ export const snackbarReduce = (state = StateTree.snackbar, action) => {
   }
 }
 
-const profileEditorReduce = (state = StateTree.profileEditor, action) => {
+const profileEditor = (state = StateTree.profileEditor, action) => {
   switch (action.type) {
     case TOGGLE_PROFILE_EDITOR:
       return !!action.firstName
@@ -398,7 +399,7 @@ const profileEditorReduce = (state = StateTree.profileEditor, action) => {
   }
 }
 
-const usersFetchedReduce = (state = StateTree.usersFetched, action) => {
+const usersFetched = (state = StateTree.usersFetched, action) => {
   switch (action.type) {
     case POPULATE_USERS:
       return true;
@@ -407,7 +408,7 @@ const usersFetchedReduce = (state = StateTree.usersFetched, action) => {
   }
 }
 
-const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) => {
+const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
       return {
@@ -440,21 +441,21 @@ const allRecipesFetchedReduce = (state = StateTree.allRecipesFetched, action) =>
 }
 
 export default combineReducers({
-  activeTab: activeTabReduce,
-  tabHistory: tabHistoryReduce,
-  sampleRecipes: sampleRecipesReduce,
-  detailRecipeId: detailRecipeIdReduce,
-  isDetailVisible: detailVisibilityReduce,
-  isDrawerMenuVisible: drawerMenuReduce,
-  isSpinnerVisible: spinnerReduce,
-  profileEditor: profileEditorReduce,
-  usersFetched: usersFetchedReduce,
-  isHydrated: hydrationReduce,
-  errorMessages: errorMessageReduce,
-  snackbar: snackbarReduce,
-  users: usersReduce,
-  activeUser: activeUserReduce,
-  displayUser: displayUserReduce,
-  displayUserDetail: displayUserDetailReduce,
-  allRecipesFetched: allRecipesFetchedReduce
+  activeTab,
+  tabHistory,
+  sampleRecipes,
+  detailRecipeId,
+  isDetailVisible,
+  isDrawerMenuVisible,
+  isSpinnerVisible,
+  profileEditor,
+  usersFetched,
+  isHydrated,
+  errorMessages,
+  snackbar,
+  users,
+  activeUser,
+  displayUser,
+  displayUserDetail,
+  allRecipesFetched
 });

@@ -22,7 +22,8 @@ import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import {
   TOGGLE_RECIPE_DETAILS,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_ADD_ROW_MODE,
+  TOGGLE_DETAIL_EDIT_MODE,
+  TOGGLE_DETAIL_ADD_ROW_MODE,
   UPDATE_USER_REQUESTED
 } from '../../actions';
 import {
@@ -93,7 +94,7 @@ class RecipeDetail extends React.Component {
                 <MenuRoundedIcon
                   style={{
                     ...iconStyle,
-                    background: !!this.state.anchorEl ? '#424242' : 'none',
+                    background: !!this.state.anchorEl ? '#292929' : 'none',
                     color: !!this.state.anchorEl ? 'white' : 'black',
                     border: !!this.state.anchorEl ? '1px solid white' : 'none'
                   }}
@@ -144,7 +145,7 @@ class RecipeDetail extends React.Component {
             </div>
             <div style={{width:'100%', display:'flex'}}>
               <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
-              {this.props.isLoggedIn &&
+              {this.props.editMode &&
                 <div style={{width:'50%'}}>
                   <Button
                     startIcon={<SaveIcon/>}
@@ -161,7 +162,7 @@ class RecipeDetail extends React.Component {
                   <Button
                     startIcon={<AddIcon/>}
                     style={actionButtonStyle}
-                    onClick={() => this.props.toggleAddRowMode()}
+                    onClick={this.props.toggleAddRowMode}
                     className={this.props.classes.button}
                   >
                     Add
@@ -172,7 +173,7 @@ class RecipeDetail extends React.Component {
             <IngredientsTable
               tableRef={this.tableRef}
               ingredients={this.props.ingredients}
-              isEditable={this.props.isLoggedIn}
+              isEditable={this.props.editMode}
               addRowMode={this.props.addRowMode}
               toggleAddRowMode={this.props.toggleAddRowMode}
             />
@@ -197,21 +198,25 @@ class RecipeDetail extends React.Component {
           }}
         >
           <Grid container direction="column">
-            <Grid item>
+            <Grid item style={{background:'#292929', borderBottom: '1px solid white'}}>
               <Button
                 startIcon={<CreateIcon/>}
                 className={this.props.classes.button}
+                style={{fontSize: '16px'}}
+                onClick={() => {
+                  this.setState({ anchorEl: null });
+                  this.props.toggleEditMode();
+                }}
               >
                 Edit
               </Button>
             </Grid>
-            <Grid item>
+            <Grid item style={{background:'#292929'}}>
               <Button
                 className={this.props.classes.button}
-                style={{
-                  paddingRight: '0',
-                  borderRadius: '0',
-                  borderTop: '1px solid white'
+                style={{fontSize: '16px', paddingRight:'0'}}
+                onClick={() => {
+                  this.setState({ anchorEl: null });
                 }}
               >
                 Delete
@@ -227,7 +232,8 @@ class RecipeDetail extends React.Component {
 const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
-    addRowMode: state.addRowMode,
+    editMode: state.detailRecipe.editMode,
+    addRowMode: state.detailRecipe.addRowMode,
     activeUser: state.activeUser,
     savedRecipeIds: !!state.activeUser
       ? state.activeUser.savedRecipeIds.map(obj => obj.id)
@@ -239,7 +245,8 @@ const mapDispatchToProps = dispatch => {
   return {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
     loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_ADD_ROW_MODE }),
+    toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_DETAIL_ADD_ROW_MODE }),
     updateSavedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: SAVED_RECIPE_IDS,

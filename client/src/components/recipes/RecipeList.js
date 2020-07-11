@@ -66,7 +66,7 @@ const mapStateToProps = state => {
   return {
     networkFailed: state.errorMessages.networkFailed,
     isDetailVisible: state.isDetailVisible,
-    detailRecipeId: state.detailRecipeId,
+    detailRecipeId: state.detailRecipe.id,
     activeTab: state.activeTab,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,

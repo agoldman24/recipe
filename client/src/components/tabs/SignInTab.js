@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_UP_TAB } from '../../variables/Constants';
-import { SIGN_IN_REQUESTED, SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
+import { SIGN_IN_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES } from '../../actions';
 import { formTheme, errorStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
@@ -24,7 +24,11 @@ const SignInTab = props => {
   const onFormSubmit = (e) => {
     e.preventDefault();
     props.clearErrorMessages();
-    props.signIn(username, password);
+    if (!username || !password) {
+      props.putEmptyFieldsError();
+    } else {
+      props.signIn(username, password);
+    }
   }
 
   return (
@@ -37,6 +41,8 @@ const SignInTab = props => {
           Sign in
         </Typography>
         <form className={classes.form}>
+          {props.emptyFields &&
+            <div style={{...errorStyle, paddingTop:'0'}}>One or more fields is empty</div>}
           {props.loginFailed &&
             <div style={{...errorStyle, paddingTop:'0'}}>Invalid username or password</div>}
           {props.networkFailed &&
@@ -99,6 +105,7 @@ const SignInTab = props => {
 
 const mapStateToProps = state => {
   return {
+    emptyFields: state.errorMessages.emptyFields,
     loginFailed: state.errorMessages.loginFailed,
     networkFailed: state.errorMessages.networkFailed
   };
@@ -106,6 +113,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    putEmptyFieldsError: () => dispatch({ type: EMPTY_FIELDS }),
     clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
     signIn: (username, password) => {
       dispatch({ type: SIGN_IN_REQUESTED, username, password });

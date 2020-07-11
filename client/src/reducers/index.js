@@ -37,7 +37,8 @@ import {
   START_FILE_UPLOAD,
   LOAD_RECIPE_DETAILS_START,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_ADD_ROW_MODE
+  TOGGLE_DETAIL_EDIT_MODE,
+  TOGGLE_DETAIL_ADD_ROW_MODE
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -132,10 +133,29 @@ const isDetailVisible = (state = StateTree.isDetailVisible, action) => {
   }
 }
 
-const detailRecipeId = (state = StateTree.detailRecipeId, action) => {
+const detailRecipe = (state = StateTree.detailRecipe, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
-      return !!action.id ? action.id : state;
+      return !!action.id
+        ? {
+            ...state,
+            id: action.id
+          }
+        : {
+            id: "",
+            editMode: false,
+            addRowMode: false
+          }
+    case TOGGLE_DETAIL_EDIT_MODE:
+      return {
+        ...state,
+        editMode: !state.editMode
+      }
+    case TOGGLE_DETAIL_ADD_ROW_MODE:
+      return {
+        ...state,
+        addRowMode: !state.addRowMode
+      }
     default:
       return state;
   }
@@ -444,20 +464,11 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
   }
 }
 
-const addRowMode = (state = false, action) => {
-  switch (action.type) {
-    case TOGGLE_ADD_ROW_MODE:
-      return !state;
-    default:
-      return state;
-  }
-}
-
 export default combineReducers({
   activeTab,
   tabHistory,
   sampleRecipes,
-  detailRecipeId,
+  detailRecipe,
   isDetailVisible,
   isDrawerMenuVisible,
   isSpinnerVisible,
@@ -470,6 +481,5 @@ export default combineReducers({
   activeUser,
   displayUser,
   displayUserDetail,
-  allRecipesFetched,
-  addRowMode
+  allRecipesFetched
 });

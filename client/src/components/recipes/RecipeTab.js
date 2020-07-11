@@ -34,7 +34,7 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     sampleRecipes: state.sampleRecipes,
     isDetailVisible: state.isDetailVisible,
-    detailRecipeId: state.detailRecipeId
+    detailRecipeId: state.detailRecipe.id
   };
 }
 

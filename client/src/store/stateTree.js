@@ -65,7 +65,11 @@ export default Object.assign({},
     quantity: ""
   },
   sampleRecipes: {},
-  detailRecipeId: "",
+  detailRecipe: {
+    id: "",
+    editMode: false,
+    addRowMode: false
+  },
   allRecipesFetched: {
     samples: false,
     created: false,

@@ -2,7 +2,7 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import HomeIcon from '@material-ui/icons/Home';
+import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
 import Fab from '@material-ui/core/Fab';
 import DrawerMenu from './DrawerMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ const NavigationMenu = props => {
 
   const navBarStyle = {
     width:'100%', height:'50px', left:'0', position:'fixed', zIndex:'4',
-    backgroundImage:'linear-gradient(black, #202020)'
+    backgroundImage: props.isLoggedIn ? 'linear-gradient(black, #202020)' : 'none'
   };
 
   const tabStyle = {
@@ -30,9 +30,9 @@ const NavigationMenu = props => {
   const fabStyle = {
     position: 'fixed',
     right: 5,
-    background: 'none',
+    background: 'linear-gradient(to top right, #ff4000, yellow)',
     boxShadow: 'none',
-    color: 'white',
+    color: 'black'
   };
 
   return (
@@ -59,7 +59,7 @@ const NavigationMenu = props => {
               style={fabStyle}
               onClick={() => props.setActiveTab(WELCOME_TAB)}
             >
-              <HomeIcon style={{height:'40', width:'40'}}/>
+              <HomeTwoToneIcon style={{height:'40', width:'40'}}/>
             </Fab>
           </div>
         : null

@@ -83,12 +83,13 @@ class App extends React.Component {
       padding: '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
+    const recipeTab_notLoggedIn = !this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
     const desktopStyle = {
-      position:'relative',
-      top:'50px',
+      position: 'relative',
+      top: recipeTab_notLoggedIn ? '0' : '50px',
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 130px)'
-        : 'calc(100vh - 50px)',
+        : '100vh',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
     return (
@@ -97,7 +98,9 @@ class App extends React.Component {
       }>
         <NavigationMenu/>
         <SuccessSnackbar/>
-        {this.state.showScrollButton && <ScrollButton/>}
+        {this.state.showScrollButton &&
+          <ScrollButton scrollButtonTop={recipeTab_notLoggedIn ? '10px' : '60px'}/>
+        }
         {this.props.isSpinnerVisible && <Spinner/>}
         <Container
           id="container"

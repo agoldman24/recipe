@@ -3,6 +3,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import RecipeCard from './RecipeCard';
 import RecipeDetail from './RecipeDetail';
+import RecipeDetailEdit from './RecipeDetailEdit';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../../actions';
@@ -21,14 +22,23 @@ const RecipeList = props => {
             <Grid item key={recipe.id}
               style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
             >
-              {props.isDetailVisible && props.detailRecipeId === recipe.id &&
-                <RecipeDetail
-                  id={recipe.id}
-                  name={recipe.name}
-                  image={recipe.image}
-                  ingredients={recipe.ingredients}
-                  directions={recipe.directions}
-                />
+              {props.isDetailVisible && props.detailRecipeId === recipe.id
+                ? props.editMode
+                  ? <RecipeDetailEdit
+                      id={recipe.id}
+                      name={recipe.name}
+                      image={recipe.image}
+                      ingredients={recipe.ingredients}
+                      directions={recipe.directions}
+                    />
+                  : <RecipeDetail
+                      id={recipe.id}
+                      name={recipe.name}
+                      image={recipe.image}
+                      ingredients={recipe.ingredients}
+                      directions={recipe.directions}
+                    />
+                : null
               }
               <RecipeCard
                 id={recipe.id}
@@ -67,14 +77,15 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     isDetailVisible: state.isDetailVisible,
     detailRecipeId: state.detailRecipe.id,
+    editMode: state.detailRecipe.editMode,
     activeTab: state.activeTab,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     allRecipesFetched:
-    (state.activeTab.name === RECIPE_TAB && state.allRecipesFetched.samples)
-    || (!!state.displayUserDetail && 
-      ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
-      || (state.displayUserDetail.activeDetail === SAVED_RECIPES && state.allRecipesFetched.saved))
+      (state.activeTab.name === RECIPE_TAB && state.allRecipesFetched.samples)
+      || (!!state.displayUserDetail && 
+        ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
+        || (state.displayUserDetail.activeDetail === SAVED_RECIPES && state.allRecipesFetched.saved))
     )
   };
 }

@@ -84,6 +84,7 @@ const IngredientsTable = ({
         }
       }}
       style={{
+        width: '100%',
         padding: isMobile ? '0': '0 20px'
       }}
     />

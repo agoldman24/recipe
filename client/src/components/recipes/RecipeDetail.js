@@ -10,8 +10,6 @@ import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import SaveIcon from '@material-ui/icons/Save';
 import CreateIcon from '@material-ui/icons/Create';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -31,14 +29,6 @@ import {
   detailStyle, headerStyle, titleStyle, sectionStyle, buttonStyle
 } from '../../styles';
 
-const actionButtonStyle = {
-  ...buttonStyle,
-  float:'right',
-  height:'40%',
-  width:'25%',
-  margin:'35px 5% 0 0'
-}
-
 const styles = () => ({
   button: {
     textTransform: 'none'
@@ -47,7 +37,7 @@ const styles = () => ({
     borderRadius: '4px 0 4px 4px',
     border: '1px solid white'
   }
-})
+});
 
 class RecipeDetail extends React.Component {
   constructor() {
@@ -83,24 +73,26 @@ class RecipeDetail extends React.Component {
             children={[]}
           >
             <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
-              <Fab
-                style={{
-                  ...fabStyle,
-                  position:'fixed',
-                  top:'15px',
-                  right: isMobile ? '0' : '21%'
-               }}
-              >
-                <MenuRoundedIcon
+              {this.props.isLoggedIn &&
+                <Fab
                   style={{
-                    ...iconStyle,
-                    background: !!this.state.anchorEl ? '#292929' : 'none',
-                    color: !!this.state.anchorEl ? 'white' : 'black',
-                    border: !!this.state.anchorEl ? '1px solid white' : 'none'
-                  }}
-                  onClick={e => this.setState({ anchorEl: e.currentTarget })}
-                />
-              </Fab>
+                    ...fabStyle,
+                    position:'fixed',
+                    top:'15px',
+                    right: isMobile ? '0' : '21%'
+                }}
+                >
+                  <MenuRoundedIcon
+                    style={{
+                      ...iconStyle,
+                      background: !!this.state.anchorEl ? '#292929' : 'none',
+                      color: !!this.state.anchorEl ? 'white' : 'black',
+                      border: !!this.state.anchorEl ? '1px solid white' : 'none'
+                    }}
+                    onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                  />
+                </Fab>
+              }
               <div style={{float:'right'}}>
                 <Fab
                   style={{
@@ -109,14 +101,8 @@ class RecipeDetail extends React.Component {
                     right: isMobile ? '0' : '21%'
                   }}
                   onClick={() => {
-                    if (this.props.addRowMode ||
-                      (this.tableRef.current && this.tableRef.current.state.lastEditingRow)
-                    ) {
-                      alert('You have unsaved changes!');
-                    } else {
-                      this.props.toggleDetailView();
-                      document.getElementById('root').style.overflowY = 'auto';
-                    }
+                    this.props.toggleDetailView();
+                    document.getElementById('root').style.overflowY = 'auto';
                   }}
                 >
                   <CloseRoundedIcon style={blackIconStyle} />
@@ -145,30 +131,6 @@ class RecipeDetail extends React.Component {
             </div>
             <div style={{width:'100%', display:'flex'}}>
               <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
-              {this.props.editMode &&
-                <div style={{width:'50%'}}>
-                  <Button
-                    startIcon={<SaveIcon/>}
-                    style={{
-                      ...actionButtonStyle,
-                      width: isMobile ? '40%' : '25%',
-                      border: '1px solid rgba(255, 255, 255, 0.3)' // todo: replace with disabled logic
-                    }}
-                    disabled={true}
-                    className={this.props.classes.button}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    startIcon={<AddIcon/>}
-                    style={actionButtonStyle}
-                    onClick={this.props.toggleAddRowMode}
-                    className={this.props.classes.button}
-                  >
-                    Add
-                  </Button>
-                </div>
-              }
             </div>
             <IngredientsTable
               tableRef={this.tableRef}

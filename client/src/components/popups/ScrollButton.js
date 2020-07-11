@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import { defaultTheme } from '../../styles';
 import { isMobile } from 'react-device-detect';
 
-export default function ScrollButton() {
+export default function ScrollButton({ scrollButtonTop }) {
   const buttonStyle = {
     color: 'black',
     fontWeight: 'bold',
@@ -14,9 +14,9 @@ export default function ScrollButton() {
     <div style={{
       position:'fixed',
       width:'100vw',
-      top:'60px',
+      top: scrollButtonTop,
       textAlign:'center',
-      zIndex:'1'
+      zIndex:'4'
     }}>
       <Button
         style={buttonStyle}

@@ -22,7 +22,7 @@ const IngredientsTable = ({
   tableRef, ingredients, isEditable, addRowMode, toggleAddRowMode
 }) => {
   const classes = useStyles();
-  
+
   let editable = !isEditable ? null : {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
@@ -59,7 +59,7 @@ const IngredientsTable = ({
           label={props.columnDef.title}
           onChange={event => props.onChange(event.target.value)}
           style={{
-            width: isMobile ? '150px' : '250px'
+            width: isMobile ? '100px' : '250px'
           }}
           InputProps={{
             classes: {

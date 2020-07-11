@@ -12,15 +12,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_IN_TAB } from '../../variables/Constants';
 import { SIGN_UP_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES } from '../../actions';
-import { formTheme } from '../../styles';
+import { formTheme, errorStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
-
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200',
-  paddingBottom:'15px'
-};
  
 const SignUpTab = props => {
   const classes = useStyles();
@@ -50,11 +44,11 @@ const SignUpTab = props => {
         </Typography>
         <form className={classes.form}>
           {props.emptyFields &&
-            <div style={errorStyle}>One or more fields is empty</div>}
+            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>One or more fields is empty</div>}
           {props.usernameExists &&
-            <div style={errorStyle}>That username already exists, choose a different one</div>}
+            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>That username already exists, choose a different one</div>}
           {props.networkFailed &&
-            <div style={errorStyle}>Network error</div>}
+            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>Network error</div>}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField

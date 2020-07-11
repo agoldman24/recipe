@@ -12,14 +12,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_UP_TAB } from '../../variables/Constants';
 import { SIGN_IN_REQUESTED, SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
-import { formTheme } from '../../styles';
+import { formTheme, errorStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
-
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200'
-};
 
 const SignInTab = props => {
   const classes = useStyles();
@@ -43,9 +38,9 @@ const SignInTab = props => {
         </Typography>
         <form className={classes.form}>
           {props.loginFailed &&
-            <div style={errorStyle}>Invalid username or password</div>}
+            <div style={{...errorStyle, paddingTop:'0'}}>Invalid username or password</div>}
           {props.networkFailed &&
-            <div style={errorStyle}>Network error</div>}
+            <div style={{...errorStyle, paddingTop:'0'}}>Network error</div>}
           <TextField
             InputProps={{
               classes: {

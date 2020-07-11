@@ -4,12 +4,7 @@ import RecipeButtons from './RecipeButtons';
 import { connect } from 'react-redux';
 import { GET_RECIPES_REQUESTED } from '../../actions';
 import { SAMPLES } from '../../variables/Constants';
-
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200',
-  paddingTop:'50px'
-};
+import { errorStyle } from '../../styles';
 
 class RecipeTab extends React.Component {
   componentDidMount() {

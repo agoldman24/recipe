@@ -6,16 +6,11 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import InfoIcon from '@material-ui/icons/Info';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
 import { SAVED_RECIPE_IDS } from '../../variables/Constants';
-import { fabStyle, undetailedStyle } from '../../styles';
-
-const iconStyle = {
-  width:'30',
-  height:'30'
-};
+import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
 
 const RecipeCard = props => {
   return (
@@ -31,21 +26,14 @@ const RecipeCard = props => {
             {props.name}
           </Typography>
         }
-        style={{background:'white', color:'black'}}
+        style={headerStyle}
       />
       <CardMedia
         style={{height:"0", paddingTop:"100%", position:'relative'}}
         image={props.image}
         children={[]}
       >
-        <div
-          style={{
-            position:'absolute', top:'0', left:'0',
-            width:'100%', height:'30%', verticalAlign:'text-top',
-            backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
-            color:'black', fontWeight:'bold'
-          }}
-        >
+        <div style={whiteFadeBackgroundStyle}>
           <div style={{width:'10%', float:'right'}}>
             <Fab
               style={{...fabStyle, float:'right'}}

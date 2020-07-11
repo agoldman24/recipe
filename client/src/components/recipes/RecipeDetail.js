@@ -6,33 +6,45 @@ import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
+import CreateIcon from '@material-ui/icons/Create';
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import IngredientsTable from '../tables/IngredientsTable';
+import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import {
   TOGGLE_RECIPE_DETAILS,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_ADD_ROW_MODE
+  TOGGLE_ADD_ROW_MODE,
+  UPDATE_USER_REQUESTED
 } from '../../actions';
 import {
-  fabStyle, blackIconStyle, darkBackgroundStyle,
-  detailStyle, titleStyle, sectionStyle, buttonStyle
+  fabStyle, iconStyle, blackIconStyle, darkBackgroundStyle, whiteFadeBackgroundStyle,
+  detailStyle, headerStyle, titleStyle, sectionStyle, buttonStyle
 } from '../../styles';
 
 const actionButtonStyle = {
   ...buttonStyle,
   float:'right',
   height:'40%',
-  width:'30%',
+  width:'25%',
   margin:'35px 5% 0 0'
 }
 
-const styles = theme => ({
+const styles = () => ({
   button: {
     textTransform: 'none'
+  },
+  paper: {
+    borderRadius: '4px 0 4px 4px',
+    border: '1px solid white'
   }
 })
 
@@ -40,6 +52,9 @@ class RecipeDetail extends React.Component {
   constructor() {
     super();
     this.tableRef = createRef();
+    this.state = {
+      anchorEl: null
+    }
   }
   componentDidMount() {
     this.props.loadRecipeDetailsFinished();
@@ -59,24 +74,39 @@ class RecipeDetail extends React.Component {
                 {this.props.name}
               </Typography>
             }
-            style={{background:'white', color:'black'}}
+            style={headerStyle}
           />
           <CardMedia
             style={{height:"0", paddingTop:"100%", position:'relative'}}
             image={this.props.image}
             children={[]}
           >
-            <div
-              style={{
-                position:'absolute', top:'0', left:'0', zIndex: '99',
-                width:'100%', height:'30%', verticalAlign:'text-top',
-                backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
-                color:'black', fontWeight:'bold'
-              }}
-            >
-              <div style={{width:'10%', float:'right'}}>
+            <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
+              <Fab
+                style={{
+                  ...fabStyle,
+                  position:'fixed',
+                  top:'15px',
+                  right: isMobile ? '0' : '21%'
+               }}
+              >
+                <MenuRoundedIcon
+                  style={{
+                    ...iconStyle,
+                    background: !!this.state.anchorEl ? '#424242' : 'none',
+                    color: !!this.state.anchorEl ? 'white' : 'black',
+                    border: !!this.state.anchorEl ? '1px solid white' : 'none'
+                  }}
+                  onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                />
+              </Fab>
+              <div style={{float:'right'}}>
                 <Fab
-                  style={{...fabStyle, float:'right'}}
+                  style={{
+                    ...fabStyle,
+                    position:'fixed',
+                    right: isMobile ? '0' : '21%'
+                  }}
                   onClick={() => {
                     if (this.props.addRowMode ||
                       (this.tableRef.current && this.tableRef.current.state.lastEditingRow)
@@ -91,36 +121,58 @@ class RecipeDetail extends React.Component {
                   <CloseRoundedIcon style={blackIconStyle} />
                 </Fab>
               </div>
+              {this.props.isLoggedIn
+              ? this.props.savedRecipeIds.includes(this.props.id)
+                ? <Fab
+                    onClick={() => this.props.updateSavedRecipes(
+                      this.props.activeUser.id, this.props.id, false
+                    )}
+                    style={{...fabStyle, float:'left'}}
+                  >
+                    <FavoriteIcon style={iconStyle}/>
+                  </Fab>
+                : <Fab
+                    onClick={() => this.props.updateSavedRecipes(
+                      this.props.activeUser.id, this.props.id, true
+                    )}
+                    style={{...fabStyle, float:'left'}}
+                  >
+                    <FavoriteBorderIcon style={iconStyle}/>
+                  </Fab>
+              : null
+              }
             </div>
             <div style={{width:'100%', display:'flex'}}>
               <Typography style={{...titleStyle, paddingBottom:'5px'}} variant="h3">Ingredients</Typography>
-              <div style={{width:'50%'}}>
-                <Button
-                  startIcon={<SaveIcon/>}
-                  style={{
-                    ...actionButtonStyle,
-                    width: isMobile ? '35%' : '30%',
-                    border: '1px solid rgba(255, 255, 255, 0.3)' // todo: replace with disabled logic
-                  }}
-                  disabled={true}
-                  className={this.props.classes.button}
-                >
-                  Save
-                </Button>
-                <Button
-                  startIcon={<AddIcon/>}
-                  style={actionButtonStyle}
-                  onClick={() => this.props.toggleAddRowMode()}
-                  className={this.props.classes.button}
-                >
-                  Add
-                </Button>
-              </div>
+              {this.props.isLoggedIn &&
+                <div style={{width:'50%'}}>
+                  <Button
+                    startIcon={<SaveIcon/>}
+                    style={{
+                      ...actionButtonStyle,
+                      width: isMobile ? '40%' : '25%',
+                      border: '1px solid rgba(255, 255, 255, 0.3)' // todo: replace with disabled logic
+                    }}
+                    disabled={true}
+                    className={this.props.classes.button}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    startIcon={<AddIcon/>}
+                    style={actionButtonStyle}
+                    onClick={() => this.props.toggleAddRowMode()}
+                    className={this.props.classes.button}
+                  >
+                    Add
+                  </Button>
+                </div>
+              }
             </div>
             <IngredientsTable
               tableRef={this.tableRef}
               ingredients={this.props.ingredients}
-              isEditable={!!this.props.activeUser}
+              isEditable={this.props.isLoggedIn}
               addRowMode={this.props.addRowMode}
               toggleAddRowMode={this.props.toggleAddRowMode}
             />
@@ -128,6 +180,45 @@ class RecipeDetail extends React.Component {
             <Typography style={sectionStyle}>{this.props.directions}</Typography>
           </CardMedia>
         </Card>
+        <Popover
+          open={!!this.state.anchorEl}
+          anchorEl={this.state.anchorEl}
+          onClose={() => this.setState({ anchorEl: null })}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          classes={{
+            paper: this.props.classes.paper
+          }}
+        >
+          <Grid container direction="column">
+            <Grid item>
+              <Button
+                startIcon={<CreateIcon/>}
+                className={this.props.classes.button}
+              >
+                Edit
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                className={this.props.classes.button}
+                style={{
+                  paddingRight: '0',
+                  borderRadius: '0',
+                  borderTop: '1px solid white'
+                }}
+              >
+                Delete
+              </Button>
+            </Grid>
+          </Grid>
+        </Popover>
       </div>
     );
   }
@@ -135,8 +226,12 @@ class RecipeDetail extends React.Component {
 
 const mapStateToProps = state => {
   return {
+    isLoggedIn: !!state.activeUser,
+    addRowMode: state.addRowMode,
     activeUser: state.activeUser,
-    addRowMode: state.addRowMode
+    savedRecipeIds: !!state.activeUser
+      ? state.activeUser.savedRecipeIds.map(obj => obj.id)
+      : null
   };
 };
 
@@ -144,7 +239,12 @@ const mapDispatchToProps = dispatch => {
   return {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
     loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_ADD_ROW_MODE })
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_ADD_ROW_MODE }),
+    updateSavedRecipes: (id, recipeId, keep) => dispatch({
+      type: UPDATE_USER_REQUESTED,
+      updateType: SAVED_RECIPE_IDS,
+      id, recipeId, keep
+    })
   };
 };
 

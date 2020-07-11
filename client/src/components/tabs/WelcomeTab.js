@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { SET_ACTIVE_TAB } from '../../actions';
 import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
-import { gradientTextStyle } from "../../styles";
+import { gradientTextStyle, errorStyle } from "../../styles";
 
 const buttonStyle = {
   marginTop: '10px',
@@ -16,11 +16,6 @@ const buttonStyle = {
   borderStyle: 'solid',
   fontFamily: 'Raleway'
 }
-
-const errorStyle = {
-  textAlign:'center',
-  color:'#ff2200'
-};
 
 const WelcomeTab = props => {
   return (
@@ -52,7 +47,7 @@ const WelcomeTab = props => {
       </Grid>
       {!props.isSpinnerVisible &&
       (props.networkFailed
-      ? <div style={errorStyle}>Network error</div>
+      ? <div style={{...errorStyle, paddingTop:'0'}}>Network error</div>
       : <div>
           <Grid item>
             <Button

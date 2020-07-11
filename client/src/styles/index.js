@@ -59,7 +59,7 @@ export const gridStyle = {
 
 export const errorStyle = {
   textAlign:'center',
-  color:'#ff2200',
+  color:'#ff4621',
   paddingTop:'50px'
 };
 
@@ -165,12 +165,13 @@ export const followingButtonStyle = {
 }
 
 export const iconStyle = {
-  width:'25',
-  height:'25'
+  width:'30',
+  height:'30'
 };
 
 export const checkIconStyle = {
-  ...iconStyle,
+  width:'25',
+  height:'25',
   verticalAlign:'top',
   marginLeft:'5px',
   color:'#00d412'
@@ -196,7 +197,6 @@ export const fabStyle = {
 export const blackIconStyle = {
   width:'30',
   height:'30',
-  position:'fixed',
   background:'black',
   color:'white',
   borderRadius:'50px'
@@ -210,6 +210,13 @@ export const darkBackgroundStyle = {
   width:'100vw',
   zIndex:'4',
   background:'rgba(0,0,0,0.7)'
+}
+
+export const whiteFadeBackgroundStyle = {
+  position:'absolute', top:'0', left:'0',
+  width:'100%', height:'30%', verticalAlign:'text-top',
+  backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
+  color:'black', fontWeight:'bold'
 }
 
 export const detailStyle = {
@@ -229,6 +236,12 @@ export const undetailedStyle = {
   boxShadow: 'none',
   width: isMobile ? '100vw' : '30vw'
 };
+
+export const headerStyle = {
+  background: 'white',
+  color: 'black',
+  padding: '16px 40px 0 16px'
+}
 
 export const titleStyle = {
   padding: isMobile ? '20px 20px 20px 10px' : '20px',

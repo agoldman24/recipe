@@ -14,7 +14,7 @@ const columns = [
 ].map(column => {
   return {
     ...column,
-    headerStyle: { color: "#fff78c", fontSize: 16 }
+    headerStyle: { color: '#ffaa16' , fontSize: 16 }
   }
 });
 
@@ -78,6 +78,7 @@ const IngredientsTable = ({
         toolbar: false,
         paging: false,
         addRowPosition: 'first',
+        maxBodyHeight: '500px',
         rowStyle: {
           fontSize: 16,
           width: 250
@@ -85,7 +86,7 @@ const IngredientsTable = ({
       }}
       style={{
         width: '100%',
-        padding: isMobile ? '0': '0 20px'
+        padding: isMobile || isEditable ? '0': '0 20px'
       }}
     />
   );

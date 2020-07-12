@@ -79,11 +79,11 @@ class App extends React.Component {
   }
 
   render() {
+    const recipeTab_notLoggedIn = !this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
     const mobileStyle = {
-      padding: '50px 0 10px',
+      padding: recipeTab_notLoggedIn ? '0 0 10px 0' : '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
-    const recipeTab_notLoggedIn = !this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
     const desktopStyle = {
       position: 'relative',
       top: recipeTab_notLoggedIn ? '0' : '50px',

@@ -5,14 +5,19 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
-import InfoIcon from '@material-ui/icons/Info';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
 import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
+import '../../index.css';
 
 const RecipeCard = props => {
+  const openRecipeDetails = event => {
+    props.loadRecipeDetailsStart();
+    setTimeout(() => props.toggleDetailView(props.id), 1);
+    document.getElementById('root').style.overflowY = 'hidden';
+  }
   return (
     <Card style={undetailedStyle}>
       <CardHeader
@@ -27,39 +32,34 @@ const RecipeCard = props => {
           </Typography>
         }
         style={headerStyle}
+        className="cardHeader"
+        onClick={openRecipeDetails}
       />
       <CardMedia
-        style={{height:"0", paddingTop:"100%", position:'relative'}}
         image={props.image}
         children={[]}
+        className="cardMedia"
+        onClick={openRecipeDetails}
       >
         <div style={whiteFadeBackgroundStyle}>
-          <div style={{width:'10%', float:'right'}}>
-            <Fab
-              style={{...fabStyle, float:'right'}}
-              onClick={() => {
-                props.loadRecipeDetailsStart();
-                setTimeout(() => props.toggleDetailView(props.id), 1);
-                document.getElementById('root').style.overflowY = 'hidden';
-              }}
-            >
-              <InfoIcon style={iconStyle}/>
-            </Fab>
-          </div>
           {props.isLoggedIn
           ? props.savedRecipeIds.includes(props.id)
             ? <Fab
-                onClick={() => props.updateSavedRecipes(
-                  props.activeUser.id, props.id, false
-                )}
+                onClick={event => {
+                  event.stopPropagation();
+                  event.cancelBubble = true;
+                  props.updateSavedRecipes(props.activeUser.id, props.id, false)
+                }}
                 style={{...fabStyle, float:'left'}}
               >
                 <FavoriteIcon style={iconStyle}/>
               </Fab>
             : <Fab
-                onClick={() => props.updateSavedRecipes(
-                  props.activeUser.id, props.id, true
-                )}
+                onClick={event => {
+                  event.stopPropagation();
+                  event.cancelBubble = true;
+                  props.updateSavedRecipes(props.activeUser.id, props.id, true)
+                }}
                 style={{...fabStyle, float:'left'}}
               >
                 <FavoriteBorderIcon style={iconStyle}/>

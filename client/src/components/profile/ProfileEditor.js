@@ -8,7 +8,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import '../../index.css';
 import { UPDATE_PROFILE_EDITOR } from '../../actions';
 import { formTheme } from '../../styles';
 
@@ -22,8 +21,8 @@ const cellStyle = {
 const textStyle = {
   fontFamily: 'Signika',
   fontSize: '16px',
-  float:'left',
-  width:'80px'
+  float: 'left',
+  width: '80px'
 };
 
 const ProfileEditor = props => {

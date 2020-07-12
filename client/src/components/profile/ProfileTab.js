@@ -30,7 +30,6 @@ import {
 } from '../../variables/Constants';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import "../../index.css";
 import {
   defaultTheme,
   gridStyle,

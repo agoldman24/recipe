@@ -16,7 +16,7 @@ export default function ScrollButton({ scrollButtonTop }) {
       width:'100vw',
       top: scrollButtonTop,
       textAlign:'center',
-      zIndex:'4'
+      zIndex:'3'
     }}>
       <Button
         style={buttonStyle}

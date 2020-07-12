@@ -26,7 +26,7 @@ import {
 } from '../../actions';
 import {
   fabStyle, iconStyle, blackIconStyle, darkBackgroundStyle, whiteFadeBackgroundStyle,
-  detailStyle, headerStyle, titleStyle, sectionStyle, buttonStyle
+  detailStyle, headerStyle, titleStyle, sectionStyle
 } from '../../styles';
 
 const styles = () => ({
@@ -74,40 +74,41 @@ class RecipeDetail extends React.Component {
           >
             <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
               {this.props.isLoggedIn &&
-                <Fab
-                  style={{
-                    ...fabStyle,
-                    position:'fixed',
-                    top:'15px',
-                    right: isMobile ? '0' : '21%'
-                }}
-                >
-                  <MenuRoundedIcon
+                <div>
+                  <Fab
                     style={{
-                      ...iconStyle,
-                      background: !!this.state.anchorEl ? '#292929' : 'none',
-                      color: !!this.state.anchorEl ? 'white' : 'black',
-                      border: !!this.state.anchorEl ? '1px solid white' : 'none'
+                      ...fabStyle,
+                      position: 'fixed',
+                      top: '15px',
+                      right: isMobile ? '0' : '21%'
                     }}
-                    onClick={e => this.setState({ anchorEl: e.currentTarget })}
-                  />
-                </Fab>
+                  >
+                    <MenuRoundedIcon
+                      style={{
+                        ...iconStyle,
+                        background: !!this.state.anchorEl ? '#292929' : 'none',
+                        color: !!this.state.anchorEl ? 'white' : 'black',
+                        border: !!this.state.anchorEl ? '1px solid white' : 'none'
+                      }}
+                      onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                    />
+                  </Fab>
+                  <Fab
+                    style={{
+                      ...fabStyle,
+                      position: 'fixed',
+                      top: '60px',
+                      right: isMobile ? '0' : '21%'
+                    }}
+                    onClick={() => {
+                      this.props.toggleDetailView();
+                      document.getElementById('root').style.overflowY = 'auto';
+                    }}
+                  >
+                    <CloseRoundedIcon style={blackIconStyle} />
+                  </Fab>
+                </div>
               }
-              <div style={{float:'right'}}>
-                <Fab
-                  style={{
-                    ...fabStyle,
-                    position:'fixed',
-                    right: isMobile ? '0' : '21%'
-                  }}
-                  onClick={() => {
-                    this.props.toggleDetailView();
-                    document.getElementById('root').style.overflowY = 'auto';
-                  }}
-                >
-                  <CloseRoundedIcon style={blackIconStyle} />
-                </Fab>
-              </div>
               {this.props.isLoggedIn
               ? this.props.savedRecipeIds.includes(this.props.id)
                 ? <Fab

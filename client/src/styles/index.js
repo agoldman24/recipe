@@ -53,19 +53,19 @@ export const formTheme = theme => ({
 });
 
 export const gridStyle = {
-  alignItems:'center',
+  alignItems: 'center',
   padding: '0 10px'
 }
 
 export const errorStyle = {
-  textAlign:'center',
-  color:'#ff4621',
-  paddingTop:'50px'
+  textAlign: 'center',
+  color: '#ff4621',
+  paddingTop: '50px'
 };
 
 export const textStyle = {
-  fontWeight:'bold',
-  fontFamily:'Signika',
+  fontWeight: 'bold',
+  fontFamily: 'Signika',
   lineHeight: 1,
 }
 
@@ -83,13 +83,13 @@ export const gradientTextStyle2 = {
 
 export const usernameStyle = {
   ...textStyle,
-  fontFamily:'Raleway',
-  padding:'10px 0'
+  fontFamily: 'Raleway',
+  padding: '10px 0'
 }
 
 export const nameBoxStyle = {
-  display:'inline-flex',
-  paddingBottom:'20px'
+  display: 'inline-flex',
+  paddingBottom: '20px'
 }
 
 export const nameStyle = {
@@ -116,25 +116,25 @@ export const selected = {
 export const highlightedNumberStyle = {
   ...gradientTextStyle2,
   ...textStyle,
-  fontSize:'40px'
+  fontSize: '40px'
 };
 
 export const unhighlightedNumberStyle = {
   ...textStyle,
-  fontSize:'40px'
+  fontSize: '40px'
 };
 
 export const highlightedTextStyle = {
   ...textStyle,
-  fontSize:'16px',
-  fontWeight:'normal',
-  color:'#ffc800'
+  fontSize: '16px',
+  fontWeight: 'normal',
+  color: '#ffc800'
 };
 
 export const unhighlightedTextStyle = {
   ...textStyle,
-  fontSize:'16px',
-  fontWeight:'normal'
+  fontSize: '16px',
+  fontWeight: 'normal'
 };
 
 export const buttonStyle = {
@@ -153,28 +153,28 @@ export const backButtonStyle = {
 
 export const unfollowButtonStyle = {
   ...buttonStyle,
-  float:'right',
+  float: 'right',
   margin: '0 5%',
   width: '60%'
 }
 
 export const followingButtonStyle = {
-  float:'right',
-  fontSize:'16px',
-  color:'#00d412'
+  float: 'right',
+  fontSize: '16px',
+  color: '#00d412'
 }
 
 export const iconStyle = {
-  width:'30',
-  height:'30'
+  width: '30',
+  height: '30'
 };
 
 export const checkIconStyle = {
-  width:'25',
-  height:'25',
-  verticalAlign:'top',
-  marginLeft:'5px',
-  color:'#00d412'
+  width: '25',
+  height: '25',
+  verticalAlign: 'top',
+  marginLeft: '5px',
+  color: '#00d412'
 }
 
 export const tableStyle = {
@@ -195,28 +195,28 @@ export const fabStyle = {
 };
 
 export const blackIconStyle = {
-  width:'30',
-  height:'30',
-  background:'black',
-  color:'white',
-  borderRadius:'50px'
+  width: '30',
+  height: '30',
+  background: 'black',
+  color: 'white',
+  borderRadius: '50px'
 };
 
 export const darkBackgroundStyle = {
-  position:'fixed',
-  top:'0',
-  left:'0',
-  height:'100vh',
-  width:'100vw',
-  zIndex:'4',
-  background:'rgba(0,0,0,0.7)'
+  position: 'fixed',
+  top: '0',
+  left: '0',
+  height: '100vh',
+  width: '100vw',
+  zIndex: '4',
+  background: 'rgba(0,0,0,0.7)'
 }
 
 export const whiteFadeBackgroundStyle = {
-  position:'absolute', top:'0', left:'0',
-  width:'100%', height:'30%', verticalAlign:'text-top',
-  backgroundImage:'linear-gradient(white, rgba(0,0,0,0))',
-  color:'black', fontWeight:'bold'
+  position: 'absolute', top: '0', left: '0',
+  width: '100%', height: '30%', verticalAlign: 'text-top',
+  backgroundImage: 'linear-gradient(white, rgba(0,0,0,0))',
+  color: 'black', fontWeight: 'bold'
 }
 
 export const detailStyle = {
@@ -256,3 +256,10 @@ export const sectionStyle = {
   paddingBottom: '50%',
   lineHeight: '2'
 }
+
+export const radioLabelStyle = (state, dirType) => ({
+  height: '25px',
+  color: state.directions.type === dirType
+    ? defaultTheme.palette.primary.main
+    : 'white'
+});

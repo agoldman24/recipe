@@ -12,6 +12,12 @@ body {
   overflow-y: auto;
 }
 
+.cardMedia {
+  height: 0;
+  padding-top: 100%;
+  position: relative;
+}
+
 .fileContainer {
   overflow: hidden;
   position: relative;
@@ -20,7 +26,9 @@ body {
   color: white;
 }
 .fileContainer:hover,
-.clickable:hover {
+.clickable:hover,
+.cardMedia:hover,
+.cardHeader:hover {
   cursor: pointer;
 }
 

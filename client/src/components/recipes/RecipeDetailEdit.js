@@ -280,8 +280,6 @@ const mapDispatchToProps = dispatch => {
     toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
     toggleAddRowMode: () => dispatch({ type: TOGGLE_DETAIL_ADD_ROW_MODE }),
     toggleModal: (actionName, actionPayload) => {
-      console.log(actionName)
-      console.log(actionPayload);
       dispatch({ type: TOGGLE_MODAL, actionName, actionPayload })
     }
   };

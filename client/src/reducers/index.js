@@ -117,8 +117,6 @@ const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
       return {
         ...state,
         ...Object.keys(action.recipes).reduce((accum, uuid) => {
-          console.log(uuid);
-          console.log(action.recipes[uuid])
           accum[uuid] = {
             ...action.recipes[uuid],
             ingredients: action.recipes[uuid].ingredients.map((ingredient, index) => ({

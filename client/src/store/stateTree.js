@@ -14,6 +14,10 @@ export default Object.assign({},
     isVisible: false,
     message: ""
   },
+  modal: {
+    isVisible: false,
+    actionPayload: {}
+  },
   errorMessages: {
     emptyFields: false,
     usernameExists: false,

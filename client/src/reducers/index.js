@@ -31,6 +31,7 @@ import {
   EMPTY_FIELDS,
   SHOW_SNACKBAR,
   HIDE_SNACKBAR,
+  TOGGLE_MODAL,
   TOGGLE_DRAWER_MENU,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
@@ -115,7 +116,18 @@ const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
     case APPEND_SAMPLE_RECIPES:
       return {
         ...state,
-        ...action.recipes
+        ...Object.keys(action.recipes).reduce((accum, uuid) => {
+          console.log(uuid);
+          console.log(action.recipes[uuid])
+          accum[uuid] = {
+            ...action.recipes[uuid],
+            ingredients: action.recipes[uuid].ingredients.map((ingredient, index) => ({
+              ...ingredient,
+              index
+            }))
+          }
+          return accum;
+        }, {})
       }
     case SIGN_OUT:
       return {};
@@ -381,6 +393,21 @@ export const snackbar = (state = StateTree.snackbar, action) => {
   }
 }
 
+export const modal = (state = StateTree.modal, action) => {
+  switch (action.type) {
+    case TOGGLE_MODAL:
+      return state.isVisible
+        ? StateTree.modal
+        : {
+            isVisible: true,
+            actionName: action.actionName,
+            actionPayload: action.actionPayload
+          }
+      default:
+        return state;
+  }
+}
+
 const profileEditor = (state = StateTree.profileEditor, action) => {
   switch (action.type) {
     case TOGGLE_PROFILE_EDITOR:
@@ -477,6 +504,7 @@ export default combineReducers({
   isHydrated,
   errorMessages,
   snackbar,
+  modal,
   users,
   activeUser,
   displayUser,

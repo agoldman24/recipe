@@ -15,12 +15,14 @@ import SaveIcon from '@material-ui/icons/Save';
 import IngredientsTable from '../tables/IngredientsTable';
 import {
   TOGGLE_DETAIL_EDIT_MODE,
-  TOGGLE_DETAIL_ADD_ROW_MODE
+  TOGGLE_DETAIL_ADD_ROW_MODE,
+  TOGGLE_MODAL
 } from '../../actions';
 import {
   defaultTheme, darkBackgroundStyle, detailStyle,
   buttonStyle, radioLabelStyle
 } from '../../styles';
+import { isMobile } from 'react-device-detect';
 
 const styles = () => ({
   button: {
@@ -36,6 +38,11 @@ const styles = () => ({
   },
   multilineTextField: {
     padding: '10px 5px 10px 15px'
+  },
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   }
 });
 
@@ -54,7 +61,7 @@ const addButtonStyle = {
 
 const fixedButtonStyle = {
   ...buttonStyle,
-  width: '15vw',
+  width: isMobile ? '160px' : '100px',
   margin: '10px 0 10px 10px'
 }
 
@@ -100,6 +107,7 @@ class RecipeDetailEdit extends React.Component {
     super();
     this.tableRef = createRef();
     this.state = {
+      focusedContainer: null,
       directions: {
         type: "",
         value: ""
@@ -118,9 +126,18 @@ class RecipeDetailEdit extends React.Component {
   }
   render() {
     return (
-      <div style={darkBackgroundStyle}>
-        <Card style={detailStyle}>
-          <Grid container direction="column" style={{...containerStyle, border:'none', margin:'0', width:'inherit'}}>
+      <div style={darkBackgroundStyle} onClick={() => this.setState({ focusedContainer: null })}>
+        <Card style={{...detailStyle, paddingBottom:'20%'}}>
+          <Grid
+            container
+            direction="column"
+            style={{
+              ...containerStyle,
+              border:'none',
+              margin:'0',
+              width:'inherit'
+            }}
+          >
             <Grid item style={{...itemStyle, height:'45px', width:'inherit'}}>
               <div style={{display:'flex', position:'fixed', zIndex:'99', paddingLeft:'2px'}}>
                 <Button style={deleteButtonStyle}>Delete</Button>
@@ -146,7 +163,19 @@ class RecipeDetailEdit extends React.Component {
               }}/>
             </Grid>
           </Grid>
-          <Grid container direction="column" style={containerStyle}>
+          <Grid
+            container
+            direction="column"
+            style={{
+              ...containerStyle,
+              border: this.state.focusedContainer === "ingredients" ? '1px solid #ffe100' : '1px solid white'
+            }}
+            onClick={event => {
+              event.stopPropagation();
+              event.cancelBubble = true;
+              this.setState({ focusedContainer: "ingredients" });
+            }}
+          >
             <Grid item style={itemStyle}>
               <Typography style={sectionTitleStyle}>Ingredients*</Typography>
               <Button
@@ -165,10 +194,23 @@ class RecipeDetailEdit extends React.Component {
                 isEditable={true}
                 addRowMode={this.props.addRowMode}
                 toggleAddRowMode={this.props.toggleAddRowMode}
+                toggleModal={this.props.toggleModal}
               />
             </Grid>
           </Grid>
-          <Grid container direction="column" style={containerStyle}>
+          <Grid
+            container
+            direction="column"
+            style={{
+              ...containerStyle,
+              border: this.state.focusedContainer === "directions" ? '1px solid #ffe100' : '1px solid white'
+            }}
+            onClick={event => {
+              event.stopPropagation();
+              event.cancelBubble = true;
+              this.setState({ focusedContainer: "directions" });
+            }}
+          >
             <Grid item style={itemStyle}>
               <Typography style={sectionTitleStyle}>Directions*</Typography>
               <FormControl component="fieldset" style={rightSideActionStyle}>
@@ -208,7 +250,7 @@ class RecipeDetailEdit extends React.Component {
                     style={{width:'95%', margin:'10px 2.5%'}}
                     variant="outlined"
                     multiline
-                    rowsMax={10}
+                    rowsMax={8}
                     value={this.state.directions.value}
                     onChange={e => this.setState({
                       directions: {
@@ -229,14 +271,19 @@ class RecipeDetailEdit extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    addRowMode: state.detailRecipe.addRowMode
+    addRowMode: state.detailRecipe.addRowMode,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_DETAIL_ADD_ROW_MODE })
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_DETAIL_ADD_ROW_MODE }),
+    toggleModal: (actionName, actionPayload) => {
+      console.log(actionName)
+      console.log(actionPayload);
+      dispatch({ type: TOGGLE_MODAL, actionName, actionPayload })
+    }
   };
 };
 

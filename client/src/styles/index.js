@@ -221,8 +221,8 @@ export const whiteFadeBackgroundStyle = {
 
 export const detailStyle = {
   borderRadius: '0',
-  width: isMobile ? '100vw' : '60vw',
-  left: isMobile ? '0' : '20vw',
+  width: isMobile ? '100vw' : '500px',
+  left: isMobile ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
   overflowY: 'auto',

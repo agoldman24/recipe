@@ -80,7 +80,7 @@ class RecipeDetail extends React.Component {
                       ...fabStyle,
                       position: 'fixed',
                       top: '15px',
-                      right: isMobile ? '0' : '21%'
+                      right: isMobile ? '0' : 'calc(50vw - 240px)'
                     }}
                   >
                     <MenuRoundedIcon
@@ -98,7 +98,7 @@ class RecipeDetail extends React.Component {
                       ...fabStyle,
                       position: 'fixed',
                       top: '60px',
-                      right: isMobile ? '0' : '21%'
+                      right: isMobile ? '0' : 'calc(50vw - 240px)'
                     }}
                     onClick={() => {
                       this.props.toggleDetailView();

@@ -15,6 +15,7 @@ import SearchTab from './tabs/SearchTab';
 import ProfileTab from './profile/ProfileTab';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
+import PromptModal from './popups/PromptModal';
 import {
   SIGN_IN_REQUESTED,
   GET_ALL_USERS,
@@ -98,8 +99,12 @@ class App extends React.Component {
       }>
         <NavigationMenu/>
         <SuccessSnackbar/>
+        <PromptModal/>
         {this.state.showScrollButton &&
-          <ScrollButton scrollButtonTop={recipeTab_notLoggedIn ? '10px' : '60px'}/>
+          <ScrollButton
+            scrollButtonTop={recipeTab_notLoggedIn ? '10px' : '60px'}
+            zIndex={recipeTab_notLoggedIn ? '4' : '3'}
+          />
         }
         {this.props.isSpinnerVisible && <Spinner/>}
         <Container

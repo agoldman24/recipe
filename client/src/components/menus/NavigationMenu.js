@@ -29,10 +29,11 @@ const NavigationMenu = props => {
 
   const fabStyle = {
     position: 'fixed',
-    right: 5,
+    right: 10, top: 5,
     background: 'linear-gradient(to top right, #ff4000, yellow)',
     boxShadow: 'none',
-    color: 'black'
+    color: 'black',
+    zIndex: '5'
   };
 
   return (
@@ -54,14 +55,12 @@ const NavigationMenu = props => {
           <DrawerMenu />
         </Tabs>
       : props.activeTab.name !== WELCOME_TAB
-        ? <div style={navBarStyle}>
-            <Fab
-              style={fabStyle}
-              onClick={() => props.setActiveTab(WELCOME_TAB)}
-            >
-              <HomeTwoToneIcon style={{height:'40', width:'40'}}/>
-            </Fab>
-          </div>
+        ? <Fab
+            style={fabStyle}
+            onClick={() => props.setActiveTab(WELCOME_TAB)}
+          >
+            <HomeTwoToneIcon style={{height:'40', width:'40'}}/>
+          </Fab>
         : null
       }
       </Paper>

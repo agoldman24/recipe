@@ -15,12 +15,13 @@ import SaveIcon from '@material-ui/icons/Save';
 import IngredientsTable from '../tables/IngredientsTable';
 import {
   TOGGLE_DETAIL_EDIT_MODE,
-  TOGGLE_DETAIL_ADD_ROW_MODE,
+  TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
+  TOGGLE_INGREDIENTS_ADD_ROW_MODE,
   TOGGLE_MODAL
 } from '../../actions';
 import {
-  defaultTheme, darkBackgroundStyle, detailStyle,
-  buttonStyle, radioLabelStyle
+  defaultTheme, darkBackgroundStyle, detailStyle, radioLabelStyle,
+  buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
 } from '../../styles';
 import { isMobile } from 'react-device-detect';
 
@@ -48,7 +49,7 @@ const styles = () => ({
 
 const rightSideActionStyle = {
   float: 'right',
-  width: '30%',
+  width: isMobile ? '40%' : '30%',
   margin: '10px 10px 0 0'
 }
 
@@ -65,22 +66,19 @@ const fixedButtonStyle = {
   margin: '10px 0 10px 10px'
 }
 
-const deleteButtonStyle = {
+const fixedDeleteButtonStyle = {
   ...fixedButtonStyle,
-  color: '#ff4621',
-  border: '2px solid #ff4621'
+  ...deleteButtonStyle
 }
 
-const saveButtonStyle = {
+const fixedSaveButtonStyle = {
   ...fixedButtonStyle,
-  color: '#df52ff',
-  border: '2px solid #df52ff'
+  ...saveButtonStyle
 }
 
-const cancelButtonStyle = {
+const fixedCancelButtonStyle = {
   ...fixedButtonStyle,
-  color: '#cccccc',
-  border: '2px solid #cccccc'
+  ...cancelButtonStyle
 }
 
 const containerStyle = {
@@ -140,18 +138,15 @@ class RecipeDetailEdit extends React.Component {
           >
             <Grid item style={{...itemStyle, height:'45px', width:'inherit'}}>
               <div style={{display:'flex', position:'fixed', zIndex:'99', paddingLeft:'2px'}}>
-                <Button style={deleteButtonStyle}>Delete</Button>
-                <Button startIcon={<SaveIcon/>} style={saveButtonStyle}>Save</Button>
-                <Button style={cancelButtonStyle} onClick={() => {
-                    if (this.props.addRowMode ||
-                      (this.tableRef.current && this.tableRef.current.state.lastEditingRow)
-                    ) {
-                      alert('You have unsaved changes!');
-                    } else {
-                      this.props.toggleEditMode();
-                    }
-                  }}
-                >Cancel</Button>
+                <Button style={fixedDeleteButtonStyle}>Delete</Button>
+                <Button startIcon={<SaveIcon/>} style={fixedSaveButtonStyle}>Save</Button>
+                <Button style={fixedCancelButtonStyle} onClick={() => {
+                  if (this.props.addRowMode || this.props.editRowMode) {
+                    alert('You have unsaved changes!')
+                  } else {
+                    this.props.toggleEditMode();
+                  }
+                }}>Cancel</Button>
               </div>
               <div style={{
                 zIndex:'98',
@@ -180,7 +175,8 @@ class RecipeDetailEdit extends React.Component {
               <Typography style={sectionTitleStyle}>Ingredients*</Typography>
               <Button
                 startIcon={<AddIcon/>}
-                style={addButtonStyle}
+                style={{...addButtonStyle, opacity: this.props.editRowMode ? '0.3' : '1.0'}}
+                disabled={this.props.editRowMode}
                 onClick={this.props.toggleAddRowMode}
                 className={this.props.classes.button}
               >
@@ -192,7 +188,10 @@ class RecipeDetailEdit extends React.Component {
                 tableRef={this.tableRef}
                 ingredients={this.props.ingredients}
                 isEditable={true}
+                editMode={this.props.editMode}
+                editRowMode={this.props.editRowMode}
                 addRowMode={this.props.addRowMode}
+                toggleEditRowMode={this.props.toggleEditRowMode}
                 toggleAddRowMode={this.props.toggleAddRowMode}
                 toggleModal={this.props.toggleModal}
               />
@@ -271,14 +270,17 @@ class RecipeDetailEdit extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    addRowMode: state.detailRecipe.addRowMode,
+    editMode: state.detailRecipe.editMode,
+    editRowMode: state.detailRecipe.ingredients.editRowMode,
+    addRowMode: state.detailRecipe.ingredients.addRowMode
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_DETAIL_ADD_ROW_MODE }),
+    toggleEditRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_EDIT_ROW_MODE }),
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE }),
     toggleModal: (actionName, actionPayload) => {
       dispatch({ type: TOGGLE_MODAL, actionName, actionPayload })
     }

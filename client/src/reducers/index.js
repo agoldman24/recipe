@@ -39,7 +39,8 @@ import {
   LOAD_RECIPE_DETAILS_START,
   LOAD_RECIPE_DETAILS_FINISHED,
   TOGGLE_DETAIL_EDIT_MODE,
-  TOGGLE_DETAIL_ADD_ROW_MODE
+  TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
+  TOGGLE_INGREDIENTS_ADD_ROW_MODE
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -147,24 +148,28 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
       return !!action.id
-        ? {
-            ...state,
-            id: action.id
-          }
-        : {
-            id: "",
-            editMode: false,
-            addRowMode: false
-          }
+        ? { ...state, id: action.id }
+        : StateTree.detailRecipe
     case TOGGLE_DETAIL_EDIT_MODE:
       return {
         ...state,
         editMode: !state.editMode
       }
-    case TOGGLE_DETAIL_ADD_ROW_MODE:
+    case TOGGLE_INGREDIENTS_EDIT_ROW_MODE:
       return {
         ...state,
-        addRowMode: !state.addRowMode
+        ingredients: {
+          ...state.ingredients,
+          editRowMode: !state.ingredients.editRowMode
+        }
+      }
+    case TOGGLE_INGREDIENTS_ADD_ROW_MODE:
+      return {
+        ...state,
+        ingredients: {
+          ...state.ingredients,
+          addRowMode: !state.ingredients.addRowMode
+        }
       }
     default:
       return state;

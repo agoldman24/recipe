@@ -1,5 +1,4 @@
 import React from 'react';
-import { isMobile } from 'react-device-detect';
 import MaterialTable, { MTableAction } from "material-table";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
@@ -22,29 +21,28 @@ const columns = [
 });
 
 const IngredientsTable = ({
-  tableRef, ingredients, isEditable, addRowMode, toggleAddRowMode, toggleModal
+  tableRef,
+  ingredients,
+  isEditable,
+  editRowMode,
+  addRowMode,
+  toggleEditRowMode,
+  toggleAddRowMode,
+  toggleModal
 }) => {
-  const [editingRow, setEditingRow] = React.useState(false);
-
   let editable = !isEditable ? null : {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
-        setEditingRow(false);
+        toggleEditRowMode();
         resolve();
       }),
     onRowUpdateCancelled: (newData, oldData) =>
       new Promise((resolve, reject) => {
-        setEditingRow(false);
+        toggleEditRowMode();
         resolve();
       }),
     onRowDelete: oldData =>
       new Promise((resolve, reject) => {
-        setEditingRow(false);
-        resolve();
-      }),
-    onRowDeleteCancelled: oldData =>
-      new Promise((resolve, reject) => {
-        setEditingRow(false);
         resolve();
       })
   };
@@ -70,14 +68,17 @@ const IngredientsTable = ({
         Container: props => <Paper {...props} elevation={0}/>,
         Action: props => {
           const element = typeof props.action === "function" ? props.action(props.data) : props.action;
-          return editingRow
+          return editRowMode
           ? <MTableAction {...props}/>
-          : <Button style={{padding:'12px', minWidth:'0'}}>
+          : <Button
+              style={{padding:'12px', minWidth:'0'}}
+              disabled={addRowMode && !(element.tooltip === "Save" || element.tooltip === "Cancel")}
+            >
               {element.tooltip === "Edit"
               ? <CreateIcon
                   onClick={event => {
                     element.onClick(event, props.data);
-                    setEditingRow(true);
+                    toggleEditRowMode();
                   }}
                 />
               : element.tooltip === "Delete"
@@ -125,7 +126,7 @@ const IngredientsTable = ({
         toolbar: false,
         paging: false,
         addRowPosition: 'first',
-        maxBodyHeight: isMobile ? 'none' : '240px',
+        maxBodyHeight: isEditable ? '240px' : 'none',
         rowStyle: {
           fontSize: 16,
           width: 250
@@ -133,7 +134,7 @@ const IngredientsTable = ({
       }}
       style={{
         width: '100%',
-        padding: isEditable ? '0' : '0 10px 0 20px'
+        padding: isEditable ? '0' : '0 20px'
       }}
     />
   );

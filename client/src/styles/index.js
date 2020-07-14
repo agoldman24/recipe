@@ -164,6 +164,21 @@ export const followingButtonStyle = {
   color: '#00d412'
 }
 
+export const deleteButtonStyle = {
+  color: '#ff4621',
+  border: '2px solid #ff4621'
+}
+
+export const saveButtonStyle = {
+  color: '#df52ff',
+  border: '2px solid #df52ff'
+}
+
+export const cancelButtonStyle = {
+  color: '#cccccc',
+  border: '2px solid #cccccc'
+}
+
 export const iconStyle = {
   width: '30',
   height: '30'
@@ -240,11 +255,11 @@ export const undetailedStyle = {
 export const headerStyle = {
   background: 'white',
   color: 'black',
-  padding: '16px 40px 0 16px'
+  padding: '16px 50px 0 16px'
 }
 
 export const titleStyle = {
-  padding: isMobile ? '20px 20px 20px 10px' : '20px',
+  padding: '20px',
   fontFamily: 'Shadows Into Light',
   width: '50%'
 }

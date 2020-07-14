@@ -61,7 +61,7 @@ const addButtonStyle = {
 
 const fixedButtonStyle = {
   ...buttonStyle,
-  width: isMobile ? '160px' : '100px',
+  width: '100px',
   margin: '10px 0 10px 10px'
 }
 
@@ -127,7 +127,7 @@ class RecipeDetailEdit extends React.Component {
   render() {
     return (
       <div style={darkBackgroundStyle} onClick={() => this.setState({ focusedContainer: null })}>
-        <Card style={{...detailStyle, paddingBottom:'20%'}}>
+        <Card style={{...detailStyle, paddingBottom: isMobile ? '50%' : '20%'}}>
           <Grid
             container
             direction="column"

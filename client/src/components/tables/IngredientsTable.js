@@ -2,7 +2,6 @@ import React from 'react';
 import { isMobile } from 'react-device-detect';
 import MaterialTable, { MTableAction } from "material-table";
 import Paper from "@material-ui/core/Paper";
-import Modal from '@material-ui/core/Modal';
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button"
 import CreateIcon from "@material-ui/icons/Create";
@@ -126,7 +125,7 @@ const IngredientsTable = ({
         toolbar: false,
         paging: false,
         addRowPosition: 'first',
-        maxBodyHeight: '240px',
+        maxBodyHeight: isMobile ? 'none' : '240px',
         rowStyle: {
           fontSize: 16,
           width: 250
@@ -134,7 +133,7 @@ const IngredientsTable = ({
       }}
       style={{
         width: '100%',
-        padding: isMobile || isEditable ? '0': '0 10px 0 20px'
+        padding: isEditable ? '0' : '0 10px 0 20px'
       }}
     />
   );

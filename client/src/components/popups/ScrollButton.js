@@ -12,10 +12,10 @@ export default function ScrollButton({ scrollButtonTop, zIndex }) {
   }
   return (
     <div style={{
-      position:'fixed',
-      width:'100vw',
+      position: 'fixed',
+      width: '100vw',
       top: scrollButtonTop,
-      textAlign:'center',
+      textAlign: 'center',
       zIndex
     }}>
       <Button

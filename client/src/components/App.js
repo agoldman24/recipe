@@ -80,14 +80,26 @@ class App extends React.Component {
   }
 
   render() {
-    const recipeTab_notLoggedIn = !this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
     const mobileStyle = {
-      padding: recipeTab_notLoggedIn ? '0 0 10px 0' : '50px 0 10px',
+      padding: this.props.isLoggedIn
+        ? '50px 0 10px'
+        : this.props.activeTab.name === SEARCH_TAB
+        || this.props.activeTab.name === RECIPE_TAB
+        || this.props.activeTab.name === PROFILE_TAB
+          ? '0 0 10px 0'
+          : '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
     const desktopStyle = {
       position: 'relative',
-      top: recipeTab_notLoggedIn ? '0' : '50px',
+      top: this.props.isLoggedIn ? '50px' :' 0',
+      top: this.props.isLoggedIn
+        ? '50px'
+        : this.props.activeTab.name === SEARCH_TAB
+        || this.props.activeTab.name === RECIPE_TAB
+        || this.props.activeTab.name === PROFILE_TAB
+          ? '0'
+          : '50px',
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 130px)'
         : '100vh',
@@ -100,10 +112,10 @@ class App extends React.Component {
         <NavigationMenu/>
         <SuccessSnackbar/>
         <PromptModal/>
-        {this.state.showScrollButton &&
+        {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
           <ScrollButton
-            scrollButtonTop={recipeTab_notLoggedIn ? '10px' : '60px'}
-            zIndex={recipeTab_notLoggedIn ? '4' : '3'}
+            scrollButtonTop={this.props.isLoggedIn ? '60px' : '10px'}
+            zIndex={!this.props.isLoggedIn ? '2' : '3'}
           />
         }
         {this.props.isSpinnerVisible && <Spinner/>}

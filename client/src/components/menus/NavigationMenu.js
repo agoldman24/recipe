@@ -1,13 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import HomeTwoToneIcon from '@material-ui/icons/HomeTwoTone';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import Fab from '@material-ui/core/Fab';
 import DrawerMenu from './DrawerMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
-import { connect } from 'react-redux';
 import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB } from '../../variables/Constants';
 import { defaultTheme } from '../../styles';
 
@@ -29,11 +30,15 @@ const NavigationMenu = props => {
 
   const fabStyle = {
     position: 'fixed',
-    right: 10, top: 5,
-    background: 'linear-gradient(to top right, #ff4000, yellow)',
+    right: isMobile ? 0 : 10,
+    bottom: isMobile ? 0 : 'intial',
+    top: isMobile ? 'initial' : 5,
+    background: isMobile
+      ? 'linear-gradient(to top left, black, rgba(0,0,0,0))'
+      : 'linear-gradient(to bottom left, black, rgba(0,0,0,0))',
     boxShadow: 'none',
-    color: 'black',
-    zIndex: '5'
+    color: 'white',
+    zIndex: '3'
   };
 
   return (
@@ -59,7 +64,7 @@ const NavigationMenu = props => {
             style={fabStyle}
             onClick={() => props.setActiveTab(WELCOME_TAB)}
           >
-            <HomeTwoToneIcon style={{height:'40', width:'40'}}/>
+            <HomeOutlinedIcon style={{height:'40', width:'40'}}/>
           </Fab>
         : null
       }

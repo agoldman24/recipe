@@ -51,7 +51,7 @@ const styles = () => ({
 
 const rightSideActionStyle = {
   float: 'right',
-  width: isMobile ? '40%' : '30%'
+  width: !isMobile ? '40%' : '30%'
 }
 
 const addButtonStyle = {
@@ -129,7 +129,7 @@ class RecipeDetailEdit extends React.Component {
   render() {
     return (
       <div style={darkBackgroundStyle} onClick={() => this.setState({ focusedContainer: null })}>
-        <Card style={{...detailStyle, paddingBottom: isMobile ? '50%' : '20%'}}>
+        <Card style={{...detailStyle, paddingBottom: !isMobile ? '50%' : '20%'}}>
           <Grid
             container
             direction="column"
@@ -214,8 +214,8 @@ class RecipeDetailEdit extends React.Component {
                   {this.state.focusedContainer === "ingredients"
                   ? <Button
                       startIcon={<AddIcon/>}
-                      style={{...addButtonStyle, opacity: this.props.editRowMode ? '0.3' : '1.0'}}
-                      disabled={this.props.editRowMode}
+                      style={{...addButtonStyle, opacity: this.props.editRowMode || this.props.addRowMode ? '0.3' : '1.0'}}
+                      disabled={this.props.editRowMode || this.props.addRowMode}
                       onClick={() => {
                         document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
                         this.props.toggleAddRowMode();
@@ -233,7 +233,7 @@ class RecipeDetailEdit extends React.Component {
                   }
                 </div>
               </Grid>
-              <Grid id="ingredients" item style={{...itemStyle, maxHeight:'420px', overflow:'auto'}}>
+              <Grid id="ingredients" item style={{...itemStyle, maxHeight:'365px', overflow:'auto'}}>
                 <IngredientsTable
                   tableRef={this.tableRef}
                   ingredients={this.props.ingredients}
@@ -312,7 +312,7 @@ class RecipeDetailEdit extends React.Component {
                       style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
                       variant="outlined"
                       multiline
-                      rowsMax={16}
+                      rowsMax={13}
                       value={this.state.directions.value}
                       onChange={e => this.setState({
                         directions: {

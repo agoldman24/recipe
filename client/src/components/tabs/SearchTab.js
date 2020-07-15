@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     left: 0,
     marginTop: '25px',
-    width: isMobile ? '90%' : '80%',
-    marginLeft: isMobile ? '5%' : '10%',
+    width: !isMobile ? '90%' : '80%',
+    marginLeft: !isMobile ? '5%' : '10%',
   },
   searchIcon: {
     position: 'absolute',

@@ -21,7 +21,7 @@ export default function ScrollButton({ scrollButtonTop, zIndex }) {
       <Button
         style={buttonStyle}
         onClick={() => {
-          const id = isMobile ? 'root' : 'container';
+          const id = !isMobile ? 'root' : 'container';
           document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
         }}
       >

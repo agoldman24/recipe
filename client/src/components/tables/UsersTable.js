@@ -14,8 +14,8 @@ import '../../index.css';
 
 const useStyles = makeStyles({
   table: {
-    marginLeft: isMobile ? '5%' : '10%',
-    width: isMobile ? '90%' : '80%'
+    marginLeft: !isMobile ? '5%' : '10%',
+    width: !isMobile ? '90%' : '80%'
   }
 });
 

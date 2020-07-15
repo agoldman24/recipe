@@ -141,7 +141,7 @@ export const buttonStyle = {
   border: '1px solid white',
   fontSize: '14px',
   padding: '2px',
-  width: isMobile ? '90%' : '40%'
+  width: !isMobile ? '90%' : '40%'
 };
 
 export const backButtonStyle = {
@@ -193,12 +193,12 @@ export const checkIconStyle = {
 }
 
 export const tableStyle = {
-  width: isMobile ? '100%' : '60%',
+  width: !isMobile ? '100%' : '60%',
   margin: 'auto'
 }
 
 export const rowStyle = {
-  width: isMobile ? '100%' : '50%',
+  width: !isMobile ? '100%' : '50%',
   margin: 'auto',
   paddingTop: '20px'
 }
@@ -236,8 +236,8 @@ export const whiteFadeBackgroundStyle = {
 
 export const detailStyle = {
   borderRadius: '0',
-  width: isMobile ? '100vw' : '500px',
-  left: isMobile ? '0' : 'calc(50vw - 250px)',
+  width: !isMobile ? '100vw' : '500px',
+  left: !isMobile ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
   overflowY: 'auto',
@@ -249,7 +249,7 @@ export const undetailedStyle = {
   borderRadius: '0',
   background: '#202020',
   boxShadow: 'none',
-  width: isMobile ? '100vw' : '30vw'
+  width: !isMobile ? '100vw' : '30vw'
 };
 
 export const headerStyle = {

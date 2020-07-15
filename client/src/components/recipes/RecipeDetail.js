@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';

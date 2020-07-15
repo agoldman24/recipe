@@ -1,5 +1,5 @@
 import React from 'react';
-import MaterialTable, { MTableAction } from "material-table";
+import MaterialTable, { MTableHeader, MTableAction } from "material-table";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button"
@@ -66,6 +66,18 @@ const IngredientsTable = ({
       editable={editable}
       components={{
         Container: props => <Paper {...props} elevation={0}/>,
+        Header: props => isEditable ? null : <MTableHeader {...props}/>,
+        EditField: props => (
+          <Input
+            value={props.value}
+            placeholder={props.columnDef.title}
+            onChange={event => props.onChange(event.target.value)}
+            style={{
+              width: '140px',
+              fontSize: '16px'
+            }}
+          />
+        ),
         Action: props => {
           const element = typeof props.action === "function" ? props.action(props.data) : props.action;
           return editRowMode
@@ -104,18 +116,7 @@ const IngredientsTable = ({
                     />
               }
             </Button>
-        },
-        EditField: props => (
-          <Input
-            value={props.value}
-            placeholder={props.columnDef.title}
-            onChange={event => props.onChange(event.target.value)}
-            style={{
-              width: '140px',
-              fontSize: '16px'
-            }}
-          />
-        )
+        }
       }}
       localization={{
         header: {
@@ -126,7 +127,6 @@ const IngredientsTable = ({
         toolbar: false,
         paging: false,
         addRowPosition: 'first',
-        maxBodyHeight: isEditable ? '240px' : 'none',
         rowStyle: {
           fontSize: 16,
           width: 250

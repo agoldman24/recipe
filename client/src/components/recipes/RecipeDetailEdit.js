@@ -1,10 +1,13 @@
 import React, { createRef } from 'react';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
+import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -12,6 +15,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import AddIcon from '@material-ui/icons/Add';
 import SaveIcon from '@material-ui/icons/Save';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IngredientsTable from '../tables/IngredientsTable';
 import {
   TOGGLE_DETAIL_EDIT_MODE,
@@ -20,10 +24,10 @@ import {
   TOGGLE_MODAL
 } from '../../actions';
 import {
-  defaultTheme, darkBackgroundStyle, detailStyle, radioLabelStyle,
+  defaultTheme, darkBackgroundStyle, detailStyle, radioLabelStyle, fabStyle,
   buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
 } from '../../styles';
-import { isMobile } from 'react-device-detect';
+import '../../index.css';
 
 const styles = () => ({
   button: {
@@ -40,24 +44,25 @@ const styles = () => ({
   multilineTextField: {
     padding: '10px 5px 10px 15px'
   },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+  wrapper: {
+    width: '100%'
   }
 });
 
 const rightSideActionStyle = {
   float: 'right',
-  width: isMobile ? '40%' : '30%',
-  margin: '10px 10px 0 0'
+  width: isMobile ? '40%' : '30%'
 }
 
 const addButtonStyle = {
   ...buttonStyle,
-  ...rightSideActionStyle,
+  width: '100%',
   color: '#45bbff',
   border: '2px solid #45bbff'
+}
+
+const expandIconStyle = {
+  marginRight: '10px'
 }
 
 const fixedButtonStyle = {
@@ -95,7 +100,6 @@ const itemStyle = {
 
 const sectionTitleStyle = {
   float: 'left',
-  margin: '10px 0 0 15px',
   color: defaultTheme.palette.primary.main,
   fontSize: '20px'
 }
@@ -105,7 +109,7 @@ class RecipeDetailEdit extends React.Component {
     super();
     this.tableRef = createRef();
     this.state = {
-      focusedContainer: null,
+      focusedContainer: "ingredients",
       directions: {
         type: "",
         value: ""
@@ -158,110 +162,170 @@ class RecipeDetailEdit extends React.Component {
               }}/>
             </Grid>
           </Grid>
-          <Grid
-            container
-            direction="column"
-            style={{
-              ...containerStyle,
-              border: this.state.focusedContainer === "ingredients" ? '1px solid #ffe100' : '1px solid white'
-            }}
-            onClick={event => {
-              event.stopPropagation();
-              event.cancelBubble = true;
-              this.setState({ focusedContainer: "ingredients" });
-            }}
+          <Collapse
+            in={this.state.focusedContainer === "image"}
+            classes={{wrapper: this.props.classes.wrapper}}
+            style={{...containerStyle, border: this.state.focusedContainer === "image" ? '1px solid #ffe100' : '1px solid white'}}
+            collapsedHeight={50}
           >
-            <Grid item style={itemStyle}>
-              <Typography style={sectionTitleStyle}>Ingredients*</Typography>
-              <Button
-                startIcon={<AddIcon/>}
-                style={{...addButtonStyle, opacity: this.props.editRowMode ? '0.3' : '1.0'}}
-                disabled={this.props.editRowMode}
-                onClick={this.props.toggleAddRowMode}
-                className={this.props.classes.button}
-              >
-                Add
-              </Button>
+            <Grid
+              container
+              direction="column"
+              onClick={event => {
+                event.stopPropagation();
+                event.cancelBubble = true;
+                this.setState({ focusedContainer: "image" });
+              }}
+            >
+              <Grid item style={{...itemStyle, padding:'10px'}}>
+                <Typography style={sectionTitleStyle}>Image*</Typography>
+                <div style={rightSideActionStyle}>
+                  {this.state.focusedContainer === "image"
+                  ? null
+                  : <Fab
+                      style={{...fabStyle, ...expandIconStyle, color:'white', float:'right', height:'0', width:'0'}}
+                      onClick={() => this.setState({ focusedContainer: "image" })}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
+                </div>
+              </Grid>
             </Grid>
-            <Grid item style={itemStyle}>
-              <IngredientsTable
-                tableRef={this.tableRef}
-                ingredients={this.props.ingredients}
-                isEditable={true}
-                editMode={this.props.editMode}
-                editRowMode={this.props.editRowMode}
-                addRowMode={this.props.addRowMode}
-                toggleEditRowMode={this.props.toggleEditRowMode}
-                toggleAddRowMode={this.props.toggleAddRowMode}
-                toggleModal={this.props.toggleModal}
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="column"
-            style={{
-              ...containerStyle,
-              border: this.state.focusedContainer === "directions" ? '1px solid #ffe100' : '1px solid white'
-            }}
-            onClick={event => {
-              event.stopPropagation();
-              event.cancelBubble = true;
-              this.setState({ focusedContainer: "directions" });
-            }}
+          </Collapse>
+          <Collapse
+            in={this.state.focusedContainer === "ingredients"}
+            classes={{wrapper: this.props.classes.wrapper}}
+            style={{...containerStyle, border: this.state.focusedContainer === "ingredients" ? '1px solid #ffe100' : '1px solid white'}}
+            collapsedHeight={50}
           >
-            <Grid item style={itemStyle}>
-              <Typography style={sectionTitleStyle}>Directions*</Typography>
-              <FormControl component="fieldset" style={rightSideActionStyle}>
-                <RadioGroup
-                  value={this.state.directions.type}
-                  onChange={e => this.setState({
-                    directions: {
-                      ...this.state.directions,
-                      type: e.target.value
-                    }
-                  })}
-                >
-                  <FormControlLabel
-                    value="step-by-step"
-                    control={<Radio color="primary" />}
-                    label="Step-by-Step"
-                    style={radioLabelStyle(this.state, "step-by-step")}
-                  />
-                  <FormControlLabel
-                    value="paragraph"
-                    control={<Radio color="primary" />}
-                    label="Paragraph"
-                    style={radioLabelStyle(this.state, "paragraph")}
-                  />
-                </RadioGroup>
-              </FormControl>
+            <Grid
+              container
+              direction="column"
+              onClick={event => {
+                event.stopPropagation();
+                event.cancelBubble = true;
+                this.setState({ focusedContainer: "ingredients" });
+              }}
+            >
+              <Grid item style={{...itemStyle, padding:'10px'}}>
+                <Typography style={sectionTitleStyle}>Ingredients*</Typography>
+                <div style={rightSideActionStyle}>
+                  {this.state.focusedContainer === "ingredients"
+                  ? <Button
+                      startIcon={<AddIcon/>}
+                      style={{...addButtonStyle, opacity: this.props.editRowMode ? '0.3' : '1.0'}}
+                      disabled={this.props.editRowMode}
+                      onClick={() => {
+                        document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
+                        this.props.toggleAddRowMode();
+                      }}
+                      className={this.props.classes.button}
+                    >
+                      Add
+                    </Button>
+                  : <Fab
+                      style={{...fabStyle, ...expandIconStyle, color:'white', float:'right', height:'0', width:'0'}}
+                      onClick={() => this.setState({ focusedContainer: "ingredients" })}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
+                </div>
+              </Grid>
+              <Grid id="ingredients" item style={{...itemStyle, maxHeight:'420px', overflow:'auto'}}>
+                <IngredientsTable
+                  tableRef={this.tableRef}
+                  ingredients={this.props.ingredients}
+                  isEditable={true}
+                  editMode={this.props.editMode}
+                  editRowMode={this.props.editRowMode}
+                  addRowMode={this.props.addRowMode}
+                  toggleEditRowMode={this.props.toggleEditRowMode}
+                  toggleAddRowMode={this.props.toggleAddRowMode}
+                  toggleModal={this.props.toggleModal}
+                />
+              </Grid>
             </Grid>
-            <Grid item style={itemStyle}>
-              {this.state.directions.type === "paragraph"
-                ? <TextField
-                    InputProps={{
-                      classes: {
-                        root: this.props.classes.multilineTextField,
-                        input: this.props.classes.inputText
-                      }
-                    }}
-                    style={{width:'95%', margin:'10px 2.5%'}}
-                    variant="outlined"
-                    multiline
-                    rowsMax={8}
-                    value={this.state.directions.value}
-                    onChange={e => this.setState({
-                      directions: {
-                        ...this.state.directions,
-                        value: e.target.value
-                      }
-                    })}
-                  />
-                : null
-              }
+          </Collapse>
+          <Collapse
+            in={this.state.focusedContainer === "directions"}
+            classes={{wrapper: this.props.classes.wrapper}}
+            style={{...containerStyle, border: this.state.focusedContainer === "directions" ? '1px solid #ffe100' : '1px solid white'}}
+            collapsedHeight={50}
+          >
+            <Grid
+              container
+              direction="column"
+              onClick={event => {
+                event.stopPropagation();
+                event.cancelBubble = true;
+                this.setState({ focusedContainer: "directions" });
+              }}
+            >
+              <Grid item style={{...itemStyle, padding:'10px'}}>
+                <Typography style={sectionTitleStyle}>Directions*</Typography>
+                <div style={rightSideActionStyle}>
+                  {this.state.focusedContainer === "directions"
+                  ? <FormControl component="fieldset">
+                      <RadioGroup
+                        value={this.state.directions.type}
+                        onChange={e => this.setState({
+                          directions: {
+                            ...this.state.directions,
+                            type: e.target.value
+                          }
+                        })}
+                      >
+                        <FormControlLabel
+                          value="step-by-step"
+                          control={<Radio color="primary" />}
+                          label="Step-by-Step"
+                          style={radioLabelStyle(this.state, "step-by-step")}
+                        />
+                        <FormControlLabel
+                          value="paragraph"
+                          control={<Radio color="primary" />}
+                          label="Paragraph"
+                          style={radioLabelStyle(this.state, "paragraph")}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  : <Fab
+                      style={{...fabStyle, ...expandIconStyle, color:'white', float:'right', height:'0', width:'0'}}
+                      onClick={() => this.setState({ focusedContainer: "directions" })}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
+                  </div>
+              </Grid>
+              <Grid item style={itemStyle}>
+                {this.state.directions.type === "paragraph"
+                  ? <TextField
+                      InputProps={{
+                        classes: {
+                          root: this.props.classes.multilineTextField,
+                          input: this.props.classes.inputText
+                        }
+                      }}
+                      style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
+                      variant="outlined"
+                      multiline
+                      rowsMax={16}
+                      value={this.state.directions.value}
+                      onChange={e => this.setState({
+                        directions: {
+                          ...this.state.directions,
+                          value: e.target.value
+                        }
+                      })}
+                    />
+                  : null
+                }
+              </Grid>
             </Grid>
-          </Grid>
+          </Collapse>
         </Card>
       </div>
     );

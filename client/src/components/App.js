@@ -92,7 +92,6 @@ class App extends React.Component {
     };
     const desktopStyle = {
       position: 'relative',
-      top: this.props.isLoggedIn ? '50px' :' 0',
       top: this.props.isLoggedIn
         ? '50px'
         : this.props.activeTab.name === SEARCH_TAB

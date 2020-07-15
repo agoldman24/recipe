@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2),
-    width: !isMobile ? '90%' : '40%'
+    width: isMobile ? '90%' : '40%'
   },
   button: {
     float: 'right',

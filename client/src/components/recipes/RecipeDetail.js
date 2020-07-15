@@ -78,7 +78,7 @@ class RecipeDetail extends React.Component {
                     ...fabStyle,
                     position: 'fixed',
                     top: '15px',
-                    right: !isMobile ? '0' : 'calc(50vw - 240px)'
+                    right: isMobile ? '0' : 'calc(50vw - 240px)'
                   }}
                 >
                   <MenuRoundedIcon
@@ -97,7 +97,7 @@ class RecipeDetail extends React.Component {
                   ...fabStyle,
                   position: 'fixed',
                   top: '60px',
-                  right: !isMobile ? '0' : 'calc(50vw - 240px)'
+                  right: isMobile ? '0' : 'calc(50vw - 240px)'
                 }}
                 onClick={() => {
                   this.props.toggleDetailView();
@@ -137,7 +137,7 @@ class RecipeDetail extends React.Component {
               toggleAddRowMode={this.props.toggleAddRowMode}
             />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
-            <div style={{paddingLeft: !isMobile ? '5px' : '0'}}>
+            <div style={{paddingLeft: isMobile ? '5px' : '0'}}>
               <Typography style={sectionStyle}>{this.props.directions}</Typography>
             </div>
           </CardMedia>

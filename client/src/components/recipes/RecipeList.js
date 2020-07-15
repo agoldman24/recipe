@@ -11,16 +11,16 @@ import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../../varia
 
 const RecipeList = props => {
   return (
-    <div style={{paddingBottom: !isMobile ? '100px' : '30px'}}>
+    <div style={{paddingBottom: isMobile ? '100px' : '30px'}}>
       <Grid
         container
-        direction={!isMobile ? "column" : "row"}
+        direction={isMobile ? "column" : "row"}
         justify="center"
       >
         {props.recipes.map(recipe => {
           return (
             <Grid item key={recipe.id}
-              style={{padding: !isMobile ? '0' : '10px 5px 0 5px'}}
+              style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
             >
               {props.isDetailVisible && props.detailRecipeId === recipe.id
                 ? props.editMode

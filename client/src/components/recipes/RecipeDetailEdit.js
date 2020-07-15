@@ -51,7 +51,7 @@ const styles = () => ({
 
 const rightSideActionStyle = {
   float: 'right',
-  width: !isMobile ? '40%' : '30%'
+  width: isMobile ? '40%' : '30%'
 }
 
 const addButtonStyle = {
@@ -129,7 +129,7 @@ class RecipeDetailEdit extends React.Component {
   render() {
     return (
       <div style={darkBackgroundStyle} onClick={() => this.setState({ focusedContainer: null })}>
-        <Card style={{...detailStyle, paddingBottom: !isMobile ? '50%' : '20%'}}>
+        <Card style={{...detailStyle, paddingBottom: isMobile ? '50%' : '20%'}}>
           <Grid
             container
             direction="column"

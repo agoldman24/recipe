@@ -42,7 +42,7 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
-    const id = !isMobile ? 'root' : 'container';
+    const id = isMobile ? 'root' : 'container';
     document.getElementById(id).addEventListener('scroll', this.handleScroll);
     this.props.getAllUsers();
     const activeUserId = localStorage.getItem("activeUserId");
@@ -72,7 +72,7 @@ class App extends React.Component {
     }
   }
   handleScroll = () => {
-    const id = !isMobile ? 'root' : 'container';
+    const id = isMobile ? 'root' : 'container';
     const isScrollButtonVisible = !!document.getElementById(id).scrollTop;
     if (isScrollButtonVisible !== this.state.showScrollButton) {
       this.setState({ showScrollButton: isScrollButtonVisible });
@@ -121,8 +121,8 @@ class App extends React.Component {
         <Container
           id="container"
           component="main"
-          maxWidth={!isMobile ? "xs" : false}
-          style={!isMobile ? mobileStyle : desktopStyle}
+          maxWidth={isMobile ? "xs" : false}
+          style={isMobile ? mobileStyle : desktopStyle}
         >
           <CssBaseline />
           {this.props.activeTab.name === SEARCH_TAB && <SearchTab/>}

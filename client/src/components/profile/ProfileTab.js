@@ -181,7 +181,7 @@ const ProfileTab = props => {
                   Edit Profile
                 </Button>
               : activeUser.followingIds.includes(id)
-                ? <div style={{width: !isMobile ? '100%' : '50%'}}>
+                ? <div style={{width: isMobile ? '100%' : '50%'}}>
                     <Button
                       onClick={() => updateFollowingIds(activeUser.id, id, false)}
                       style={unfollowButtonStyle}

@@ -272,9 +272,23 @@ export const sectionStyle = {
   lineHeight: '2'
 }
 
-export const radioLabelStyle = (state, dirType) => ({
+export const radioLabelStyle = (dirType, type) => ({
   height: '25px',
-  color: state.directions.type === dirType
+  color: dirType === type
     ? defaultTheme.palette.primary.main
     : 'white'
 });
+
+export const containerStyle = {
+  border: '1px solid white',
+  borderRadius: '5px',
+  margin: '10px',
+  width: 'initial'
+}
+
+export const borderStyle = (focusedContainer, container, isDisabled) => ({
+  ...containerStyle,
+  border: focusedContainer === container
+    ? '1px solid #ffe100'
+    : isDisabled ? '1px solid rgba(255,255,255,0.3)' : '1px solid white'
+})

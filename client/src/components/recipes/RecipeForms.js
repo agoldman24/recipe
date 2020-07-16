@@ -16,7 +16,6 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IngredientsTable from '../tables/IngredientsTable';
 import {
-  TOGGLE_DETAIL_EDIT_MODE,
   TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
   TOGGLE_INGREDIENTS_ADD_ROW_MODE,
   TOGGLE_MODAL
@@ -264,7 +263,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
     toggleEditRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_EDIT_ROW_MODE }),
     toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE }),
     toggleModal: (actionName, actionPayload) => {

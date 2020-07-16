@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 import RecipeForms from './RecipeForms';
+import { TOGGLE_DETAIL_EDIT_MODE } from '../../actions';
 import {
   darkBackgroundStyle, detailStyle, containerStyle,
   buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
@@ -125,7 +126,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {};
+const mapDispatchToProps = dispatch => ({
+  toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
+});
 
 export default connect(
   mapStateToProps,

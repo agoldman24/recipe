@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -20,13 +21,14 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2),
-    width: '400px'
+    width: isMobile ? '250px' : '400px'
   },
   button: {
     float: 'right',
     height: '30px',
     margin: '10px 0 0 10px',
-    fontWeight: 'bold',
+    padding: '5px 10px',
+    fontWeight: 'bold'
   }
 }));
 

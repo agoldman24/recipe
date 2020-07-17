@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -21,7 +21,7 @@ import {
   TOGGLE_MODAL
 } from '../../actions';
 import {
-  defaultTheme, borderStyle, radioLabelStyle, fabStyle, buttonStyle
+  borderStyle, sectionTitleStyle, radioLabelStyle, fabStyle, buttonStyle
 } from '../../styles';
 
 const useStyles = makeStyles(() => ({
@@ -30,7 +30,8 @@ const useStyles = makeStyles(() => ({
   },
   inputText: {
     fontSize: '16px',
-    lineHeight: '1.5'
+    lineHeight: '1.5',
+    padding: '15px 10px'
   },
   multilineTextField: {
     padding: '10px 5px 10px 15px'
@@ -64,26 +65,55 @@ const itemStyle = {
   width: '100%'
 }
 
-const sectionTitleStyle = {
-  float: 'left',
-  color: defaultTheme.palette.primary.main,
-  fontSize: '20px'
-}
+const CssTextField = withStyles({
+  root: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white',
+      }
+    },
+  },
+})(TextField);
 
 const RecipeForms = props => {
   const classes = useStyles();
-  const [focusedContainer, setFocusedContainer] = React.useState("ingredients");
-  const [directions, setDirections] = React.useState(props.directions);
-  const [dirType, setDirType] = React.useState("paragraph");
+  const [isNameFocused, setIsNameFocused] = useState(false);
+  const [focusedContainer, setFocusedContainer] = useState("ingredients");
+  const [name, setName] = useState(props.name);
+  const [directions, setDirections] = useState(props.directions);
+  const [dirType, setDirType] = useState("paragraph");
   const containersDisabled = props.editRowMode || props.addRowMode;
-  console.log("containers disabled:", containersDisabled);
-  console.log("focusedContainer:", focusedContainer);
   return (
     <div>
+      <div style={{display:'flex', margin:'15px 10px 10px 10px'}}>
+        <CssTextField
+          InputProps={{
+            classes: {
+              input: classes.inputText
+            }
+          }}
+          style={{
+            border: containersDisabled ? '1px solid rgba(255,255,255,0.3)' : '1px solid white'
+          }}
+          variant="outlined"
+          required
+          fullWidth
+          label="Name"
+          type="name"
+          value={name}
+          onClick={() => setIsNameFocused(true)}
+          onChange={e => setName(e.target.value)}
+        />
+      </div>
       <Collapse
         in={focusedContainer === "image"}
         classes={{wrapper: classes.wrapper}}
-        style={borderStyle(focusedContainer, "image", containersDisabled && focusedContainer !== "image")}
+        style={borderStyle(
+          focusedContainer,
+          "image",
+          containersDisabled && focusedContainer !== "image",
+          isNameFocused
+        )}
         collapsedHeight={50}
       >
         <Grid
@@ -94,20 +124,28 @@ const RecipeForms = props => {
             opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'
           }}
           onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "image"))
-              setFocusedContainer("image")
+            if (!(containersDisabled && focusedContainer !== "image")) {
+              setIsNameFocused(false);
+              setFocusedContainer("image");
+            }
           }}
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
-            <Typography style={sectionTitleStyle}>Image*</Typography>
+            <Typography
+              style={sectionTitleStyle(focusedContainer, "image", isNameFocused)}
+            >
+              Image*
+            </Typography>
             <div style={rightSideActionStyle}>
               {focusedContainer === "image"
               ? null
               : <Fab
                   style={expandIconStyle}
                   onClick={() => {
-                    if (!(containersDisabled && focusedContainer !== "image"))
-                      setFocusedContainer("image")
+                    if (!(containersDisabled && focusedContainer !== "image")) {
+                      setIsNameFocused(false);
+                      setFocusedContainer("image");
+                    }
                   }}
                 >
                   <ExpandMoreIcon />
@@ -120,7 +158,12 @@ const RecipeForms = props => {
       <Collapse
         in={focusedContainer === "ingredients"}
         classes={{wrapper: classes.wrapper}}
-        style={borderStyle(focusedContainer, "ingredients", containersDisabled && focusedContainer !== "ingredients")}
+        style={borderStyle(
+          focusedContainer,
+          "ingredients",
+          containersDisabled && focusedContainer !== "ingredients",
+          isNameFocused
+        )}
         collapsedHeight={50}
       >
         <Grid
@@ -128,12 +171,18 @@ const RecipeForms = props => {
           direction="column"
           style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
           onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "ingredients"))
-              setFocusedContainer("ingredients")
+            if (!(containersDisabled && focusedContainer !== "ingredients")) {
+              setIsNameFocused(false);
+              setFocusedContainer("ingredients");
+            }
           }}
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
-            <Typography style={sectionTitleStyle}>Ingredients*</Typography>
+            <Typography
+              style={sectionTitleStyle(focusedContainer, "ingredients", isNameFocused)}
+            >
+              Ingredients*
+            </Typography>
             <div style={rightSideActionStyle}>
               {focusedContainer === "ingredients"
               ? <Button
@@ -154,8 +203,10 @@ const RecipeForms = props => {
               : <Fab
                   style={expandIconStyle}
                   onClick={() => {
-                    if (!(containersDisabled && focusedContainer !== "ingredients"))
-                      setFocusedContainer("ingredients")
+                    if (!(containersDisabled && focusedContainer !== "ingredients")) {
+                      setIsNameFocused(false);
+                      setFocusedContainer("ingredients");
+                    }
                   }}
                 >
                   <ExpandMoreIcon />
@@ -181,7 +232,12 @@ const RecipeForms = props => {
       <Collapse
         in={focusedContainer === "directions"}
         classes={{wrapper: classes.wrapper}}
-        style={borderStyle(focusedContainer, "directions", containersDisabled && focusedContainer !== "directions")}
+        style={borderStyle(
+          focusedContainer,
+          "directions",
+          containersDisabled && focusedContainer !== "directions",
+          isNameFocused
+        )}
         collapsedHeight={50}
       >
         <Grid
@@ -189,12 +245,18 @@ const RecipeForms = props => {
           direction="column"
           style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
           onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "directions"))
-              setFocusedContainer("directions")
+            if (!(containersDisabled && focusedContainer !== "directions")) {
+              setIsNameFocused(false);
+              setFocusedContainer("directions");
+            }
           }}
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
-            <Typography style={sectionTitleStyle}>Directions*</Typography>
+            <Typography
+              style={sectionTitleStyle(focusedContainer, "directions", isNameFocused)}
+            >
+              Directions*
+            </Typography>
             <div style={rightSideActionStyle}>
               {focusedContainer === "directions"
               ? <FormControl component="fieldset">
@@ -219,8 +281,10 @@ const RecipeForms = props => {
               : <Fab
                   style={expandIconStyle}
                   onClick={() => {
-                    if (!(containersDisabled && focusedContainer !== "directions"))
-                      setFocusedContainer("directions")
+                    if (!(containersDisabled && focusedContainer !== "directions")) {
+                      setIsNameFocused(false);
+                      setFocusedContainer("directions");
+                    }
                   }}
                 >
                   <ExpandMoreIcon />

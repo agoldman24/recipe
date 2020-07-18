@@ -32,18 +32,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PromptModal = ({ modal, toggleModal }) => {
+const PromptModal = ({ isVisible, toggleModal, message, onConfirm, onConfirmParam }) => {
   const classes = useStyles();
-  const message = modal.isVisible
-    ? "Are you sure you want to delete item '" + modal.actionPayload.item + "'?"
-    : "";
+  console.log("onConfirm:", onConfirm)
   return (
     <div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={modal.isVisible}
+        open={isVisible}
         onClose={toggleModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -51,14 +49,26 @@ const PromptModal = ({ modal, toggleModal }) => {
           timeout: 500,
         }}
       >
-        <Fade in={modal.isVisible}>
+        <Fade in={isVisible}>
           <Grid container direction="column" className={classes.paper}>
             <Grid item>
               <h3 id="transition-modal-title">{message}</h3>
             </Grid>
             <Grid item>
-              <Button className={classes.button} style={deleteButtonStyle}>Delete</Button>
-              <Button className={classes.button} style={cancelButtonStyle}>Cancel</Button>
+              <Button
+                className={classes.button}
+                style={deleteButtonStyle}
+                onClick={() => onConfirm(onConfirmParam)}
+              >
+                Delete
+              </Button>
+              <Button
+                className={classes.button}
+                style={cancelButtonStyle}
+                onClick={() => toggleModal(false)}
+              >
+                Cancel
+              </Button>
             </Grid>
           </Grid>
         </Fade>
@@ -67,19 +77,4 @@ const PromptModal = ({ modal, toggleModal }) => {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    modal: state.modal
-  };
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleModal: () => dispatch({ type: TOGGLE_MODAL })
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PromptModal);
+export default PromptModal;

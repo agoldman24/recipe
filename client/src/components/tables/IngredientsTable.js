@@ -7,7 +7,6 @@ import CreateIcon from "@material-ui/icons/Create";
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { DELETE_INGREDIENT } from '../../actions';
 
 const columns = [
   { title: "Item", field: "item" },
@@ -28,11 +27,15 @@ const IngredientsTable = ({
   addRowMode,
   toggleEditRowMode,
   toggleAddRowMode,
-  toggleModal
+  toggleModal,
+  onIngredientChange,
+  onIngredientAdd,
+  onIngredientDelete
 }) => {
   let editable = !isEditable ? null : {
     onRowUpdate: (newData, oldData) =>
       new Promise((resolve, reject) => {
+        onIngredientChange(newData);
         toggleEditRowMode();
         resolve();
       }),
@@ -52,6 +55,7 @@ const IngredientsTable = ({
       ...editable,
       onRowAdd: newData =>
         new Promise((resolve, reject) => {
+          onIngredientAdd({ ...newData, index: 0 });
           toggleAddRowMode();
           resolve();
         }),
@@ -95,13 +99,10 @@ const IngredientsTable = ({
                 />
               : element.tooltip === "Delete"
                 ? <DeleteOutlineIcon
-                    onClick={() => toggleModal(
-                      DELETE_INGREDIENT,
-                      {
-                        index: props.data.index,
-                        item: props.data.item
-                      }
-                    )}
+                    onClick={() => {
+                      console.log("index:", props.data.index)
+                      onIngredientDelete(props.data.index)
+                    }}
                   />
                 : element.tooltip === "Save"
                   ? <CheckIcon

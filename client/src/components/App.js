@@ -15,7 +15,6 @@ import SearchTab from './tabs/SearchTab';
 import ProfileTab from './profile/ProfileTab';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
-import PromptModal from './popups/PromptModal';
 import {
   SIGN_IN_REQUESTED,
   GET_ALL_USERS,
@@ -110,7 +109,6 @@ class App extends React.Component {
       }>
         <NavigationMenu/>
         <SuccessSnackbar/>
-        <PromptModal/>
         {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
           <ScrollButton
             scrollButtonTop={this.props.isLoggedIn ? '60px' : '10px'}

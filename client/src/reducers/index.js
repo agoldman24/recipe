@@ -396,21 +396,6 @@ export const snackbar = (state = StateTree.snackbar, action) => {
   }
 }
 
-export const modal = (state = StateTree.modal, action) => {
-  switch (action.type) {
-    case TOGGLE_MODAL:
-      return state.isVisible
-        ? StateTree.modal
-        : {
-            isVisible: true,
-            actionName: action.actionName,
-            actionPayload: action.actionPayload
-          }
-      default:
-        return state;
-  }
-}
-
 const profileEditor = (state = StateTree.profileEditor, action) => {
   switch (action.type) {
     case TOGGLE_PROFILE_EDITOR:
@@ -507,7 +492,6 @@ export default combineReducers({
   isHydrated,
   errorMessages,
   snackbar,
-  modal,
   users,
   activeUser,
   displayUser,

@@ -15,6 +15,7 @@ import FormControl from '@material-ui/core/FormControl';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IngredientsTable from '../tables/IngredientsTable';
+import PromptModal from '../popups/PromptModal';
 import {
   TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
   TOGGLE_INGREDIENTS_ADD_ROW_MODE,
@@ -77,14 +78,45 @@ const CssTextField = withStyles({
 
 const RecipeForms = props => {
   const classes = useStyles();
+  const [isModalVisible, setModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState("ingredients");
   const [name, setName] = useState(props.name);
   const [directions, setDirections] = useState(props.directions);
   const [dirType, setDirType] = useState("paragraph");
+  const [ingredients, setIngredients] = useState(props.ingredients);
+  const [deletedIndex, setDeletedIndex] = useState(0);
   const containersDisabled = props.editRowMode || props.addRowMode;
+  console.log(ingredients);
+  const handleIngredientChange = ingredient => {
+    let newIngredients = [...ingredients];
+    newIngredients[ingredient.index] = ingredient;
+    setIngredients(newIngredients);
+  }
+  const handleIngredientAdd = ingredient => {
+    let newIngredients = ingredients.map(i => ({ ...i, index: i.index + 1 }));
+    setIngredients([ingredient, ...newIngredients]);
+  }
+  const handleIngredientDelete = index => {
+    setIngredients(ingredients.reduce((accum, ingredient) => {
+      if (ingredient.index !== index) {
+        accum.push(ingredient)
+      }
+      return accum;
+    }, []).map((ingredient, index) => ({
+      ...ingredient, index
+    })));
+    setModalVisible(false);
+  }
   return (
     <div>
+      <PromptModal
+        isVisible={isModalVisible}
+        toggleModal={setModalVisible}
+        onConfirm={handleIngredientDelete}
+        onConfirmParam={deletedIndex}
+        message={"Are you sure you want to delete item '" + ingredients[deletedIndex].item + "'?"}
+      />
       <div style={{display:'flex', margin:'15px 10px 10px 10px'}}>
         <CssTextField
           InputProps={{
@@ -93,7 +125,7 @@ const RecipeForms = props => {
             }
           }}
           style={{
-            border: containersDisabled ? '1px solid rgba(255,255,255,0.3)' : '1px solid white'
+            opacity: containersDisabled ? '0.3' : '1.0'
           }}
           variant="outlined"
           required
@@ -120,7 +152,7 @@ const RecipeForms = props => {
           container
           direction="column"
           style={{
-            height: '400px',
+            height: '365px',
             opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'
           }}
           onClick={() => {
@@ -214,10 +246,10 @@ const RecipeForms = props => {
               }
             </div>
           </Grid>
-          <Grid id="ingredients" item style={{...itemStyle, maxHeight:'365px', overflow:'auto'}}>
+          <Grid id="ingredients" item style={{...itemStyle, maxHeight:'320px', overflow:'auto'}}>
             <IngredientsTable
               tableRef={props.tableRef}
-              ingredients={props.ingredients}
+              ingredients={ingredients}
               isEditable={true}
               editMode={props.editMode}
               editRowMode={props.editRowMode}
@@ -225,6 +257,12 @@ const RecipeForms = props => {
               toggleEditRowMode={props.toggleEditRowMode}
               toggleAddRowMode={props.toggleAddRowMode}
               toggleModal={props.toggleModal}
+              onIngredientChange={handleIngredientChange}
+              onIngredientAdd={handleIngredientAdd}
+              onIngredientDelete={i => {
+                setDeletedIndex(i);
+                setModalVisible(true);
+              }}
             />
           </Grid>
         </Grid>
@@ -304,7 +342,7 @@ const RecipeForms = props => {
                   style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
                   variant="outlined"
                   multiline
-                  rowsMax={13}
+                  rowsMax={10}
                   value={directions}
                   onChange={e => setDirections(e.target.value)}
                 />

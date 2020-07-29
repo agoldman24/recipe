@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -7,7 +6,6 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { TOGGLE_MODAL } from '../../actions';
 import { deleteButtonStyle, cancelButtonStyle } from '../../styles';
 
 const useStyles = makeStyles(theme => ({
@@ -34,7 +32,6 @@ const useStyles = makeStyles(theme => ({
 
 const PromptModal = ({ isVisible, toggleModal, message, onConfirm, onConfirmParam }) => {
   const classes = useStyles();
-  console.log("onConfirm:", onConfirm)
   return (
     <div>
       <Modal

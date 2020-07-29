@@ -5,6 +5,9 @@ import { makeStyles, withStyles } from '@material-ui/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Card from '@material-ui/core/Card';
+import CardMedia from '@material-ui/core/CardMedia';
+import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
@@ -14,20 +17,25 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import {
   TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
-  TOGGLE_INGREDIENTS_ADD_ROW_MODE,
-  TOGGLE_MODAL
+  TOGGLE_INGREDIENTS_ADD_ROW_MODE
 } from '../../actions';
 import {
-  borderStyle, sectionTitleStyle, radioLabelStyle, fabStyle, buttonStyle
+  borderStyle, sectionTitleStyle, radioLabelStyle, fabStyle, buttonStyle, iconStyle
 } from '../../styles';
 
 const useStyles = makeStyles(() => ({
   button: {
     textTransform: 'none'
+  },
+  paper: {
+    borderRadius: '4px 0 4px 4px',
+    border: '1px solid white',
+    marginTop: '3px'
   },
   inputText: {
     fontSize: '16px',
@@ -81,22 +89,26 @@ const RecipeForms = props => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState("ingredients");
+  const [anchorEl, setAnchorEl] = useState(null);
   const [name, setName] = useState(props.name);
+  const [image, setImage] = useState(props.image);
   const [directions, setDirections] = useState(props.directions);
   const [dirType, setDirType] = useState("paragraph");
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [deletedIndex, setDeletedIndex] = useState(0);
   const containersDisabled = props.editRowMode || props.addRowMode;
-  console.log(ingredients);
+
   const handleIngredientChange = ingredient => {
     let newIngredients = [...ingredients];
     newIngredients[ingredient.index] = ingredient;
     setIngredients(newIngredients);
   }
+
   const handleIngredientAdd = ingredient => {
     let newIngredients = ingredients.map(i => ({ ...i, index: i.index + 1 }));
     setIngredients([ingredient, ...newIngredients]);
   }
+
   const handleIngredientDelete = index => {
     setIngredients(ingredients.reduce((accum, ingredient) => {
       if (ingredient.index !== index) {
@@ -108,6 +120,7 @@ const RecipeForms = props => {
     })));
     setModalVisible(false);
   }
+
   return (
     <div>
       <PromptModal
@@ -124,9 +137,7 @@ const RecipeForms = props => {
               input: classes.inputText
             }
           }}
-          style={{
-            opacity: containersDisabled ? '0.3' : '1.0'
-          }}
+          style={{opacity: containersDisabled ? '0.3' : '1.0'}}
           variant="outlined"
           required
           fullWidth
@@ -147,22 +158,19 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
+        onClick={() => {
+          if (!(containersDisabled && focusedContainer !== "image")) {
+            setIsNameFocused(false);
+            setFocusedContainer("image");
+          }
+        }}
       >
         <Grid
           container
           direction="column"
-          style={{
-            height: '365px',
-            opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'
-          }}
-          onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "image")) {
-              setIsNameFocused(false);
-              setFocusedContainer("image");
-            }
-          }}
+          style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
         >
-          <Grid item style={{...itemStyle, padding:'10px'}}>
+          <Grid item style={{...itemStyle, padding:'10px 10px 5px 10px'}}>
             <Typography
               style={sectionTitleStyle(focusedContainer, "image", isNameFocused)}
             >
@@ -170,7 +178,18 @@ const RecipeForms = props => {
             </Typography>
             <div style={rightSideActionStyle}>
               {focusedContainer === "image"
-              ? null
+              ? <Fab
+                  style={expandIconStyle}
+                  onClick={e => setAnchorEl(e.currentTarget)}
+                >
+                  <MenuRoundedIcon
+                    style={{
+                      ...iconStyle,
+                      background: !!anchorEl ? '#292929' : 'none',
+                      border: !!anchorEl ? '1px solid white' : 'none'
+                    }}
+                  />
+                </Fab>
               : <Fab
                   style={expandIconStyle}
                   onClick={() => {
@@ -186,6 +205,16 @@ const RecipeForms = props => {
             </div>
           </Grid>
         </Grid>
+        <Card style={{padding:'0 10px', marginRight:'0.1px'}}>
+          <CardMedia
+            image={image}
+            style={{
+              height:'320px',
+              padding:'0',
+              borderRadius:'10px 10px 0 0'
+            }}
+          />
+        </Card>
       </Collapse>
       <Collapse
         in={focusedContainer === "ingredients"}
@@ -197,17 +226,17 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
+        onClick={() => {
+          if (!(containersDisabled && focusedContainer !== "ingredients")) {
+            setIsNameFocused(false);
+            setFocusedContainer("ingredients");
+          }
+        }}
       >
         <Grid
           container
           direction="column"
           style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
-          onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "ingredients")) {
-              setIsNameFocused(false);
-              setFocusedContainer("ingredients");
-            }
-          }}
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
             <Typography
@@ -246,7 +275,7 @@ const RecipeForms = props => {
               }
             </div>
           </Grid>
-          <Grid id="ingredients" item style={{...itemStyle, maxHeight:'320px', overflow:'auto'}}>
+          <Grid item id="ingredients" style={{...itemStyle, maxHeight:'320px', overflow:'auto'}}>
             <IngredientsTable
               tableRef={props.tableRef}
               ingredients={ingredients}
@@ -256,7 +285,6 @@ const RecipeForms = props => {
               addRowMode={props.addRowMode}
               toggleEditRowMode={props.toggleEditRowMode}
               toggleAddRowMode={props.toggleAddRowMode}
-              toggleModal={props.toggleModal}
               onIngredientChange={handleIngredientChange}
               onIngredientAdd={handleIngredientAdd}
               onIngredientDelete={i => {
@@ -277,17 +305,17 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
+        onClick={() => {
+          if (!(containersDisabled && focusedContainer !== "directions")) {
+            setIsNameFocused(false);
+            setFocusedContainer("directions");
+          }
+        }}
       >
         <Grid
           container
           direction="column"
           style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
-          onClick={() => {
-            if (!(containersDisabled && focusedContainer !== "directions")) {
-              setIsNameFocused(false);
-              setFocusedContainer("directions");
-            }
-          }}
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
             <Typography
@@ -351,6 +379,47 @@ const RecipeForms = props => {
           </Grid>
         </Grid>
       </Collapse>
+      <Popover
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        classes={{
+          paper: classes.paper
+        }}
+      >
+        <Grid container direction="column">
+          <Grid item style={{background:'#292929', borderBottom: '1px solid white'}}>
+            <Button
+              className={classes.button}
+              style={{fontSize: '16px'}}
+              onClick={() => {
+                setAnchorEl(null);
+              }}
+            >
+              Upload photo
+            </Button>
+          </Grid>
+          <Grid item style={{background:'#292929'}}>
+            <Button
+              className={classes.button}
+              style={{fontSize: '16px', paddingRight:'0'}}
+              onClick={() => {
+                setAnchorEl(null);
+              }}
+            >
+              Choose icon
+            </Button>
+          </Grid>
+        </Grid>
+      </Popover>
     </div>
   );
 }
@@ -366,10 +435,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleEditRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_EDIT_ROW_MODE }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE }),
-    toggleModal: (actionName, actionPayload) => {
-      dispatch({ type: TOGGLE_MODAL, actionName, actionPayload })
-    }
+    toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE })
   };
 };
 

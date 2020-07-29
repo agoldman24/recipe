@@ -1,6 +1,5 @@
 import React, { createRef } from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -49,7 +48,7 @@ class RecipeDetailEdit extends React.Component {
     const buttonsDisabled = this.props.editRowMode || this.props.addRowMode
     return (
       <div style={darkBackgroundStyle}>
-        <Card style={{...detailStyle, paddingBottom: isMobile ? '50%' : '20%'}}>
+        <Card style={detailStyle}>
           <Grid
             container
             direction="column"

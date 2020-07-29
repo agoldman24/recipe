@@ -27,27 +27,24 @@ const IngredientsTable = ({
   addRowMode,
   toggleEditRowMode,
   toggleAddRowMode,
-  toggleModal,
   onIngredientChange,
   onIngredientAdd,
   onIngredientDelete
 }) => {
   let editable = !isEditable ? null : {
-    onRowUpdate: (newData, oldData) =>
-      new Promise((resolve, reject) => {
+    onRowUpdate: newData =>
+      new Promise(resolve => {
         onIngredientChange(newData);
         toggleEditRowMode();
         resolve();
       }),
-    onRowUpdateCancelled: (newData, oldData) =>
-      new Promise((resolve, reject) => {
+    onRowUpdateCancelled: () =>
+      new Promise(resolve => {
         toggleEditRowMode();
         resolve();
       }),
-    onRowDelete: oldData =>
-      new Promise((resolve, reject) => {
-        resolve();
-      })
+    onRowDelete: () =>
+      new Promise(resolve => resolve())
   };
   if (isEditable && addRowMode) {
     tableRef.current.state.showAddRow = true;
@@ -99,21 +96,14 @@ const IngredientsTable = ({
                 />
               : element.tooltip === "Delete"
                 ? <DeleteOutlineIcon
-                    onClick={() => {
-                      console.log("index:", props.data.index)
-                      onIngredientDelete(props.data.index)
-                    }}
+                    onClick={() => onIngredientDelete(props.data.index)}
                   />
                 : element.tooltip === "Save"
                   ? <CheckIcon
-                      onClick={event => {
-                        element.onClick(event, props.data);
-                      }}
+                      onClick={event => element.onClick(event, props.data)}
                     />
                   : <CloseIcon
-                      onClick={event => {
-                        element.onClick(event, props.data);
-                      }}
+                      onClick={event => element.onClick(event, props.data)}
                     />
               }
             </Button>

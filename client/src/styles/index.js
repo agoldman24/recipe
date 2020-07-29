@@ -289,7 +289,7 @@ export const containerStyle = {
 export const borderStyle = (focusedContainer, container, isDisabled, isNameFocused) => ({
   ...containerStyle,
   border: focusedContainer === container
-    ? isNameFocused ? '1px solid white' : '1px solid #ffe100'
+    ? isNameFocused ? '1px solid white' : '2px solid #ffe100'
     : isDisabled ? '1px solid rgba(255,255,255,0.3)' : '1px solid white'
 });
 

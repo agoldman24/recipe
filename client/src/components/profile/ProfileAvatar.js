@@ -51,10 +51,9 @@ const ProfileAvatar = props => {
       ? <div style={{height:'120px', textAlign:'center'}}>
           <Avatar
             alt="Profile"
-            src={
-              !!profileEditor
-                ? profileEditor.profileImage
-                : displayUserDetail.profileImage
+            src={!!profileEditor
+              ? profileEditor.profileImage
+              : displayUserDetail.profileImage
             }
             style={imageStyle}
           />

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles, withStyles } from '@material-ui/styles';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -25,7 +26,8 @@ import {
   TOGGLE_INGREDIENTS_ADD_ROW_MODE
 } from '../../actions';
 import {
-  borderStyle, sectionTitleStyle, radioLabelStyle, fabStyle, buttonStyle, iconStyle
+  borderStyle, sectionTitleStyle, radioLabelStyle,
+  fabStyle, buttonStyle, iconStyle, inputTheme
 } from '../../styles';
 
 const useStyles = makeStyles(() => ({
@@ -42,8 +44,12 @@ const useStyles = makeStyles(() => ({
     lineHeight: '1.5',
     padding: '15px 10px'
   },
+  multilineInputText: {
+    fontSize: '16px',
+    lineHeight: '1.5'
+  },
   multilineTextField: {
-    padding: '10px 5px 10px 15px'
+    padding: '10px 5px 10px 12px'
   },
   wrapper: {
     width: '100%'
@@ -110,6 +116,7 @@ const RecipeForms = props => {
   }
 
   const handleIngredientDelete = index => {
+    setModalVisible(false);
     setIngredients(ingredients.reduce((accum, ingredient) => {
       if (ingredient.index !== index) {
         accum.push(ingredient)
@@ -118,7 +125,6 @@ const RecipeForms = props => {
     }, []).map((ingredient, index) => ({
       ...ingredient, index
     })));
-    setModalVisible(false);
   }
 
   return (
@@ -128,7 +134,10 @@ const RecipeForms = props => {
         toggleModal={setModalVisible}
         onConfirm={handleIngredientDelete}
         onConfirmParam={deletedIndex}
-        message={"Are you sure you want to delete item '" + ingredients[deletedIndex].item + "'?"}
+        message={isModalVisible
+          ? "Are you sure you want to delete item '" + ingredients[deletedIndex].item + "'?"
+          : ""
+        }
       />
       <div style={{display:'flex', margin:'15px 10px 10px 10px'}}>
         <CssTextField
@@ -185,8 +194,7 @@ const RecipeForms = props => {
                   <MenuRoundedIcon
                     style={{
                       ...iconStyle,
-                      background: !!anchorEl ? '#292929' : 'none',
-                      border: !!anchorEl ? '1px solid white' : 'none'
+                      background: !!anchorEl ? '#292929' : 'none'
                     }}
                   />
                 </Fab>
@@ -209,7 +217,7 @@ const RecipeForms = props => {
           <CardMedia
             image={image}
             style={{
-              height:'320px',
+              height: isMobile ? '320px' : '280px',
               padding:'0',
               borderRadius:'10px 10px 0 0'
             }}
@@ -275,7 +283,12 @@ const RecipeForms = props => {
               }
             </div>
           </Grid>
-          <Grid item id="ingredients" style={{...itemStyle, maxHeight:'320px', overflow:'auto'}}>
+          <Grid item id="ingredients"
+            style={{
+              ...itemStyle,
+              maxHeight: isMobile ? '320px' : '280px',
+              overflow:'auto'
+            }}>
             <IngredientsTable
               tableRef={props.tableRef}
               ingredients={ingredients}
@@ -359,23 +372,26 @@ const RecipeForms = props => {
               </div>
           </Grid>
           <Grid item style={itemStyle}>
-            {dirType === "paragraph"
+            <ThemeProvider theme={createMuiTheme(inputTheme)}>
+              {dirType === "paragraph"
               ? <TextField
                   InputProps={{
                     classes: {
                       root: classes.multilineTextField,
-                      input: classes.inputText
+                      input: classes.multilineInputText
                     }
                   }}
                   style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
                   variant="outlined"
+                  color="secondary"
                   multiline
                   rowsMax={10}
                   value={directions}
                   onChange={e => setDirections(e.target.value)}
                 />
               : null
-            }
+              }
+            </ThemeProvider>
           </Grid>
         </Grid>
       </Collapse>

@@ -39,7 +39,7 @@ const PromptModal = ({ isVisible, toggleModal, message, onConfirm, onConfirmPara
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={isVisible}
-        onClose={toggleModal}
+        onClose={() => toggleModal(false)}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{

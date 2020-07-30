@@ -16,6 +16,22 @@ export const defaultTheme = {
   }
 }
 
+export const inputTheme = {
+  palette: {
+    type: 'dark',
+    background: {
+      default: '#202020'
+    },
+    primary: {
+      main: '#ffe100',
+      mainGradient: 'linear-gradient(to top right, #ff4000, yellow)'
+    },
+    secondary: {
+      main: '#fc8c03'
+    }
+  }
+}
+
 export const formTheme = theme => ({
   paper: {
     margin: theme.spacing(2),

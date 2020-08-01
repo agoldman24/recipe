@@ -47,6 +47,10 @@ const useStyles = makeStyles(() => ({
     lineHeight: '1.5',
     padding: '15px 10px'
   },
+  inputTextReducedPadding: {
+    fontSize: '16px',
+    padding: '10px'
+  },
   multilineInputText: {
     fontSize: '16px',
     lineHeight: '1.5'
@@ -95,7 +99,8 @@ const CssTextField = withStyles({
 
 const RecipeForms = props => {
   const classes = useStyles();
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
+  const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState("ingredients");
   const [anchorEl, setAnchorEl] = useState(null);
@@ -128,7 +133,7 @@ const RecipeForms = props => {
   }
 
   const handleIngredientDelete = index => {
-    setModalVisible(false);
+    setDeleteIngredientModalVisible(false);
     setIngredients(ingredients.reduce((accum, ingredient) => {
       if (ingredient.index !== index) {
         accum.push(ingredient)
@@ -139,15 +144,34 @@ const RecipeForms = props => {
     })));
   }
 
+  const handleStepDelete = index => {
+    setDeleteStepModalVisible(false);
+    let currentSteps = [ ...directionSteps ];
+    currentSteps.splice(index, 1);
+    setDirectionSteps(currentSteps);
+  }
+
   return (
     <div>
       <PromptModal
-        isVisible={isModalVisible}
-        toggleModal={setModalVisible}
+        modalType="delete"
+        isVisible={isDeleteIngredientModalVisible}
+        toggleModal={setDeleteIngredientModalVisible}
         onConfirm={handleIngredientDelete}
         onConfirmParam={deletedIndex}
-        message={isModalVisible
+        message={isDeleteIngredientModalVisible
           ? "Are you sure you want to delete item '" + ingredients[deletedIndex].item + "'?"
+          : ""
+        }
+      />
+      <PromptModal
+        modalType="delete"
+        isVisible={isDeleteStepModalVisible}
+        toggleModal={setDeleteStepModalVisible}
+        onConfirm={handleStepDelete}
+        onConfirmParam={deletedIndex}
+        message={isDeleteStepModalVisible
+          ? "Are you sure you want to delete Step " + (deletedIndex + 1) + "?"
           : ""
         }
       />
@@ -314,7 +338,7 @@ const RecipeForms = props => {
               onIngredientAdd={handleIngredientAdd}
               onIngredientDelete={i => {
                 setDeletedIndex(i);
-                setModalVisible(true);
+                setDeleteIngredientModalVisible(true);
               }}
             />
           </Grid>
@@ -405,90 +429,109 @@ const RecipeForms = props => {
                 />
               : <div style={{
                   display:'flex',
-                  flexDirection:'column',
+                  flexDirection:'column-reverse',
+                  WebkitFlexDirection:'column-reverse',
                   maxHeight:'280px',
                   overflow:'auto',
                   padding:'0 0 10px 5px'
                 }}>
-                <Grid container direction="column">
-                  {directionSteps.map((step, index) => {
-                  return (
-                    <Grid container direction="row" key={index}>
-                      <Grid item style={{width:'8%', marginTop: '14px'}}>
-                        <Fab style={iconButtonStyle}>
-                          <DeleteOutlineIcon/>
-                        </Fab>
+                  <Grid container direction="column">
+                    {directionSteps.map((step, index) => {
+                    return (
+                      <Grid container direction="row" key={index}
+                        style={{opacity: addDirectionMode ? '0.3' : '1.0'}}
+                      >
+                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                          <Fab style={iconButtonStyle}>
+                            <DeleteOutlineIcon
+                              onClick={() => {
+                                setDeletedIndex(index);
+                                setDeleteStepModalVisible(true);
+                              }}
+                            />
+                          </Fab>
+                        </Grid>
+                        <Grid item style={{width:'8%', paddingTop: '13px'}}>
+                          <Typography style={{
+                            float: 'right',
+                            paddingRight: '5px',
+                            fontSize: '16px'
+                          }}>
+                            {index + 1 + "."}
+                          </Typography>
+                        </Grid>
+                        <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
+                          <TextField
+                            InputProps={{
+                              classes: {
+                                input: classes.inputTextReducedPadding
+                              }
+                            }}
+                            variant="outlined"
+                            color="secondary"
+                            style={{width:'100%'}}
+                            value={step}
+                            onChange={e => {
+                              let currentSteps = [ ...directionSteps ];
+                              currentSteps[index] = e.target.value;
+                              setDirectionSteps(currentSteps);
+                            }}
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item style={{width:'8%'}}>
-                        <Typography style={{
-                          marginTop: '20px',
-                          float: 'right',
-                          paddingRight: '5px',
-                          fontSize: '16px'
-                        }}>
-                          {index + 1 + "."}
-                        </Typography>
+                    );
+                    })}
+                    {addDirectionMode
+                    ? <Grid container direction="row">
+                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                          <Fab style={iconButtonStyle}>
+                            <CloseIcon onClick={() => setAddDirectionMode(false)}/>
+                          </Fab>
+                        </Grid>
+                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                          <Fab style={iconButtonStyle}>
+                            <CheckIcon onClick={() => {
+                              let currentSteps = [ ...directionSteps ];
+                              currentSteps.push(newStep);
+                              setDirectionSteps(currentSteps);
+                              setAddDirectionMode(false);
+                              setNewStep("");
+                            }}/>
+                          </Fab>
+                        </Grid>
+                        <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
+                          <TextField
+                            InputProps={{
+                              classes: {
+                                input: classes.inputTextReducedPadding
+                              }
+                            }}
+                            variant="outlined"
+                            color="secondary"
+                            autoFocus
+                            fullWidth
+                            value={newStep}
+                            onChange={e => setNewStep(e.target.value)}
+                          />
+                        </Grid>
                       </Grid>
-                      <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
-                        <TextField
-                          variant="outlined"
-                          color="secondary"
-                          style={{width:'100%'}}
-                          value={step}
-                          onChange={e => {
-                            let currentSteps = [ ...directionSteps ];
-                            currentSteps[index] = e.target.value;
-                            setDirectionSteps(currentSteps);
-                          }}
-                        />
+                    : <Grid container direction="row">
+                        <Grid item style={{width:'16%'}}>
+                          <Fab style={iconButtonStyle} onClick={() => setAddDirectionMode(true)}>
+                            <AddIcon/>
+                          </Fab>
+                        </Grid>
+                        <Grid item style={{
+                          cursor: 'pointer',
+                          margin: '7px 10px',
+                          fontSize: '16px',
+                          color: '#909090'
+                        }} onClick={() => setAddDirectionMode(true)}>
+                          Add step...
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  );
-                  })}
-                  {addDirectionMode
-                  ? <Grid container direction="row">
-                      <Grid item style={{width:'8%', marginTop: '14px'}}>
-                        <Fab style={iconButtonStyle}>
-                          <CloseIcon onClick={() => setAddDirectionMode(false)}/>
-                        </Fab>
-                      </Grid>
-                      <Grid item style={{width:'8%', marginTop: '14px'}}>
-                        <Fab style={iconButtonStyle}>
-                          <CheckIcon onClick={() => {
-                            let currentSteps = [ ...directionSteps ];
-                            currentSteps.push(newStep);
-                            setDirectionSteps(currentSteps);
-                            setAddDirectionMode(false);
-                            setNewStep("");
-                          }}/>
-                        </Fab>
-                      </Grid>
-                      <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
-                        <TextField
-                          variant="outlined"
-                          color="secondary"
-                          fullWidth
-                          value={newStep}
-                          onChange={e => setNewStep(e.target.value)}
-                        />
-                      </Grid>
-                    </Grid>
-                  : <Grid container direction="row">
-                      <Grid item style={{width:'16%'}}>
-                        <Fab style={iconButtonStyle} onClick={() => setAddDirectionMode(true)}>
-                          <AddIcon/>
-                        </Fab>
-                      </Grid>
-                      <Grid item style={{
-                        margin: '7px 10px',
-                        fontSize: '16px',
-                        color: '#909090'
-                      }} onClick={() => setAddDirectionMode(true)}>
-                        Add step...
-                      </Grid>
-                    </Grid>
-                  }
-                </Grid>
+                    }
+                  </Grid>
                 </div>
               }
             </ThemeProvider>

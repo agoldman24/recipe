@@ -24,10 +24,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
+import FileBase from 'react-file-base64';
+import { b64toBlob } from '../../utilities/imageConverter';
 import {
   borderStyle, sectionTitleStyle, radioLabelStyle,
   fabStyle, buttonStyle, iconStyle, inputTheme
 } from '../../styles';
+import '../../index.css';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -95,6 +98,7 @@ const CssTextField = withStyles({
 
 const RecipeForms = props => {
   const classes = useStyles();
+  const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
   const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
@@ -111,11 +115,18 @@ const RecipeForms = props => {
   const [directionsType, setDirectionsType] = useState("paragraph");
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [deletedIndex, setDeletedIndex] = useState(0);
-  // const [addIngredientMode, setAddIngredientMode] = useState(false);
-  // const [editIngredientMode, setEditIngredientMode] = useState(false);
-  // const [addDirectionMode, setAddDirectionMode] = useState(false);
   const [newStep, setNewStep] = useState("");
   const containersDisabled = props.addIngredientMode || props.editIngredientMode || props.addDirectionMode;
+
+  const onImageChange = file => {
+    if (!(file.type === "image/jpeg" || file.type === "image/png")) {
+      setFileTypeModalVisible(true);
+    } else {
+      const data = file.base64.toString();
+      setImage(URL.createObjectURL(b64toBlob(data)));
+      setAnchorEl(null);
+    }
+  }
 
   const handleIngredientChange = ingredient => {
     let newIngredients = [...ingredients];
@@ -147,8 +158,16 @@ const RecipeForms = props => {
     setDirectionSteps(currentSteps);
   }
 
+  console.log("image:", image);
+
   return (
     <div>
+      <PromptModal
+        modalType="okay"
+        isVisible={isFileTypeModalVisible}
+        closeModal={() => setFileTypeModalVisible(false)}
+        message={"Invalid file type. Please choose a PNG or JPEG file."}
+      />
       <PromptModal
         modalType="delete"
         isVisible={isDeleteIngredientModalVisible}
@@ -424,7 +443,7 @@ const RecipeForms = props => {
                   onChange={e => setDirectionsParagraph(e.target.value)}
                 />
               : <div style={{
-                  display:'flex',
+                  display:'-webkit-flex',
                   WebkitFlexDirection:'column-reverse',
                   maxHeight:'280px',
                   overflow:'auto',
@@ -550,21 +569,16 @@ const RecipeForms = props => {
         }}
       >
         <Grid container direction="column">
-          <Grid item style={{background:'#292929', borderBottom: '1px solid white'}}>
-            <Button
-              className={classes.button}
-              style={{fontSize: '16px'}}
-              onClick={() => {
-                setAnchorEl(null);
-              }}
-            >
-              Upload photo
-            </Button>
+          <Grid item style={{background:'#292929', borderBottom: '1px solid white', padding:'10px'}}>
+            <label className="fileContainer" style={{fontSize:'16px'}}>
+              Upload Photo
+              <FileBase type="file" onDone={onImageChange}/>
+            </label>
           </Grid>
           <Grid item style={{background:'#292929'}}>
             <Button
               className={classes.button}
-              style={{fontSize: '16px', paddingRight:'0'}}
+              style={{fontSize: '16px', paddingRight:'0', fontFamily: 'Signika'}}
               onClick={() => {
                 setAnchorEl(null);
               }}

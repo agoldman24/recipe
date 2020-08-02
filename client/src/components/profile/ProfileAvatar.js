@@ -1,23 +1,23 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
+import Typography from '@material-ui/core/Typography';
 import Spinner from '../popups/Spinner';
 import PromptModal from '../popups/PromptModal';
 import {
   TOGGLE_PROFILE_EDITOR,
-  START_FILE_UPLOAD,
   UPDATE_PROFILE_EDITOR
 } from '../../actions';
-import { connect } from 'react-redux';
 import FileBase from 'react-file-base64';
+import { highlightedNumberStyle } from '../../styles';
 import "../../index.css";
 
 const imageStyle = {
   width: '120px',
   height: '120px',
   margin: 'auto',
-  fontSize: '30px',
-  border: '2px solid black'
+  border: '1.5px solid white',
+  background: 'radial-gradient(black, black, black, black, #222222, #333333, #333333, grey, grey)'
 }
 
 const editPhotoButtonStyle = {
@@ -42,8 +42,7 @@ const ProfileAvatar = props => {
   const {
     isSpinnerVisible,
     displayUserDetail,
-    displayUser: { id, firstName, lastName },
-    activeUser,
+    displayUser: { firstName, lastName },
     profileEditor
   } = props;
 
@@ -60,49 +59,31 @@ const ProfileAvatar = props => {
         message={"Invalid file type. Please choose a PNG or JPEG file."}
       />
       {isSpinnerVisible && <Spinner/>}
+      <div style={{height:'120px', textAlign:'center'}}>
       {profileImageLoaded
-      ? <div style={{height:'120px', textAlign:'center'}}>
-          <Avatar
-            alt="Profile"
-            src={!!profileEditor
-              ? profileEditor.profileImage
-              : displayUserDetail.profileImage
-            }
-            style={imageStyle}
-          />
-          {!!profileEditor &&
-            <label style={editPhotoButtonStyle} className="fileContainer">
-              Change Profile Photo
-              <FileBase type="file" onDone={onImageChange}/>
-            </label>
+      ? <Avatar
+          alt="Profile"
+          src={!!profileEditor
+            ? profileEditor.profileImage
+            : displayUserDetail.profileImage
           }
-        </div>
+          style={imageStyle}
+        />
       : <Avatar alt="Profile" style={imageStyle}>
-          <Grid container direction="column" style={{textAlign:'center'}}>
-            <Grid item>
+          <div style={{textAlign:'center'}}>
+            <Typography style={highlightedNumberStyle}>
               {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
-            </Grid>
-            <Grid item style={{lineHeight:'0.5', paddingBottom:'10px'}}>
-            {!!activeUser && activeUser.id === id &&
-              <label
-                className="fileContainer"
-                onClick={() => {
-                  props.toggleProfileEditor(
-                    props.displayUser.firstName,
-                    props.displayUser.lastName,
-                    props.displayUserDetail.profileImage
-                  );
-                  setTimeout(() => props.startFileUpload(), 1);
-                }}
-              >
-                Upload photo
-                <FileBase type="file" onDone={onImageChange}/>
-              </label>
-            }
-            </Grid>
-          </Grid>
+            </Typography>
+          </div>
         </Avatar>
       }
+      {!!profileEditor &&
+        <label style={editPhotoButtonStyle} className="fileContainer">
+          Change Profile Photo
+          <FileBase type="file" onDone={onImageChange}/>
+        </label>
+      }
+      </div>
     </div>
   );
 }
@@ -111,7 +92,6 @@ const mapStateToProps = state => {
   return {
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
-    activeUser: state.activeUser,
     profileEditor: state.profileEditor,
     isSpinnerVisible: state.isSpinnerVisible
   };
@@ -125,7 +105,6 @@ const mapDispatchToProps = dispatch => {
         firstName, lastName, profileImage
       });
     },
-    startFileUpload: () => dispatch({ type: START_FILE_UPLOAD }),
     updateProfileEditor: imageData => {
       dispatch({
         type: UPDATE_PROFILE_EDITOR,

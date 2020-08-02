@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -27,9 +27,9 @@ const textStyle = {
 
 const ProfileEditor = props => {
   const classes = useStyles();
-  const [firstName, setFirstName] = React.useState(props.activeUser.firstName);
-  const [lastName, setLastName] = React.useState(props.activeUser.lastName);
-  const [username, setUsername] = React.useState(props.activeUser.username);
+  const [firstName, setFirstName] = useState(props.activeUser.firstName);
+  const [lastName, setLastName] = useState(props.activeUser.lastName);
+  const [username, setUsername] = useState(props.activeUser.username);
 
   return (
     <TableContainer>

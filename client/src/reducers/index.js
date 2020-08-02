@@ -34,7 +34,6 @@ import {
   TOGGLE_DRAWER_MENU,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
-  START_FILE_UPLOAD,
   LOAD_RECIPE_DETAILS_START,
   LOAD_RECIPE_DETAILS_FINISHED,
   TOGGLE_DETAIL_EDIT_MODE
@@ -55,7 +54,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_REQUESTED:
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
-    case START_FILE_UPLOAD:
     case LOAD_RECIPE_DETAILS_START:
       return true;
     case POPULATE_USERS:
@@ -67,7 +65,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
-    case UPDATE_PROFILE_EDITOR:
     case LOAD_RECIPE_DETAILS_FINISHED:
       return false;
     default:

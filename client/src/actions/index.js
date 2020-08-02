@@ -46,7 +46,6 @@ export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
 export const TOGGLE_PROFILE_EDITOR = 'TOGGLE_PROFILE_EDITOR';
 
 /* Loading spinner actions */
-export const START_FILE_UPLOAD = 'START_FILE_UPLOAD';
 export const HYDRATION_COMPLETE = "HYDRATION_COMPLETE";
 
 /* Profile Editor actions */

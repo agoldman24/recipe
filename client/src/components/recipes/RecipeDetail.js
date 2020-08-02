@@ -160,7 +160,7 @@ class RecipeDetail extends React.Component {
               <Button
                 startIcon={<CreateIcon/>}
                 className={this.props.classes.button}
-                style={{fontSize: '16px'}}
+                style={{fontSize: '16px', fontFamily:'Signika'}}
                 onClick={() => {
                   this.setState({ anchorEl: null });
                   this.props.toggleEditMode();
@@ -172,7 +172,7 @@ class RecipeDetail extends React.Component {
             <Grid item style={{background:'#292929'}}>
               <Button
                 className={this.props.classes.button}
-                style={{fontSize: '16px', paddingRight:'0'}}
+                style={{fontSize: '16px', paddingRight:'0', fontFamily:'Signika'}}
                 onClick={() => {
                   this.setState({ anchorEl: null });
                 }}

@@ -54,7 +54,7 @@ const SearchTab = props => {
       >
       </InputBase>
     </div>
-    <div style={{padding: '40px 0'}}/>
+    <div style={{padding: '35px 0'}}/>
     <UsersTable
       users={
         props.usersArray.filter(user =>

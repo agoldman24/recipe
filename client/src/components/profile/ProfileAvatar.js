@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Spinner from '../popups/Spinner';
+import PromptModal from '../popups/PromptModal';
 import {
   TOGGLE_PROFILE_EDITOR,
   START_FILE_UPLOAD,
@@ -27,9 +28,15 @@ const editPhotoButtonStyle = {
 
 const ProfileAvatar = props => {
 
-  const onImageChange = files => {
-    const data = files.base64.toString();
-    props.updateProfileEditor(data);
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const onImageChange = file => {
+    if (!(file.type === "image/jpeg" || file.type === "image/png")) {
+      setModalVisible(true);
+    } else {
+      const data = file.base64.toString();
+      props.updateProfileEditor(data);
+    }
   }
 
   const {
@@ -46,6 +53,12 @@ const ProfileAvatar = props => {
   
   return (
     <div>
+      <PromptModal
+        modalType="okay"
+        isVisible={isModalVisible}
+        closeModal={() => setModalVisible(false)}
+        message={"Invalid file type. Please choose a PNG or JPEG file."}
+      />
       {isSpinnerVisible && <Spinner/>}
       {profileImageLoaded
       ? <div style={{height:'120px', textAlign:'center'}}>

@@ -21,7 +21,6 @@ import {
   TOGGLE_RECIPE_DETAILS,
   LOAD_RECIPE_DETAILS_FINISHED,
   TOGGLE_DETAIL_EDIT_MODE,
-  TOGGLE_INGREDIENTS_ADD_ROW_MODE,
   UPDATE_USER_REQUESTED
 } from '../../actions';
 import {
@@ -133,8 +132,6 @@ class RecipeDetail extends React.Component {
             <IngredientsTable
               ingredients={this.props.ingredients}
               isEditable={this.props.editMode}
-              addRowMode={this.props.addRowMode}
-              toggleAddRowMode={this.props.toggleAddRowMode}
             />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
             <div style={{paddingLeft: isMobile ? '5px' : '0'}}>
@@ -194,7 +191,6 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     editMode: state.detailRecipe.editMode,
-    addRowMode: state.detailRecipe.ingredients.addRowMode,
     activeUser: state.activeUser,
     savedRecipeIds: !!state.activeUser
       ? state.activeUser.savedRecipeIds.map(obj => obj.id)
@@ -207,7 +203,6 @@ const mapDispatchToProps = dispatch => {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
     loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
     toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE }),
     updateSavedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: SAVED_RECIPE_IDS,

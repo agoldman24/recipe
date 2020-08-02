@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PromptModal = ({ modalType, isVisible, toggleModal, message, onConfirm, onConfirmParam }) => {
+const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onConfirmParam }) => {
   const classes = useStyles();
   return (
     <div>
@@ -39,7 +39,7 @@ const PromptModal = ({ modalType, isVisible, toggleModal, message, onConfirm, on
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={isVisible}
-        onClose={() => toggleModal(false)}
+        onClose={closeModal}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -63,7 +63,7 @@ const PromptModal = ({ modalType, isVisible, toggleModal, message, onConfirm, on
                 <Button
                   className={classes.button}
                   style={cancelButtonStyle}
-                  onClick={() => toggleModal(false)}
+                  onClick={closeModal}
                 >
                   Cancel
                 </Button>
@@ -72,7 +72,7 @@ const PromptModal = ({ modalType, isVisible, toggleModal, message, onConfirm, on
                 <Button
                   className={classes.button}
                   style={cancelButtonStyle}
-                  onClick={() => toggleModal(false)}
+                  onClick={closeModal}
                 >
                   Okay
                 </Button>

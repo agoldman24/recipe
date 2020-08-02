@@ -25,10 +25,6 @@ import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import {
-  TOGGLE_INGREDIENTS_EDIT_ROW_MODE,
-  TOGGLE_INGREDIENTS_ADD_ROW_MODE
-} from '../../actions';
-import {
   borderStyle, sectionTitleStyle, radioLabelStyle,
   fabStyle, buttonStyle, iconStyle, inputTheme
 } from '../../styles';
@@ -115,11 +111,11 @@ const RecipeForms = props => {
   const [directionsType, setDirectionsType] = useState("paragraph");
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [deletedIndex, setDeletedIndex] = useState(0);
-  const [addIngredientMode, setAddIngredientMode] = useState(false);
-  const [editIngredientMode, setEditIngredientMode] = useState(false);
-  const [addDirectionMode, setAddDirectionMode] = useState(false);
+  // const [addIngredientMode, setAddIngredientMode] = useState(false);
+  // const [editIngredientMode, setEditIngredientMode] = useState(false);
+  // const [addDirectionMode, setAddDirectionMode] = useState(false);
   const [newStep, setNewStep] = useState("");
-  const containersDisabled = addIngredientMode || editIngredientMode || addDirectionMode;
+  const containersDisabled = props.addIngredientMode || props.editIngredientMode || props.addDirectionMode;
 
   const handleIngredientChange = ingredient => {
     let newIngredients = [...ingredients];
@@ -156,7 +152,7 @@ const RecipeForms = props => {
       <PromptModal
         modalType="delete"
         isVisible={isDeleteIngredientModalVisible}
-        toggleModal={setDeleteIngredientModalVisible}
+        closeModal={() => setDeleteIngredientModalVisible(false)}
         onConfirm={handleIngredientDelete}
         onConfirmParam={deletedIndex}
         message={isDeleteIngredientModalVisible
@@ -167,7 +163,7 @@ const RecipeForms = props => {
       <PromptModal
         modalType="delete"
         isVisible={isDeleteStepModalVisible}
-        toggleModal={setDeleteStepModalVisible}
+        closeModal={() => setDeleteStepModalVisible(false)}
         onConfirm={handleStepDelete}
         onConfirmParam={deletedIndex}
         message={isDeleteStepModalVisible
@@ -294,12 +290,12 @@ const RecipeForms = props => {
                   startIcon={<AddIcon/>}
                   style={{
                     ...addButtonStyle,
-                    opacity: addIngredientMode || editIngredientMode || addDirectionMode ? '0.3' : '1.0'
+                    opacity: props.addIngredientMode || props.editIngredientMode || props.addDirectionMode ? '0.3' : '1.0'
                   }}
-                  disabled={addIngredientMode || editIngredientMode || addDirectionMode}
+                  disabled={props.addIngredientMode || props.editIngredientMode || props.addDirectionMode}
                   onClick={() => {
                     document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
-                    setAddIngredientMode(true);
+                    props.toggleAddIngredientMode();
                   }}
                   className={classes.button}
                 >
@@ -330,10 +326,10 @@ const RecipeForms = props => {
               ingredients={ingredients}
               isEditable={true}
               editMode={props.editMode}
-              editRowMode={editIngredientMode}
-              addRowMode={addIngredientMode}
-              toggleEditRowMode={() => setEditIngredientMode(!editIngredientMode)}
-              toggleAddRowMode={() => setAddIngredientMode(!addIngredientMode)}
+              editRowMode={props.editIngredientMode}
+              addRowMode={props.addIngredientMode}
+              toggleEditRowMode={props.toggleEditIngredientMode}
+              toggleAddRowMode={props.toggleAddIngredientMode}
               onIngredientChange={handleIngredientChange}
               onIngredientAdd={handleIngredientAdd}
               onIngredientDelete={i => {
@@ -429,7 +425,6 @@ const RecipeForms = props => {
                 />
               : <div style={{
                   display:'flex',
-                  flexDirection:'column-reverse',
                   WebkitFlexDirection:'column-reverse',
                   maxHeight:'280px',
                   overflow:'auto',
@@ -439,7 +434,7 @@ const RecipeForms = props => {
                     {directionSteps.map((step, index) => {
                     return (
                       <Grid container direction="row" key={index}
-                        style={{opacity: addDirectionMode ? '0.3' : '1.0'}}
+                        style={{opacity: props.addDirectionMode ? '0.3' : '1.0'}}
                       >
                         <Grid item style={{width:'8%', paddingTop: '7px'}}>
                           <Fab style={iconButtonStyle}>
@@ -481,11 +476,11 @@ const RecipeForms = props => {
                       </Grid>
                     );
                     })}
-                    {addDirectionMode
+                    {props.addDirectionMode
                     ? <Grid container direction="row">
                         <Grid item style={{width:'8%', paddingTop: '7px'}}>
                           <Fab style={iconButtonStyle}>
-                            <CloseIcon onClick={() => setAddDirectionMode(false)}/>
+                            <CloseIcon onClick={props.toggleAddDirectionMode}/>
                           </Fab>
                         </Grid>
                         <Grid item style={{width:'8%', paddingTop: '7px'}}>
@@ -494,7 +489,7 @@ const RecipeForms = props => {
                               let currentSteps = [ ...directionSteps ];
                               currentSteps.push(newStep);
                               setDirectionSteps(currentSteps);
-                              setAddDirectionMode(false);
+                              props.toggleAddDirectionMode();
                               setNewStep("");
                             }}/>
                           </Fab>
@@ -517,7 +512,7 @@ const RecipeForms = props => {
                       </Grid>
                     : <Grid container direction="row">
                         <Grid item style={{width:'16%'}}>
-                          <Fab style={iconButtonStyle} onClick={() => setAddDirectionMode(true)}>
+                          <Fab style={iconButtonStyle} onClick={props.toggleAddDirectionMode}>
                             <AddIcon/>
                           </Fab>
                         </Grid>
@@ -525,8 +520,8 @@ const RecipeForms = props => {
                           cursor: 'pointer',
                           margin: '7px 10px',
                           fontSize: '16px',
-                          color: '#909090'
-                        }} onClick={() => setAddDirectionMode(true)}>
+                          color: '#b5b5b5'
+                        }} onClick={props.toggleAddDirectionMode}>
                           Add step...
                         </Grid>
                       </Grid>
@@ -585,17 +580,12 @@ const RecipeForms = props => {
 
 const mapStateToProps = state => {
   return {
-    editMode: state.detailRecipe.editMode,
-    editRowMode: state.detailRecipe.ingredients.editRowMode,
-    addRowMode: state.detailRecipe.ingredients.addRowMode
+    editMode: state.detailRecipe.editMode
   };
 };
 
 const mapDispatchToProps = dispatch => {
-  return {
-    toggleEditRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_EDIT_ROW_MODE }),
-    toggleAddRowMode: () => dispatch({ type: TOGGLE_INGREDIENTS_ADD_ROW_MODE })
-  };
+  return {};
 };
 
 export default connect(

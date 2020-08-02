@@ -43,9 +43,15 @@ class RecipeDetailEdit extends React.Component {
   constructor() {
     super();
     this.tableRef = createRef();
+    this.state = {
+      addIngredientMode: false,
+      editIngredientMode: false,
+      addDirectionMode: false
+    }
   }
   render() {
-    const buttonsDisabled = this.props.editRowMode || this.props.addRowMode
+    const { addIngredientMode, editIngredientMode, addDirectionMode } = this.state;
+    const buttonsDisabled = addIngredientMode || editIngredientMode || addDirectionMode;
     return (
       <div style={darkBackgroundStyle}>
         <Card style={detailStyle}>
@@ -111,6 +117,12 @@ class RecipeDetailEdit extends React.Component {
             ingredients={this.props.ingredients}
             directions={this.props.directions}
             tableRef={this.tableRef}
+            addIngredientMode={this.state.addIngredientMode}
+            editIngredientMode={this.state.editIngredientMode}
+            addDirectionMode={this.state.addDirectionMode}
+            toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
+            toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
+            toggleAddDirectionMode={() => this.setState({ addDirectionMode: !this.state.addDirectionMode })}
           />
         </Card>
       </div>
@@ -119,10 +131,7 @@ class RecipeDetailEdit extends React.Component {
 };
 
 const mapStateToProps = state => {
-  return {
-    editRowMode: state.detailRecipe.ingredients.editRowMode,
-    addRowMode: state.detailRecipe.ingredients.addRowMode
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => ({

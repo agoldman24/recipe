@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: '80%',
+    width: isMobile ? '70%' : '80%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'
@@ -95,7 +95,11 @@ const IconsModal = props => {
                 Search
               </Button>
             </Grid>
-            <Grid item>{props.icons.length}</Grid>
+            {!!props.icons.length &&
+              <Grid item>
+                <img height="100px" width="100px" src={props.icons[0].raster_sizes[8].formats[0].preview_url}/>
+              </Grid>
+            }
           </Grid>
         </Fade>
       </Modal>

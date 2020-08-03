@@ -8,13 +8,13 @@
     "heroku-postbuild": "cd client && npm install --save redux react-redux redux-saga axios && npm run build"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.8",
     "body-parser": "^1.19.0",
     "concurrently": "^5.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.8.11",
-    "morgan": "^1.9.1",
-    "oauth": "^0.9.12"
+    "morgan": "^1.9.1"
   }
 }

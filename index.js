@@ -6,6 +6,7 @@ const path = require("path");
 const userRoutes = require('./server/userRoutes');
 const recipeRoutes = require('./server/recipeRoutes');
 const imageRoutes = require('./server/imageRoutes');
+const iconRoutes = require('./server/iconRoutes');
 const app = express();
 const router = express.Router();
 
@@ -40,6 +41,8 @@ router.post("/createRecipe", recipeRoutes.createRecipe);
 router.get("/getImageById", imageRoutes.getImageById);
 router.post("/createImage", imageRoutes.createImage);
 router.post("/updateImage", imageRoutes.updateImage);
+
+router.get("/getIcons", iconRoutes.getIcons);
 
 app.use("/api", router);
 

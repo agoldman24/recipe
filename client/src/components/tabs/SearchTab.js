@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
@@ -36,34 +36,33 @@ const useStyles = makeStyles(theme => ({
 
 const SearchTab = props => {
   const classes = useStyles();
-  const [searchVal, setSearchVal] = React.useState("");
+  const [searchVal, setSearchVal] = useState("");
   return (
     <div>
-    <div className={classes.search}>
-      <div className={classes.searchIcon}>
-        <SearchIcon />
+      <div className={classes.search}>
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+        <InputBase
+          placeholder="Search users..."
+          classes={{
+            root: classes.inputRoot,
+            input: classes.inputInput,
+          }}
+          inputProps={{'aria-label':'search'}}
+          onChange={e => setSearchVal(e.target.value.toLowerCase())}
+        />
       </div>
-      <InputBase
-        placeholder="Search users..."
-        classes={{
-          root: classes.inputRoot,
-          input: classes.inputInput,
-        }}
-        inputProps={{'aria-label':'search'}}
-        onChange={e => setSearchVal(e.target.value.toLowerCase())}
-      >
-      </InputBase>
-    </div>
-    <div style={{padding: '35px 0'}}/>
-    <UsersTable
-      users={
-        props.usersArray.filter(user =>
-          user.username.toLowerCase().includes(searchVal) ||
-          user.firstName.toLowerCase().includes(searchVal) ||
-          user.lastName.toLowerCase().includes(searchVal)
-        )
-      }
-    />
+      <div style={{padding: '35px 0'}}/>
+      <UsersTable
+        users={
+          props.usersArray.filter(user =>
+            user.username.toLowerCase().includes(searchVal) ||
+            user.firstName.toLowerCase().includes(searchVal) ||
+            user.lastName.toLowerCase().includes(searchVal)
+          )
+        }
+      />
     </div>
   );
 }

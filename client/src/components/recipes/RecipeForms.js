@@ -24,6 +24,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
+import IconsModal from '../popups/IconsModal';
 import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
 import {
@@ -98,20 +99,19 @@ const CssTextField = withStyles({
 
 const RecipeForms = props => {
   const classes = useStyles();
+  const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
   const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
-  const [focusedContainer, setFocusedContainer] = useState("ingredients");
+  const [focusedContainer, setFocusedContainer] = useState("image");
   const [anchorEl, setAnchorEl] = useState(null);
   const [name, setName] = useState(props.name);
   const [image, setImage] = useState(props.image);
   const [directionsParagraph, setDirectionsParagraph] = useState(
-    typeof props.directions === "string" ? props.directions : ""
-  );
+    typeof props.directions === "string" ? props.directions : "");
   const [directionSteps, setDirectionSteps] = useState(
-    typeof props.directions === "string" ? [] : props.directions
-  );
+    typeof props.directions === "string" ? [] : props.directions);
   const [directionsType, setDirectionsType] = useState("paragraph");
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [deletedIndex, setDeletedIndex] = useState(0);
@@ -158,10 +158,12 @@ const RecipeForms = props => {
     setDirectionSteps(currentSteps);
   }
 
-  console.log("image:", image);
-
   return (
     <div>
+      <IconsModal
+        isVisible={isIconsModalVisible}
+        closeModal={() => setIconsModalVisible(false)}
+      />
       <PromptModal
         modalType="okay"
         isVisible={isFileTypeModalVisible}
@@ -344,7 +346,6 @@ const RecipeForms = props => {
               tableRef={props.tableRef}
               ingredients={ingredients}
               isEditable={true}
-              editMode={props.editMode}
               editRowMode={props.editIngredientMode}
               addRowMode={props.addIngredientMode}
               toggleEditRowMode={props.toggleEditIngredientMode}
@@ -444,7 +445,9 @@ const RecipeForms = props => {
                 />
               : <div style={{
                   display:'-webkit-flex',
+                  display:'flex',
                   WebkitFlexDirection:'column-reverse',
+                  flexDirection:'column-reverse',
                   maxHeight:'280px',
                   overflow:'auto',
                   padding:'0 0 10px 5px'
@@ -579,9 +582,7 @@ const RecipeForms = props => {
             <Button
               className={classes.button}
               style={{fontSize: '16px', paddingRight:'0', fontFamily: 'Signika'}}
-              onClick={() => {
-                setAnchorEl(null);
-              }}
+              onClick={() => setIconsModalVisible(true)}
             >
               Choose icon
             </Button>
@@ -593,9 +594,7 @@ const RecipeForms = props => {
 }
 
 const mapStateToProps = state => {
-  return {
-    editMode: state.detailRecipe.editMode
-  };
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {

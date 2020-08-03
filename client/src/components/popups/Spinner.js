@@ -6,7 +6,8 @@ export default function Spinner() {
       className="ui active inverted massive text loader"
       style={{
         position:"fixed",
-        fontSize:"50px"
+        fontSize:"50px",
+        zIndex: 9999
       }}
     />
   );

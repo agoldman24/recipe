@@ -45,8 +45,12 @@ export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';
 export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
 export const TOGGLE_PROFILE_EDITOR = 'TOGGLE_PROFILE_EDITOR';
 
-/* Loading spinner actions */
+/* Hydration actions */
 export const HYDRATION_COMPLETE = "HYDRATION_COMPLETE";
 
 /* Profile Editor actions */
 export const UPDATE_PROFILE_EDITOR = 'UPDATE_PROFILE_EDITOR';
+
+/* Icon actions */
+export const GET_ICONS_REQUESTED = 'GET_ICONS_REQUESTED';
+export const GET_ICONS_SUCCEEDED = 'GET_ICONS_SUCCEEDED';

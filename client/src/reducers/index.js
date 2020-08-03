@@ -36,7 +36,9 @@ import {
   UPDATE_PROFILE_EDITOR,
   LOAD_RECIPE_DETAILS_START,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_DETAIL_EDIT_MODE
+  TOGGLE_DETAIL_EDIT_MODE,
+  GET_ICONS_REQUESTED,
+  GET_ICONS_SUCCEEDED
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -55,6 +57,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
     case LOAD_RECIPE_DETAILS_START:
+    case GET_ICONS_REQUESTED:
       return true;
     case POPULATE_USERS:
     case GET_USER_DETAIL_SUCCEEDED:
@@ -66,6 +69,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
     case LOAD_RECIPE_DETAILS_FINISHED:
+    case GET_ICONS_SUCCEEDED:
       return false;
     default:
       return state;
@@ -447,11 +451,20 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
       if (action.newTab.name !== PROFILE_TAB) {
         return {
           ...state,
-          creatd: false,
+          created: false,
           saved: false
         };
       }
       return state;
+    default:
+      return state;
+  }
+}
+
+const icons = (state = StateTree.icons, action) => {
+  switch (action.type) {
+    case GET_ICONS_SUCCEEDED:
+      return action.icons;
     default:
       return state;
   }
@@ -474,5 +487,6 @@ export default combineReducers({
   activeUser,
   displayUser,
   displayUserDetail,
-  allRecipesFetched
+  allRecipesFetched,
+  icons
 });

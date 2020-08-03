@@ -73,5 +73,6 @@ export default Object.assign({},
     samples: false,
     created: false,
     saved: false
-  }
+  },
+  icons: []
 });

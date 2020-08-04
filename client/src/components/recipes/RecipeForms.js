@@ -444,10 +444,6 @@ const RecipeForms = props => {
                   onChange={e => setDirectionsParagraph(e.target.value)}
                 />
               : <div style={{
-                  display:'-webkit-flex',
-                  display:'flex',
-                  WebkitFlexDirection:'column-reverse',
-                  flexDirection:'column-reverse',
                   maxHeight:'280px',
                   overflow:'auto',
                   padding:'0 0 10px 5px'

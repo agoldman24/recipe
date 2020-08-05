@@ -42,12 +42,6 @@ body {
 .fileContainer:hover {
   cursor: pointer;
 }
-
-.iconContainer {
-  width: 90px;
-  padding: 5px 0 5px 10px;
-  border-radius: 10px;
-}
 .iconContainer:hover {
   cursor: pointer;
   background: white;

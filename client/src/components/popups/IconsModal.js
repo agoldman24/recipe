@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: isMobile ? '73%' : '79%',
+    width: isMobile ? '71.5%' : '79%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'
@@ -104,14 +104,17 @@ const IconsModal = props => {
               <Grid container direction="column">
                 <Grid container direction="row">
                   {[0,1,2,3].map(column =>
-                  <Grid item className="iconContainer"
-                    onClick={() => {
-                      onConfirm(props.icons[4*row + column]);
-                      closeModal();
-                    }}
-                  >
+                  <Grid item style={{
+                    width: isMobile ? '70px' : '90px',
+                    padding: isMobile ? '2px 0 2px 4px' : '5px 0 5px 10px',
+                    borderRadius: '10px'
+                  }}
+                  onClick={() => {
+                    onConfirm(props.icons[4*row + column]);
+                    closeModal();
+                  }}>
                     <img src={props.icons[4*row + column]}
-                      height="65px" style={{maxWidth:'80px'}}
+                      height={isMobile ? "50px" : "65px"} style={{maxWidth:'63px'}}
                     />
                   </Grid>
                   )}

@@ -1,9 +1,8 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
-  NETWORK_FAILED,
   GET_ICONS_REQUESTED,
-  GET_ICONS_SUCCEEDED
+  GET_ICONS_FINISHED
 } from '../actions';
 
 function* getIcons({ searchWord }) {
@@ -17,9 +16,9 @@ function* getIcons({ searchWord }) {
       return accum;
     }, "");
     const { data } = yield call(Api.get, '/getIcons?searchWord=' + queryString);
-    yield put({ type: GET_ICONS_SUCCEEDED, icons: data.icons });
+    yield put({ type: GET_ICONS_FINISHED, icons: data.icons });
   } catch (err) {
-    yield put({ type: NETWORK_FAILED });
+    yield put({ type: GET_ICONS_FINISHED, icons: [] });
     console.log(err);
   }
 }

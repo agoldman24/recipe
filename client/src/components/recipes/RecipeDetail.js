@@ -172,7 +172,7 @@ class RecipeDetail extends React.Component {
             <Grid item style={{background:'#292929'}}>
               <Button
                 className={this.props.classes.button}
-                style={{fontSize: '16px', paddingRight:'0', fontFamily:'Signika'}}
+                style={{fontSize: '16px', width:'100%', fontFamily:'Signika'}}
                 onClick={() => {
                   this.setState({ anchorEl: null });
                 }}

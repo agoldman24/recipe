@@ -10,6 +10,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import { GET_ICONS_REQUESTED } from '../../actions';
+import '../../index.css';
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -27,7 +28,8 @@ const useStyles = makeStyles(theme => ({
   button: {
     float: 'right',
     height: '35px',
-    background: 'black'
+    background: 'black',
+    border: '1px solid grey'
   },
   searchIcon: {
     position: 'absolute',
@@ -38,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: isMobile ? '70%' : '80%',
+    width: isMobile ? '73%' : '79%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'
@@ -50,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const IconsModal = props => {
-  const { isVisible, closeModal } = props;
+  const { isVisible, closeModal, onConfirm } = props;
   const [searchVal, setSearchVal] = useState("");
   const classes = useStyles();
   return (
@@ -68,8 +70,10 @@ const IconsModal = props => {
         }}
       >
         <Fade in={isVisible}>
-          <Grid container direction="column" className={classes.paper}>
-            <Grid item>
+          <Grid container direction="column" className={classes.paper}
+            style={{paddingBottom:'5px', paddingRight:'5px'}}
+          >
+            <Grid item style={{height:'55px', width:'97.5%'}}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
@@ -96,10 +100,27 @@ const IconsModal = props => {
               </Button>
             </Grid>
             {!!props.icons.length &&
-              <Grid item>
-                <img height="100px" width="100px" src={props.icons[0].raster_sizes[8].formats[0].preview_url}/>
+            [0,1,2,3,4].map(row =>
+              <Grid container direction="column">
+                <Grid container direction="row">
+                  {[0,1,2,3].map(column =>
+                  <Grid item className="iconContainer"
+                    onClick={() => {
+                      onConfirm(props.icons[4*row + column]);
+                      closeModal();
+                    }}
+                  >
+                    <img src={props.icons[4*row + column]}
+                      height="65px" style={{maxWidth:'80px'}}
+                    />
+                  </Grid>
+                  )}
+                </Grid>
               </Grid>
-            }
+            )}
+            <Grid item style={{width:'100%'}}>
+              <Button style={{float:'right'}}>Close</Button>
+            </Grid>
           </Grid>
         </Fade>
       </Modal>

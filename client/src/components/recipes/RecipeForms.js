@@ -163,6 +163,7 @@ const RecipeForms = props => {
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
+        onConfirm={icon => setImage(icon)}
       />
       <PromptModal
         modalType="okay"
@@ -536,7 +537,7 @@ const RecipeForms = props => {
                         </Grid>
                         <Grid item style={{
                           cursor: 'pointer',
-                          margin: '7px 10px',
+                          margin: '7px 15px',
                           fontSize: '16px',
                           color: '#b5b5b5'
                         }} onClick={props.toggleAddDirectionMode}>
@@ -577,8 +578,11 @@ const RecipeForms = props => {
           <Grid item style={{background:'#292929'}}>
             <Button
               className={classes.button}
-              style={{fontSize: '16px', paddingRight:'0', fontFamily: 'Signika'}}
-              onClick={() => setIconsModalVisible(true)}
+              style={{fontSize: '16px', width:'100%', fontFamily: 'Signika'}}
+              onClick={() => {
+                setIconsModalVisible(true);
+                setAnchorEl(null);
+              }}
             >
               Choose icon
             </Button>

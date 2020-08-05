@@ -6,8 +6,11 @@ exports.getIcons = (req, res) => {
       authorization: 'Bearer B4jUYgw0xve99CQTbcq6zXxRQQUuwpV0ShgQYXuHkOaJ0UgFRN2zATYGVl2X5sOM'
     }
   }).then(function(response) {
-    res.json({ success: true, icons: response.data.icons });
+    res.json({
+      success: true,
+      icons: response.data.icons.map(icon => icon.raster_sizes[8].formats[0].preview_url)
+    });
   }).catch(error => {
-    res.json({ success: false, error })
+    res.json({ success: false, error });
   });
 }

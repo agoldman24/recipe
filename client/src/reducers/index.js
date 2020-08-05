@@ -38,7 +38,7 @@ import {
   LOAD_RECIPE_DETAILS_FINISHED,
   TOGGLE_DETAIL_EDIT_MODE,
   GET_ICONS_REQUESTED,
-  GET_ICONS_SUCCEEDED
+  GET_ICONS_FINISHED
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -69,7 +69,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
     case LOAD_RECIPE_DETAILS_FINISHED:
-    case GET_ICONS_SUCCEEDED:
+    case GET_ICONS_FINISHED:
       return false;
     default:
       return state;
@@ -463,7 +463,7 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
 
 const icons = (state = StateTree.icons, action) => {
   switch (action.type) {
-    case GET_ICONS_SUCCEEDED:
+    case GET_ICONS_FINISHED:
       return action.icons;
     default:
       return state;

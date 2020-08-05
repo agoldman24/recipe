@@ -105,8 +105,8 @@ const IconsModal = props => {
                 <Grid container direction="row">
                   {[0,1,2,3].map(column =>
                   <Grid item style={{
-                    width: isMobile ? '70px' : '90px',
-                    padding: isMobile ? '2px 0 2px 4px' : '5px 0 5px 10px',
+                    width: isMobile ? '65px' : '90px',
+                    padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
                     borderRadius: '10px'
                   }}
                   onClick={() => {
@@ -114,7 +114,7 @@ const IconsModal = props => {
                     closeModal();
                   }}>
                     <img src={props.icons[4*row + column]}
-                      height={isMobile ? "50px" : "65px"} style={{maxWidth:'63px'}}
+                      height={isMobile ? "38px" : "65px"} style={{maxWidth:'50px'}}
                     />
                   </Grid>
                   )}

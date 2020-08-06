@@ -116,6 +116,7 @@ const RecipeForms = props => {
     ...ingredient, isModified: false
   })));
   const [deletedIndex, setDeletedIndex] = useState(0);
+  const [addStepMode, setAddStepMode] = useState(false);
   const containersDisabled = props.addIngredientMode || props.editIngredientMode;
 
   const onImageChange = file => {
@@ -511,13 +512,16 @@ const RecipeForms = props => {
                                 input: classes.inputTextReducedPadding
                               },
                               onFocus: () => setFocusedStep(index),
-                              onBlur: () => setFocusedStep(null)
+                              onBlur: () => {
+                                setFocusedStep(null);
+                                setAddStepMode(false);
+                              }
                             }}
                             id={"step_" + index}
                             variant="outlined"
                             color="secondary"
                             style={{width:'100%'}}
-                            autoFocus
+                            autoFocus={addStepMode}
                             error={!step.length}
                             helperText={step.length || focusedStep === index ? "" : "This step is empty"}
                             value={step}
@@ -534,6 +538,7 @@ const RecipeForms = props => {
                       <Grid item style={{width:'16%'}}>
                         <Fab style={iconButtonStyle} onClick={() => {
                           setDirectionSteps([...directionSteps, ""]);
+                          setAddStepMode(true);
                         }}>
                           <AddIcon/>
                         </Fab>
@@ -543,7 +548,10 @@ const RecipeForms = props => {
                         margin: '7px 15px',
                         fontSize: '16px',
                         color: '#b5b5b5'
-                      }} onClick={() => setDirectionSteps([...directionSteps, ""])}>
+                      }} onClick={() => {
+                        setDirectionSteps([...directionSteps, ""]);
+                        setAddStepMode(true);
+                      }}>
                         Add step...
                       </Grid>
                     </Grid>

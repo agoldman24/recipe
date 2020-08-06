@@ -106,7 +106,7 @@ const IconsModal = props => {
                   {[0,1,2,3].map(column =>
                   <Grid item className="iconContainer"
                     style={{
-                    width: isMobile ? '70px' : '90px',
+                    width: isMobile ? '68px' : '90px',
                     padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
                     borderRadius: '10px'
                     }}
@@ -116,7 +116,7 @@ const IconsModal = props => {
                     }}
                   >
                     <img src={props.icons[4*row + column]}
-                      height={isMobile ? "48px" : "65px"} style={{maxWidth: isMobile ? '68px' : '85px'}}
+                      height={isMobile ? "46px" : "65px"} style={{maxWidth: isMobile ? '65px' : '85px'}}
                     />
                   </Grid>
                   )}

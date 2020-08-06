@@ -1,5 +1,5 @@
 import React from 'react';
-import MaterialTable, { MTableHeader, MTableAction } from "material-table";
+import MaterialTable, { MTableHeader, MTableAction, MTableCell } from "material-table";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
 import Button from "@material-ui/core/Button"
@@ -34,7 +34,7 @@ const IngredientsTable = ({
   let editable = !isEditable ? null : {
     onRowUpdate: newData =>
       new Promise(resolve => {
-        onIngredientChange(newData);
+        onIngredientChange({ ...newData, isModified: true });
         toggleEditRowMode();
         resolve();
       }),
@@ -52,7 +52,7 @@ const IngredientsTable = ({
       ...editable,
       onRowAdd: newData =>
         new Promise((resolve, reject) => {
-          onIngredientAdd({ ...newData, index: 0 });
+          onIngredientAdd({ ...newData, index: 0, isModified: true });
           toggleAddRowMode();
           resolve();
         }),
@@ -68,6 +68,7 @@ const IngredientsTable = ({
       components={{
         Container: props => <Paper {...props} elevation={0}/>,
         Header: props => isEditable ? null : <MTableHeader {...props}/>,
+        Cell: props => <MTableCell {...props} style={{fontStyle: props.rowData.isModified ? 'italic' : 'normal'}}/>,
         EditField: props => (
           <Input
             value={props.value}

@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const IconsModal = props => {
-  const { isVisible, closeModal, onConfirm } = props;
+  const { isVisible, closeModal, onConfirm, iconFetchMessage } = props;
   const [searchVal, setSearchVal] = useState("");
   const classes = useStyles();
   return (
@@ -101,10 +101,10 @@ const IconsModal = props => {
             </Grid>
             {!!props.icons.length &&
             [0,1,2,3,4].map(row =>
-              <Grid container direction="column">
+              <Grid container direction="column" key={"row_" + row}>
                 <Grid container direction="row">
                   {[0,1,2,3].map(column =>
-                  <Grid item className="iconContainer"
+                  <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
                     style={{
                     width: isMobile ? '68px' : '90px',
                     padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
@@ -123,8 +123,11 @@ const IconsModal = props => {
                 </Grid>
               </Grid>
             )}
+            <Grid item>
+              <p style={{fontSize:'14px', paddingLeft:'5px'}}>{iconFetchMessage}</p>
+            </Grid>
             <Grid item style={{width:'100%'}}>
-              <Button style={{float:'right'}}>Close</Button>
+              <Button style={{float:'right'}} onClick={closeModal}>Close</Button>
             </Grid>
           </Grid>
         </Fade>
@@ -135,7 +138,8 @@ const IconsModal = props => {
 
 const mapStateToProps = state => {
   return {
-    icons: state.icons
+    icons: state.icons,
+    iconFetchMessage: state.iconFetchMessage
   }
 }
 

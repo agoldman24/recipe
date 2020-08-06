@@ -74,5 +74,6 @@ export default Object.assign({},
     created: false,
     saved: false
   },
-  icons: []
+  icons: [],
+  iconFetchMessage: ""
 });

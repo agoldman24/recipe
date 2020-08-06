@@ -45,13 +45,12 @@ class RecipeDetailEdit extends React.Component {
     this.tableRef = createRef();
     this.state = {
       addIngredientMode: false,
-      editIngredientMode: false,
-      addDirectionMode: false
+      editIngredientMode: false
     }
   }
   render() {
-    const { addIngredientMode, editIngredientMode, addDirectionMode } = this.state;
-    const buttonsDisabled = addIngredientMode || editIngredientMode || addDirectionMode;
+    const { addIngredientMode, editIngredientMode } = this.state;
+    const buttonsDisabled = addIngredientMode || editIngredientMode;
     return (
       <div style={darkBackgroundStyle}>
         <Card style={detailStyle}>
@@ -119,10 +118,8 @@ class RecipeDetailEdit extends React.Component {
             tableRef={this.tableRef}
             addIngredientMode={this.state.addIngredientMode}
             editIngredientMode={this.state.editIngredientMode}
-            addDirectionMode={this.state.addDirectionMode}
             toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
             toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
-            toggleAddDirectionMode={() => this.setState({ addDirectionMode: !this.state.addDirectionMode })}
           />
         </Card>
       </div>

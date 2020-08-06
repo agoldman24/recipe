@@ -470,6 +470,15 @@ const icons = (state = StateTree.icons, action) => {
   }
 }
 
+const iconFetchMessage = (state = StateTree.iconFetchMessage, action) => {
+  switch (action.type) {
+    case GET_ICONS_FINISHED:
+      return !!action.icons.length ? "" : "No icons found, try another search"
+    default:
+      return "";
+  }
+}
+
 export default combineReducers({
   activeTab,
   tabHistory,
@@ -488,5 +497,6 @@ export default combineReducers({
   displayUser,
   displayUserDetail,
   allRecipesFetched,
-  icons
+  icons,
+  iconFetchMessage
 });

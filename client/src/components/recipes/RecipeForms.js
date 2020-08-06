@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -18,8 +18,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import IngredientsTable from '../tables/IngredientsTable';
@@ -112,11 +110,13 @@ const RecipeForms = props => {
     typeof props.directions === "string" ? props.directions : "");
   const [directionSteps, setDirectionSteps] = useState(
     typeof props.directions === "string" ? [] : props.directions);
-  const [directionsType, setDirectionsType] = useState("paragraph");
-  const [ingredients, setIngredients] = useState(props.ingredients);
+  const [focusedStep, setFocusedStep] = useState(null);
+  const [directionsType, setDirectionsType] = useState(typeof props.directions);
+  const [ingredients, setIngredients] = useState(props.ingredients.map(ingredient => ({
+    ...ingredient, isModified: false
+  })));
   const [deletedIndex, setDeletedIndex] = useState(0);
-  const [newStep, setNewStep] = useState("");
-  const containersDisabled = props.addIngredientMode || props.editIngredientMode || props.addDirectionMode;
+  const containersDisabled = props.addIngredientMode || props.editIngredientMode;
 
   const onImageChange = file => {
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
@@ -156,6 +156,25 @@ const RecipeForms = props => {
     let currentSteps = [ ...directionSteps ];
     currentSteps.splice(index, 1);
     setDirectionSteps(currentSteps);
+  }
+
+  const directionsAreDifferent = () => {
+    if (directionsType !== typeof props.directions) {
+      return true;
+    };
+    if (directionsType === "string") {
+      return directionsParagraph !== props.directions;
+    } else {
+      if (directionSteps.length !== props.directions.length) {
+        return true;
+      }
+      directionSteps.forEach((direction, index) => {
+        if (direction !== props.directions[index]) {
+          return true;
+        }
+      });
+    }
+    return false;
   }
 
   return (
@@ -200,7 +219,10 @@ const RecipeForms = props => {
               input: classes.inputText
             }
           }}
-          style={{opacity: containersDisabled ? '0.3' : '1.0'}}
+          style={{
+            opacity: containersDisabled ? '0.3' : '1.0',
+            fontStyle: name === props.name ? 'normal' : 'italic'
+          }}
           variant="outlined"
           required
           fullWidth
@@ -235,7 +257,10 @@ const RecipeForms = props => {
         >
           <Grid item style={{...itemStyle, padding:'10px 10px 5px 10px'}}>
             <Typography
-              style={sectionTitleStyle(focusedContainer, "image", isNameFocused)}
+              style={{
+                ...sectionTitleStyle(focusedContainer, "image", isNameFocused),
+                fontStyle: image === props.image ? 'normal' : 'italic'
+              }}
             >
               Image*
             </Typography>
@@ -302,7 +327,11 @@ const RecipeForms = props => {
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
             <Typography
-              style={sectionTitleStyle(focusedContainer, "ingredients", isNameFocused)}
+              style={{
+                ...sectionTitleStyle(focusedContainer, "ingredients", isNameFocused),
+                fontStyle: ingredients.length !== props.ingredients.length
+                  || ingredients.filter(i => i.isModified).length ? 'italic' : 'normal'
+              }}
             >
               Ingredients*
             </Typography>
@@ -312,9 +341,9 @@ const RecipeForms = props => {
                   startIcon={<AddIcon/>}
                   style={{
                     ...addButtonStyle,
-                    opacity: props.addIngredientMode || props.editIngredientMode || props.addDirectionMode ? '0.3' : '1.0'
+                    opacity: props.addIngredientMode || props.editIngredientMode ? '0.3' : '1.0'
                   }}
-                  disabled={props.addIngredientMode || props.editIngredientMode || props.addDirectionMode}
+                  disabled={props.addIngredientMode || props.editIngredientMode}
                   onClick={() => {
                     document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
                     props.toggleAddIngredientMode();
@@ -387,7 +416,10 @@ const RecipeForms = props => {
         >
           <Grid item style={{...itemStyle, padding:'10px'}}>
             <Typography
-              style={sectionTitleStyle(focusedContainer, "directions", isNameFocused)}
+              style={{
+                ...sectionTitleStyle(focusedContainer, "directions", isNameFocused),
+                fontStyle: directionsAreDifferent() ? 'italic' : 'normal'
+              }}
             >
               Directions*
             </Typography>
@@ -395,20 +427,20 @@ const RecipeForms = props => {
               {focusedContainer === "directions"
               ? <FormControl component="fieldset">
                   <RadioGroup
-                    value={directionsType}
-                    onChange={e => setDirectionsType(e.target.value)}
+                    value={directionsType === "string" ? "paragraph" : "step-by-step"}
+                    onChange={e => setDirectionsType(e.target.value === "paragraph" ? "string" : "object")}
                   >
                     <FormControlLabel
                       value="step-by-step"
                       control={<Radio color="primary" />}
                       label="Step-by-Step"
-                      style={radioLabelStyle(directionsType, "step-by-step")}
+                      style={radioLabelStyle(directionsType, "object")}
                     />
                     <FormControlLabel
                       value="paragraph"
                       control={<Radio color="primary" />}
                       label="Paragraph"
-                      style={radioLabelStyle(directionsType, "paragraph")}
+                      style={radioLabelStyle(directionsType, "string")}
                     />
                   </RadioGroup>
                 </FormControl>
@@ -428,7 +460,7 @@ const RecipeForms = props => {
           </Grid>
           <Grid item style={itemStyle}>
             <ThemeProvider theme={createMuiTheme(inputTheme)}>
-              {directionsType === "paragraph"
+              {directionsType === "string"
               ? <TextField
                   InputProps={{
                     classes: {
@@ -452,9 +484,7 @@ const RecipeForms = props => {
                   <Grid container direction="column">
                     {directionSteps.map((step, index) => {
                     return (
-                      <Grid container direction="row" key={index}
-                        style={{opacity: props.addDirectionMode ? '0.3' : '1.0'}}
-                      >
+                      <Grid container direction="row" key={index}>
                         <Grid item style={{width:'8%', paddingTop: '7px'}}>
                           <Fab style={iconButtonStyle}>
                             <DeleteOutlineIcon
@@ -479,11 +509,17 @@ const RecipeForms = props => {
                             InputProps={{
                               classes: {
                                 input: classes.inputTextReducedPadding
-                              }
+                              },
+                              onFocus: () => setFocusedStep(index),
+                              onBlur: () => setFocusedStep(null)
                             }}
+                            id={"step_" + index}
                             variant="outlined"
                             color="secondary"
                             style={{width:'100%'}}
+                            autoFocus
+                            error={!step.length}
+                            helperText={step.length || focusedStep === index ? "" : "This step is empty"}
                             value={step}
                             onChange={e => {
                               let currentSteps = [ ...directionSteps ];
@@ -493,58 +529,24 @@ const RecipeForms = props => {
                           />
                         </Grid>
                       </Grid>
-                    );
-                    })}
-                    {props.addDirectionMode
-                    ? <Grid container direction="row">
-                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
-                          <Fab style={iconButtonStyle}>
-                            <CloseIcon onClick={props.toggleAddDirectionMode}/>
-                          </Fab>
-                        </Grid>
-                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
-                          <Fab style={iconButtonStyle}>
-                            <CheckIcon onClick={() => {
-                              let currentSteps = [ ...directionSteps ];
-                              currentSteps.push(newStep);
-                              setDirectionSteps(currentSteps);
-                              props.toggleAddDirectionMode();
-                              setNewStep("");
-                            }}/>
-                          </Fab>
-                        </Grid>
-                        <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
-                          <TextField
-                            InputProps={{
-                              classes: {
-                                input: classes.inputTextReducedPadding
-                              }
-                            }}
-                            variant="outlined"
-                            color="secondary"
-                            autoFocus
-                            fullWidth
-                            value={newStep}
-                            onChange={e => setNewStep(e.target.value)}
-                          />
-                        </Grid>
+                    )})}
+                    <Grid container direction="row">
+                      <Grid item style={{width:'16%'}}>
+                        <Fab style={iconButtonStyle} onClick={() => {
+                          setDirectionSteps([...directionSteps, ""]);
+                        }}>
+                          <AddIcon/>
+                        </Fab>
                       </Grid>
-                    : <Grid container direction="row">
-                        <Grid item style={{width:'16%'}}>
-                          <Fab style={iconButtonStyle} onClick={props.toggleAddDirectionMode}>
-                            <AddIcon/>
-                          </Fab>
-                        </Grid>
-                        <Grid item style={{
-                          cursor: 'pointer',
-                          margin: '7px 15px',
-                          fontSize: '16px',
-                          color: '#b5b5b5'
-                        }} onClick={props.toggleAddDirectionMode}>
-                          Add step...
-                        </Grid>
+                      <Grid item style={{
+                        cursor: 'pointer',
+                        margin: '7px 15px',
+                        fontSize: '16px',
+                        color: '#b5b5b5'
+                      }} onClick={() => setDirectionSteps([...directionSteps, ""])}>
+                        Add step...
                       </Grid>
-                    }
+                    </Grid>
                   </Grid>
                 </div>
               }

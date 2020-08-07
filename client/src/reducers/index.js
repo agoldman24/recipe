@@ -390,10 +390,10 @@ const profileEditor = (state = StateTree.profileEditor, action) => {
           }
         : null;
     case UPDATE_PROFILE_EDITOR:
-      if (!!action.imageData) {
+      if (!!action.imageUrl) {
         return {
           ...state,
-          profileImage: URL.createObjectURL(b64toBlob(action.imageData))
+          profileImage: action.imageUrl
         }
       }
       else if (!!action.firstName) {

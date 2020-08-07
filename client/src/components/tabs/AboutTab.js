@@ -22,9 +22,11 @@ export default function AboutTab() {
           About
         </Typography>
       </Grid>
-      <Typography>
-        Recipe Book is a platform used for creating and sharing recipes
-      </Typography>
+      <Grid item style={{padding:'10px'}}>
+        <Typography>
+        RecipeBook is a website developed by Andrew Goldman with the goal of building a community-driven hub of delicious home-cooked meals. Anyone wishing to expand their culinary portfolio or simply decide what to cook for dinner one night will find value in this application. Its content is facilitated by the exchange of recipes among users, particularly those who are passionate about food and wish to share their ideas with the world. By creating a free RecipeBook account, you can submit and save customized recipes complete with images, ingredients, and directions and also "follow" other chefs to view the recipes they've created. You can also convert the ingredients of any given recipe into a digital shipping list to check items off of when you go to the grocery store. Visit recipebookapp.com to get started!
+        </Typography>
+      </Grid>
     </Grid>
   );
 }

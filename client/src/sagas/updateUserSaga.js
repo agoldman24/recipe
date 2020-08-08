@@ -42,23 +42,13 @@ function* updateUser(action) {
               id: profileImageId,
               data: imageData
             });
-            if (!firstName && !lastName && !username) {
-              user = activeUser;
-            } else {
-              res2 = yield call(Api.post, '/updateProfile', {
-                id: activeUser.id,
-                profileImageId, firstName, lastName, username
-              });
-              user = res2.data.user;
-            }
           }
-        } else {
-          res2 = yield call(Api.post, '/updateProfile', {
-            id: activeUser.id,
-            profileImageId, firstName, lastName, username
-          });
-          user = res2.data.user;
         }
+        res2 = yield call(Api.post, '/updateProfile', {
+          id: activeUser.id,
+          profileImageId, firstName, lastName, username
+        });
+        user = res2.data.user;
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: PROFILE, 

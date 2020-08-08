@@ -115,7 +115,7 @@ const IconsModal = props => {
                       closeModal();
                     }}
                   >
-                    <img src={props.icons[4*row + column]}
+                    <img alt="icon" src={props.icons[4*row + column]}
                       height={isMobile ? "46px" : "65px"} style={{maxWidth: isMobile ? '65px' : '85px'}}
                     />
                   </Grid>

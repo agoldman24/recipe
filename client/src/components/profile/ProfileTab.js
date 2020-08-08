@@ -165,7 +165,7 @@ const ProfileTab = props => {
               <ArrowBackIosIcon/>
             </Fab>
           }
-          <Grid item>
+          <Grid item style={{paddingTop: !!props.activeUser ? '0' : '30px'}}>
             <Typography variant="h5" style={usernameStyle}>{username}</Typography>
           </Grid>
           <Grid item style={nameBoxStyle}>

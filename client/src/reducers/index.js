@@ -115,16 +115,7 @@ const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
     case APPEND_SAMPLE_RECIPES:
       return {
         ...state,
-        ...Object.keys(action.recipes).reduce((accum, uuid) => {
-          accum[uuid] = {
-            ...action.recipes[uuid],
-            ingredients: action.recipes[uuid].ingredients.map((ingredient, index) => ({
-              ...ingredient,
-              index
-            }))
-          }
-          return accum;
-        }, {})
+        ...action.recipes
       }
     case SIGN_OUT:
       return {};

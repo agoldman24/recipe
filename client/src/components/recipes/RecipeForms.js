@@ -112,8 +112,8 @@ const RecipeForms = props => {
     typeof props.directions === "string" ? [] : props.directions);
   const [focusedStep, setFocusedStep] = useState(null);
   const [directionsType, setDirectionsType] = useState(typeof props.directions);
-  const [ingredients, setIngredients] = useState(props.ingredients.map(ingredient => ({
-    ...ingredient, isModified: false
+  const [ingredients, setIngredients] = useState(props.ingredients.map((ingredient, index) => ({
+    ...ingredient, index, isModified: false
   })));
   const [deletedIndex, setDeletedIndex] = useState(0);
   const [addStepMode, setAddStepMode] = useState(false);

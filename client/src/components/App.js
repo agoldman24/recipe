@@ -79,14 +79,13 @@ class App extends React.Component {
   }
 
   render() {
+    const activeTab = this.props.activeTab.name;
     const mobileStyle = {
       padding: this.props.isLoggedIn
         ? '50px 0 10px'
-        : this.props.activeTab.name === SEARCH_TAB
-        || this.props.activeTab.name === RECIPE_TAB
-        || this.props.activeTab.name === PROFILE_TAB
+        : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '0 0 10px 0'
-          : '50px 0 10px',
+          : activeTab === ABOUT_TAB ? '10px 0 0 0' : '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
     const desktopStyle = {
@@ -109,13 +108,13 @@ class App extends React.Component {
       }>
         <NavigationMenu/>
         <SuccessSnackbar/>
+        <Spinner isVisible={this.props.isSpinnerVisible}/>
         {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
           <ScrollButton
             scrollButtonTop={this.props.isLoggedIn ? '60px' : '10px'}
             zIndex={!this.props.isLoggedIn ? '2' : '3'}
           />
         }
-        {this.props.isSpinnerVisible && <Spinner/>}
         <Container
           id="container"
           component="main"
@@ -126,7 +125,8 @@ class App extends React.Component {
           {this.props.activeTab.name === SEARCH_TAB && <SearchTab/>}
           {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
           {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
-          {this.props.activeTab.name === ABOUT_TAB && <AboutTab/>}
+          {this.props.activeTab.name === ABOUT_TAB &&
+            <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>}
           {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
           {this.props.activeTab.name === RECIPE_TAB && <RecipeTab/>}
           {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}

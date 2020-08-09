@@ -30,12 +30,12 @@ const NavigationMenu = props => {
 
   const fabStyle = {
     position: 'fixed',
-    right: isMobile ? 0 : 10,
-    bottom: isMobile ? 0 : 'intial',
-    top: isMobile ? 'initial' : 5,
+    right: 20,
+    bottom: isMobile ? 20 : 'initial',
+    top: isMobile ? 'initial' : 10,
     background: isMobile
-      ? 'linear-gradient(to top left, black, rgba(0,0,0,0))'
-      : 'linear-gradient(to bottom left, black, rgba(0,0,0,0))',
+      ? 'linear-gradient(to top left, #202020, grey)'
+      : 'linear-gradient(to bottom left, #202020, grey)',
     boxShadow: 'none',
     color: 'white',
     zIndex: '3'

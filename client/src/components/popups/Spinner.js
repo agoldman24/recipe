@@ -1,14 +1,20 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-export default function Spinner() {
+const useStyles = makeStyles({
+  paper: {
+    overflow: 'hidden',
+    background: 'none'
+  }
+});
+
+export default function Spinner({ isVisible }) {
+  const classes = useStyles();
   return (
-    <div
-      className="ui active inverted massive text loader"
-      style={{
-        position:"fixed",
-        fontSize:"50px",
-        zIndex: 9999
-      }}
-    />
+    <Dialog open={isVisible} classes={{ paper: classes.paper }}>
+      <CircularProgress/>
+    </Dialog>
   );
-};
+}

@@ -1,89 +1,58 @@
 import React from 'react';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+import { makeStyles } from '@material-ui/styles';
+import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import CreateIcon from '@material-ui/icons/Create';
-import { defaultTheme } from '../../styles';
+import { recipeButtonStyle } from '../../styles';
+
+const useStyles = makeStyles(() => ({
+  button: {
+    textTransform: 'none',
+    fontSize: '16px',
+    fontFamily: 'Signika',
+    borderRadius: '0',
+    padding: '15px'
+  }
+}));
+
+const fabStyle = {
+  background: 'none',
+  boxShadow: 'none',
+  color: 'white'
+};
 
 export default function RecipeButtons() {
-  const radioStyle = {
-    position: 'fixed',
-    width: '100vw',
-    left: '0',
-    bottom: '15px',
-    zIndex: '2'
-  };
-  const fabStyle = {
-    background: 'none',
-    boxShadow: 'none',
-    color: 'white',
-    marginLeft:'5px'
-  };
-
+  const classes = useStyles();
   const [value, setValue] = React.useState('Samples');
 
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
-
   return (
-    <div>
-      <div style={{
-        position:'fixed',
-        width:'100vw',
-        height:'80px',
-        bottom:'0',
-        left:'0',
-        backgroundImage:'linear-gradient(#202020, black)',
-        zIndex:'1'
-      }}/>
-      <FormControl component="fieldset" style={radioStyle}>
-        <RadioGroup
-          value={value}
-          onChange={handleChange}
-          style={{justifyContent:'center'}}
-          row
-        >
-          <FormControlLabel
-            value="By Me"
-            control={<Radio color="primary" />}
-            label="By Me"
-            labelPlacement="bottom"
-            style={{
-              color: value === "By Me"
-                ? defaultTheme.palette.primary.main
-                : 'white'
-            }}
-          />
-          <FormControlLabel
-            value="By Friends"
-            control={<Radio color="primary" />}
-            label="By Friends"
-            labelPlacement="bottom"
-            style={{
-              color: value === "By Friends"
-                ? defaultTheme.palette.primary.main
-                : 'white'
-            }}
-          />
-          <FormControlLabel
-            value="Samples"
-            control={<Radio color="primary" />}
-            label="Samples"
-            labelPlacement="bottom"
-            style={{
-              color: value === "Samples"
-                ? defaultTheme.palette.primary.main
-                : 'white'
-            }}
-          />
-          <Fab style={fabStyle}>
-            <CreateIcon style={{height:'40', width:'40'}}/>
-          </Fab>
-        </RadioGroup>
-      </FormControl>
+    <div style={{
+      position:'fixed',
+      width:'100vw',
+      bottom:'0',
+      left:'0',
+      backgroundImage:'linear-gradient(#202020, black)',
+      textAlign:'center',
+      zIndex:'1'
+    }}>
+      <Button
+        className={classes.button}
+        style={recipeButtonStyle(value, "By Me")}
+        onClick={() => setValue("By Me")}
+      >By Me</Button>
+      <Button
+        className={classes.button}
+        style={recipeButtonStyle(value, "By Friends")}
+        onClick={() => setValue("By Friends")}
+      >By Friends</Button>
+      <Button
+        className={classes.button}
+        style={recipeButtonStyle(value, "Samples")}
+        onClick={() => setValue("Samples")}
+      >Samples</Button>
+      <Fab style={fabStyle}>
+        <CreateIcon style={{height:'35', width:'35'}}/>
+      </Fab>
     </div>
   );
 }

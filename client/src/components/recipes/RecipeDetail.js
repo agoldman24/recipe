@@ -35,6 +35,9 @@ const styles = () => ({
   paper: {
     borderRadius: '4px 0 4px 4px',
     border: '1px solid white'
+  },
+  root: {
+    marginTop: '-10px'
   }
 });
 
@@ -95,7 +98,7 @@ class RecipeDetail extends React.Component {
                 style={{
                   ...fabStyle,
                   position: 'fixed',
-                  top: '60px',
+                  top: '68px',
                   right: isMobile ? '0' : 'calc(50vw - 240px)'
                 }}
                 onClick={() => {
@@ -112,6 +115,7 @@ class RecipeDetail extends React.Component {
                       this.props.activeUser.id, this.props.id, false
                     )}
                     style={{...fabStyle, float:'left'}}
+                    classes={{ root: this.props.classes.root }}
                   >
                     <FavoriteIcon style={iconStyle}/>
                   </Fab>
@@ -120,6 +124,7 @@ class RecipeDetail extends React.Component {
                       this.props.activeUser.id, this.props.id, true
                     )}
                     style={{...fabStyle, float:'left'}}
+                    classes={{ root: this.props.classes.root }}
                   >
                     <FavoriteBorderIcon style={iconStyle}/>
                   </Fab>

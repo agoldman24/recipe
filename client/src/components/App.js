@@ -10,7 +10,7 @@ import SignInTab from './tabs/SignInTab';
 import SignUpTab from './tabs/SignUpTab';
 import WelcomeTab from './tabs/WelcomeTab';
 import AboutTab from './tabs/AboutTab';
-import RecipeTab from './recipes/RecipeTab';
+import RecipeTab from './tabs/RecipeTab';
 import SearchTab from './tabs/SearchTab';
 import ProfileTab from './profile/ProfileTab';
 import ScrollButton from './popups/ScrollButton';
@@ -98,7 +98,7 @@ class App extends React.Component {
           ? '0'
           : '50px',
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
-        ? 'calc(100vh - 130px)'
+        ? 'calc(100vh - 110px)'
         : '100vh',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };

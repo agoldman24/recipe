@@ -226,8 +226,8 @@ export const fabStyle = {
 };
 
 export const blackIconStyle = {
-  width: '30',
-  height: '30',
+  width: '27',
+  height: '27',
   background: 'black',
   color: 'white',
   borderRadius: '50px'
@@ -316,3 +316,10 @@ export const sectionTitleStyle = (focusedContainer, container, isNameFocused) =>
     : 'white',
   fontSize: '16px'
 });
+
+export const recipeButtonStyle = (value, currentVal) => ({
+  borderTop: value === currentVal
+    ? '2px solid ' + defaultTheme.palette.primary.main
+    : 'none',
+  color: value === currentVal ? defaultTheme.palette.primary.main : 'white'
+})

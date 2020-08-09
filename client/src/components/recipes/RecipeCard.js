@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -12,7 +13,14 @@ import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
 import '../../index.css';
 
+const useStyles = makeStyles(() => ({
+  root: {
+    marginTop: '-10px'
+  }
+}));
+
 const RecipeCard = props => {
+  const classes = useStyles();
   const openRecipeDetails = event => {
     props.loadRecipeDetailsStart();
     setTimeout(() => props.toggleDetailView(props.id), 1);
@@ -51,6 +59,7 @@ const RecipeCard = props => {
                   props.updateSavedRecipes(props.activeUser.id, props.id, false)
                 }}
                 style={{...fabStyle, float:'left'}}
+                classes={{ root: classes.root }}
               >
                 <FavoriteIcon style={iconStyle}/>
               </Fab>
@@ -61,18 +70,12 @@ const RecipeCard = props => {
                   props.updateSavedRecipes(props.activeUser.id, props.id, true)
                 }}
                 style={{...fabStyle, float:'left'}}
+                classes={{ root: classes.root }}
               >
                 <FavoriteBorderIcon style={iconStyle}/>
               </Fab>
           : null
           }
-        </div>
-        <div
-          style={{
-            position:'absolute', top:'30%', left:'0',
-            width:'100%', verticalAlign:'text-top'
-          }}
-        >
         </div>
         <div style={{
           position:'absolute',

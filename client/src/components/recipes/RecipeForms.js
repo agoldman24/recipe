@@ -544,8 +544,9 @@ const RecipeForms = props => {
                         </Fab>
                       </Grid>
                       <Grid item style={{
+                        width: '75%',
                         cursor: 'pointer',
-                        margin: '7px 15px',
+                        margin: '7px 0 7px 15px',
                         fontSize: '16px',
                         color: '#b5b5b5'
                       }} onClick={() => {

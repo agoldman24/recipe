@@ -271,7 +271,7 @@ export const undetailedStyle = {
 export const headerStyle = {
   background: 'white',
   color: 'black',
-  padding: '16px 50px 0 16px'
+  padding: '16px 50px 10px 16px'
 }
 
 export const titleStyle = {

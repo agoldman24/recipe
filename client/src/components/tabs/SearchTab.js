@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: '100%',
+    width: isMobile ? '100%' : '97%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'

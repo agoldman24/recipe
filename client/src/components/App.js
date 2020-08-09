@@ -85,7 +85,7 @@ class App extends React.Component {
         ? '50px 0 10px'
         : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '0 0 10px 0'
-          : activeTab === ABOUT_TAB ? '10px 0 0 0' : '50px 0 10px',
+          : activeTab === ABOUT_TAB ? '20px 0 5px 0' : '50px 0 10px',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
     const desktopStyle = {

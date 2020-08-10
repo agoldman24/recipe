@@ -98,7 +98,7 @@ class RecipeDetail extends React.Component {
                 style={{
                   ...fabStyle,
                   position: 'fixed',
-                  top: '68px',
+                  top: '65px',
                   right: isMobile ? '0' : 'calc(50vw - 240px)'
                 }}
                 onClick={() => {

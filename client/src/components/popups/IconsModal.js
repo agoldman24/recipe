@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { GET_ICONS_REQUESTED } from '../../actions';
 import '../../index.css';
 
@@ -52,9 +53,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const IconsModal = props => {
+  const classes = useStyles();
   const { isVisible, closeModal, onConfirm, iconFetchMessage } = props;
   const [searchVal, setSearchVal] = useState("");
-  const classes = useStyles();
+  const [icons, setIcons] = useState([]);
+  useEffect(() => {
+    setIcons(props.icons.map(icon => ({ url: icon, isLoading: true })));
+  }, [props.icons]);
   return (
     <div>
       <Modal
@@ -99,7 +104,7 @@ const IconsModal = props => {
                 Search
               </Button>
             </Grid>
-            {!!props.icons.length &&
+            {!!icons.length &&
             [0,1,2,3,4].map(row =>
               <Grid container direction="column" key={"row_" + row}>
                 <Grid container direction="row">
@@ -111,13 +116,23 @@ const IconsModal = props => {
                     borderRadius: '10px'
                     }}
                     onClick={() => {
-                      onConfirm(props.icons[4*row + column]);
+                      onConfirm(icons[4*row + column].url);
                       closeModal();
                     }}
                   >
-                    <img alt="icon" src={props.icons[4*row + column]}
-                      height={isMobile ? "46px" : "65px"} style={{maxWidth: isMobile ? '65px' : '85px'}}
-                    />
+                    <CircularProgress size={50} style={{
+                      display: icons[4*row + column].isLoading ? 'block' : 'none'
+                    }}/>
+                    <img alt="icon" src={icons[4*row + column].url}
+                      onLoad={() => {
+                        let currentIcons = [...icons];
+                        currentIcons[4*row + column].isLoading = false;
+                        setIcons(currentIcons);
+                      }}
+                      height={isMobile ? "46px" : "65px"} style={{
+                        display: icons[4*row + column].isLoading ? 'none' : 'block',
+                        maxWidth: isMobile ? '65px' : '85px'
+                    }}/>
                   </Grid>
                   )}
                 </Grid>

@@ -23,7 +23,7 @@ const fabStyle = {
 
 export default function RecipeButtons() {
   const classes = useStyles();
-  const [value, setValue] = React.useState('Samples');
+  const [value, setValue] = React.useState('Anonymous');
 
   return (
     <div style={{
@@ -37,9 +37,9 @@ export default function RecipeButtons() {
     }}>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(value, "By Me")}
-        onClick={() => setValue("By Me")}
-      >By Me</Button>
+        style={recipeButtonStyle(value, "Anonymous")}
+        onClick={() => setValue("Anonymous")}
+      >Anonymous</Button>
       <Button
         className={classes.button}
         style={recipeButtonStyle(value, "By Friends")}
@@ -47,9 +47,9 @@ export default function RecipeButtons() {
       >By Friends</Button>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(value, "Samples")}
-        onClick={() => setValue("Samples")}
-      >Samples</Button>
+        style={recipeButtonStyle(value, "By Me")}
+        onClick={() => setValue("By Me")}
+      >By Me</Button>
       <Fab style={fabStyle}>
         <CreateIcon style={{height:'35', width:'35'}}/>
       </Fab>

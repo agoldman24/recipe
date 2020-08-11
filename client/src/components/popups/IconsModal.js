@@ -120,7 +120,7 @@ const IconsModal = props => {
                       closeModal();
                     }}
                   >
-                    <CircularProgress size={isMobile ? 40 : 65} style={{
+                    <CircularProgress size={isMobile ? 45 : 65} style={{
                       display: icons[4*row + column].isLoading ? 'block' : 'none'
                     }}/>
                     <img alt="icon" src={icons[4*row + column].url}

@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { isMobile } from 'react-device-detect';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
 import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
@@ -21,6 +22,8 @@ const useStyles = makeStyles(() => ({
 
 const RecipeCard = props => {
   const classes = useStyles();
+  const [image, setImage] = useState(props.image);
+  const [isLoading, setIsLoading] = useState(true);
   const openRecipeDetails = event => {
     props.loadRecipeDetailsStart();
     setTimeout(() => props.toggleDetailView(props.id), 1);
@@ -43,15 +46,34 @@ const RecipeCard = props => {
         className="cardHeader"
         onClick={openRecipeDetails}
       />
-      <CardMedia
-        image={props.image}
-        children={[]}
-        className="cardMedia"
-        onClick={openRecipeDetails}
-      >
-        <div style={whiteFadeBackgroundStyle}>
+      <div className="cardMedia" onClick={openRecipeDetails}>
+        <div>
           {props.isLoggedIn
-          ? props.savedRecipeIds.includes(props.id)
+          ? <div style={{...whiteFadeBackgroundStyle, backgroundImage:'none'}}>
+            <CircularProgress style={{
+              display: isLoading ? 'block' : 'none',
+              margin: 'auto',
+              marginTop: '40%',
+              width: '25%',
+              height: 'auto'
+            }}/>
+            <img alt="icon" width="100%" src={image}
+              onLoad={() => {
+                setIsLoading(false);
+              }}
+              style={{
+                display: isLoading ? 'none' : 'block'
+              }}
+            />
+            <div style={{
+              position: 'absolute',
+              top: '0px',
+              left: '0px',
+              width: '100%',
+              height: '100px',
+              backgroundImage: 'linear-gradient(white, rgba(0, 0, 0, 0))'
+            }}>
+            {props.savedRecipeIds.includes(props.id)
             ? <Fab
                 onClick={event => {
                   event.stopPropagation();
@@ -74,6 +96,9 @@ const RecipeCard = props => {
               >
                 <FavoriteBorderIcon style={iconStyle}/>
               </Fab>
+            }
+            </div>
+            </div>
           : null
           }
         </div>
@@ -84,7 +109,7 @@ const RecipeCard = props => {
           height:'50px',
           backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
         }}/>
-      </CardMedia>
+      </div>
     </Card>
   );
 };

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { isMobile } from 'react-device-detect';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -47,33 +46,32 @@ const RecipeCard = props => {
         onClick={openRecipeDetails}
       />
       <div className="cardMedia" onClick={openRecipeDetails}>
-        <div>
+        <div style={{...whiteFadeBackgroundStyle, backgroundImage:'none'}}>
+          <CircularProgress style={{
+            display: isLoading ? 'block' : 'none',
+            margin: 'auto',
+            marginTop: '40%',
+            width: '25%',
+            height: 'auto'
+          }}/>
+          <img alt="icon" width="100%" src={image}
+            onLoad={() => {
+              setIsLoading(false);
+            }}
+            style={{
+              display: isLoading ? 'none' : 'block'
+            }}
+          />
+          <div style={{
+            position: 'absolute',
+            top: '0px',
+            left: '0px',
+            width: '100%',
+            height: '100px',
+            backgroundImage: 'linear-gradient(white, rgba(0, 0, 0, 0))'
+          }}>
           {props.isLoggedIn
-          ? <div style={{...whiteFadeBackgroundStyle, backgroundImage:'none'}}>
-            <CircularProgress style={{
-              display: isLoading ? 'block' : 'none',
-              margin: 'auto',
-              marginTop: '40%',
-              width: '25%',
-              height: 'auto'
-            }}/>
-            <img alt="icon" width="100%" src={image}
-              onLoad={() => {
-                setIsLoading(false);
-              }}
-              style={{
-                display: isLoading ? 'none' : 'block'
-              }}
-            />
-            <div style={{
-              position: 'absolute',
-              top: '0px',
-              left: '0px',
-              width: '100%',
-              height: '100px',
-              backgroundImage: 'linear-gradient(white, rgba(0, 0, 0, 0))'
-            }}>
-            {props.savedRecipeIds.includes(props.id)
+          ? props.savedRecipeIds.includes(props.id)
             ? <Fab
                 onClick={event => {
                   event.stopPropagation();
@@ -96,11 +94,8 @@ const RecipeCard = props => {
               >
                 <FavoriteBorderIcon style={iconStyle}/>
               </Fab>
-            }
-            </div>
-            </div>
-          : null
-          }
+            : null}
+          </div>
         </div>
         <div style={{
           position:'absolute',

@@ -116,6 +116,9 @@ const IngredientsTable = ({
       localization={{
         header: {
           actions: ""
+        },
+        body: {
+          emptyDataSourceMessage: "Click 'Add' to create a new ingredient"
         }
       }}
       options={{

@@ -67,7 +67,10 @@ const IconsModal = props => {
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={isVisible}
-        onClose={closeModal}
+        onClose={e => {
+          e.stopPropagation();
+          closeModal();
+        }}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -94,12 +97,16 @@ const IconsModal = props => {
                   }
                 }}
                 inputProps={{'aria-label':'search'}}
+                onClick={e => e.stopPropagation()}
                 onChange={e => setSearchVal(e.target.value.toLowerCase())}
               />
               <Button id="search"
                 className={classes.button}
                 disabled={!searchVal.length}
-                onClick={() => props.getIcons(searchVal)}
+                onClick={e => {
+                  e.stopPropagation();
+                  props.getIcons(searchVal)
+                }}
               >
                 Search
               </Button>
@@ -115,7 +122,8 @@ const IconsModal = props => {
                     padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
                     borderRadius: '10px'
                     }}
-                    onClick={() => {
+                    onClick={e => {
+                      e.stopPropagation();
                       onConfirm(icons[4*row + column].url);
                       closeModal();
                     }}
@@ -142,7 +150,12 @@ const IconsModal = props => {
               <p style={{fontSize:'14px', paddingLeft:'5px'}}>{iconFetchMessage}</p>
             </Grid>
             <Grid item style={{width:'100%'}}>
-              <Button style={{float:'right'}} onClick={closeModal}>Close</Button>
+              <Button style={{float:'right'}}
+                onClick={e => {
+                  e.stopPropagation();
+                  closeModal();
+                }}
+              >Close</Button>
             </Grid>
           </Grid>
         </Fade>

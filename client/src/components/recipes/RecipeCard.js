@@ -21,7 +21,6 @@ const useStyles = makeStyles(() => ({
 
 const RecipeCard = props => {
   const classes = useStyles();
-  const [image, setImage] = useState(props.image);
   const [isLoading, setIsLoading] = useState(true);
   const openRecipeDetails = event => {
     props.loadRecipeDetailsStart();
@@ -54,7 +53,7 @@ const RecipeCard = props => {
             width: '25%',
             height: 'auto'
           }}/>
-          <img alt="icon" width="100%" src={image}
+          <img alt="icon" width="100%" src={props.image}
             onLoad={() => {
               setIsLoading(false);
             }}
@@ -75,7 +74,6 @@ const RecipeCard = props => {
             ? <Fab
                 onClick={event => {
                   event.stopPropagation();
-                  event.cancelBubble = true;
                   props.updateSavedRecipes(props.activeUser.id, props.id, false)
                 }}
                 style={{...fabStyle, float:'left'}}
@@ -86,7 +84,6 @@ const RecipeCard = props => {
             : <Fab
                 onClick={event => {
                   event.stopPropagation();
-                  event.cancelBubble = true;
                   props.updateSavedRecipes(props.activeUser.id, props.id, true)
                 }}
                 style={{...fabStyle, float:'left'}}

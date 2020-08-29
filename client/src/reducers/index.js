@@ -36,7 +36,8 @@ import {
   UPDATE_PROFILE_EDITOR,
   LOAD_RECIPE_DETAILS_START,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_DETAIL_EDIT_MODE,
+  TOGGLE_RECIPE_EDIT_MODE,
+  TOGGLE_RECIPE_CREATE_MODE,
   GET_ICONS_REQUESTED,
   GET_ICONS_FINISHED
 } from '../actions';
@@ -139,10 +140,15 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
       return !!action.id
         ? { ...state, id: action.id }
         : StateTree.detailRecipe
-    case TOGGLE_DETAIL_EDIT_MODE:
+    case TOGGLE_RECIPE_EDIT_MODE:
       return {
         ...state,
         editMode: !state.editMode
+      }
+    case TOGGLE_RECIPE_CREATE_MODE:
+      return {
+        ...state,
+        createMode: !state.createMode
       }
     default:
       return state;

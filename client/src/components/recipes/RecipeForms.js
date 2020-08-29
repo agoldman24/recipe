@@ -92,6 +92,11 @@ const CssTextField = withStyles({
         borderColor: 'white',
       }
     },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: 'white',
+      marginTop: '-4px'
+    }
   },
 })(TextField);
 
@@ -102,7 +107,7 @@ const RecipeForms = props => {
   const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
   const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
   const [isNameFocused, setIsNameFocused] = useState(false);
-  const [focusedContainer, setFocusedContainer] = useState("image");
+  const [focusedContainer, setFocusedContainer] = useState(props.isEditMode ? "image" : null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [name, setName] = useState(props.name);
   const [image, setImage] = useState(props.image);
@@ -160,7 +165,7 @@ const RecipeForms = props => {
   }
 
   const directionsAreDifferent = () => {
-    if (directionsType !== typeof props.directions) {
+    if (props.isEditMode && directionsType !== typeof props.directions) {
       return true;
     };
     if (directionsType === "string") {
@@ -179,7 +184,7 @@ const RecipeForms = props => {
   }
 
   return (
-    <div>
+    <div style={{width:'100%', height:'100%'}} onClick={() => setFocusedContainer(null)}>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
@@ -244,8 +249,9 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
-        onClick={() => {
+        onClick={e => {
           if (!(containersDisabled && focusedContainer !== "image")) {
+            e.stopPropagation();
             setIsNameFocused(false);
             setFocusedContainer("image");
           }
@@ -269,7 +275,10 @@ const RecipeForms = props => {
               {focusedContainer === "image"
               ? <Fab
                   style={iconButtonStyle}
-                  onClick={e => setAnchorEl(e.currentTarget)}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setAnchorEl(e.currentTarget)
+                  }}
                 >
                   <MenuRoundedIcon
                     style={{
@@ -280,8 +289,9 @@ const RecipeForms = props => {
                 </Fab>
               : <Fab
                   style={iconButtonStyle}
-                  onClick={() => {
+                  onClick={e => {
                     if (!(containersDisabled && focusedContainer !== "image")) {
+                      e.stopPropagation();
                       setIsNameFocused(false);
                       setFocusedContainer("image");
                     }
@@ -293,7 +303,7 @@ const RecipeForms = props => {
             </div>
           </Grid>
         </Grid>
-        <Card style={{padding:'0 10px', marginRight:'0.1px'}}>
+        <Card style={{padding:'0 10px', width:'99%', marginLeft:'0.5%'}}>
           <CardMedia
             image={image}
             style={{
@@ -314,8 +324,9 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
-        onClick={() => {
+        onClick={e => {
           if (!(containersDisabled && focusedContainer !== "ingredients")) {
+            e.stopPropagation();
             setIsNameFocused(false);
             setFocusedContainer("ingredients");
           }
@@ -355,8 +366,9 @@ const RecipeForms = props => {
                 </Button>
               : <Fab
                   style={iconButtonStyle}
-                  onClick={() => {
+                  onClick={e => {
                     if (!(containersDisabled && focusedContainer !== "ingredients")) {
+                      e.stopPropagation();
                       setIsNameFocused(false);
                       setFocusedContainer("ingredients");
                     }
@@ -371,6 +383,8 @@ const RecipeForms = props => {
             style={{
               ...itemStyle,
               maxHeight: isMobile ? '320px' : '280px',
+              width: '99%',
+              marginLeft: '0.5%',
               overflow:'auto'
             }}>
             <IngredientsTable
@@ -401,8 +415,9 @@ const RecipeForms = props => {
           isNameFocused
         )}
         collapsedHeight={50}
-        onClick={() => {
+        onClick={e => {
           if (!(containersDisabled && focusedContainer !== "directions")) {
+            e.stopPropagation();
             setIsNameFocused(false);
             setFocusedContainer("directions");
           }
@@ -447,8 +462,9 @@ const RecipeForms = props => {
                 </FormControl>
               : <Fab
                   style={iconButtonStyle}
-                  onClick={() => {
+                  onClick={e => {
                     if (!(containersDisabled && focusedContainer !== "directions")) {
+                      e.stopPropagation();
                       setIsNameFocused(false);
                       setFocusedContainer("directions");
                     }
@@ -489,7 +505,8 @@ const RecipeForms = props => {
                         <Grid item style={{width:'8%', paddingTop: '7px'}}>
                           <Fab style={iconButtonStyle}>
                             <DeleteOutlineIcon
-                              onClick={() => {
+                              onClick={e => {
+                                e.stopPropagation();
                                 setDeletedIndex(index);
                                 setDeleteStepModalVisible(true);
                               }}
@@ -549,7 +566,8 @@ const RecipeForms = props => {
                         margin: '7px 0 7px 15px',
                         fontSize: '16px',
                         color: '#b5b5b5'
-                      }} onClick={() => {
+                      }} onClick={e => {
+                        e.stopPropagation();
                         setDirectionSteps([...directionSteps, ""]);
                         setAddStepMode(true);
                       }}>
@@ -566,7 +584,10 @@ const RecipeForms = props => {
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
-        onClose={() => setAnchorEl(null)}
+        onClose={e => {
+          e.stopPropagation();
+          setAnchorEl(null)
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
@@ -581,7 +602,7 @@ const RecipeForms = props => {
       >
         <Grid container direction="column">
           <Grid item style={{background:'#292929', borderBottom: '1px solid white', padding:'10px'}}>
-            <label className="fileContainer" style={{fontSize:'16px'}}>
+            <label className="fileContainer" style={{fontSize:'16px'}} onClick={e => e.stopPropagation()}>
               Upload Photo
               <FileBase type="file" onDone={onImageChange}/>
             </label>
@@ -590,7 +611,8 @@ const RecipeForms = props => {
             <Button
               className={classes.button}
               style={{fontSize: '16px', width:'100%', fontFamily: 'Signika'}}
-              onClick={() => {
+              onClick={e => {
+                e.stopPropagation();
                 setIconsModalVisible(true);
                 setAnchorEl(null);
               }}

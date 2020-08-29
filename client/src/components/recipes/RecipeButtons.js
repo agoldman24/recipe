@@ -21,7 +21,7 @@ const fabStyle = {
   color: 'white'
 };
 
-export default function RecipeButtons() {
+export default function RecipeButtons(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState('Anonymous');
 
@@ -50,7 +50,7 @@ export default function RecipeButtons() {
         style={recipeButtonStyle(value, "By Me")}
         onClick={() => setValue("By Me")}
       >By Me</Button>
-      <Fab style={fabStyle}>
+      <Fab style={fabStyle} onClick={props.toggleCreateMode}>
         <CreateIcon style={{height:'35', width:'35'}}/>
       </Fab>
     </div>

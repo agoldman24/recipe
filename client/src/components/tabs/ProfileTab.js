@@ -10,9 +10,9 @@ import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Slide from '@material-ui/core/Slide';
-import ProfileAvatar from './ProfileAvatar';
-import ProfileEditor from './ProfileEditor';
-import ProfileDetailsGrid from './ProfileDetailsGrid';
+import ProfileAvatar from '../profile/ProfileAvatar';
+import ProfileEditor from '../profile/ProfileEditor';
+import ProfileDetailsGrid from '../profile/ProfileDetailsGrid';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,

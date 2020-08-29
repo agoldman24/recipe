@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 import RecipeForms from './RecipeForms';
-import { TOGGLE_DETAIL_EDIT_MODE } from '../../actions';
+import { TOGGLE_RECIPE_EDIT_MODE, TOGGLE_RECIPE_CREATE_MODE } from '../../actions';
 import {
   darkBackgroundStyle, detailStyle, containerStyle,
   buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
@@ -94,7 +94,13 @@ class RecipeDetailEdit extends React.Component {
                     opacity: buttonsDisabled ? '0.3' : '1.0'
                   }}
                   disabled={buttonsDisabled}
-                  onClick={this.props.toggleEditMode}
+                  onClick={() => {
+                    if (this.props.isEditMode) {
+                      this.props.toggleEditMode();
+                    } else {
+                      this.props.toggleCreateMode();
+                    }
+                  }}
                 >
                   Cancel
                 </Button>
@@ -116,6 +122,7 @@ class RecipeDetailEdit extends React.Component {
             ingredients={this.props.ingredients}
             directions={this.props.directions}
             tableRef={this.tableRef}
+            isEditMode={this.props.isEditMode}
             addIngredientMode={this.state.addIngredientMode}
             editIngredientMode={this.state.editIngredientMode}
             toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
@@ -128,11 +135,15 @@ class RecipeDetailEdit extends React.Component {
 };
 
 const mapStateToProps = state => {
-  return {};
+  return {
+    isEditMode: state.detailRecipe.editMode,
+    isCreateMode: state.detailRecipe.createMode
+  };
 };
 
 const mapDispatchToProps = dispatch => ({
-  toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
+  toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
+  toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE })
 });
 
 export default connect(

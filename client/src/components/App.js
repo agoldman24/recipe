@@ -12,7 +12,8 @@ import WelcomeTab from './tabs/WelcomeTab';
 import AboutTab from './tabs/AboutTab';
 import RecipeTab from './tabs/RecipeTab';
 import SearchTab from './tabs/SearchTab';
-import ProfileTab from './profile/ProfileTab';
+import ProfileTab from './tabs/ProfileTab';
+import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
 import {
@@ -115,6 +116,15 @@ class App extends React.Component {
             zIndex={!this.props.isLoggedIn ? '2' : '3'}
           />
         }
+        {this.props.recipeCreateMode &&
+          <RecipeDetailEdit
+            id={""}
+            name={""}
+            image={""}
+            ingredients={[]}
+            directions={""}
+          />
+        }
         <Container
           id="container"
           component="main"
@@ -142,6 +152,7 @@ const mapStateToProps = state => {
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: state.isDetailVisible,
+    recipeCreateMode: state.detailRecipe.createMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
     users: state.users

@@ -67,7 +67,8 @@ export default Object.assign({},
   sampleRecipes: {},
   detailRecipe: {
     id: "",
-    editMode: false
+    editMode: false,
+    createMode: false
   },
   allRecipesFetched: {
     samples: false,

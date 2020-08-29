@@ -20,7 +20,7 @@ import { SAVED_RECIPE_IDS } from '../../variables/Constants';
 import {
   TOGGLE_RECIPE_DETAILS,
   LOAD_RECIPE_DETAILS_FINISHED,
-  TOGGLE_DETAIL_EDIT_MODE,
+  TOGGLE_RECIPE_EDIT_MODE,
   UPDATE_USER_REQUESTED
 } from '../../actions';
 import {
@@ -207,7 +207,7 @@ const mapDispatchToProps = dispatch => {
   return {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
     loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
-    toggleEditMode: () => dispatch({ type: TOGGLE_DETAIL_EDIT_MODE }),
+    toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
     updateSavedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: SAVED_RECIPE_IDS,

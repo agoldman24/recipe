@@ -2,7 +2,7 @@ import React from 'react';
 import RecipeList from '../recipes/RecipeList';
 import RecipeButtons from '../recipes/RecipeButtons';
 import { connect } from 'react-redux';
-import { GET_RECIPES_REQUESTED } from '../../actions';
+import { GET_RECIPES_REQUESTED, TOGGLE_RECIPE_CREATE_MODE } from '../../actions';
 import { SAMPLES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
 
@@ -20,7 +20,11 @@ class RecipeTab extends React.Component {
         ? <div style={errorStyle}>Network error</div>
         : <div>
             <RecipeList recipes={Object.values(this.props.sampleRecipes)}/>
-            {this.props.isLoggedIn && <RecipeButtons />}
+            {this.props.isLoggedIn &&
+              <RecipeButtons
+                toggleCreateMode={this.props.toggleCreateMode}
+              />
+            }
           </div>
         }
       </div>
@@ -44,6 +48,7 @@ const mapDispatchToProps = dispatch => {
       type: GET_RECIPES_REQUESTED,
       requestType: SAMPLES
     }),
+    toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE })
   };
 };
 

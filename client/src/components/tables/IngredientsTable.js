@@ -97,10 +97,7 @@ const IngredientsTable = ({
                 />
               : element.tooltip === "Delete"
                 ? <DeleteOutlineIcon
-                    onClick={() => {
-                      console.log("props:", props)
-                      onIngredientDelete(props.data.index)
-                    }}
+                    onClick={() => onIngredientDelete(props.data.index)}
                   />
                 : element.tooltip === "Save"
                   ? <CheckIcon

@@ -227,7 +227,7 @@ const RecipeForms = props => {
           }}
           style={{
             opacity: containersDisabled ? '0.3' : '1.0',
-            fontStyle: name === props.name ? 'normal' : 'italic'
+            fontStyle: name === props.name || isNameFocused ? 'normal' : 'italic'
           }}
           variant="outlined"
           required

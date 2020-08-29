@@ -118,7 +118,7 @@ const IngredientsTable = ({
           actions: ""
         },
         body: {
-          emptyDataSourceMessage: "Click 'Add' to create a new ingredient"
+          emptyDataSourceMessage: addRowMode ? "" : "Click 'Add' to create a new ingredient"
         }
       }}
       options={{

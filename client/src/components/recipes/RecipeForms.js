@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -110,24 +110,28 @@ const RecipeForms = props => {
     tableRef,
     isEditMode,
     addIngredientMode, toggleAddIngredientMode,
-    editIngredientMode, toggleEditIngredientMode,
-    isIconsModalVisible, setIconsModalVisible,
-    isFileTypeModalVisible, setFileTypeModalVisible,
-    isDeleteIngredientModalVisible, setDeleteIngredientModalVisible,
-    isDeleteStepModalVisible, setDeleteStepModalVisible,
-    isNameFocused, setIsNameFocused,
-    focusedContainer, setFocusedContainer,
-    anchorEl, setAnchorEl,
-    name, setName,
-    image, setImage,
-    directionsParagraph, setDirectionsParagraph,
-    directionSteps, setDirectionSteps,
-    focusedStep, setFocusedStep,
-    directionsType, setDirectionsType,
-    ingredients, setIngredients,
-    deletedIndex, setDeletedIndex,
-    addStepMode, setAddStepMode
+    editIngredientMode, toggleEditIngredientMode
   } = props;
+  const [isIconsModalVisible, setIconsModalVisible] = useState(false);
+  const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
+  const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
+  const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
+  const [isNameFocused, setIsNameFocused] = useState(false);
+  const [focusedContainer, setFocusedContainer] = useState(isEditMode ? "image" : null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [name, setName] = useState(originalName);
+  const [image, setImage] = useState(originalImage);
+  const [directionsParagraph, setDirectionsParagraph] = useState(
+    typeof originalDirections === "string" ? originalDirections : "");
+  const [directionSteps, setDirectionSteps] = useState(
+    typeof originalDirections === "string" ? [] : originalDirections);
+  const [focusedStep, setFocusedStep] = useState(null);
+  const [directionsType, setDirectionsType] = useState(typeof originalDirections);
+  const [ingredients, setIngredients] = useState(originalIngredients.map((ingredient, index) => ({
+    ...ingredient, index, isModified: false
+  })));
+  const [deletedIndex, setDeletedIndex] = useState(0);
+  const [addStepMode, setAddStepMode] = useState(false);
   const containersDisabled = addIngredientMode || editIngredientMode;
 
   const onImageChange = file => {

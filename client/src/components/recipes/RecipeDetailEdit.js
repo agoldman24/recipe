@@ -40,13 +40,31 @@ const fixedCancelButtonStyle = {
 }
 
 class RecipeDetailEdit extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.tableRef = createRef();
-    this.state = {
-      addIngredientMode: false,
-      editIngredientMode: false
-    }
+  }
+  state = {
+    addIngredientMode: false,
+    editIngredientMode: false,
+    isIconsModalVisible: false,
+    isFileTypeModalVisible: false,
+    isDeleteIngredientModalVisible: false,
+    isDeleteStepModalVisible: false,
+    isNameFocused: false,
+    focusedContainer: this.props.isEditMode ? "image" : null,
+    anchorEl: null,
+    name: this.props.name,
+    image: this.props.image,
+    directionsParagraph: typeof this.props.directions === "string" ? this.props.directions : "",
+    directionSteps: typeof this.props.directions === "string" ? [] : this.props.directions,
+    focusedStep: null,
+    directionsType: typeof this.props.directions,
+    ingredients: this.props.ingredients.map((ingredient, index) => ({
+      ...ingredient, index, isModified: false
+    })),
+    deletedIndex: 0,
+    addStepMode: false
   }
   render() {
     const { addIngredientMode, editIngredientMode } = this.state;
@@ -117,16 +135,48 @@ class RecipeDetailEdit extends React.Component {
           </Grid>
           <RecipeForms
             id={this.props.id}
-            name={this.props.name}
-            image={this.props.image}
-            ingredients={this.props.ingredients}
-            directions={this.props.directions}
+            originalName={this.props.name}
+            originalImage={this.props.image}
+            originalIngredients={this.props.ingredients}
+            originalDirections={this.props.directions}
             tableRef={this.tableRef}
             isEditMode={this.props.isEditMode}
             addIngredientMode={this.state.addIngredientMode}
             editIngredientMode={this.state.editIngredientMode}
             toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
             toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
+            isIconsModalVisible={this.state.isIconsModalVisible}
+            setIconsModalVisible={val => this.setState({ isIconsModalVisible: val })}
+            isFileTypeModalVisible={this.state.isFileTypeModalVisible}
+            setFileTypeVisible={val => this.setState({ isFileTypeModalVisible: val })}
+            isDeleteIngredientModalVisible={this.state.isDeleteIngredientModalVisible}
+            setDeleteIngredientModalVisible={val => this.setState({ isDeleteIngredientModalVisible: val })}
+            isDeleteStepModalVisible={this.state.isDeleteStepModalVisible}
+            setDeleteStepModalVisible={val => this.setState({ isDeleteStepModalVisible: val })}
+            isNameFocused={this.state.isNameFocused}
+            setIsNameFocused={val => this.setState({ isNameFocused: val })}
+            focusedContainer={this.state.focusedContainer}
+            setFocusedContainer={val => this.setState({ focusedContainer: val })}
+            anchorEl={this.state.anchorEl}
+            setAnchorEl={val => this.setState({ anchorEl: val })}
+            name={this.state.name}
+            setName={val => this.setState({ name: val })}
+            image={this.state.image}
+            setImage={val => this.setState({ image: val })}
+            directionsParagraph={this.state.directionsParagraph}
+            setDirectionsParagraph={val => this.setState({ directionsParagraph: val })}
+            directionSteps={this.state.directionSteps}
+            setDirectionSteps={val => this.setState({ directionSteps: val })}
+            focusedStep={this.state.focusedStep}
+            setFocusedStep={val => this.setState({ focusedStep: val })}
+            directionsType={this.state.directionsType}
+            setDirectionsType={val => this.setState({ directionsType: val })}
+            ingredients={this.state.ingredients}
+            setIngredients={val => this.setState({ ingredients: val })}
+            deletedIndex={this.state.deletedIndex}
+            setDeletedIndex={val => this.setState({ deletedIndex: val })}
+            addStepMode={this.state.addStepMode}
+            setAddStepMode={val => this.setState({ addStepMode: val })}
           />
         </Card>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -102,27 +102,33 @@ const CssTextField = withStyles({
 
 const RecipeForms = props => {
   const classes = useStyles();
-  const [isIconsModalVisible, setIconsModalVisible] = useState(false);
-  const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
-  const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
-  const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
-  const [isNameFocused, setIsNameFocused] = useState(false);
-  const [focusedContainer, setFocusedContainer] = useState(props.isEditMode ? "image" : null);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [name, setName] = useState(props.name);
-  const [image, setImage] = useState(props.image);
-  const [directionsParagraph, setDirectionsParagraph] = useState(
-    typeof props.directions === "string" ? props.directions : "");
-  const [directionSteps, setDirectionSteps] = useState(
-    typeof props.directions === "string" ? [] : props.directions);
-  const [focusedStep, setFocusedStep] = useState(null);
-  const [directionsType, setDirectionsType] = useState(typeof props.directions);
-  const [ingredients, setIngredients] = useState(props.ingredients.map((ingredient, index) => ({
-    ...ingredient, index, isModified: false
-  })));
-  const [deletedIndex, setDeletedIndex] = useState(0);
-  const [addStepMode, setAddStepMode] = useState(false);
-  const containersDisabled = props.addIngredientMode || props.editIngredientMode;
+  const {
+    originalName,
+    originalImage,
+    originalIngredients,
+    originalDirections,
+    tableRef,
+    isEditMode,
+    addIngredientMode, toggleAddIngredientMode,
+    editIngredientMode, toggleEditIngredientMode,
+    isIconsModalVisible, setIconsModalVisible,
+    isFileTypeModalVisible, setFileTypeModalVisible,
+    isDeleteIngredientModalVisible, setDeleteIngredientModalVisible,
+    isDeleteStepModalVisible, setDeleteStepModalVisible,
+    isNameFocused, setIsNameFocused,
+    focusedContainer, setFocusedContainer,
+    anchorEl, setAnchorEl,
+    name, setName,
+    image, setImage,
+    directionsParagraph, setDirectionsParagraph,
+    directionSteps, setDirectionSteps,
+    focusedStep, setFocusedStep,
+    directionsType, setDirectionsType,
+    ingredients, setIngredients,
+    deletedIndex, setDeletedIndex,
+    addStepMode, setAddStepMode
+  } = props;
+  const containersDisabled = addIngredientMode || editIngredientMode;
 
   const onImageChange = file => {
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
@@ -165,17 +171,17 @@ const RecipeForms = props => {
   }
 
   const directionsAreDifferent = () => {
-    if (props.isEditMode && directionsType !== typeof props.directions) {
+    if (isEditMode && directionsType !== typeof originalDirections) {
       return true;
     };
     if (directionsType === "string") {
-      return directionsParagraph !== props.directions;
+      return directionsParagraph !== originalDirections;
     } else {
-      if (directionSteps.length !== props.directions.length) {
+      if (directionSteps.length !== originalDirections.length) {
         return true;
       }
       directionSteps.forEach((direction, index) => {
-        if (direction !== props.directions[index]) {
+        if (direction !== originalDirections[index]) {
           return true;
         }
       });
@@ -227,7 +233,7 @@ const RecipeForms = props => {
           }}
           style={{
             opacity: containersDisabled ? '0.3' : '1.0',
-            fontStyle: name === props.name || isNameFocused ? 'normal' : 'italic'
+            fontStyle: name === originalName || isNameFocused ? 'normal' : 'italic'
           }}
           variant="outlined"
           required
@@ -266,7 +272,7 @@ const RecipeForms = props => {
             <Typography
               style={{
                 ...sectionTitleStyle(focusedContainer, "image", isNameFocused),
-                fontStyle: image === props.image ? 'normal' : 'italic'
+                fontStyle: image === originalImage ? 'normal' : 'italic'
               }}
             >
               Image*
@@ -341,7 +347,7 @@ const RecipeForms = props => {
             <Typography
               style={{
                 ...sectionTitleStyle(focusedContainer, "ingredients", isNameFocused),
-                fontStyle: ingredients.length !== props.ingredients.length
+                fontStyle: ingredients.length !== originalIngredients.length
                   || ingredients.filter(i => i.isModified).length ? 'italic' : 'normal'
               }}
             >
@@ -353,12 +359,12 @@ const RecipeForms = props => {
                   startIcon={<AddIcon/>}
                   style={{
                     ...addButtonStyle,
-                    opacity: props.addIngredientMode || props.editIngredientMode ? '0.3' : '1.0'
+                    opacity: addIngredientMode || editIngredientMode ? '0.3' : '1.0'
                   }}
-                  disabled={props.addIngredientMode || props.editIngredientMode}
+                  disabled={addIngredientMode || editIngredientMode}
                   onClick={() => {
                     document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
-                    props.toggleAddIngredientMode();
+                    toggleAddIngredientMode();
                   }}
                   className={classes.button}
                 >
@@ -388,13 +394,13 @@ const RecipeForms = props => {
               overflow:'auto'
             }}>
             <IngredientsTable
-              tableRef={props.tableRef}
+              tableRef={tableRef}
               ingredients={ingredients}
               isEditable={true}
-              editRowMode={props.editIngredientMode}
-              addRowMode={props.addIngredientMode}
-              toggleEditRowMode={props.toggleEditIngredientMode}
-              toggleAddRowMode={props.toggleAddIngredientMode}
+              editRowMode={editIngredientMode}
+              addRowMode={addIngredientMode}
+              toggleEditRowMode={toggleEditIngredientMode}
+              toggleAddRowMode={toggleAddIngredientMode}
               onIngredientChange={handleIngredientChange}
               onIngredientAdd={handleIngredientAdd}
               onIngredientDelete={i => {
@@ -553,10 +559,13 @@ const RecipeForms = props => {
                     )})}
                     <Grid container direction="row">
                       <Grid item style={{width:'16%'}}>
-                        <Fab style={iconButtonStyle} onClick={() => {
-                          setDirectionSteps([...directionSteps, ""]);
-                          setAddStepMode(true);
-                        }}>
+                        <Fab style={iconButtonStyle}
+                          disabled={directionSteps.length && !directionSteps[directionSteps.length - 1].length}
+                          onClick={() => {
+                            setDirectionSteps([...directionSteps, ""]);
+                            setAddStepMode(true);
+                          }}
+                        >
                           <AddIcon/>
                         </Fab>
                       </Grid>
@@ -566,10 +575,11 @@ const RecipeForms = props => {
                         margin: '7px 0 7px 15px',
                         fontSize: '16px',
                         color: '#b5b5b5'
-                      }} onClick={e => {
-                        e.stopPropagation();
-                        setDirectionSteps([...directionSteps, ""]);
-                        setAddStepMode(true);
+                      }} onClick={() => {
+                        if (!directionSteps.length || directionSteps[directionSteps.length - 1].length) {
+                          setDirectionSteps([...directionSteps, ""]);
+                          setAddStepMode(true);
+                        }
                       }}>
                         Add step...
                       </Grid>

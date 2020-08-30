@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MaterialTable, { MTableHeader, MTableAction, MTableCell } from "material-table";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
@@ -31,6 +31,7 @@ const IngredientsTable = ({
   onIngredientAdd,
   onIngredientDelete
 }) => {
+  const [focusedColumn, setFocusedColumn] = useState("Item");
   let editable = !isEditable ? null : {
     onRowUpdate: newData =>
       new Promise(resolve => {
@@ -51,7 +52,7 @@ const IngredientsTable = ({
     editable = {
       ...editable,
       onRowAdd: newData =>
-        new Promise((resolve, reject) => {
+        new Promise(resolve => {
           onIngredientAdd({ ...newData, index: 0, isModified: true });
           toggleAddRowMode();
           resolve();
@@ -73,6 +74,8 @@ const IngredientsTable = ({
           <Input
             value={props.value}
             placeholder={props.columnDef.title}
+            onClick={() => setFocusedColumn(props.columnDef.title)}
+            autoFocus={props.columnDef.title === focusedColumn}
             onChange={event => props.onChange(event.target.value)}
             style={{
               width: '140px',

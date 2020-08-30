@@ -39,7 +39,10 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={isVisible}
-        onClose={closeModal}
+        onClose={e => {
+          e.stopPropagation();
+          closeModal();
+        }}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -56,14 +59,20 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
                 <Button
                   className={classes.button}
                   style={deleteButtonStyle}
-                  onClick={() => onConfirm(onConfirmParam)}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onConfirm(onConfirmParam)
+                  }}
                 >
                   Delete
                 </Button>
                 <Button
                   className={classes.button}
                   style={cancelButtonStyle}
-                  onClick={closeModal}
+                  onClick={e => {
+                    e.stopPropagation();
+                    closeModal();
+                  }}
                 >
                   Cancel
                 </Button>
@@ -72,7 +81,10 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
                 <Button
                   className={classes.button}
                   style={cancelButtonStyle}
-                  onClick={closeModal}
+                  onClick={e => {
+                    e.stopPropagation();
+                    closeModal();
+                  }}
                 >
                   Okay
                 </Button>

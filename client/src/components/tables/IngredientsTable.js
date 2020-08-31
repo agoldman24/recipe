@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MaterialTable, { MTableHeader, MTableAction, MTableCell } from "material-table";
 import Paper from "@material-ui/core/Paper";
 import Input from "@material-ui/core/Input";
@@ -9,7 +9,11 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 
 const columns = [
-  { title: "Item", field: "item" },
+  { title: "Item", field: "item",
+    validate: rowData => !rowData.item
+      ? { isValid: false }
+      : true
+  },
   { title: "Quantity", field: "quantity" }
 ].map(column => {
   return {
@@ -31,12 +35,14 @@ const IngredientsTable = ({
   onIngredientAdd,
   onIngredientDelete
 }) => {
+  const [isError, setIsError] = useState(false);
   let editable = !isEditable ? null : {
-    onRowUpdate: (newData, oldData) =>
+    onRowUpdate: newData =>
       new Promise(resolve => {
+        const { item, quantity } = ingredients[newData.index];
         onIngredientChange({
           ...newData,
-          isModified: newData.item !== oldData.item || newData.quantity !== oldData.quantity
+          isModified: newData.item !== item || newData.quantity !== quantity
         });
         toggleEditRowMode();
         resolve();
@@ -55,11 +61,18 @@ const IngredientsTable = ({
       ...editable,
       onRowAdd: newData =>
         new Promise(resolve => {
-          onIngredientAdd({ ...newData, index: 0, isModified: true });
-          toggleAddRowMode();
+          setIsError(true);
+          if (newData.item.length) {
+            setIsError(false);
+            onIngredientAdd({ ...newData, index: 0, isModified: true });
+            toggleAddRowMode();
+          }
           resolve();
         }),
-      onRowAddCancelled: () => toggleAddRowMode()
+      onRowAddCancelled: () => {
+        toggleAddRowMode();
+        setIsError(false);
+      }
     }
   }
   return (
@@ -72,18 +85,32 @@ const IngredientsTable = ({
         Container: props => <Paper {...props} elevation={0}/>,
         Header: props => isEditable ? null : <MTableHeader {...props}/>,
         Cell: props => <MTableCell {...props} style={{fontStyle: props.rowData.isModified ? 'italic' : 'normal'}}/>,
-        EditField: props => (
-          <Input
-            value={props.value}
-            placeholder={props.columnDef.title}
-            autoFocus={props.columnDef.title === "Item"}
-            onChange={event => props.onChange(event.target.value)}
-            style={{
-              width: '140px',
-              fontSize: '16px'
-            }}
-          />
-        ),
+        EditField: props => {
+          const title = props.columnDef.title;
+          let placeholder = title;
+          if (title === "Item") {
+            placeholder += "*";
+          }
+          return (
+            <div>
+              <Input
+                value={props.value}
+                placeholder={placeholder}
+                autoFocus={title === "Item"}
+                onChange={event => props.onChange(event.target.value)}
+                style={{
+                  width: '140px',
+                  fontSize: '16px'
+                }}
+              />
+              {isError && title === "Item" &&
+                <div style={{color:'#f44336', marginTop:'4px', fontSize:'10.5px'}}>
+                  Item cannot be empty
+                </div>
+              }
+            </div>
+          )
+        },
         Action: props => {
           const element = typeof props.action === "function" ? props.action(props.data) : props.action;
           return editRowMode
@@ -119,7 +146,7 @@ const IngredientsTable = ({
           actions: ""
         },
         body: {
-          emptyDataSourceMessage: addRowMode ? "" : "Click 'Add' to create a new ingredient"
+          emptyDataSourceMessage: addRowMode ? undefined : "Click 'Add' to create a new ingredient"
         }
       }}
       options={{

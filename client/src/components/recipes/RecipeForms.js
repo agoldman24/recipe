@@ -110,7 +110,8 @@ const RecipeForms = props => {
     tableRef,
     isEditMode,
     addIngredientMode, toggleAddIngredientMode,
-    editIngredientMode, toggleEditIngredientMode
+    editIngredientMode, toggleEditIngredientMode,
+    setIsSaveEnabled
   } = props;
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
@@ -134,13 +135,36 @@ const RecipeForms = props => {
   const [addStepMode, setAddStepMode] = useState(false);
   const containersDisabled = addIngredientMode || editIngredientMode;
 
+  const setGlobalDiff = (
+    newName = name,
+    newImage = image,
+    newIngredients = ingredients,
+    newDirectionsType = directionsType,
+    newDirectionsParagraph = directionsParagraph,
+    newDirectionSteps = directionSteps
+  ) => {
+    const ingredientsDiff = ingredientsAreDifferent(newIngredients);
+    const directionsDiff = directionsAreDifferent(
+      newDirectionsType,
+      newDirectionsParagraph,
+      newDirectionSteps
+    );
+    setIsSaveEnabled(
+      newName !== originalName ||
+      newImage !== originalImage ||
+      ingredientsDiff || directionsDiff
+    );
+  }
+
   const onImageChange = file => {
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
       setFileTypeModalVisible(true);
     } else {
       const data = file.base64.toString();
-      setImage(URL.createObjectURL(b64toBlob(data)));
+      const newImage = URL.createObjectURL(b64toBlob(data));
+      setImage(newImage);
       setAnchorEl(null);
+      setGlobalDiff(undefined, newImage);
     }
   }
 
@@ -148,23 +172,27 @@ const RecipeForms = props => {
     let newIngredients = [...ingredients];
     newIngredients[ingredient.index] = ingredient;
     setIngredients(newIngredients);
+    setGlobalDiff(undefined, undefined, newIngredients);
   }
 
   const handleIngredientAdd = ingredient => {
     let newIngredients = ingredients.map(i => ({ ...i, index: i.index + 1 }));
     setIngredients([ingredient, ...newIngredients]);
+    setGlobalDiff(undefined, undefined, newIngredients);
   }
 
   const handleIngredientDelete = index => {
     setDeleteIngredientModalVisible(false);
-    setIngredients(ingredients.reduce((accum, ingredient) => {
+    const newIngredients = ingredients.reduce((accum, ingredient) => {
       if (ingredient.index !== index) {
         accum.push(ingredient)
       }
       return accum;
     }, []).map((ingredient, index) => ({
       ...ingredient, index
-    })));
+    }));
+    setIngredients(newIngredients);
+    setGlobalDiff(undefined, undefined, newIngredients);
   }
 
   const handleStepDelete = index => {
@@ -172,19 +200,24 @@ const RecipeForms = props => {
     let currentSteps = [ ...directionSteps ];
     currentSteps.splice(index, 1);
     setDirectionSteps(currentSteps);
+    setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
   }
 
-  const directionsAreDifferent = () => {
-    if (isEditMode && directionsType !== typeof originalDirections) {
+  const directionsAreDifferent = (
+    newDirectionsType = directionsType,
+    newDirectionsParagraph = directionsParagraph,
+    newDirectionSteps = directionSteps
+  ) => {
+    if (isEditMode && newDirectionsType !== typeof originalDirections) {
       return true;
     };
-    if (directionsType === "string") {
-      return directionsParagraph !== originalDirections;
+    if (newDirectionsType === "string") {
+      return newDirectionsParagraph.replace(/\s+/g, '') !== originalDirections.replace(/\s+/g, '');
     } else {
-      if (directionSteps.length !== originalDirections.length) {
+      if (newDirectionSteps.length !== originalDirections.length) {
         return true;
       }
-      directionSteps.forEach((direction, index) => {
+      newDirectionSteps.forEach((direction, index) => {
         if (direction !== originalDirections[index]) {
           return true;
         }
@@ -193,12 +226,22 @@ const RecipeForms = props => {
     return false;
   }
 
+  const ingredientsAreDifferent = (newIngredients = ingredients) => {
+    return newIngredients.length !== originalIngredients.length
+      || newIngredients.filter(i => i.isModified).length;
+  }
+
   return (
-    <div style={{width:'100%', height:'100%'}} onClick={() => setFocusedContainer(null)}>
+    <div style={{width:'100%', height:'100%'}}
+      onClick={() => { if (!containersDisabled) setFocusedContainer(null) }}
+    >
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
-        onConfirm={icon => setImage(icon)}
+        onConfirm={icon => {
+          setImage(icon);
+          setGlobalDiff(icon);
+        }}
       />
       <PromptModal
         modalType="okay"
@@ -233,6 +276,10 @@ const RecipeForms = props => {
           InputProps={{
             classes: {
               input: classes.inputText
+            },
+            onBlur: () => {
+              setIsNameFocused(false);
+              setGlobalDiff();
             }
           }}
           style={{
@@ -351,8 +398,7 @@ const RecipeForms = props => {
             <Typography
               style={{
                 ...sectionTitleStyle(focusedContainer, "ingredients", isNameFocused),
-                fontStyle: ingredients.length !== originalIngredients.length
-                  || ingredients.filter(i => i.isModified).length ? 'italic' : 'normal'
+                fontStyle: ingredientsAreDifferent() ? 'italic' : 'normal'
               }}
             >
               Ingredients*
@@ -454,7 +500,11 @@ const RecipeForms = props => {
               ? <FormControl component="fieldset">
                   <RadioGroup
                     value={directionsType === "string" ? "paragraph" : "step-by-step"}
-                    onChange={e => setDirectionsType(e.target.value === "paragraph" ? "string" : "object")}
+                    onChange={e => {
+                      const newType = e.target.value === "paragraph" ? "string" : "object";
+                      setDirectionsType(newType);
+                      setGlobalDiff(undefined, undefined, undefined, newType, undefined, undefined);
+                    }}
                   >
                     <FormControlLabel
                       value="step-by-step"
@@ -493,7 +543,8 @@ const RecipeForms = props => {
                     classes: {
                       root: classes.multilineTextField,
                       input: classes.multilineInputText
-                    }
+                    },
+                    onBlur: () => setGlobalDiff()
                   }}
                   style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
                   variant="outlined"
@@ -556,6 +607,7 @@ const RecipeForms = props => {
                               let currentSteps = [ ...directionSteps ];
                               currentSteps[index] = e.target.value;
                               setDirectionSteps(currentSteps);
+                              setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
                             }}
                           />
                         </Grid>

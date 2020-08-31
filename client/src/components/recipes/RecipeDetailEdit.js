@@ -46,10 +46,11 @@ class RecipeDetailEdit extends React.Component {
   }
   state = {
     addIngredientMode: false,
-    editIngredientMode: false
+    editIngredientMode: false,
+    isSaveEnabled: false
   }
   render() {
-    const { addIngredientMode, editIngredientMode } = this.state;
+    const { addIngredientMode, editIngredientMode, isSaveEnabled } = this.state;
     const buttonsDisabled = addIngredientMode || editIngredientMode;
     return (
       <div style={darkBackgroundStyle}>
@@ -69,25 +70,38 @@ class RecipeDetailEdit extends React.Component {
                 zIndex: '99',
                 paddingLeft: '2px'
               }}>
-                <Button
-                  style={{
-                    ...fixedDeleteButtonStyle,
-                    opacity: buttonsDisabled ? '0.3' : '1.0'
-                  }}
-                  disabled={buttonsDisabled}
-                >
-                  Delete
-                </Button>
-                <Button
-                  startIcon={<SaveIcon/>}
-                  style={{
-                    ...fixedSaveButtonStyle,
-                    opacity: buttonsDisabled ? '0.3' : '1.0'
-                  }}
-                  disabled={buttonsDisabled}
-                >
-                  Save
-                </Button>
+                {this.props.isEditMode
+                ? <div>
+                    <Button
+                      style={{
+                        ...fixedDeleteButtonStyle,
+                        opacity: buttonsDisabled ? '0.3' : '1.0'
+                      }}
+                      disabled={buttonsDisabled}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      startIcon={<SaveIcon/>}
+                      style={{
+                        ...fixedSaveButtonStyle,
+                        opacity: buttonsDisabled || !isSaveEnabled ? '0.3' : '1.0'
+                      }}
+                      disabled={buttonsDisabled || !isSaveEnabled}
+                    >
+                      Save
+                    </Button>
+                  </div>
+                : <Button
+                    style={{
+                      ...fixedSaveButtonStyle,
+                      opacity: buttonsDisabled ? '0.3' : '1.0'
+                    }}
+                    disabled={buttonsDisabled}
+                  >
+                    Submit
+                  </Button>
+                }
                 <Button
                   style={{
                     ...fixedCancelButtonStyle,
@@ -127,6 +141,7 @@ class RecipeDetailEdit extends React.Component {
             editIngredientMode={this.state.editIngredientMode}
             toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
             toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
+            setIsSaveEnabled={val => this.setState({ isSaveEnabled: val })}
           />
         </Card>
       </div>

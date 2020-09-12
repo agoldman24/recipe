@@ -298,21 +298,25 @@ export const radioLabelStyle = (dirType, type) => ({
 export const containerStyle = {
   border: '1px solid rgb(118, 118, 118)',
   borderRadius: '5px',
-  margin: '10px',
+  margin: '5px 10px',
   width: 'initial'
 }
 
-export const borderStyle = (focusedContainer, container, isDisabled, isNameFocused) => ({
+export const borderStyle = (focusedContainer, container, isDisabled, isErrored) => ({
   ...containerStyle,
   border: focusedContainer === container
-    ? isNameFocused ? '1px solid white' : '2px solid #ffe100'
-    : isDisabled ? '1px solid rgba(255,255,255,0.3)' : '1px solid white'
+    ? '2px solid #ffe100'
+    : isDisabled
+      ? '1px solid rgba(255,255,255,0.3)'
+      : isErrored
+        ? '1px solid ' + errorStyle.color
+        : '1px solid white'
 });
 
-export const sectionTitleStyle = (focusedContainer, container, isNameFocused) => ({
+export const sectionTitleStyle = (focusedContainer, container) => ({
   float: 'left',
   color: focusedContainer === container
-    ? isNameFocused ? 'white' : defaultTheme.palette.primary.main
+    ? defaultTheme.palette.primary.main
     : 'white',
   fontSize: '16px'
 });

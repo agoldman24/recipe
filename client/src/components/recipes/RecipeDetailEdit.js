@@ -47,7 +47,12 @@ class RecipeDetailEdit extends React.Component {
   state = {
     addIngredientMode: false,
     editIngredientMode: false,
-    isSaveEnabled: false
+    isSaveEnabled: false,
+    isErrored: false,
+    isNameEmpty: this.props.isCreateMode,
+    isImageEmpty: this.props.isCreateMode,
+    isIngredientsEmpty: this.props.isCreateMode,
+    isDirectionsEmpty: this.props.isCreateMode
   }
   render() {
     const { addIngredientMode, editIngredientMode, isSaveEnabled } = this.state;
@@ -88,6 +93,14 @@ class RecipeDetailEdit extends React.Component {
                         opacity: buttonsDisabled || !isSaveEnabled ? '0.3' : '1.0'
                       }}
                       disabled={buttonsDisabled || !isSaveEnabled}
+                      onClick={() => {
+                        const { isNameEmpty, isImageEmpty, isIngredientsEmpty, isDirectionsEmpty } = this.state;
+                        if (isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty) {
+                          this.setState({ isErrored: true });
+                        } else {
+                          this.setState({ isErrored: false });
+                        }
+                      }}
                     >
                       Save
                     </Button>
@@ -98,6 +111,14 @@ class RecipeDetailEdit extends React.Component {
                       opacity: buttonsDisabled ? '0.3' : '1.0'
                     }}
                     disabled={buttonsDisabled}
+                    onClick={() => {
+                      const { isNameEmpty, isImageEmpty, isIngredientsEmpty, isDirectionsEmpty } = this.state;
+                      if (isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty) {
+                        this.setState({ isErrored: true });
+                      } else {
+                        this.setState({ isErrored: false });
+                      }
+                    }}
                   >
                     Submit
                   </Button>
@@ -142,6 +163,15 @@ class RecipeDetailEdit extends React.Component {
             toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
             toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
             setIsSaveEnabled={val => this.setState({ isSaveEnabled: val })}
+            isErrored={this.state.isErrored}
+            isNameEmpty={this.state.isNameEmpty}
+            isImageEmpty={this.state.isImageEmpty}
+            isIngredientsEmpty={this.state.isIngredientsEmpty}
+            isDirectionsEmpty={this.state.isDirectionsEmpty}
+            setIsNameEmpty={val => this.setState({ isNameEmpty: val })}
+            setIsImageEmpty={val => this.setState({ isImageEmpty: val })}
+            setIsIngredientsEmpty={val => this.setState({ isIngredientsEmpty: val })}
+            setIsDirectionsEmpty={val => this.setState({ isDirectionsEmpty: val })}
           />
         </Card>
       </div>

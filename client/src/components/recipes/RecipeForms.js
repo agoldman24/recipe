@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
@@ -16,6 +15,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -27,7 +27,7 @@ import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
 import {
   borderStyle, sectionTitleStyle, radioLabelStyle,
-  fabStyle, buttonStyle, iconStyle, inputTheme
+  fabStyle, buttonStyle, iconStyle, errorStyle, inputTheme
 } from '../../styles';
 import '../../index.css';
 
@@ -58,6 +58,30 @@ const useStyles = makeStyles(() => ({
   },
   wrapper: {
     width: '100%'
+  },
+  whiteRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      }
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: 'white',
+      marginTop: '-4px'
+    }
+  },
+  redRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: errorStyle.color,
+      }
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: 'white',
+      marginTop: '-4px'
+    }
   }
 }));
 
@@ -85,21 +109,6 @@ const itemStyle = {
   width: '100%'
 }
 
-const CssTextField = withStyles({
-  root: {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white',
-      }
-    },
-    '& .MuiInputLabel-root': {
-      fontSize: '16px',
-      color: 'white',
-      marginTop: '-4px'
-    }
-  },
-})(TextField);
-
 const RecipeForms = props => {
   const classes = useStyles();
   const {
@@ -111,13 +120,17 @@ const RecipeForms = props => {
     isEditMode,
     addIngredientMode, toggleAddIngredientMode,
     editIngredientMode, toggleEditIngredientMode,
-    setIsSaveEnabled
+    setIsSaveEnabled,
+    isErrored,
+    isNameEmpty, setIsNameEmpty,
+    isImageEmpty, setIsImageEmpty,
+    isIngredientsEmpty, setIsIngredientsEmpty,
+    isDirectionsEmpty, setIsDirectionsEmpty
   } = props;
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
   const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
-  const [isNameFocused, setIsNameFocused] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState(isEditMode ? "image" : null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [name, setName] = useState(originalName);
@@ -134,6 +147,19 @@ const RecipeForms = props => {
   const [deletedIndex, setDeletedIndex] = useState(0);
   const [addStepMode, setAddStepMode] = useState(false);
   const containersDisabled = addIngredientMode || editIngredientMode;
+
+  const setFocus = container => {
+    if (container !== focusedContainer) {
+      if (focusedContainer === "directions"
+        && directionsType === "object"
+        && directionSteps.length
+        && !directionSteps[directionSteps.length - 1].length
+      ) {
+        handleStepDelete(directionSteps.length - 1);
+      }
+      setFocusedContainer(container);
+    }
+  }
 
   const setGlobalDiff = (
     newName = name,
@@ -153,6 +179,13 @@ const RecipeForms = props => {
       newName !== originalName ||
       newImage !== originalImage ||
       ingredientsDiff || directionsDiff
+    );
+    setIsNameEmpty(!newName.length);
+    setIsImageEmpty(!newImage);
+    setIsIngredientsEmpty(!newIngredients.length);
+    setIsDirectionsEmpty(newDirectionsType === "string"
+      ? !newDirectionsParagraph.length
+      : !newDirectionSteps.length
     );
   }
 
@@ -176,8 +209,8 @@ const RecipeForms = props => {
   }
 
   const handleIngredientAdd = ingredient => {
-    let newIngredients = ingredients.map(i => ({ ...i, index: i.index + 1 }));
-    setIngredients([ingredient, ...newIngredients]);
+    let newIngredients = [ingredient, ...ingredients.map(i => ({ ...i, index: i.index + 1 }))];
+    setIngredients(newIngredients);
     setGlobalDiff(undefined, undefined, newIngredients);
   }
 
@@ -232,15 +265,15 @@ const RecipeForms = props => {
   }
 
   return (
-    <div style={{width:'100%', height:'100%'}}
-      onClick={() => { if (!containersDisabled) setFocusedContainer(null) }}
-    >
+    <ClickAwayListener onClickAway={() => { console.log("anchorEl:", anchorEl); if (!anchorEl) setFocus(null) }}>
+    <div style={{width:'100%'}}>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
         onConfirm={icon => {
           setImage(icon);
-          setGlobalDiff(icon);
+          setGlobalDiff(undefined, icon);
+          setTimeout(() => setAnchorEl(null), 1);
         }}
       />
       <PromptModal
@@ -271,382 +304,428 @@ const RecipeForms = props => {
           : ""
         }
       />
-      <div style={{display:'flex', margin:'15px 10px 10px 10px'}}>
-        <CssTextField
-          InputProps={{
-            classes: {
-              input: classes.inputText
-            },
-            onBlur: () => {
-              setIsNameFocused(false);
-              setGlobalDiff();
-            }
-          }}
-          style={{
-            opacity: containersDisabled ? '0.3' : '1.0',
-            fontStyle: name === originalName || isNameFocused ? 'normal' : 'italic'
-          }}
-          variant="outlined"
-          required
-          fullWidth
-          label="Name"
-          type="name"
-          value={name}
-          onClick={() => setIsNameFocused(true)}
-          onChange={e => setName(e.target.value)}
-        />
-      </div>
-      <Collapse
-        in={focusedContainer === "image"}
-        classes={{wrapper: classes.wrapper}}
-        style={borderStyle(
-          focusedContainer,
-          "image",
-          containersDisabled && focusedContainer !== "image",
-          isNameFocused
-        )}
-        collapsedHeight={50}
-        onClick={e => {
-          if (!(containersDisabled && focusedContainer !== "image")) {
-            e.stopPropagation();
-            setIsNameFocused(false);
-            setFocusedContainer("image");
-          }
-        }}
+      <Grid container direction="row"
+        style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
       >
-        <Grid
-          container
-          direction="column"
-          style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
-        >
-          <Grid item style={{...itemStyle, padding:'10px 10px 5px 10px'}}>
-            <Typography
-              style={{
-                ...sectionTitleStyle(focusedContainer, "image", isNameFocused),
-                fontStyle: image === originalImage ? 'normal' : 'italic'
-              }}
-            >
-              Image*
-            </Typography>
-            <div style={rightSideActionStyle}>
-              {focusedContainer === "image"
-              ? <Fab
-                  style={iconButtonStyle}
-                  onClick={e => {
-                    e.stopPropagation();
-                    setAnchorEl(e.currentTarget)
-                  }}
-                >
-                  <MenuRoundedIcon
-                    style={{
-                      ...iconStyle,
-                      background: !!anchorEl ? '#292929' : 'none'
-                    }}
-                  />
-                </Fab>
-              : <Fab
-                  style={iconButtonStyle}
-                  onClick={e => {
-                    if (!(containersDisabled && focusedContainer !== "image")) {
-                      e.stopPropagation();
-                      setIsNameFocused(false);
-                      setFocusedContainer("image");
-                    }
-                  }}
-                >
-                  <ExpandMoreIcon />
-                </Fab>
-              }
-            </div>
-          </Grid>
-        </Grid>
-        <Card style={{padding:'0 10px', width:'99%', marginLeft:'0.5%'}}>
-          <CardMedia
-            image={image}
-            style={{
-              height: isMobile ? '320px' : '280px',
-              padding:'0',
-              borderRadius:'10px 10px 0 0'
+        <Grid item style={{
+          width: focusedContainer !== "name" && isNameEmpty && isErrored ? '50%' : '100%',
+          paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '10px' : '0'
+        }}>
+          <TextField
+            InputProps={{
+              classes: {
+                input: classes.inputText
+              },
+              onBlur: () => setGlobalDiff()
             }}
-          />
-        </Card>
-      </Collapse>
-      <Collapse
-        in={focusedContainer === "ingredients"}
-        classes={{wrapper: classes.wrapper}}
-        style={borderStyle(
-          focusedContainer,
-          "ingredients",
-          containersDisabled && focusedContainer !== "ingredients",
-          isNameFocused
-        )}
-        collapsedHeight={50}
-        onClick={e => {
-          if (!(containersDisabled && focusedContainer !== "ingredients")) {
-            e.stopPropagation();
-            setIsNameFocused(false);
-            setFocusedContainer("ingredients");
-          }
-        }}
-      >
-        <Grid
-          container
-          direction="column"
-          style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
-        >
-          <Grid item style={{...itemStyle, padding:'10px'}}>
-            <Typography
-              style={{
-                ...sectionTitleStyle(focusedContainer, "ingredients", isNameFocused),
-                fontStyle: ingredientsAreDifferent() ? 'italic' : 'normal'
-              }}
-            >
-              Ingredients*
-            </Typography>
-            <div style={rightSideActionStyle}>
-              {focusedContainer === "ingredients"
-              ? <Button
-                  startIcon={<AddIcon/>}
-                  style={{
-                    ...addButtonStyle,
-                    opacity: addIngredientMode || editIngredientMode ? '0.3' : '1.0'
-                  }}
-                  disabled={addIngredientMode || editIngredientMode}
-                  onClick={() => {
-                    document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
-                    toggleAddIngredientMode();
-                  }}
-                  className={classes.button}
-                >
-                  Add
-                </Button>
-              : <Fab
-                  style={iconButtonStyle}
-                  onClick={e => {
-                    if (!(containersDisabled && focusedContainer !== "ingredients")) {
-                      e.stopPropagation();
-                      setIsNameFocused(false);
-                      setFocusedContainer("ingredients");
-                    }
-                  }}
-                >
-                  <ExpandMoreIcon />
-                </Fab>
-              }
-            </div>
-          </Grid>
-          <Grid item id="ingredients"
+            classes={{root: isNameEmpty && isErrored ? classes.redRoot : classes.whiteRoot}}
             style={{
-              ...itemStyle,
-              maxHeight: isMobile ? '320px' : '280px',
-              width: '99%',
-              marginLeft: '0.5%',
-              overflow:'auto'
-            }}>
-            <IngredientsTable
-              tableRef={tableRef}
-              ingredients={ingredients}
-              isEditable={true}
-              editRowMode={editIngredientMode}
-              addRowMode={addIngredientMode}
-              toggleEditRowMode={toggleEditIngredientMode}
-              toggleAddRowMode={toggleAddIngredientMode}
-              onIngredientChange={handleIngredientChange}
-              onIngredientAdd={handleIngredientAdd}
-              onIngredientDelete={i => {
-                setDeletedIndex(i);
-                setDeleteIngredientModalVisible(true);
-              }}
-            />
-          </Grid>
+              opacity: containersDisabled ? '0.3' : '1.0',
+              fontStyle: name === originalName || focusedContainer === "name" ? 'normal' : 'italic'
+            }}
+            variant="outlined"
+            required
+            fullWidth
+            label="Name"
+            type="name"
+            value={name}
+            onClick={e => {
+              e.stopPropagation();
+              setFocus("name")
+            }}
+            onChange={e => setName(e.target.value)}
+          />
         </Grid>
-      </Collapse>
-      <Collapse
-        in={focusedContainer === "directions"}
-        classes={{wrapper: classes.wrapper}}
-        style={borderStyle(
-          focusedContainer,
-          "directions",
-          containersDisabled && focusedContainer !== "directions",
-          isNameFocused
-        )}
-        collapsedHeight={50}
-        onClick={e => {
-          if (!(containersDisabled && focusedContainer !== "directions")) {
-            e.stopPropagation();
-            setIsNameFocused(false);
-            setFocusedContainer("directions");
-          }
-        }}
-      >
-        <Grid
-          container
-          direction="column"
-          style={{opacity: containersDisabled &&
-            (focusedContainer !== "image" && focusedContainer !== "directions") ? '0.3' : '1.0'
-          }}
-        >
-          <Grid item style={{...itemStyle, padding:'10px'}}>
-            <Typography
-              style={{
-                ...sectionTitleStyle(focusedContainer, "directions", isNameFocused),
-                fontStyle: directionsAreDifferent() ? 'italic' : 'normal'
-              }}
+        {focusedContainer !== "name" && isNameEmpty && isErrored &&
+          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+            Please enter a name
+          </Grid>
+        }
+      </Grid>
+      <Grid container direction="row">
+        <Grid item style={{
+          width: focusedContainer !== "image" && isImageEmpty && isErrored ? '50%' : '100%'
+        }}>
+          <Collapse
+            in={focusedContainer === "image"}
+            classes={{wrapper: classes.wrapper}}
+            style={borderStyle(
+              focusedContainer,
+              "image",
+              containersDisabled && focusedContainer !== "image",
+              isImageEmpty && isErrored
+            )}
+            collapsedHeight={50}
+            onClick={e => {
+              if (!(containersDisabled && focusedContainer !== "image")) {
+                e.stopPropagation();
+                setFocus("image");
+              }
+            }}
+          >
+            <Grid
+              container
+              direction="column"
+              style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
             >
-              Directions*
-            </Typography>
-            <div style={rightSideActionStyle}>
-              {focusedContainer === "directions"
-              ? <FormControl component="fieldset">
-                  <RadioGroup
-                    value={directionsType === "string" ? "paragraph" : "step-by-step"}
-                    onChange={e => {
-                      const newType = e.target.value === "paragraph" ? "string" : "object";
-                      setDirectionsType(newType);
-                      setGlobalDiff(undefined, undefined, undefined, newType, undefined, undefined);
-                    }}
-                  >
-                    <FormControlLabel
-                      value="step-by-step"
-                      control={<Radio color="primary" />}
-                      label="Step-by-Step"
-                      style={radioLabelStyle(directionsType, "object")}
-                    />
-                    <FormControlLabel
-                      value="paragraph"
-                      control={<Radio color="primary" />}
-                      label="Paragraph"
-                      style={radioLabelStyle(directionsType, "string")}
-                    />
-                  </RadioGroup>
-                </FormControl>
-              : <Fab
-                  style={iconButtonStyle}
-                  onClick={e => {
-                    if (!(containersDisabled && focusedContainer !== "directions")) {
-                      e.stopPropagation();
-                      setIsNameFocused(false);
-                      setFocusedContainer("directions");
-                    }
+              <Grid item style={{...itemStyle, padding:'10px 10px 5px 10px'}}>
+                <Typography
+                  style={{
+                    ...sectionTitleStyle(focusedContainer, "image"),
+                    fontStyle: image === originalImage ? 'normal' : 'italic'
                   }}
                 >
-                  <ExpandMoreIcon />
-                </Fab>
-              }
-              </div>
-          </Grid>
-          <Grid item style={itemStyle}>
-            <ThemeProvider theme={createMuiTheme(inputTheme)}>
-              {directionsType === "string"
-              ? <TextField
-                  InputProps={{
-                    classes: {
-                      root: classes.multilineTextField,
-                      input: classes.multilineInputText
-                    },
-                    onBlur: () => setGlobalDiff()
-                  }}
-                  style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
-                  variant="outlined"
-                  color="secondary"
-                  multiline
-                  rowsMax={10}
-                  value={directionsParagraph}
-                  onChange={e => setDirectionsParagraph(e.target.value)}
-                />
-              : <div style={{
-                  maxHeight:'280px',
-                  overflow:'auto',
-                  padding:'0 0 10px 5px'
-                }}>
-                  <Grid container direction="column">
-                    {directionSteps.map((step, index) => {
-                    return (
-                      <Grid container direction="row" key={index}>
-                        <Grid item style={{width:'8%', paddingTop: '7px'}}>
-                          <Fab style={iconButtonStyle}>
-                            <DeleteOutlineIcon
-                              onClick={e => {
-                                e.stopPropagation();
-                                setDeletedIndex(index);
-                                setDeleteStepModalVisible(true);
-                              }}
-                            />
-                          </Fab>
-                        </Grid>
-                        <Grid item style={{width:'8%', paddingTop: '13px'}}>
-                          <Typography style={{
-                            float: 'right',
-                            paddingRight: '5px',
-                            fontSize: '16px'
-                          }}>
-                            {index + 1 + "."}
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
-                          <TextField
-                            InputProps={{
-                              classes: {
-                                input: classes.inputTextReducedPadding
-                              },
-                              onFocus: () => setFocusedStep(index),
-                              onBlur: () => {
-                                setFocusedStep(null);
-                                setAddStepMode(false);
-                              }
-                            }}
-                            id={"step_" + index}
-                            variant="outlined"
-                            color="secondary"
-                            style={{width:'100%'}}
-                            autoFocus={addStepMode}
-                            error={!step.length}
-                            helperText={step.length || focusedStep === index ? "" : "This step is empty"}
-                            value={step}
-                            onChange={e => {
-                              let currentSteps = [ ...directionSteps ];
-                              currentSteps[index] = e.target.value;
-                              setDirectionSteps(currentSteps);
-                              setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-                    )})}
-                    <Grid container direction="row">
-                      <Grid item style={{width:'16%'}}>
-                        <Fab style={iconButtonStyle}
-                          disabled={directionSteps.length && !directionSteps[directionSteps.length - 1].length}
-                          onClick={() => {
-                            setDirectionSteps([...directionSteps, ""]);
-                            setAddStepMode(true);
-                          }}
-                        >
-                          <AddIcon/>
-                        </Fab>
-                      </Grid>
-                      <Grid item style={{
-                        width: '75%',
-                        cursor: 'pointer',
-                        margin: '7px 0 7px 15px',
-                        fontSize: '16px',
-                        color: '#b5b5b5'
-                      }} onClick={() => {
-                        if (!directionSteps.length || directionSteps[directionSteps.length - 1].length) {
-                          setDirectionSteps([...directionSteps, ""]);
-                          setAddStepMode(true);
+                  Image*
+                </Typography>
+                <div style={rightSideActionStyle}>
+                  {focusedContainer === "image"
+                  ? <Fab
+                      style={iconButtonStyle}
+                      onClick={e => {
+                        e.stopPropagation();
+                        setAnchorEl(e.currentTarget)
+                      }}
+                    >
+                      <MenuRoundedIcon
+                        style={{
+                          ...iconStyle,
+                          background: !!anchorEl ? '#292929' : 'none'
+                        }}
+                      />
+                    </Fab>
+                  : <Fab
+                      style={iconButtonStyle}
+                      onClick={e => {
+                        if (!(containersDisabled && focusedContainer !== "image")) {
+                          e.stopPropagation();
+                          setFocus("image");
                         }
-                      }}>
-                        Add step...
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                      }}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
                 </div>
-              }
-            </ThemeProvider>
-          </Grid>
+              </Grid>
+            </Grid>
+            <Card style={{padding:'0 10px', width:'99%', marginLeft:'0.5%'}}>
+              <CardMedia
+                image={image}
+                style={{
+                  height: isMobile ? '320px' : '280px',
+                  padding:'0',
+                  borderRadius:'10px 10px 0 0'
+                }}
+              />
+            </Card>
+          </Collapse>
         </Grid>
-      </Collapse>
+        {focusedContainer !== "image" && isImageEmpty && isErrored &&
+          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+            Please choose an image
+          </Grid>
+        }
+      </Grid>
+      <Grid container direction="row">
+        <Grid item style={{
+          width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '50%' : '100%'
+        }}>
+          <Collapse
+            in={focusedContainer === "ingredients"}
+            classes={{wrapper: classes.wrapper}}
+            style={borderStyle(
+              focusedContainer,
+              "ingredients",
+              containersDisabled && focusedContainer !== "ingredients",
+              isIngredientsEmpty && isErrored
+            )}
+            collapsedHeight={50}
+            onClick={e => {
+              if (!(containersDisabled && focusedContainer !== "ingredients")) {
+                e.stopPropagation();
+                setFocus("ingredients");
+              }
+            }}
+          >
+            <Grid
+              container
+              direction="column"
+              style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
+            >
+              <Grid item style={{...itemStyle, padding:'10px'}}>
+                <Typography
+                  style={{
+                    ...sectionTitleStyle(focusedContainer, "ingredients"),
+                    fontStyle: ingredientsAreDifferent() ? 'italic' : 'normal'
+                  }}
+                >
+                  Ingredients*
+                </Typography>
+                <div style={rightSideActionStyle}>
+                  {focusedContainer === "ingredients"
+                  ? <Button
+                      startIcon={<AddIcon/>}
+                      style={{
+                        ...addButtonStyle,
+                        opacity: addIngredientMode || editIngredientMode ? '0.3' : '1.0'
+                      }}
+                      disabled={addIngredientMode || editIngredientMode}
+                      onClick={() => {
+                        document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
+                        toggleAddIngredientMode();
+                      }}
+                      className={classes.button}
+                    >
+                      Add
+                    </Button>
+                  : <Fab
+                      style={iconButtonStyle}
+                      onClick={e => {
+                        if (!(containersDisabled && focusedContainer !== "ingredients")) {
+                          e.stopPropagation();
+                          setFocus("ingredients");
+                        }
+                      }}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
+                </div>
+              </Grid>
+              <Grid item id="ingredients"
+                style={{
+                  ...itemStyle,
+                  maxHeight: isMobile ? '320px' : '280px',
+                  width: '99%',
+                  marginLeft: '0.5%',
+                  overflow:'auto'
+                }}>
+                <IngredientsTable
+                  tableRef={tableRef}
+                  ingredients={ingredients}
+                  isEditable={true}
+                  editRowMode={editIngredientMode}
+                  addRowMode={addIngredientMode}
+                  toggleEditRowMode={toggleEditIngredientMode}
+                  toggleAddRowMode={toggleAddIngredientMode}
+                  onIngredientChange={handleIngredientChange}
+                  onIngredientAdd={handleIngredientAdd}
+                  onIngredientDelete={i => {
+                    setDeletedIndex(i);
+                    setDeleteIngredientModalVisible(true);
+                  }}
+                />
+              </Grid>
+            </Grid>
+          </Collapse>
+        </Grid>
+        {focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored &&
+          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+            Please enter at least one ingredient
+          </Grid>
+        }
+      </Grid>
+      <Grid container direction="row">
+        <Grid item style={{
+          width: focusedContainer !== "directions" && isDirectionsEmpty && isErrored ? '50%' : '100%'
+        }}>
+          <Collapse
+            in={focusedContainer === "directions"}
+            classes={{wrapper: classes.wrapper}}
+            style={borderStyle(
+              focusedContainer,
+              "directions",
+              containersDisabled && focusedContainer !== "directions",
+              isDirectionsEmpty && isErrored
+            )}
+            collapsedHeight={50}
+            onClick={e => {
+              if (!(containersDisabled && focusedContainer !== "directions")) {
+                e.stopPropagation();
+                setFocusedContainer("directions");
+              }
+            }}
+          >
+            <Grid
+              container
+              direction="column"
+              style={{opacity: containersDisabled &&
+                (focusedContainer !== "image" && focusedContainer !== "directions") ? '0.3' : '1.0'
+              }}
+            >
+              <Grid item style={{...itemStyle, padding:'10px'}}>
+                <Typography
+                  style={{
+                    ...sectionTitleStyle(focusedContainer, "directions"),
+                    fontStyle: directionsAreDifferent() ? 'italic' : 'normal'
+                  }}
+                >
+                  Directions*
+                </Typography>
+                <div style={rightSideActionStyle}>
+                  {focusedContainer === "directions"
+                  ? <FormControl component="fieldset">
+                      <RadioGroup
+                        value={directionsType === "string" ? "paragraph" : "step-by-step"}
+                        onChange={e => {
+                          if (directionsType === "object" &&
+                            directionSteps.length &&
+                            !directionSteps[directionSteps.length - 1].length
+                          ) {
+                            handleStepDelete(directionSteps.length - 1);
+                          }
+                          const newType = e.target.value === "paragraph" ? "string" : "object";
+                          setDirectionsType(newType);
+                          setGlobalDiff(undefined, undefined, undefined, newType, undefined, undefined);
+                        }}
+                      >
+                        <FormControlLabel
+                          value="step-by-step"
+                          control={<Radio color="primary" />}
+                          label="Step-by-Step"
+                          style={radioLabelStyle(directionsType, "object")}
+                        />
+                        <FormControlLabel
+                          value="paragraph"
+                          control={<Radio color="primary" />}
+                          label="Paragraph"
+                          style={radioLabelStyle(directionsType, "string")}
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  : <Fab
+                      style={iconButtonStyle}
+                      onClick={e => {
+                        if (!(containersDisabled && focusedContainer !== "directions")) {
+                          e.stopPropagation();
+                          setFocusedContainer("directions");
+                        }
+                      }}
+                    >
+                      <ExpandMoreIcon />
+                    </Fab>
+                  }
+                </div>
+              </Grid>
+              <Grid item style={itemStyle}>
+                <ThemeProvider theme={createMuiTheme(inputTheme)}>
+                  {directionsType === "string"
+                  ? <TextField
+                      InputProps={{
+                        classes: {
+                          root: classes.multilineTextField,
+                          input: classes.multilineInputText
+                        },
+                        onBlur: () => setGlobalDiff()
+                      }}
+                      style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}
+                      variant="outlined"
+                      color="secondary"
+                      multiline
+                      rowsMax={10}
+                      value={directionsParagraph}
+                      onChange={e => setDirectionsParagraph(e.target.value)}
+                    />
+                  : <div style={{
+                      maxHeight:'280px',
+                      overflow:'auto',
+                      padding:'0 0 10px 5px'
+                    }}>
+                      <Grid container direction="column">
+                        {directionSteps.map((step, index) => {
+                        return (
+                          <Grid container direction="row" key={index}>
+                            <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                              <Fab style={iconButtonStyle}>
+                                <DeleteOutlineIcon
+                                  onClick={e => {
+                                    e.stopPropagation();
+                                    setDeletedIndex(index);
+                                    setDeleteStepModalVisible(true);
+                                  }}
+                                />
+                              </Fab>
+                            </Grid>
+                            <Grid item style={{width:'8%', paddingTop: '13px'}}>
+                              <Typography style={{
+                                float: 'right',
+                                paddingRight: '5px',
+                                fontSize: '16px'
+                              }}>
+                                {index + 1 + "."}
+                              </Typography>
+                            </Grid>
+                            <Grid item style={{width:'80%', padding: '5px 0 5px 15px'}}>
+                              <TextField
+                                InputProps={{
+                                  classes: {
+                                    input: classes.inputTextReducedPadding
+                                  },
+                                  onFocus: () => setFocusedStep(index),
+                                  onBlur: () => {
+                                    setFocusedStep(null);
+                                    setAddStepMode(false);
+                                  }
+                                }}
+                                id={"step_" + index}
+                                variant="outlined"
+                                color="secondary"
+                                style={{width:'100%'}}
+                                autoFocus={addStepMode}
+                                error={!step.length}
+                                helperText={step.length || focusedStep === index ? "" : "This step is empty"}
+                                value={step}
+                                onChange={e => {
+                                  let currentSteps = [...directionSteps];
+                                  currentSteps[index] = e.target.value;
+                                  setDirectionSteps(currentSteps);
+                                  setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                        )})}
+                        <Grid container direction="row">
+                          <Grid item style={{width:'16%'}}>
+                            <Fab style={iconButtonStyle}
+                              disabled={directionSteps.length && !directionSteps[directionSteps.length - 1].length}
+                              onClick={() => {
+                                setDirectionSteps([...directionSteps, ""]);
+                                setAddStepMode(true);
+                              }}
+                            >
+                              <AddIcon/>
+                            </Fab>
+                          </Grid>
+                          <Grid item style={{
+                            width: '75%',
+                            cursor: 'pointer',
+                            margin: '7px 0 7px 15px',
+                            fontSize: '16px',
+                            color: '#b5b5b5'
+                          }} onClick={() => {
+                            if (!directionSteps.length || directionSteps[directionSteps.length - 1].length) {
+                              setDirectionSteps([...directionSteps, ""]);
+                              setAddStepMode(true);
+                            }
+                          }}>
+                            Add step...
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </div>
+                  }
+                </ThemeProvider>
+              </Grid>
+            </Grid>
+          </Collapse>
+        </Grid>
+        {focusedContainer !== "directions" && isDirectionsEmpty && isErrored &&
+          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+            Please enter at least one direction
+          </Grid>
+        }
+      </Grid>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
@@ -680,7 +759,6 @@ const RecipeForms = props => {
               onClick={e => {
                 e.stopPropagation();
                 setIconsModalVisible(true);
-                setAnchorEl(null);
               }}
             >
               Choose icon
@@ -689,18 +767,8 @@ const RecipeForms = props => {
         </Grid>
       </Popover>
     </div>
+    </ClickAwayListener>
   );
 }
 
-const mapStateToProps = state => {
-  return {};
-};
-
-const mapDispatchToProps = dispatch => {
-  return {};
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RecipeForms);
+export default RecipeForms;

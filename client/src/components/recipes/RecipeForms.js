@@ -265,7 +265,13 @@ const RecipeForms = props => {
   }
 
   return (
-    <ClickAwayListener onClickAway={() => { console.log("anchorEl:", anchorEl); if (!anchorEl) setFocus(null) }}>
+    <ClickAwayListener
+      onClickAway={() => {
+        if (!anchorEl && !editIngredientMode && !addIngredientMode) {
+          setFocus(null);
+        }
+      }}
+    >
     <div style={{width:'100%'}}>
       <IconsModal
         isVisible={isIconsModalVisible}

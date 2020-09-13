@@ -27,7 +27,8 @@ import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
 import {
   borderStyle, sectionTitleStyle, radioLabelStyle,
-  fabStyle, buttonStyle, iconStyle, errorStyle, inputTheme
+  fabStyle, buttonStyle, iconStyle, errorStyle,
+  defaultTheme, inputTheme
 } from '../../styles';
 import '../../index.css';
 
@@ -63,7 +64,10 @@ const useStyles = makeStyles(() => ({
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: 'white'
-      }
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
     },
     '& .MuiInputLabel-root': {
       fontSize: '16px',
@@ -75,11 +79,29 @@ const useStyles = makeStyles(() => ({
     '& .MuiOutlinedInput-root': {
       '& fieldset': {
         borderColor: errorStyle.color,
-      }
+      },
+      '&:hover fieldset': {
+        borderColor: errorStyle.color,
+      },
     },
     '& .MuiInputLabel-root': {
       fontSize: '16px',
-      color: 'white',
+      color: errorStyle.color,
+      marginTop: '-4px'
+    }
+  },
+  yellowRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: defaultTheme.palette.primary.main,
+      },
+      '&:hover fieldset': {
+        borderColor: defaultTheme.palette.primary.main,
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: defaultTheme.palette.primary.main,
       marginTop: '-4px'
     }
   }
@@ -107,6 +129,13 @@ const iconButtonStyle = {
 
 const itemStyle = {
   width: '100%'
+}
+
+const errorMessageStyle = {
+  width: '30%',
+  margin: 'auto',
+  paddingRight: '10px',
+  color: errorStyle.color
 }
 
 const RecipeForms = props => {
@@ -266,9 +295,11 @@ const RecipeForms = props => {
 
   return (
     <ClickAwayListener
-      onClickAway={() => {
-        if (!anchorEl && !editIngredientMode && !addIngredientMode) {
+      onClickAway={e => {
+        if (!anchorEl && !containersDisabled) {
           setFocus(null);
+          console.log(e.target)
+          e.target.click();
         }
       }}
     >
@@ -314,8 +345,8 @@ const RecipeForms = props => {
         style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
       >
         <Grid item style={{
-          width: focusedContainer !== "name" && isNameEmpty && isErrored ? '50%' : '100%',
-          paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '10px' : '0'
+          width: focusedContainer !== "name" && isNameEmpty && isErrored ? '70%' : '100%',
+          paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '6px' : '0'
         }}>
           <TextField
             InputProps={{
@@ -324,33 +355,40 @@ const RecipeForms = props => {
               },
               onBlur: () => setGlobalDiff()
             }}
-            classes={{root: isNameEmpty && isErrored ? classes.redRoot : classes.whiteRoot}}
+            classes={{
+              root: isNameEmpty && isErrored
+                ? classes.redRoot
+                : focusedContainer === "name"
+                  ? classes.yellowRoot
+                  : classes.whiteRoot
+            }}
             style={{
               opacity: containersDisabled ? '0.3' : '1.0',
               fontStyle: name === originalName || focusedContainer === "name" ? 'normal' : 'italic'
             }}
-            variant="outlined"
             required
             fullWidth
+            disabled={containersDisabled}
+            variant="outlined"
             label="Name"
             type="name"
             value={name}
             onClick={e => {
               e.stopPropagation();
-              setFocus("name")
+              if (!containersDisabled) setFocus("name");
             }}
             onChange={e => setName(e.target.value)}
           />
         </Grid>
         {focusedContainer !== "name" && isNameEmpty && isErrored &&
-          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+          <Grid item style={{...errorMessageStyle, paddingLeft:'4px'}}>
             Please enter a name
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "image" && isImageEmpty && isErrored ? '50%' : '100%'
+          width: focusedContainer !== "image" && isImageEmpty && isErrored ? '70%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "image"}
@@ -427,14 +465,14 @@ const RecipeForms = props => {
           </Collapse>
         </Grid>
         {focusedContainer !== "image" && isImageEmpty && isErrored &&
-          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+          <Grid item style={errorMessageStyle}>
             Please choose an image
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '50%' : '100%'
+          width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '70%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "ingredients"}
@@ -526,14 +564,14 @@ const RecipeForms = props => {
           </Collapse>
         </Grid>
         {focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored &&
-          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+          <Grid item style={errorMessageStyle}>
             Please enter at least one ingredient
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "directions" && isDirectionsEmpty && isErrored ? '50%' : '100%'
+          width: focusedContainer !== "directions" && isDirectionsEmpty && isErrored ? '70%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "directions"}
@@ -727,7 +765,7 @@ const RecipeForms = props => {
           </Collapse>
         </Grid>
         {focusedContainer !== "directions" && isDirectionsEmpty && isErrored &&
-          <Grid item style={{width:'50%', margin:'auto', color: errorStyle.color}}>
+          <Grid item style={errorMessageStyle}>
             Please enter at least one direction
           </Grid>
         }

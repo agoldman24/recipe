@@ -148,24 +148,23 @@ const errorMessageStyle = {
   color: errorStyle.color
 }
 
-const RecipeForms = props => {
+const RecipeForms = ({
+  originalName,
+  originalImage,
+  originalIngredients,
+  originalDirections,
+  tableRef,
+  isEditMode,
+  addIngredientMode, toggleAddIngredientMode,
+  editIngredientMode, toggleEditIngredientMode,
+  setIsSaveEnabled,
+  isErrored,
+  isNameEmpty, setIsNameEmpty,
+  isImageEmpty, setIsImageEmpty,
+  isIngredientsEmpty, setIsIngredientsEmpty,
+  isDirectionsEmpty, setIsDirectionsEmpty
+}) => {
   const classes = useStyles();
-  const {
-    originalName,
-    originalImage,
-    originalIngredients,
-    originalDirections,
-    tableRef,
-    isEditMode,
-    addIngredientMode, toggleAddIngredientMode,
-    editIngredientMode, toggleEditIngredientMode,
-    setIsSaveEnabled,
-    isErrored,
-    isNameEmpty, setIsNameEmpty,
-    isImageEmpty, setIsImageEmpty,
-    isIngredientsEmpty, setIsIngredientsEmpty,
-    isDirectionsEmpty, setIsDirectionsEmpty
-  } = props;
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
@@ -254,25 +253,29 @@ const RecipeForms = props => {
   }
 
   const handleIngredientDelete = index => {
-    setDeleteIngredientModalVisible(false);
-    const newIngredients = ingredients.reduce((accum, ingredient) => {
-      if (ingredient.index !== index) {
-        accum.push(ingredient)
-      }
-      return accum;
-    }, []).map((ingredient, index) => ({
-      ...ingredient, index
-    }));
-    setIngredients(newIngredients);
-    setGlobalDiff(undefined, undefined, newIngredients);
+    setTimeout(() => {
+      setDeleteIngredientModalVisible(false);
+      const newIngredients = ingredients.reduce((accum, ingredient) => {
+        if (ingredient.index !== index) {
+          accum.push(ingredient)
+        }
+        return accum;
+      }, []).map((ingredient, index) => ({
+        ...ingredient, index
+      }));
+      setIngredients(newIngredients);
+      setGlobalDiff(undefined, undefined, newIngredients);
+    }, 1);
   }
 
   const handleStepDelete = index => {
-    setDeleteStepModalVisible(false);
-    let currentSteps = [ ...directionSteps ];
-    currentSteps.splice(index, 1);
-    setDirectionSteps(currentSteps);
-    setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
+    setTimeout(() => {
+      setDeleteStepModalVisible(false);
+      let currentSteps = [ ...directionSteps ];
+      currentSteps.splice(index, 1);
+      setDirectionSteps(currentSteps);
+      setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
+    }, 1);
   }
 
   const directionsAreDifferent = (

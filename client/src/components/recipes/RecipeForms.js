@@ -86,7 +86,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiInputLabel-root': {
       fontSize: '16px',
-      color: errorStyle.color,
+      color: 'white',
       marginTop: '-4px'
     }
   },
@@ -127,12 +127,22 @@ const iconButtonStyle = {
   width: '30px'
 }
 
-const itemStyle = {
+const roundedButtonStyle = {
+  width: '80%',
+  color: 'orange',
+  border: '2px solid orange',
+  fontWeight: 'bold',
+  borderRadius: '50px',
+  background: '#292929',
+  margin: '5px 10%'
+}
+
+const fullWidth = {
   width: '100%'
 }
 
 const errorMessageStyle = {
-  width: '30%',
+  width: '35%',
   margin: 'auto',
   paddingRight: '10px',
   color: errorStyle.color
@@ -296,17 +306,21 @@ const RecipeForms = props => {
   return (
     <ClickAwayListener
       onClickAway={e => {
-        if (!anchorEl && !containersDisabled) {
+        if (!anchorEl &&
+          !containersDisabled &&
+          !isIconsModalVisible &&
+          !isDeleteIngredientModalVisible &&
+          !isDeleteStepModalVisible
+        ) {
           setFocus(null);
-          console.log(e.target)
           e.target.click();
         }
       }}
     >
-    <div style={{width:'100%'}}>
+    <div style={fullWidth}>
       <IconsModal
         isVisible={isIconsModalVisible}
-        closeModal={() => setIconsModalVisible(false)}
+        closeModal={() => setTimeout(() => setIconsModalVisible(false), 1)}
         onConfirm={icon => {
           setImage(icon);
           setGlobalDiff(undefined, icon);
@@ -322,7 +336,7 @@ const RecipeForms = props => {
       <PromptModal
         modalType="delete"
         isVisible={isDeleteIngredientModalVisible}
-        closeModal={() => setDeleteIngredientModalVisible(false)}
+        closeModal={() => setTimeout(() => setDeleteIngredientModalVisible(false), 1)}
         onConfirm={handleIngredientDelete}
         onConfirmParam={deletedIndex}
         message={isDeleteIngredientModalVisible
@@ -333,7 +347,7 @@ const RecipeForms = props => {
       <PromptModal
         modalType="delete"
         isVisible={isDeleteStepModalVisible}
-        closeModal={() => setDeleteStepModalVisible(false)}
+        closeModal={() => setTimeout(() => setDeleteStepModalVisible(false), 1)}
         onConfirm={handleStepDelete}
         onConfirmParam={deletedIndex}
         message={isDeleteStepModalVisible
@@ -345,21 +359,24 @@ const RecipeForms = props => {
         style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
       >
         <Grid item style={{
-          width: focusedContainer !== "name" && isNameEmpty && isErrored ? '70%' : '100%',
-          paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '6px' : '0'
+          width: focusedContainer !== "name" && isNameEmpty && isErrored ? '65%' : '100%',
+          paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '7px' : '0'
         }}>
           <TextField
             InputProps={{
               classes: {
                 input: classes.inputText
               },
-              onBlur: () => setGlobalDiff()
+              onBlur: () => {
+                setGlobalDiff();
+                setFocus(null);
+              }
             }}
             classes={{
-              root: isNameEmpty && isErrored
-                ? classes.redRoot
-                : focusedContainer === "name"
-                  ? classes.yellowRoot
+              root: focusedContainer === "name"
+                ? classes.yellowRoot
+                : isNameEmpty && isErrored
+                  ? classes.redRoot
                   : classes.whiteRoot
             }}
             style={{
@@ -381,14 +398,20 @@ const RecipeForms = props => {
           />
         </Grid>
         {focusedContainer !== "name" && isNameEmpty && isErrored &&
-          <Grid item style={{...errorMessageStyle, paddingLeft:'4px'}}>
+          <Grid item
+            style={{
+              ...errorMessageStyle,
+              paddingLeft:'3px',
+              opacity: containersDisabled ? '0.3' : '1.0'
+            }}
+          >
             Please enter a name
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "image" && isImageEmpty && isErrored ? '70%' : '100%'
+          width: focusedContainer !== "image" && isImageEmpty && isErrored ? '65%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "image"}
@@ -412,7 +435,7 @@ const RecipeForms = props => {
               direction="column"
               style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
             >
-              <Grid item style={{...itemStyle, padding:'10px 10px 5px 10px'}}>
+              <Grid item style={{...fullWidth, padding:'10px 10px 5px 10px'}}>
                 <Typography
                   style={{
                     ...sectionTitleStyle(focusedContainer, "image"),
@@ -423,7 +446,7 @@ const RecipeForms = props => {
                 </Typography>
                 <div style={rightSideActionStyle}>
                   {focusedContainer === "image"
-                  ? <Fab
+                  ? !!image && <Fab
                       style={iconButtonStyle}
                       onClick={e => {
                         e.stopPropagation();
@@ -453,26 +476,44 @@ const RecipeForms = props => {
               </Grid>
             </Grid>
             <Card style={{padding:'0 10px', width:'99%', marginLeft:'0.5%'}}>
-              <CardMedia
-                image={image}
-                style={{
-                  height: isMobile ? '320px' : '280px',
-                  padding:'0',
-                  borderRadius:'10px 10px 0 0'
-                }}
-              />
+              {!!image
+              ? <CardMedia
+                  image={image}
+                  style={{
+                    height: !!image
+                      ? isMobile ? '320px' : '280px'
+                      : 'initial',
+                    padding:'0',
+                    borderRadius:'10px 10px 0 0'
+                  }}
+                />
+              : <div style={{paddingBottom:'10px'}}>
+                  <Button className="fileContainer" style={roundedButtonStyle}>
+                    Upload Photo
+                    <FileBase type="file" onDone={onImageChange}/>
+                  </Button>
+                  <Button style={roundedButtonStyle} onClick={() => setIconsModalVisible(true)}>
+                    Choose Icon
+                  </Button>
+                </div>
+              }
             </Card>
           </Collapse>
         </Grid>
         {focusedContainer !== "image" && isImageEmpty && isErrored &&
-          <Grid item style={errorMessageStyle}>
+          <Grid item
+            style={{
+              ...errorMessageStyle,
+              opacity: containersDisabled ? '0.3' : '1.0'
+            }}
+          >
             Please choose an image
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '70%' : '100%'
+          width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '65%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "ingredients"}
@@ -496,7 +537,7 @@ const RecipeForms = props => {
               direction="column"
               style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
             >
-              <Grid item style={{...itemStyle, padding:'10px'}}>
+              <Grid item style={{...fullWidth, padding:'10px'}}>
                 <Typography
                   style={{
                     ...sectionTitleStyle(focusedContainer, "ingredients"),
@@ -538,7 +579,7 @@ const RecipeForms = props => {
               </Grid>
               <Grid item id="ingredients"
                 style={{
-                  ...itemStyle,
+                  ...fullWidth,
                   maxHeight: isMobile ? '320px' : '280px',
                   width: '99%',
                   marginLeft: '0.5%',
@@ -564,14 +605,19 @@ const RecipeForms = props => {
           </Collapse>
         </Grid>
         {focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored &&
-          <Grid item style={errorMessageStyle}>
+          <Grid item
+            style={{
+              ...errorMessageStyle,
+              opacity: containersDisabled ? '0.3' : '1.0'
+            }}
+          >
             Please enter at least one ingredient
           </Grid>
         }
       </Grid>
       <Grid container direction="row">
         <Grid item style={{
-          width: focusedContainer !== "directions" && isDirectionsEmpty && isErrored ? '70%' : '100%'
+          width: focusedContainer !== "directions" && isDirectionsEmpty && isErrored ? '65%' : '100%'
         }}>
           <Collapse
             in={focusedContainer === "directions"}
@@ -597,7 +643,7 @@ const RecipeForms = props => {
                 (focusedContainer !== "image" && focusedContainer !== "directions") ? '0.3' : '1.0'
               }}
             >
-              <Grid item style={{...itemStyle, padding:'10px'}}>
+              <Grid item style={{...fullWidth, padding:'10px'}}>
                 <Typography
                   style={{
                     ...sectionTitleStyle(focusedContainer, "directions"),
@@ -651,7 +697,7 @@ const RecipeForms = props => {
                   }
                 </div>
               </Grid>
-              <Grid item style={itemStyle}>
+              <Grid item style={fullWidth}>
                 <ThemeProvider theme={createMuiTheme(inputTheme)}>
                   {directionsType === "string"
                   ? <TextField
@@ -714,7 +760,7 @@ const RecipeForms = props => {
                                 id={"step_" + index}
                                 variant="outlined"
                                 color="secondary"
-                                style={{width:'100%'}}
+                                style={fullWidth}
                                 autoFocus={addStepMode}
                                 error={!step.length}
                                 helperText={step.length || focusedStep === index ? "" : "This step is empty"}
@@ -765,7 +811,12 @@ const RecipeForms = props => {
           </Collapse>
         </Grid>
         {focusedContainer !== "directions" && isDirectionsEmpty && isErrored &&
-          <Grid item style={errorMessageStyle}>
+          <Grid item
+            style={{
+              ...errorMessageStyle,
+              opacity: containersDisabled ? '0.3' : '1.0'
+            }}
+          >
             Please enter at least one direction
           </Grid>
         }

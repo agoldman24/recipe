@@ -79,6 +79,13 @@ export const errorStyle = {
   paddingTop: '50px'
 };
 
+export const errorMessageStyle = {
+  width: '35%',
+  margin: 'auto',
+  paddingRight: '10px',
+  color: errorStyle.color
+}
+
 export const textStyle = {
   fontWeight: 'bold',
   fontFamily: 'Signika',

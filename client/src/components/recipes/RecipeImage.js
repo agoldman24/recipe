@@ -12,9 +12,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import FileBase from 'react-file-base64';
 import {
-  borderStyle, sectionTitleStyle, radioLabelStyle,
-  fabStyle, buttonStyle, iconStyle, errorStyle,
-  errorMessageStyle, defaultTheme, inputTheme
+  borderStyle, sectionTitleStyle, rightSideActionStyle, fullWidth,
+  buttonStyle, iconStyle, iconButtonStyle, errorMessageStyle
 } from '../../styles';
 import '../../index.css';
 
@@ -24,26 +23,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const rightSideActionStyle = {
-  float: 'right',
-  width: isMobile ? '40%' : '30%'
-}
-
-const addButtonStyle = {
-  ...buttonStyle,
-  width: '100%',
-  color: '#45bbff',
-  border: '2px solid #45bbff'
-}
-
-const iconButtonStyle = {
-  ...fabStyle,
-  color: 'white',
-  float: 'right',
-  height: '20px',
-  width: '30px'
-}
-
 const roundedButtonStyle = {
   width: '80%',
   color: 'orange',
@@ -52,10 +31,6 @@ const roundedButtonStyle = {
   borderRadius: '50px',
   background: '#292929',
   margin: '5px 10%'
-}
-
-const fullWidth = {
-  width: '100%'
 }
 
 export default function RecipeImage({
@@ -152,9 +127,13 @@ export default function RecipeImage({
                 }}
               />
             : <div style={{paddingBottom:'10px'}}>
-                <Button className="fileContainer" style={roundedButtonStyle}>
+                <Button style={roundedButtonStyle}
+                  onClick={() => document.getElementById("fileUpload").click()}
+                >
                   Upload Photo
-                  <FileBase type="file" onDone={onImageChange}/>
+                  <label className="fileContainer" id="fileUpload">
+                    <FileBase type="file" onDone={onImageChange}/>
+                  </label>
                 </Button>
                 <Button style={roundedButtonStyle} onClick={() => setIconsModalVisible(true)}>
                   Choose Icon

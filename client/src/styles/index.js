@@ -202,6 +202,22 @@ export const cancelButtonStyle = {
   border: '2px solid #cccccc'
 }
 
+export const addButtonStyle = {
+  ...buttonStyle,
+  width: '100%',
+  color: '#45bbff',
+  border: '2px solid #45bbff'
+}
+
+export const rightSideActionStyle = {
+  float: 'right',
+  width: isMobile ? '40%' : '30%'
+}
+
+export const fullWidth = {
+  width: '100%'
+}
+
 export const iconStyle = {
   width: '30',
   height: '30'
@@ -231,6 +247,14 @@ export const fabStyle = {
   boxShadow: 'none',
   color: 'black',
 };
+
+export const iconButtonStyle = {
+  ...fabStyle,
+  color: 'white',
+  float: 'right',
+  height: '20px',
+  width: '30px'
+}
 
 export const blackIconStyle = {
   width: '27',

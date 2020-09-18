@@ -12,6 +12,7 @@ import RecipeIngredients from './RecipeIngredients';
 import RecipeDirections from './RecipeDirections';
 import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
+import { fullWidth } from '../../styles';
 import '../../index.css';
 
 const useStyles = makeStyles(() => ({
@@ -24,10 +25,6 @@ const useStyles = makeStyles(() => ({
     marginTop: '3px'
   }
 }));
-
-const fullWidth = {
-  width: '100%'
-}
 
 const directionsAreDifferent = (
   newDirectionsType,

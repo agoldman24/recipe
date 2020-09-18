@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
@@ -12,11 +11,11 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {
-  borderStyle, sectionTitleStyle, radioLabelStyle,
-  fabStyle, buttonStyle, errorMessageStyle, inputTheme
+  borderStyle, sectionTitleStyle, radioLabelStyle, iconButtonStyle,
+  rightSideActionStyle, fullWidth, errorMessageStyle, inputTheme
 } from '../../styles';
 import '../../index.css';
 
@@ -41,40 +40,6 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   }
 }));
-
-const rightSideActionStyle = {
-  float: 'right',
-  width: isMobile ? '40%' : '30%'
-}
-
-const addButtonStyle = {
-  ...buttonStyle,
-  width: '100%',
-  color: '#45bbff',
-  border: '2px solid #45bbff'
-}
-
-const iconButtonStyle = {
-  ...fabStyle,
-  color: 'white',
-  float: 'right',
-  height: '20px',
-  width: '30px'
-}
-
-const roundedButtonStyle = {
-  width: '80%',
-  color: 'orange',
-  border: '2px solid orange',
-  fontWeight: 'bold',
-  borderRadius: '50px',
-  background: '#292929',
-  margin: '5px 10%'
-}
-
-const fullWidth = {
-  width: '100%'
-}
 
 export default function RecipeDirections({
   focusedContainer,
@@ -219,17 +184,6 @@ export default function RecipeDirections({
                       {steps.map((step, index) => {
                       return (
                         <Grid container direction="row" key={index}>
-                          <Grid item style={{width:'8%', paddingTop: '7px'}}>
-                            <Fab style={iconButtonStyle}>
-                              <DeleteOutlineIcon
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setDeletedIndex(index);
-                                  setDeleteStepModalVisible(true);
-                                }}
-                              />
-                            </Fab>
-                          </Grid>
                           <Grid item style={{width:'8%', paddingTop: '13px'}}>
                             <Typography style={{
                               float: 'right',
@@ -268,9 +222,20 @@ export default function RecipeDirections({
                               }}
                             />
                           </Grid>
+                          <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                            <Fab style={iconButtonStyle}>
+                              <CloseIcon
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setDeletedIndex(index);
+                                  setDeleteStepModalVisible(true);
+                                }}
+                              />
+                            </Fab>
+                          </Grid>
                         </Grid>
                       )})}
-                      <Grid container direction="row">
+                      <Grid container direction="row" style={{paddingBottom:'15px'}}>
                         <Grid item style={{width:'16%'}}>
                           <Fab style={iconButtonStyle}
                             disabled={steps.length && !steps[steps.length - 1].length}

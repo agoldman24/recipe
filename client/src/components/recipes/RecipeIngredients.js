@@ -10,7 +10,8 @@ import AddIcon from '@material-ui/icons/Add';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import IngredientsTable from '../tables/IngredientsTable';
 import {
-  borderStyle, sectionTitleStyle, fabStyle, buttonStyle, errorMessageStyle
+  borderStyle, sectionTitleStyle, errorMessageStyle,
+  rightSideActionStyle, iconButtonStyle, addButtonStyle, fullWidth
 } from '../../styles';
 import '../../index.css';
 
@@ -22,30 +23,6 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   }
 }));
-
-const rightSideActionStyle = {
-  float: 'right',
-  width: isMobile ? '40%' : '30%'
-}
-
-const addButtonStyle = {
-  ...buttonStyle,
-  width: '100%',
-  color: '#45bbff',
-  border: '2px solid #45bbff'
-}
-
-const iconButtonStyle = {
-  ...fabStyle,
-  color: 'white',
-  float: 'right',
-  height: '20px',
-  width: '30px'
-}
-
-const fullWidth = {
-  width: '100%'
-}
 
 export default function RecipeIngredients({
   focusedContainer,

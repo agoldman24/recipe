@@ -122,7 +122,7 @@ class App extends React.Component {
             name={""}
             image={""}
             ingredients={[]}
-            directions={""}
+            directions={[]}
           />
         }
         <Container

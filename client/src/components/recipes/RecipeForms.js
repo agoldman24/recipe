@@ -37,6 +37,9 @@ const directionsAreDifferent = (
     return true;
   };
   if (newDirectionsType === "string") {
+    if (!isEditMode) {
+      return !!newDirectionsParagraph.length
+    }
     return newDirectionsParagraph.replace(/\s+/g, '') !== originalDirections.replace(/\s+/g, '');
   } else {
     if (newDirectionSteps.length !== originalDirections.length) {

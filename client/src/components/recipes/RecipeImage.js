@@ -13,7 +13,7 @@ import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 import FileBase from 'react-file-base64';
 import {
   borderStyle, sectionTitleStyle, rightSideActionStyle, fullWidth,
-  buttonStyle, iconStyle, iconButtonStyle, errorMessageStyle
+  iconStyle, iconButtonStyle, errorMessageStyle
 } from '../../styles';
 import '../../index.css';
 

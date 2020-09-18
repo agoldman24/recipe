@@ -212,7 +212,7 @@ export default function RecipeDirections({
                               color="secondary"
                               style={fullWidth}
                               autoFocus={addStepMode}
-                              error={!step.length}
+                              error={!step.length && focusedStep !== index}
                               helperText={step.length || focusedStep === index ? "" : "This step is empty"}
                               value={step}
                               onChange={e => {

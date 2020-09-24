@@ -1,4 +1,4 @@
-import React, { createRef } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
@@ -42,11 +42,8 @@ const fixedCancelButtonStyle = {
 class RecipeDetailEdit extends React.Component {
   constructor(props) {
     super(props);
-    this.tableRef = createRef();
   }
   state = {
-    addIngredientMode: false,
-    editIngredientMode: false,
     isSaveEnabled: false,
     isErrored: false,
     isNameEmpty: this.props.isCreateMode,
@@ -55,8 +52,7 @@ class RecipeDetailEdit extends React.Component {
     isDirectionsEmpty: this.props.isCreateMode
   }
   render() {
-    const { addIngredientMode, editIngredientMode, isSaveEnabled } = this.state;
-    const buttonsDisabled = addIngredientMode || editIngredientMode;
+    const { isSaveEnabled } = this.state;
     return (
       <div style={darkBackgroundStyle}>
         <Card style={detailStyle}>
@@ -77,22 +73,16 @@ class RecipeDetailEdit extends React.Component {
               }}>
                 {this.props.isEditMode
                 ? <div>
-                    <Button
-                      style={{
-                        ...fixedDeleteButtonStyle,
-                        opacity: buttonsDisabled ? '0.3' : '1.0'
-                      }}
-                      disabled={buttonsDisabled}
-                    >
+                    <Button style={fixedDeleteButtonStyle}>
                       Delete
                     </Button>
                     <Button
                       startIcon={<SaveIcon/>}
                       style={{
                         ...fixedSaveButtonStyle,
-                        opacity: buttonsDisabled || !isSaveEnabled ? '0.3' : '1.0'
+                        opacity: !isSaveEnabled ? '0.3' : '1.0'
                       }}
-                      disabled={buttonsDisabled || !isSaveEnabled}
+                      disabled={!isSaveEnabled}
                       onClick={() => {
                         const { isNameEmpty, isImageEmpty, isIngredientsEmpty, isDirectionsEmpty } = this.state;
                         if (isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty) {
@@ -106,11 +96,7 @@ class RecipeDetailEdit extends React.Component {
                     </Button>
                   </div>
                 : <Button
-                    style={{
-                      ...fixedSaveButtonStyle,
-                      opacity: buttonsDisabled ? '0.3' : '1.0'
-                    }}
-                    disabled={buttonsDisabled}
+                    style={fixedSaveButtonStyle}
                     onClick={() => {
                       const { isNameEmpty, isImageEmpty, isIngredientsEmpty, isDirectionsEmpty } = this.state;
                       if (isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty) {
@@ -124,11 +110,7 @@ class RecipeDetailEdit extends React.Component {
                   </Button>
                 }
                 <Button
-                  style={{
-                    ...fixedCancelButtonStyle,
-                    opacity: buttonsDisabled ? '0.3' : '1.0'
-                  }}
-                  disabled={buttonsDisabled}
+                  style={fixedCancelButtonStyle}
                   onClick={() => {
                     if (this.props.isEditMode) {
                       this.props.toggleEditMode();
@@ -156,12 +138,7 @@ class RecipeDetailEdit extends React.Component {
             originalImage={this.props.image}
             originalIngredients={this.props.ingredients}
             originalDirections={this.props.directions}
-            tableRef={this.tableRef}
             isEditMode={this.props.isEditMode}
-            addIngredientMode={this.state.addIngredientMode}
-            editIngredientMode={this.state.editIngredientMode}
-            toggleAddIngredientMode={() => this.setState({ addIngredientMode: !this.state.addIngredientMode })}
-            toggleEditIngredientMode={() => this.setState({ editIngredientMode: !this.state.editIngredientMode })}
             setIsSaveEnabled={val => this.setState({ isSaveEnabled: val })}
             isErrored={this.state.isErrored}
             isNameEmpty={this.state.isNameEmpty}

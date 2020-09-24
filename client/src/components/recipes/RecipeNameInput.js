@@ -60,7 +60,6 @@ const useStyles = makeStyles(() => ({
 
 export default function RecipeNameInput({
   focusedContainer,
-  containersDisabled,
   originalName,
   isNameEmpty,
   isErrored,
@@ -97,19 +96,18 @@ export default function RecipeNameInput({
                 : classes.whiteRoot
           }}
           style={{
-            opacity: containersDisabled ? '0.3' : '1.0',
-            fontStyle: value === originalName || focusedContainer === "name" ? 'normal' : 'italic'
+            fontStyle: value === originalName || focusedContainer === "name" 
+              ? 'normal' : 'italic'
           }}
           required
           fullWidth
-          disabled={containersDisabled}
           variant="outlined"
           label="Name"
           type="name"
           value={value}
           onClick={e => {
             e.stopPropagation();
-            if (!containersDisabled) setFocus("name");
+            setFocus("name");
           }}
           onChange={e => setValue(e.target.value)}
         />
@@ -119,7 +117,6 @@ export default function RecipeNameInput({
           style={{
             ...errorMessageStyle,
             paddingLeft:'3px',
-            opacity: containersDisabled ? '0.3' : '1.0'
           }}
         >
           Please enter a name

@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/styles';
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import IngredientsTable from '../tables/IngredientsTable';
+import RecipeItemField from './RecipeItemField';
+import RecipeQuantityField from './RecipeQuantityField';
+import { ingredientsAreDifferent } from './utils';
 import {
-  borderStyle, sectionTitleStyle, errorMessageStyle,
-  rightSideActionStyle, iconButtonStyle, addButtonStyle, fullWidth
+  borderStyle, sectionTitleStyle, errorMessageStyle, addButtonStyle,
+  rightSideActionStyle, iconButtonStyle, fullWidth, inputTheme
 } from '../../styles';
 import '../../index.css';
 
 const useStyles = makeStyles(() => ({
+  inputTextReducedPadding: {
+    fontSize: '16px',
+    padding: '10px'
+  },
   button: {
     textTransform: 'none'
   },
@@ -26,24 +34,24 @@ const useStyles = makeStyles(() => ({
 
 export default function RecipeIngredients({
   focusedContainer,
-  containersDisabled,
   originalIngredients,
   isIngredientsEmpty,
+  isEditMode,
   isErrored,
+  setGlobalDiff,
   setFocus,
-  tableRef, ingredients,
-  editIngredientMode, toggleEditIngredientMode,
-  addIngredientMode, toggleAddIngredientMode,
-  handleIngredientChange,
-  handleIngredientAdd,
-  setDeletedIndex,
-  setDeleteIngredientModalVisible
+  ingredients,
+  setIngredients,
+  handleIngredientDelete
 }) {
   const classes = useStyles();
+  const [addIngredientMode, setAddIngredientMode] = useState(false);
+  const [addEnabled, setAddEnabled] = useState(true);
   return (
     <Grid container direction="row">
       <Grid item style={{
-        width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored ? '65%' : '100%'
+        width: focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored
+          ? '65%' : '100%'
       }}>
         <Collapse
           in={focusedContainer === "ingredients"}
@@ -51,55 +59,36 @@ export default function RecipeIngredients({
           style={borderStyle(
             focusedContainer,
             "ingredients",
-            containersDisabled && focusedContainer !== "ingredients",
             isIngredientsEmpty && isErrored
           )}
           collapsedHeight={50}
           onClick={e => {
-            if (!(containersDisabled && focusedContainer !== "ingredients")) {
+            if (focusedContainer !== "ingredients") {
               e.stopPropagation();
               setFocus("ingredients");
             }
           }}
         >
-          <Grid
-            container
-            direction="column"
-            style={{opacity: containersDisabled && focusedContainer !== "ingredients" ? '0.3' : '1.0'}}
-          >
+          <Grid container direction="column">
             <Grid item style={{...fullWidth, padding:'10px'}}>
               <Typography
                 style={{
                   ...sectionTitleStyle(focusedContainer, "ingredients"),
-                  fontStyle: ingredients.length !== originalIngredients.length
-                    || ingredients.filter(i => i.isModified).length
-                      ? 'italic'
-                      : 'normal'
+                  fontStyle: ingredientsAreDifferent(
+                    ingredients,
+                    originalIngredients,
+                    isEditMode
+                  ) ? 'italic' : 'normal'
                 }}
               >
                 Ingredients*
               </Typography>
               <div style={rightSideActionStyle}>
-                {focusedContainer === "ingredients"
-                ? <Button
-                    startIcon={<AddIcon/>}
-                    style={{
-                      ...addButtonStyle,
-                      opacity: addIngredientMode || editIngredientMode ? '0.3' : '1.0'
-                    }}
-                    disabled={addIngredientMode || editIngredientMode}
-                    onClick={() => {
-                      document.getElementById("ingredients").scroll({ top: 0, behavior: 'smooth' });
-                      toggleAddIngredientMode();
-                    }}
-                    className={classes.button}
-                  >
-                    Add
-                  </Button>
-                : <Fab
+                {focusedContainer !== "ingredients" &&
+                  <Fab
                     style={iconButtonStyle}
                     onClick={e => {
-                      if (!(containersDisabled && focusedContainer !== "ingredients")) {
+                      if (focusedContainer !== "ingredients") {
                         e.stopPropagation();
                         setFocus("ingredients");
                       }
@@ -118,32 +107,71 @@ export default function RecipeIngredients({
                 marginLeft: '0.5%',
                 overflow:'auto'
               }}>
-              <IngredientsTable
-                tableRef={tableRef}
-                ingredients={ingredients}
-                isEditable={true}
-                editRowMode={editIngredientMode}
-                addRowMode={addIngredientMode}
-                toggleEditRowMode={toggleEditIngredientMode}
-                toggleAddRowMode={toggleAddIngredientMode}
-                onIngredientChange={handleIngredientChange}
-                onIngredientAdd={handleIngredientAdd}
-                onIngredientDelete={i => {
-                  setDeletedIndex(i);
-                  setDeleteIngredientModalVisible(true);
-                }}
-              />
+              <ThemeProvider theme={createMuiTheme(inputTheme)}>
+                <Grid container direction="column">
+                  {ingredients.map(({ item, quantity }, index) => {
+                  return (
+                    <Grid container direction="row" key={index}>
+                      <Grid item style={{width:'45%', padding: '5px 0 5px 20px'}}>
+                        <RecipeItemField
+                          originalValue={item}
+                          index={index}
+                          ingredients={ingredients}
+                          setIngredients={setIngredients}
+                          setGlobalDiff={setGlobalDiff}
+                          addIngredientMode={addIngredientMode}
+                          setAddIngredientMode={setAddIngredientMode}
+                          setAddEnabled={setAddEnabled}
+                        />
+                      </Grid>
+                      <Grid item style={{width:'45%', padding: '5px 0 5px 5px'}}>
+                        <RecipeQuantityField
+                          originalValue={quantity}
+                          index={index}
+                          ingredients={ingredients}
+                          setIngredients={setIngredients}
+                          setGlobalDiff={setGlobalDiff}
+                        />
+                      </Grid>
+                      <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                        <Fab style={iconButtonStyle}>
+                          <CloseIcon
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleIngredientDelete(index);
+                            }}
+                          />
+                        </Fab>
+                      </Grid>
+                    </Grid>
+                  )})}
+                  <Button
+                    startIcon={<AddIcon/>}
+                    style={{
+                      ...addButtonStyle,
+                      opacity: addEnabled ? '1.0' : '0.3'
+                    }}
+                    disabled={!addEnabled}
+                    onClick={() => {
+                      const newIngredients = [
+                        ...ingredients,
+                        { item: "", quantity: "" }
+                      ];
+                      setIngredients(newIngredients);
+                      setAddIngredientMode(true);
+                    }}
+                    className={classes.button}
+                  >
+                    Add Ingredient
+                  </Button>
+                </Grid>
+              </ThemeProvider>
             </Grid>
           </Grid>
         </Collapse>
       </Grid>
       {focusedContainer !== "ingredients" && isIngredientsEmpty && isErrored &&
-        <Grid item
-          style={{
-            ...errorMessageStyle,
-            opacity: containersDisabled ? '0.3' : '1.0'
-          }}
-        >
+        <Grid item style={errorMessageStyle}>
           Please enter at least one ingredient
         </Grid>
       }

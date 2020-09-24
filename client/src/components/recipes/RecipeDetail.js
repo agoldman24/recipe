@@ -136,7 +136,6 @@ class RecipeDetail extends React.Component {
             </div>
             <IngredientsTable
               ingredients={this.props.ingredients}
-              isEditable={this.props.editMode}
             />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
             <div style={{paddingLeft: isMobile ? '5px' : '0'}}>
@@ -195,7 +194,6 @@ class RecipeDetail extends React.Component {
 const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
-    editMode: state.detailRecipe.editMode,
     activeUser: state.activeUser,
     savedRecipeIds: !!state.activeUser
       ? state.activeUser.savedRecipeIds.map(obj => obj.id)

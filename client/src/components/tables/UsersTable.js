@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,7 +26,7 @@ const textStyle = {
 
 const UsersTable = props => {
   const classes = useStyles();
-  const [selectedId, setSelectedId] = React.useState(0);
+  const [selectedId, setSelectedId] = useState(0);
 
   return (
     <TableContainer>

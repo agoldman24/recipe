@@ -204,9 +204,11 @@ export const cancelButtonStyle = {
 
 export const addButtonStyle = {
   ...buttonStyle,
-  width: '100%',
+  width: '60%',
+  margin: '10px auto 15px',
   color: '#45bbff',
-  border: '2px solid #45bbff'
+  border: '2px solid #45bbff',
+  borderRadius: '50px'
 }
 
 export const rightSideActionStyle = {
@@ -319,13 +321,6 @@ export const sectionStyle = {
   lineHeight: '2'
 }
 
-export const radioLabelStyle = (dirType, type) => ({
-  height: '25px',
-  color: dirType === type
-    ? defaultTheme.palette.primary.main
-    : 'white'
-});
-
 export const containerStyle = {
   border: '1px solid rgb(118, 118, 118)',
   borderRadius: '5px',
@@ -333,15 +328,20 @@ export const containerStyle = {
   width: 'initial'
 }
 
-export const borderStyle = (focusedContainer, container, isDisabled, isErrored) => ({
+export const radioLabelStyle = (dirType, type) => ({
+  height: '25px',
+  color: dirType === type
+    ? defaultTheme.palette.primary.main
+    : 'white'
+});
+
+export const borderStyle = (focusedContainer, container, isErrored) => ({
   ...containerStyle,
   border: focusedContainer === container
     ? '2px solid #ffe100'
-    : isDisabled
-      ? '1px solid rgba(255,255,255,0.3)'
-      : isErrored
-        ? '1px solid ' + errorStyle.color
-        : '1px solid white'
+    : isErrored
+      ? '1px solid ' + errorStyle.color
+      : '1px solid white'
 });
 
 export const sectionTitleStyle = (focusedContainer, container) => ({

@@ -35,7 +35,6 @@ const roundedButtonStyle = {
 
 export default function RecipeImage({
   focusedContainer,
-  containersDisabled,
   originalImage,
   isImageEmpty,
   isErrored,
@@ -58,22 +57,17 @@ export default function RecipeImage({
           style={borderStyle(
             focusedContainer,
             "image",
-            containersDisabled && focusedContainer !== "image",
             isImageEmpty && isErrored
           )}
           collapsedHeight={50}
           onClick={e => {
-            if (!(containersDisabled && focusedContainer !== "image")) {
+            if (focusedContainer !== "image") {
               e.stopPropagation();
               setFocus("image");
             }
           }}
         >
-          <Grid
-            container
-            direction="column"
-            style={{opacity: containersDisabled && focusedContainer !== "image" ? '0.3' : '1.0'}}
-          >
+          <Grid container direction="column">
             <Grid item style={{...fullWidth, padding:'10px 10px 5px 10px'}}>
               <Typography
                 style={{
@@ -102,7 +96,7 @@ export default function RecipeImage({
                 : <Fab
                     style={iconButtonStyle}
                     onClick={e => {
-                      if (!(containersDisabled && focusedContainer !== "image")) {
+                      if (focusedContainer !== "image") {
                         e.stopPropagation();
                         setFocus("image");
                       }
@@ -144,12 +138,7 @@ export default function RecipeImage({
         </Collapse>
       </Grid>
       {focusedContainer !== "image" && isImageEmpty && isErrored &&
-        <Grid item
-          style={{
-            ...errorMessageStyle,
-            opacity: containersDisabled ? '0.3' : '1.0'
-          }}
-        >
+        <Grid item style={errorMessageStyle}>
           Please choose an image
         </Grid>
       }

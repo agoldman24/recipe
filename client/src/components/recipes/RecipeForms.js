@@ -13,6 +13,7 @@ import RecipeDirections from './RecipeDirections';
 import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
 import { fullWidth } from '../../styles';
+import { directionsAreDifferent } from './utils';
 import '../../index.css';
 
 const useStyles = makeStyles(() => ({
@@ -26,43 +27,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const directionsAreDifferent = (
-  newDirectionsType,
-  newDirectionsParagraph,
-  newDirectionSteps,
-  originalDirections,
-  isEditMode
-) => {
-  if (isEditMode && newDirectionsType !== typeof originalDirections) {
-    return true;
-  };
-  if (newDirectionsType === "string") {
-    if (!isEditMode) {
-      return !!newDirectionsParagraph.length
-    }
-    return newDirectionsParagraph.replace(/\s+/g, '') !== originalDirections.replace(/\s+/g, '');
-  } else {
-    if (newDirectionSteps.length !== originalDirections.length) {
-      return true;
-    }
-    newDirectionSteps.forEach((direction, index) => {
-      if (direction !== originalDirections[index]) {
-        return true;
-      }
-    });
-  }
-  return false;
-}
-
 const RecipeForms = ({
   originalName,
   originalImage,
   originalIngredients,
   originalDirections,
-  tableRef,
   isEditMode,
-  addIngredientMode, toggleAddIngredientMode,
-  editIngredientMode, toggleEditIngredientMode,
   setIsSaveEnabled,
   isErrored,
   isNameEmpty, setIsNameEmpty,
@@ -73,8 +43,6 @@ const RecipeForms = ({
   const classes = useStyles();
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
-  const [isDeleteIngredientModalVisible, setDeleteIngredientModalVisible] = useState(false);
-  const [isDeleteStepModalVisible, setDeleteStepModalVisible] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState(isEditMode ? "image" : null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [name, setName] = useState(originalName);
@@ -83,14 +51,8 @@ const RecipeForms = ({
     typeof originalDirections === "string" ? originalDirections : "");
   const [directionSteps, setDirectionSteps] = useState(
     typeof originalDirections === "string" ? [] : originalDirections);
-  const [focusedStep, setFocusedStep] = useState(null);
   const [directionsType, setDirectionsType] = useState(typeof originalDirections);
-  const [ingredients, setIngredients] = useState(originalIngredients.map((ingredient, index) => ({
-    ...ingredient, index, isModified: false
-  })));
-  const [deletedIndex, setDeletedIndex] = useState(0);
-  const [addStepMode, setAddStepMode] = useState(false);
-  const containersDisabled = addIngredientMode || editIngredientMode;
+  const [ingredients, setIngredients] = useState(originalIngredients);
 
   const setFocus = container => {
     if (container !== focusedContainer) {
@@ -100,6 +62,12 @@ const RecipeForms = ({
         && !directionSteps[directionSteps.length - 1].length
       ) {
         handleStepDelete(directionSteps.length - 1);
+      }
+      else if (focusedContainer === "ingredients"
+        && ingredients.length
+        && !ingredients[ingredients.length - 1].item.length
+      ) {
+        handleIngredientDelete(ingredients.length - 1);
       }
       setFocusedContainer(container);
     }
@@ -148,53 +116,25 @@ const RecipeForms = ({
     }
   }
 
-  const handleIngredientChange = ingredient => {
-    let newIngredients = [...ingredients];
-    newIngredients[ingredient.index] = ingredient;
-    setIngredients(newIngredients);
-    setGlobalDiff(undefined, undefined, newIngredients);
-  }
-
-  const handleIngredientAdd = ingredient => {
-    let newIngredients = [ingredient, ...ingredients.map(i => ({ ...i, index: i.index + 1 }))];
-    setIngredients(newIngredients);
-    setGlobalDiff(undefined, undefined, newIngredients);
-  }
-
   const handleIngredientDelete = index => {
-    setTimeout(() => {
-      setDeleteIngredientModalVisible(false);
-      const newIngredients = ingredients.reduce((accum, ingredient) => {
-        if (ingredient.index !== index) {
-          accum.push(ingredient)
-        }
-        return accum;
-      }, []).map((ingredient, index) => ({
-        ...ingredient, index
-      }));
-      setIngredients(newIngredients);
-      setGlobalDiff(undefined, undefined, newIngredients);
-    }, 1);
+    let currentIngredients = [...ingredients];
+    currentIngredients.splice(index, 1);
+    setIngredients(currentIngredients);
+    setGlobalDiff(undefined, undefined, currentIngredients);
   }
 
   const handleStepDelete = index => {
-    setTimeout(() => {
-      setDeleteStepModalVisible(false);
-      let currentSteps = [ ...directionSteps ];
-      currentSteps.splice(index, 1);
-      setDirectionSteps(currentSteps);
-      setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
-    }, 1);
+    let currentSteps = [...directionSteps];
+    currentSteps.splice(index, 1);
+    setDirectionSteps(currentSteps);
+    setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
   }
-
   return (
     <ClickAwayListener
       onClickAway={e => {
         if (!anchorEl &&
-          !containersDisabled &&
           !isIconsModalVisible &&
-          !isDeleteIngredientModalVisible &&
-          !isDeleteStepModalVisible
+          !isFileTypeModalVisible
         ) {
           setFocus(null);
           e.target.click();
@@ -214,34 +154,11 @@ const RecipeForms = ({
       <PromptModal
         modalType="okay"
         isVisible={isFileTypeModalVisible}
-        closeModal={() => setFileTypeModalVisible(false)}
+        closeModal={() => setTimeout(() => setFileTypeModalVisible(false), 1)}
         message={"Invalid file type. Please choose a PNG or JPEG file."}
-      />
-      <PromptModal
-        modalType="delete"
-        isVisible={isDeleteIngredientModalVisible}
-        closeModal={() => setTimeout(() => setDeleteIngredientModalVisible(false), 1)}
-        onConfirm={handleIngredientDelete}
-        onConfirmParam={deletedIndex}
-        message={isDeleteIngredientModalVisible
-          ? "Are you sure you want to delete item '" + ingredients[deletedIndex].item + "'?"
-          : ""
-        }
-      />
-      <PromptModal
-        modalType="delete"
-        isVisible={isDeleteStepModalVisible}
-        closeModal={() => setTimeout(() => setDeleteStepModalVisible(false), 1)}
-        onConfirm={handleStepDelete}
-        onConfirmParam={deletedIndex}
-        message={isDeleteStepModalVisible
-          ? "Are you sure you want to delete Step " + (deletedIndex + 1) + "?"
-          : ""
-        }
       />
       <RecipeNameInput
         focusedContainer={focusedContainer}
-        containersDisabled={containersDisabled}
         originalName={originalName}
         isNameEmpty={isNameEmpty}
         isErrored={isErrored}
@@ -251,7 +168,6 @@ const RecipeForms = ({
       />
       <RecipeImage
         focusedContainer={focusedContainer}
-        containersDisabled={containersDisabled}
         originalImage={originalImage}
         isImageEmpty={isImageEmpty}
         isErrored={isErrored}
@@ -266,29 +182,22 @@ const RecipeForms = ({
       />
       <RecipeIngredients
         focusedContainer={focusedContainer}
-        containersDisabled={containersDisabled}
         originalIngredients={originalIngredients}
         isIngredientsEmpty={isIngredientsEmpty}
+        isEditMode={isEditMode}
         isErrored={isErrored}
+        setGlobalDiff={setGlobalDiff}
         setFocus={setFocus}
-        tableRef={tableRef}
         ingredients={ingredients}
-        editIngredientMode={editIngredientMode}
-        toggleEditIngredientMode={toggleEditIngredientMode}
-        addIngredientMode={addIngredientMode}
-        toggleAddIngredientMode={toggleAddIngredientMode}
-        handleIngredientChange={handleIngredientChange}
-        handleIngredientAdd={handleIngredientAdd}
-        setDeletedIndex={setDeletedIndex}
-        setDeleteIngredientModalVisible={setDeleteIngredientModalVisible}
+        setIngredients={setIngredients}
+        handleIngredientDelete={handleIngredientDelete}
       />
       <RecipeDirections
         focusedContainer={focusedContainer}
-        containersDisabled={containersDisabled}
         isDirectionsEmpty={isDirectionsEmpty}
         isErrored={isErrored}
         setGlobalDiff={setGlobalDiff}
-        setFocusedContainer={setFocusedContainer}
+        setFocus={setFocus}
         directionsType={directionsType}
         setDirectionsType={setDirectionsType}
         directionSteps={directionSteps}
@@ -296,15 +205,8 @@ const RecipeForms = ({
         directionsParagraph={directionsParagraph}
         setDirectionsParagraph={setDirectionsParagraph}
         originalDirections={originalDirections}
-        directionsAreDifferent={directionsAreDifferent}
         isEditMode={isEditMode}
-        addStepMode={addStepMode}
-        setAddStepMode={setAddStepMode}
-        focusedStep={focusedStep}
-        setFocusedStep={setFocusedStep}
         handleStepDelete={handleStepDelete}
-        setDeletedIndex={setDeletedIndex}
-        setDeleteStepModalVisible={setDeleteStepModalVisible}
       />
       <Popover
         open={!!anchorEl}

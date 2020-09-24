@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -23,7 +23,7 @@ const fabStyle = {
 
 export default function RecipeButtons(props) {
   const classes = useStyles();
-  const [value, setValue] = React.useState('Anonymous');
+  const [value, setValue] = useState('Anonymous');
 
   return (
     <div style={{

@@ -6,14 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import PromptModal from '../popups/PromptModal';
 import IconsModal from '../popups/IconsModal';
-import RecipeNameInput from './RecipeNameInput';
+import RecipeNameField from './RecipeNameField';
 import RecipeImage from './RecipeImage';
 import RecipeIngredients from './RecipeIngredients';
 import RecipeDirections from './RecipeDirections';
 import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
 import { fullWidth } from '../../styles';
-import { directionsAreDifferent } from './utils';
+import { directionsAreDifferent, ingredientsAreDifferent } from './utils';
 import '../../index.css';
 
 const useStyles = makeStyles(() => ({
@@ -81,8 +81,11 @@ const RecipeForms = ({
     newDirectionsParagraph = directionsParagraph,
     newDirectionSteps = directionSteps
   ) => {
-    const ingredientsDiff = newIngredients.length !== originalIngredients.length
-      || newIngredients.filter(i => i.isModified).length;
+    const ingredientsDiff = ingredientsAreDifferent(
+      newIngredients,
+      originalIngredients,
+      isEditMode
+    );
     const directionsDiff = directionsAreDifferent(
       newDirectionsType,
       newDirectionsParagraph,
@@ -129,6 +132,7 @@ const RecipeForms = ({
     setDirectionSteps(currentSteps);
     setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
   }
+
   return (
     <ClickAwayListener
       onClickAway={e => {
@@ -157,7 +161,7 @@ const RecipeForms = ({
         closeModal={() => setTimeout(() => setFileTypeModalVisible(false), 1)}
         message={"Invalid file type. Please choose a PNG or JPEG file."}
       />
-      <RecipeNameInput
+      <RecipeNameField
         focusedContainer={focusedContainer}
         originalName={originalName}
         isNameEmpty={isNameEmpty}

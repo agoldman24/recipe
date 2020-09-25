@@ -12,9 +12,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function RecipeStepField({
+export default function RecipeParagraphField({
   originalValue,
-  directionsParagraph,
   setDirectionsParagraph,
   setGlobalDiff
 }) {

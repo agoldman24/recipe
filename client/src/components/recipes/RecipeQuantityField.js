@@ -27,14 +27,15 @@ export default function RecipeQuantityField({
           input: classes.inputTextReducedPadding
         },
         onBlur: () => {
-          let currentIngredients = [...ingredients];
-          if (!value.length) {
-            currentIngredients.splice(index, 1);
-          } else {
-            currentIngredients[index].quantity = value;
-          }
-          setIngredients(currentIngredients);
-          setGlobalDiff(undefined, undefined, ingredients);
+          const newIngredients = ingredients.reduce((accum, { item, quantity }, i) => {
+            accum.push(i === index
+              ? { item, quantity: value }
+              : { item, quantity }
+            );
+            return accum;
+          }, []);
+          setIngredients(newIngredients);
+          setGlobalDiff(undefined, undefined, newIngredients);
         }
       }}
       id={"quantity_" + index}

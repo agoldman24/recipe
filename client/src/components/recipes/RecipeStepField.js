@@ -30,14 +30,22 @@ export default function RecipeStepField({
           input: classes.inputTextReducedPadding
         },
         onBlur: () => {
-          let currentSteps = [...directionSteps];
+          let newSteps;
           if (!value.length) {
-            currentSteps.splice(index, 1);
+            newSteps = directionSteps.reduce((accum, step, i) => {
+              if (i !== index) {
+                accum.push(step);
+              }
+              return accum;
+            }, []);
           } else {
-            currentSteps[index] = value;
+            newSteps = directionSteps.reduce((accum, step, i) => {
+              accum.push(i === index ? value : step);
+              return accum;
+            }, []);
           }
-          setDirectionSteps(currentSteps);
-          setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
+          setDirectionSteps(newSteps);
+          setGlobalDiff(undefined, undefined, undefined, undefined, undefined, newSteps);
           setAddStepMode(false);
           setAddEnabled(true);
         }

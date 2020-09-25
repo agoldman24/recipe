@@ -17,11 +17,11 @@ export const directionsAreDifferent = (
     if (newDirectionSteps.length !== originalDirections.length) {
       return true;
     }
-    newDirectionSteps.forEach((direction, index) => {
-      if (direction !== originalDirections[index]) {
+    for (let i = 0; i < newDirectionSteps.length; i++) {
+      if (newDirectionSteps[i] !== originalDirections[i]) {
         return true;
       }
-    });
+    }
   }
   return false;
 }
@@ -37,12 +37,13 @@ export const ingredientsAreDifferent = (
     if (ingredients.length !== originalIngredients.length) {
       return true;
     }
-    ingredients.forEach(({ item, quantity }, index) => {
-      if (item.replace(/\s+/g, '') !== originalIngredients[index].item.replace(/\s+/g, '') ||
-        quantity.replace(/\s+/g, '') !== originalIngredients[index].quantity.replace(/\s+/g, '')) {
+    for (let i = 0; i < ingredients.length; i++) {
+      const { item, quantity } = ingredients[i];
+      if (item !== originalIngredients[i].item ||
+        quantity !== originalIngredients[i].quantity) {
         return true;
       }
-    });
+    }
   }
   return false;
 }

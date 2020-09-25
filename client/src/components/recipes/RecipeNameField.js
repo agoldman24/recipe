@@ -58,7 +58,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function RecipeNameInput({
+export default function RecipeNameField({
   focusedContainer,
   originalName,
   isNameEmpty,

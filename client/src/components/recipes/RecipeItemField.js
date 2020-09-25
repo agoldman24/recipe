@@ -30,14 +30,25 @@ export default function RecipeItemField({
           input: classes.inputTextReducedPadding
         },
         onBlur: () => {
-          let currentIngredients = [...ingredients];
+          let newIngredients;
           if (!value.length) {
-            currentIngredients.splice(index, 1);
+            newIngredients = ingredients.reduce((accum, ingredient, i) => {
+              if (i !== index) {
+                accum.push(ingredient);
+              }
+              return accum;
+            }, []);
           } else {
-            currentIngredients[index].item = value;
+            newIngredients = ingredients.reduce((accum, { item, quantity }, i) => {
+              accum.push(i === index
+                ? { item: value, quantity }
+                : { item, quantity }
+              );
+              return accum;
+            }, []);
           }
-          setIngredients(currentIngredients);
-          setGlobalDiff(undefined, undefined, ingredients);
+          setIngredients(newIngredients);
+          setGlobalDiff(undefined, undefined, newIngredients);
           setAddIngredientMode(false);
           setAddEnabled(true);
         }

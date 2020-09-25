@@ -1,13 +1,15 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import Fab from '@material-ui/core/Fab';
 import { defaultTheme } from '../../styles';
 import { isMobile } from 'react-device-detect';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 export default function ScrollButton({ scrollButtonTop, zIndex }) {
   const buttonStyle = {
     color: 'black',
     fontWeight: 'bold',
-    borderRadius: '20px',
+    float: 'right',
+    marginRight: '1.5%',
     background: defaultTheme.palette.primary.mainGradient
   }
   return (
@@ -18,15 +20,16 @@ export default function ScrollButton({ scrollButtonTop, zIndex }) {
       textAlign: 'center',
       zIndex
     }}>
-      <Button
+      <Fab
         style={buttonStyle}
+        size="small"
         onClick={() => {
           const id = isMobile ? 'root' : 'container';
           document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
         }}
       >
-        Scroll to top
-      </Button>
+        <KeyboardArrowUpIcon style={{ height:'25', width:'25' }}/>
+      </Fab>
     </div>
   );
 }

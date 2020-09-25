@@ -115,12 +115,12 @@ const IconsModal = props => {
             [0,1,2,3,4].map(row =>
               <Grid container direction="column" key={"row_" + row}>
                 <Grid container direction="row">
-                  {[0,1,2,3].map(column =>
+                  {[0,1,2,3].map(column => !!icons[4*row + column] &&
                   <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
                     style={{
-                    width: isMobile ? '68px' : '90px',
-                    padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
-                    borderRadius: '10px'
+                      width: isMobile ? '68px' : '90px',
+                      padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                      borderRadius: '10px'
                     }}
                     onClick={e => {
                       e.stopPropagation();

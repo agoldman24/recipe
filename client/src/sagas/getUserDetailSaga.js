@@ -26,10 +26,10 @@ function* getUserDetail(action) {
     const res3 = !!displayUser.createdRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.createdRecipeIds)
       : { data: { recipes: {} } };
-    const res4 = !!displayUser.savedRecipeIds.length
+    const res4 = !!displayUser.likedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?'
-          + 'ids=' + displayUser.savedRecipeIds.map(obj => obj.id)
-          + '&timestamps=' + displayUser.savedRecipeIds.map(obj => obj.timestamp)
+          + 'ids=' + displayUser.likedRecipeIds.map(obj => obj.id)
+          + '&timestamps=' + displayUser.likedRecipeIds.map(obj => obj.timestamp)
         )
       : { data: { recipes: {} } };
     const displayUserDetail = yield select(getDisplayUserDetail);
@@ -44,7 +44,7 @@ function* getUserDetail(action) {
       followers: res1.data.users,
       following: res2.data.users,
       createdRecipes: res3.data.recipes,
-      savedRecipes: res4.data.recipes,
+      likedRecipes: res4.data.recipes,
       activeDetail: action.activeDetail
     });
     yield put({ type: GET_USER_DETAIL_SUCCEEDED })

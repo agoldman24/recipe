@@ -4,11 +4,8 @@ export default Object.assign({},
 {
   activeTab: { name: WELCOME_TAB },
   isSpinnerVisible: false,
-  isDetailVisible: false,
   isDrawerMenuVisible: false,
   isHydrated: false,
-  usersFetched: false,
-  profileEditor: null,
   tabHistory: [],
   snackbar: {
     isVisible: false,
@@ -21,6 +18,7 @@ export default Object.assign({},
     networkFailed: false
   },
   users: {},
+  usersFetched: false,
   activeUser: {
     id: "",
     username: "",
@@ -31,7 +29,7 @@ export default Object.assign({},
     followingIds: [],
     draftRecipeIds: [],
     createdRecipeIds: [],
-    savedRecipeIds: []
+    likedRecipeIds: []
   },
   displayUser: {
     id: "",
@@ -43,37 +41,29 @@ export default Object.assign({},
     followingIds: [],
     draftRecipeIds: [],
     createdRecipeIds: [],
-    savedRecipeIds: []
+    likedRecipeIds: []
   },
   displayUserDetail: {
     profileImage: null,
     followers: {},
     following: {},
     createdRecipes: {},
-    savedRecipes: {},
+    likedRecipes: {},
     activeDetail: ""
   },
-  recipe: {
-    id: "",
-    name: "",
-    image: null,
-    ingredients: [],
-    directions: ""
-  },
-  ingredient: {
-    item: "",
-    quantity: ""
-  },
+  profileEditor: null,
+  recipeCategory: "Anonymous",
   sampleRecipes: {},
   detailRecipe: {
-    id: "",
+    id: null,
     editMode: false,
     createMode: false
   },
   allRecipesFetched: {
     samples: false,
+    friends: false,
     created: false,
-    saved: false
+    liked: false
   },
   icons: [],
   iconFetchMessage: ""

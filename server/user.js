@@ -12,7 +12,7 @@ const UserSchema = new Schema(
     followingIds: Array,
     draftRecipeIds: Array,
     createdRecipeIds: Array,
-    savedRecipeIds: Array,
+    likedRecipeIds: Array,
   }
 );
 

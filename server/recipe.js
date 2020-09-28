@@ -10,8 +10,7 @@ const RecipeSchema = new Schema(
     ingredients: Array,
     directions: String,
     authorName: String,
-    authorId: String,
-    isSample: Boolean
+    authorId: String
   },
   { timestamps: true }
 );

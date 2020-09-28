@@ -7,7 +7,7 @@ import {
   FOLLOWERS,
   FOLLOWING,
   CREATED_RECIPES,
-  SAVED_RECIPES
+  LIKED_RECIPES
 } from '../../variables/Constants';
 import {
   columnStyle,
@@ -17,7 +17,7 @@ import {
 
 export default function ProfileDetailsGrid(props) {
   const {
-    displayUser: { followerIds, followingIds, createdRecipeIds, savedRecipeIds },
+    displayUser: { followerIds, followingIds, createdRecipeIds, likedRecipeIds },
     displayUserDetail
   } = props;
 
@@ -56,12 +56,12 @@ export default function ProfileDetailsGrid(props) {
           />
         </Grid>
         <Grid item className="clickable" style={columnStyle} onClick={() => {
-          props.setActiveDetail(SAVED_RECIPES);
+          props.setActiveDetail(LIKED_RECIPES);
         }}>
           <ProfileDetail
-            isSelected={displayUserDetail.activeDetail === SAVED_RECIPES}
-            number={savedRecipeIds.length}
-            text="Saved Recipes"
+            isSelected={displayUserDetail.activeDetail === LIKED_RECIPES}
+            number={likedRecipeIds.length}
+            text="Liked Recipes"
           />
         </Grid>
       </Grid>
@@ -78,9 +78,9 @@ export default function ProfileDetailsGrid(props) {
       {displayUserDetail.activeDetail === CREATED_RECIPES &&
         <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
       }
-      {displayUserDetail.activeDetail === SAVED_RECIPES &&
+      {displayUserDetail.activeDetail === LIKED_RECIPES &&
         <RecipeList recipes={
-          Object.values(displayUserDetail.savedRecipes).sort((r1, r2) => {
+          Object.values(displayUserDetail.likedRecipes).sort((r1, r2) => {
             return r2.timestamp - r1.timestamp;
           })
         }/>

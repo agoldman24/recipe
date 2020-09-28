@@ -7,11 +7,11 @@ const saltRounds = 10;
 const getDerivedUser = user => {
   const {
     _id, username, firstName, lastName, profileImageId,
-    followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+    followerIds, followingIds, draftRecipeIds, createdRecipeIds, likedRecipeIds
   } = user;
   return {
     id: _id, username, firstName, lastName, profileImageId,
-    followerIds, followingIds, draftRecipeIds, createdRecipeIds, savedRecipeIds
+    followerIds, followingIds, draftRecipeIds, createdRecipeIds, likedRecipeIds
   }
 }
 
@@ -108,9 +108,9 @@ exports.updateProfile = (req, res) => {
   });
 }
 
-exports.updateSavedRecipeIds = (req, res) => {
-  const { id, savedRecipeIds } = req.body;
-  User.findByIdAndUpdate(id, { savedRecipeIds }, { new: true }, (error, user) => {
+exports.updateLikedRecipeIds = (req, res) => {
+  const { id, likedRecipeIds } = req.body;
+  User.findByIdAndUpdate(id, { likedRecipeIds }, { new: true }, (error, user) => {
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getDerivedUser(user) });
   });

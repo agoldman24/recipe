@@ -31,7 +31,7 @@ function* signUp(action) {
         followers: {},
         following: {},
         createdRecipes: {},
-        savedRecipes: {},
+        likedRecipes: {},
         activeDetail: FOLLOWERS
       })
       yield put({

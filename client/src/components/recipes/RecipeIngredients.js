@@ -159,6 +159,7 @@ export default function RecipeIngredients({
                       ];
                       setIngredients(newIngredients);
                       setAddIngredientMode(true);
+                      setAddEnabled(false);
                     }}
                     className={classes.button}
                   >

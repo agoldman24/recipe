@@ -7,7 +7,7 @@ import RecipeDetailEdit from './RecipeDetailEdit';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../../actions';
-import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, SAVED_RECIPES } from "../../variables/Constants";
+import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, LIKED_RECIPES } from "../../variables/Constants";
 
 const RecipeList = props => {
   return (
@@ -75,17 +75,21 @@ const RecipeList = props => {
 const mapStateToProps = state => {
   return {
     networkFailed: state.errorMessages.networkFailed,
-    isDetailVisible: state.isDetailVisible,
+    isDetailVisible: !!state.detailRecipe.id,
     detailRecipeId: state.detailRecipe.id,
     editMode: state.detailRecipe.editMode,
     activeTab: state.activeTab,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     allRecipesFetched:
-      (state.activeTab.name === RECIPE_TAB && state.allRecipesFetched.samples)
-      || (!!state.displayUserDetail && 
-        ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
-        || (state.displayUserDetail.activeDetail === SAVED_RECIPES && state.allRecipesFetched.saved))
+      (state.activeTab.name === RECIPE_TAB &&
+        (state.recipeCategory === "Anonymous" && state.allRecipesFetched.samples) ||
+        (state.recipeCategory === "By Friends" && state.allRecipesFetched.friends) ||
+        (state.recipeCategory === "By Me" && state.allRecipesFetched.created)
+      ) ||
+      (!!state.displayUserDetail && 
+      ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
+      || (state.displayUserDetail.activeDetail === LIKED_RECIPES && state.allRecipesFetched.liked))
     )
   };
 }
@@ -94,11 +98,11 @@ const mapDispatchToProps = dispatch => {
   return {
     getRecipes: (activeTab, displayUser, displayUserDetail) => dispatch({
       type: GET_RECIPES_REQUESTED,
-      requestType: activeTab.name === RECIPE_TAB ? SAMPLES : SAVED_RECIPES,
+      requestType: activeTab.name === RECIPE_TAB ? SAMPLES : LIKED_RECIPES,
       ids: activeTab.name === RECIPE_TAB
         ? null
-        : displayUser.savedRecipeIds.filter(obj =>
-            !Object.keys(displayUserDetail.savedRecipes).includes(obj.id)
+        : displayUser.likedRecipeIds.filter(obj =>
+            !Object.keys(displayUserDetail.likedRecipes).includes(obj.id)
           )
           .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
     }),

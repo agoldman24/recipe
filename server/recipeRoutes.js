@@ -5,22 +5,22 @@ const ObjectID = require('mongodb').ObjectID;
 const getDerivedRecipe = recipe => {
   const {
     _id, name, image, ingredients, directions,
-    authorName, authorId, isSample
+    authorName, authorId
   } = recipe;
   return {
     id: _id, name, image, ingredients, directions,
-    authorName, authorId, isSample
+    authorName, authorId
   }
 }
 
 exports.createRecipe = (req, res) => {
   const {
     name, image, ingredients, directions,
-    authorName, authorId, isSample
+    authorName, authorId
   } = req.body;
   const recipe = new Recipe({
     name, image, ingredients, directions,
-    authorName, authorId, isSample
+    authorName, authorId
   });
   recipe.save(err => {
     if (err) return res.json({ success: false, error: err });
@@ -34,7 +34,7 @@ exports.getSamples = (req, res) => {
     : [];
   db.collection("recipes").find(
     { _id: { $nin: idArray } },
-    { isSample: true }
+    { authorId: null }
   ).toArray().then(recipes => {
     return res.json({
       success: true,

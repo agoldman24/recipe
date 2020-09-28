@@ -151,7 +151,7 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
-    isDetailVisible: state.isDetailVisible,
+    isDetailVisible: !!state.detailRecipe.id,
     recipeCreateMode: state.detailRecipe.createMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,

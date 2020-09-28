@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
@@ -21,10 +21,8 @@ const fabStyle = {
   color: 'white'
 };
 
-export default function RecipeButtons(props) {
+export default function RecipeCategories({ category, setCategory, toggleCreateMode }) {
   const classes = useStyles();
-  const [value, setValue] = useState('Anonymous');
-
   return (
     <div style={{
       position:'fixed',
@@ -37,20 +35,20 @@ export default function RecipeButtons(props) {
     }}>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(value, "Anonymous")}
-        onClick={() => setValue("Anonymous")}
+        style={recipeButtonStyle(category, "Anonymous")}
+        onClick={() => setCategory("Anonymous")}
       >Anonymous</Button>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(value, "By Friends")}
-        onClick={() => setValue("By Friends")}
+        style={recipeButtonStyle(category, "By Friends")}
+        onClick={() => setCategory("By Friends")}
       >By Friends</Button>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(value, "By Me")}
-        onClick={() => setValue("By Me")}
+        style={recipeButtonStyle(category, "By Me")}
+        onClick={() => setCategory("By Me")}
       >By Me</Button>
-      <Fab style={fabStyle} onClick={props.toggleCreateMode}>
+      <Fab style={fabStyle} onClick={toggleCreateMode}>
         <CreateIcon style={{height:'35', width:'35'}}/>
       </Fab>
     </div>

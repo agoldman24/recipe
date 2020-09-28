@@ -10,8 +10,8 @@ import {
 } from '../actions';
 import {
   PROFILE,
-  SAVED_RECIPE_IDS,
-  SAVED_RECIPES,
+  LIKED_RECIPE_IDS,
+  LIKED_RECIPES,
   FOLLOWING_IDS,
   FOLLOWERS
 } from '../variables/Constants';
@@ -55,26 +55,26 @@ function* updateUser(action) {
           imageData, user
         });
         break;
-      case SAVED_RECIPE_IDS:
-        res = yield call(Api.post, '/updateSavedRecipeIds', {
+      case LIKED_RECIPE_IDS:
+        res = yield call(Api.post, '/updateLikedRecipeIds', {
           id: action.id,
-          savedRecipeIds: action.keep
+          likedRecipeIds: action.keep
           ? [
-              ...activeUser.savedRecipeIds,
+              ...activeUser.likedRecipeIds,
               {
                 id: action.recipeId,
                 timestamp: Date.now()
               }
             ]
-          : activeUser.savedRecipeIds.filter(obj => obj.id !== action.recipeId)
+          : activeUser.likedRecipeIds.filter(obj => obj.id !== action.recipeId)
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
         if (!!displayUser && activeUser.id === displayUser.id) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
-            updateType: SAVED_RECIPES,
-            recipe: displayUserDetail.savedRecipes[action.recipeId],
+            updateType: LIKED_RECIPES,
+            recipe: displayUserDetail.likedRecipes[action.recipeId],
             keep: action.keep,
             user
           });

@@ -16,7 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import IngredientsTable from '../tables/IngredientsTable';
-import { SAVED_RECIPE_IDS } from '../../variables/Constants';
+import { LIKED_RECIPE_IDS } from '../../variables/Constants';
 import {
   TOGGLE_RECIPE_DETAILS,
   LOAD_RECIPE_DETAILS_FINISHED,
@@ -42,11 +42,8 @@ const styles = () => ({
 });
 
 class RecipeDetail extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      anchorEl: null
-    }
+  state = {
+    anchorEl: null
   }
   componentDidMount() {
     this.props.loadRecipeDetailsFinished();
@@ -74,7 +71,7 @@ class RecipeDetail extends React.Component {
             children={[]}
           >
             <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
-              {this.props.isLoggedIn &&
+              {this.props.isLoggedIn && this.props.id === this.props.activeUser.id &&
                 <Fab
                   style={{
                     ...fabStyle,
@@ -109,9 +106,9 @@ class RecipeDetail extends React.Component {
                 <CloseRoundedIcon style={blackIconStyle} />
               </Fab>
               {this.props.isLoggedIn
-              ? this.props.savedRecipeIds.includes(this.props.id)
+              ? this.props.likedRecipeIds.includes(this.props.id)
                 ? <Fab
-                    onClick={() => this.props.updateSavedRecipes(
+                    onClick={() => this.props.updateLikedRecipes(
                       this.props.activeUser.id, this.props.id, false
                     )}
                     style={{...fabStyle, float:'left'}}
@@ -120,7 +117,7 @@ class RecipeDetail extends React.Component {
                     <FavoriteIcon style={iconStyle}/>
                   </Fab>
                 : <Fab
-                    onClick={() => this.props.updateSavedRecipes(
+                    onClick={() => this.props.updateLikedRecipes(
                       this.props.activeUser.id, this.props.id, true
                     )}
                     style={{...fabStyle, float:'left'}}
@@ -195,8 +192,8 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
-    savedRecipeIds: !!state.activeUser
-      ? state.activeUser.savedRecipeIds.map(obj => obj.id)
+    likedRecipeIds: !!state.activeUser
+      ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null
   };
 };
@@ -206,9 +203,9 @@ const mapDispatchToProps = dispatch => {
     toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
     loadRecipeDetailsFinished: () => dispatch({ type: LOAD_RECIPE_DETAILS_FINISHED }),
     toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-    updateSavedRecipes: (id, recipeId, keep) => dispatch({
+    updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
-      updateType: SAVED_RECIPE_IDS,
+      updateType: LIKED_RECIPE_IDS,
       id, recipeId, keep
     })
   };

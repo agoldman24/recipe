@@ -9,7 +9,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
-import { SAVED_RECIPE_IDS } from '../../variables/Constants';
+import { LIKED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
 import '../../index.css';
 
@@ -70,11 +70,11 @@ const RecipeCard = props => {
             backgroundImage: 'linear-gradient(white, rgba(0, 0, 0, 0))'
           }}>
           {props.isLoggedIn
-          ? props.savedRecipeIds.includes(props.id)
+          ? props.likedRecipeIds.includes(props.id)
             ? <Fab
                 onClick={event => {
                   event.stopPropagation();
-                  props.updateSavedRecipes(props.activeUser.id, props.id, false)
+                  props.updateLikedRecipes(props.activeUser.id, props.id, false)
                 }}
                 style={{...fabStyle, float:'left'}}
                 classes={{ root: classes.root }}
@@ -84,7 +84,7 @@ const RecipeCard = props => {
             : <Fab
                 onClick={event => {
                   event.stopPropagation();
-                  props.updateSavedRecipes(props.activeUser.id, props.id, true)
+                  props.updateLikedRecipes(props.activeUser.id, props.id, true)
                 }}
                 style={{...fabStyle, float:'left'}}
                 classes={{ root: classes.root }}
@@ -110,8 +110,8 @@ const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
-    savedRecipeIds: !!state.activeUser
-      ? state.activeUser.savedRecipeIds.map(obj => obj.id)
+    likedRecipeIds: !!state.activeUser
+      ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null
   };
 };
@@ -120,9 +120,9 @@ const mapDispatchToProps = dispatch => {
   return {
     loadRecipeDetailsStart: () => dispatch({ type: LOAD_RECIPE_DETAILS_START }),
     toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id }),
-    updateSavedRecipes: (id, recipeId, keep) => dispatch({
+    updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
-      updateType: SAVED_RECIPE_IDS,
+      updateType: LIKED_RECIPE_IDS,
       id, recipeId, keep
     })
   };

@@ -7,24 +7,45 @@ import {
   GET_RECIPES_REQUESTED,
   TOGGLE_RECIPE_CREATE_MODE
 } from '../../actions';
-import { SAMPLES } from '../../variables/Constants';
+import { SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
 
 class RecipeTab extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0);
+    this.fetchRecipes();
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.category !== prevProps.category) {
+      this.fetchRecipes();
+    }
+  }
+  fetchRecipes() {
+    let recipes, requestType;
     switch (this.props.category) {
       case "Anonymous":
-        if (!Object.keys(this.props.sampleRecipes).length) {
-          this.props.getSampleRecipes();
-        }
+        recipes = Object.values(this.props.sampleRecipes);
+        requestType = SAMPLE_RECIPES;
         break;
       case "By Friends":
+        recipes = Object.values(this.props.friendRecipes);
+        requestType = FRIEND_RECIPES;
         break;
       case "By Me":
+        recipes = Object.values(this.props.createdRecipes);
+        requestType = CREATED_RECIPES;
         break;
       default:
         break;
+    }
+    if (!recipes.length) {
+      this.props.getRecipes(
+        requestType,
+        this.props.users,
+        this.props.activeUser,
+        this.props.friendRecipes,
+        this.props.createdRecipes
+      );
     }
   }
   render() {
@@ -34,13 +55,12 @@ class RecipeTab extends React.Component {
         recipes = Object.values(this.props.sampleRecipes);
         break;
       case "By Friends":
-        recipes = [];
+        recipes = Object.values(this.props.friendRecipes);
         break;
       case "By Me":
-        recipes = [];
+        recipes = Object.values(this.props.createdRecipes);
         break;
       default:
-        recipes = [];
         break;
     }
     return (
@@ -69,17 +89,34 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
     sampleRecipes: state.sampleRecipes,
+    friendRecipes: state.friendRecipes,
+    createdRecipes: state.createdRecipes,
     isDetailVisible: !!state.detailRecipe.id,
-    detailRecipeId: state.detailRecipe.id
+    detailRecipeId: state.detailRecipe.id,
+    users: state.users,
+    activeUser: state.activeUser
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setCategory: category => dispatch({ type: SET_RECIPE_CATEGORY, category }),
-    getSampleRecipes: () => dispatch({
+    getRecipes: (requestType, users, activeUser, friendRecipes, createdRecipes) => dispatch({
       type: GET_RECIPES_REQUESTED,
-      requestType: SAMPLES
+      requestType,
+      ids: requestType === SAMPLE_RECIPES
+        ? null
+        : requestType === FRIEND_RECIPES
+          ? activeUser.followingIds.reduce((accum, friendId) => {
+            users[friendId].createdRecipeIds.filter(obj =>
+              !Object.keys(friendRecipes).includes(obj.id)
+            ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .forEach(r => accum.push(r));
+            return accum;
+          }, [])
+          : activeUser.createdRecipeIds.filter(obj =>
+              !Object.keys(createdRecipes).includes(obj.id)
+            ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
     }),
     toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE })
   };

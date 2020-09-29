@@ -55,6 +55,7 @@ function* updateUser(action) {
           imageData, user
         });
         break;
+      // case CREATED_RECIPE_IDS:
       case LIKED_RECIPE_IDS:
         res = yield call(Api.post, '/updateLikedRecipeIds', {
           id: action.id,

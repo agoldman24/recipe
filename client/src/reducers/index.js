@@ -19,6 +19,8 @@ import {
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
   APPEND_SAMPLE_RECIPES,
+  APPEND_FRIEND_RECIPES,
+  APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   SET_RECIPE_CATEGORY,
   TOGGLE_RECIPE_DETAILS,
@@ -65,6 +67,8 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case APPEND_SAMPLE_RECIPES:
+    case APPEND_FRIEND_RECIPES:
+    case APPEND_CREATED_RECIPES:
     case APPEND_LIKED_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
@@ -220,6 +224,7 @@ const displayUser = (state = null, action) => {
       return action.user;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
+        // case CREATED_RECIPES:
         case LIKED_RECIPES:
           return {
             ...state,
@@ -406,6 +411,34 @@ const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
   }
 }
 
+const friendRecipes = (state = StateTree.friendRecipes, action) => {
+  switch (action.type) {
+    case APPEND_FRIEND_RECIPES:
+      return {
+        ...state,
+        ...action.recipes
+      }
+    case SIGN_OUT:
+      return {};
+    default:
+      return state;
+  }
+}
+
+const createdRecipes = (state = StateTree.createdRecipes, action) => {
+  switch (action.type) {
+    case APPEND_CREATED_RECIPES:
+      return {
+        ...state,
+        ...action.recipes
+      }
+    case SIGN_OUT:
+      return {};
+    default:
+      return state;
+  }
+}
+
 const detailRecipe = (state = StateTree.detailRecipe, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_DETAILS:
@@ -434,6 +467,16 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
         ...state,
         samples: Object.keys(action.recipes).length < 9
       };
+    case APPEND_FRIEND_RECIPES:
+      return {
+        ...state,
+        friends: Object.keys(action.recipes).length < 9
+      }
+    case APPEND_CREATED_RECIPES:
+      return {
+        ...state,
+        created: Object.keys(action.recipes).length < 9
+      }
     case APPEND_LIKED_RECIPES:
       return {
         ...state,
@@ -493,6 +536,8 @@ export default combineReducers({
   displayUserDetail,
   recipeCategory,
   sampleRecipes,
+  friendRecipes,
+  createdRecipes,
   detailRecipe,
   allRecipesFetched,
   icons,

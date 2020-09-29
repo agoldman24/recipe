@@ -3,11 +3,18 @@ import Api from '../api/siteUrl';
 import {
   GET_RECIPES_REQUESTED,
   APPEND_SAMPLE_RECIPES,
+  APPEND_FRIEND_RECIPES,
+  APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   NETWORK_FAILED,
   CLEAR_ERROR_MESSAGES
 } from '../actions';
-import { SAMPLES, LIKED_RECIPES } from '../variables/Constants';
+import {
+  SAMPLE_RECIPES,
+  FRIEND_RECIPES,
+  CREATED_RECIPES,
+  LIKED_RECIPES
+} from '../variables/Constants';
 
 const getSampleRecipes = state => state.sampleRecipes;
 
@@ -16,7 +23,7 @@ function* getRecipes(action) {
   try {
     let res;
     switch (action.requestType) {
-      case SAMPLES:
+      case SAMPLE_RECIPES:
         const sampleRecipes = yield select(getSampleRecipes);
         res = !!Object.keys(sampleRecipes).length
           ? yield call(Api.get, '/getSamples?ids=' + Object.keys(sampleRecipes))
@@ -26,6 +33,8 @@ function* getRecipes(action) {
           recipes: res.data.recipes
         });
         break;
+      case FRIEND_RECIPES:
+      case CREATED_RECIPES:
       case LIKED_RECIPES:
         res = !!action.ids.length
           ? yield call(Api.get, '/getRecipesByIds?'
@@ -34,7 +43,11 @@ function* getRecipes(action) {
             )
           : { data: { recipes: {} } }
         yield put({
-          type: APPEND_LIKED_RECIPES,
+          type: action.requestType === FRIEND_RECIPES
+            ? APPEND_FRIEND_RECIPES
+            : action.requestType === CREATED_RECIPES
+              ? APPEND_CREATED_RECIPES
+              : APPEND_LIKED_RECIPES,
           recipes: res.data.recipes
         });
         break;

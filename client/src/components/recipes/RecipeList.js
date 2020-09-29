@@ -7,7 +7,10 @@ import RecipeDetailEdit from './RecipeDetailEdit';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../../actions';
-import { RECIPE_TAB, SAMPLES, CREATED_RECIPES, LIKED_RECIPES } from "../../variables/Constants";
+import {
+  RECIPE_TAB, SAMPLE_RECIPES, FRIEND_RECIPES,
+  CREATED_RECIPES, LIKED_RECIPES
+} from "../../variables/Constants";
 
 const RecipeList = props => {
   return (
@@ -59,6 +62,11 @@ const RecipeList = props => {
               e.preventDefault();
               props.getRecipes(
                 props.activeTab,
+                props.recipeCategory,
+                props.friendRecipes,
+                props.createdRecipes,
+                props.users,
+                props.activeUser,
                 props.displayUser,
                 props.displayUserDetail
               );
@@ -79,6 +87,11 @@ const mapStateToProps = state => {
     detailRecipeId: state.detailRecipe.id,
     editMode: state.detailRecipe.editMode,
     activeTab: state.activeTab,
+    recipeCategory: state.recipeCategory,
+    friendRecipes: state.friendRecipes,
+    createdRecipes: state.createdRecipes,
+    users: state.users,
+    activeUser: state.activeUser,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     allRecipesFetched:
@@ -96,15 +109,41 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getRecipes: (activeTab, displayUser, displayUserDetail) => dispatch({
+    getRecipes: (
+      activeTab,
+      recipeCategory,
+      friendRecipes,
+      createdRecipes,
+      users,
+      activeUser,
+      displayUser,
+      displayUserDetail
+    ) => dispatch({
       type: GET_RECIPES_REQUESTED,
-      requestType: activeTab.name === RECIPE_TAB ? SAMPLES : LIKED_RECIPES,
+      requestType: activeTab.name === RECIPE_TAB
+        ? recipeCategory === "Anonymous"
+          ? SAMPLE_RECIPES
+          : recipeCategory === "By Friends"
+            ? FRIEND_RECIPES
+            : CREATED_RECIPES
+        : displayUserDetail.activeDetail,
       ids: activeTab.name === RECIPE_TAB
-        ? null
+        ? recipeCategory === "By Friends"
+          ? activeUser.followingIds.reduce((accum, friendId) => {
+              users[friendId].createdRecipeIds.filter(obj =>
+                !Object.keys(friendRecipes).includes(obj.id)
+              ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+                .forEach(r => accum.push(r));
+              return accum;
+            }, [])
+          : recipeCategory === "By Me"
+            ? activeUser.createdRecipeIds.filter(obj =>
+                !Object.keys(createdRecipes).includes(obj.id)
+              ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+            : null
         : displayUser.likedRecipeIds.filter(obj =>
             !Object.keys(displayUserDetail.likedRecipes).includes(obj.id)
-          )
-          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+          ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
     }),
   };
 };

@@ -54,6 +54,8 @@ export default Object.assign({},
   profileEditor: null,
   recipeCategory: "Anonymous",
   sampleRecipes: {},
+  friendRecipes: {},
+  createdRecipes: {},
   detailRecipe: {
     id: null,
     editMode: false,

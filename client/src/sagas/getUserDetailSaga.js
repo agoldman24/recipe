@@ -24,7 +24,10 @@ function* getUserDetail(action) {
       ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followingIds)
       : { data: { users: {} } };
     const res3 = !!displayUser.createdRecipeIds.length
-      ? yield call(Api.get, '/getRecipesByIds?ids=' + displayUser.createdRecipeIds)
+      ? yield call(Api.get, '/getRecipesByIds?'
+          + 'ids=' + displayUser.createdRecipeIds.map(obj => obj.id)
+          + '&timestamps=' + displayUser.createdRecipeIds.map(obj => obj.timestamp)
+        )
       : { data: { recipes: {} } };
     const res4 = !!displayUser.likedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?'

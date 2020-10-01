@@ -108,7 +108,7 @@ export default function RecipeImage({
               </div>
             </Grid>
           </Grid>
-          <Card style={{padding:'0 10px', width:'99%', marginLeft:'0.5%'}}>
+          <Card style={{width:'95%', margin:'auto', boxShadow:'none'}}>
             {!!image
             ? <CardMedia
                 image={image}
@@ -116,8 +116,10 @@ export default function RecipeImage({
                   height: !!image
                     ? isMobile ? '320px' : '280px'
                     : 'initial',
-                  padding:'0',
-                  borderRadius:'10px 10px 0 0'
+                  width: '350px',
+                  padding: '0',
+                  margin: 'auto',
+                  borderRadius: '10px 10px 0 0'
                 }}
               />
             : <div style={{paddingBottom:'10px'}}>

@@ -108,6 +108,14 @@ exports.updateProfile = (req, res) => {
   });
 }
 
+exports.updateCreatedRecipeIds = (req, res) => {
+  const { id, createdRecipeIds } = req.body;
+  User.findByIdAndUpdate(id, { createdRecipeIds }, { new: true }, (error, user) => {
+    if (error) return res.json({ success: false, error });
+    return res.json({ success: true, user: getDerivedUser(user) });
+  });
+}
+
 exports.updateLikedRecipeIds = (req, res) => {
   const { id, likedRecipeIds } = req.body;
   User.findByIdAndUpdate(id, { likedRecipeIds }, { new: true }, (error, user) => {

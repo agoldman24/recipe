@@ -95,14 +95,15 @@ const mapStateToProps = state => {
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     allRecipesFetched:
-      (state.activeTab.name === RECIPE_TAB &&
+      (state.activeTab.name === RECIPE_TAB && (
         (state.recipeCategory === "Anonymous" && state.allRecipesFetched.samples) ||
         (state.recipeCategory === "By Friends" && state.allRecipesFetched.friends) ||
         (state.recipeCategory === "By Me" && state.allRecipesFetched.created)
-      ) ||
-      (!!state.displayUserDetail && 
-      ((state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created)
-      || (state.displayUserDetail.activeDetail === LIKED_RECIPES && state.allRecipesFetched.liked))
+      )) ||
+      (!!state.displayUserDetail && (
+        (state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created) ||
+        (state.displayUserDetail.activeDetail === LIKED_RECIPES && state.allRecipesFetched.liked)
+      )
     )
   };
 }

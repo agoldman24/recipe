@@ -18,6 +18,8 @@ import {
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
+  CREATE_RECIPE_REQUESTED,
+  ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
@@ -60,6 +62,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_REQUESTED:
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
+    case CREATE_RECIPE_REQUESTED:
     case LOAD_RECIPE_DETAILS_START:
     case GET_ICONS_REQUESTED:
       return true;
@@ -427,6 +430,11 @@ const friendRecipes = (state = StateTree.friendRecipes, action) => {
 
 const createdRecipes = (state = StateTree.createdRecipes, action) => {
   switch (action.type) {
+    case ADD_CREATED_RECIPE:
+      return {
+        ...state,
+        [action.recipe.id]: action.recipe
+      }
     case APPEND_CREATED_RECIPES:
       return {
         ...state,
@@ -492,7 +500,6 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
       if (action.newTab.name !== PROFILE_TAB) {
         return {
           ...state,
-          created: false,
           liked: false
         };
       }

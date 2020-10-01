@@ -10,6 +10,7 @@ import {
 } from '../actions';
 import {
   PROFILE,
+  CREATED_RECIPE_IDS,
   LIKED_RECIPE_IDS,
   LIKED_RECIPES,
   FOLLOWING_IDS,
@@ -55,7 +56,22 @@ function* updateUser(action) {
           imageData, user
         });
         break;
-      // case CREATED_RECIPE_IDS:
+      case CREATED_RECIPE_IDS:
+        res = yield call(Api.post, '/updateCreatedRecipeIds', {
+          id: action.id,
+          createdRecipeIds: action.keep
+          ? [
+              ...activeUser.createdRecipeIds,
+              {
+                id: action.recipeId,
+                timestamp: Date.now()
+              }
+            ]
+          : activeUser.createdRecipeIds.filter(obj => obj.id !== action.recipeId)
+        });
+        user = res.data.user;
+        yield put({ type: SET_ACTIVE_USER, user });
+        break;
       case LIKED_RECIPE_IDS:
         res = yield call(Api.post, '/updateLikedRecipeIds', {
           id: action.id,

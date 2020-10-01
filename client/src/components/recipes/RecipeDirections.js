@@ -147,7 +147,7 @@ export default function RecipeDirections({
                       {directionSteps.map((step, index) => {
                       return (
                         <Grid container direction="row" key={index}>
-                          <Grid item style={{width:'8%', paddingTop: '13px'}}>
+                          <Grid item style={{width:'8%', paddingTop:'13px'}}>
                             <Typography style={{
                               float: 'right',
                               paddingRight: '5px',
@@ -156,7 +156,7 @@ export default function RecipeDirections({
                               {index + 1 + "."}
                             </Typography>
                           </Grid>
-                          <Grid item style={{width:'80%', padding: '5px 0 5px 10px'}}>
+                          <Grid item style={{width:'80%', padding:'5px 0 5px 10px'}}>
                             <RecipeStepField
                               originalValue={step}
                               index={index}
@@ -169,7 +169,7 @@ export default function RecipeDirections({
                               setAddEnabled={setAddEnabled}
                             />
                           </Grid>
-                          <Grid item style={{width:'8%', paddingTop: '7px'}}>
+                          <Grid item style={{width:'8%', paddingTop:'7px'}}>
                             <Fab style={iconButtonStyle}>
                               <CloseIcon
                                 onClick={e => {

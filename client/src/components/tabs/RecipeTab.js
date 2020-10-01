@@ -24,15 +24,15 @@ class RecipeTab extends React.Component {
     let recipes, requestType;
     switch (this.props.category) {
       case "Anonymous":
-        recipes = Object.values(this.props.sampleRecipes);
+        recipes = this.props.sampleRecipes;
         requestType = SAMPLE_RECIPES;
         break;
       case "By Friends":
-        recipes = Object.values(this.props.friendRecipes);
+        recipes = this.props.friendRecipes;
         requestType = FRIEND_RECIPES;
         break;
       case "By Me":
-        recipes = Object.values(this.props.createdRecipes);
+        recipes = this.props.createdRecipes;
         requestType = CREATED_RECIPES;
         break;
       default:
@@ -52,13 +52,13 @@ class RecipeTab extends React.Component {
     let recipes;
     switch (this.props.category) {
       case "Anonymous":
-        recipes = Object.values(this.props.sampleRecipes);
+        recipes = this.props.sampleRecipes;
         break;
       case "By Friends":
-        recipes = Object.values(this.props.friendRecipes);
+        recipes = this.props.friendRecipes;
         break;
       case "By Me":
-        recipes = Object.values(this.props.createdRecipes);
+        recipes = this.props.createdRecipes;
         break;
       default:
         break;
@@ -88,9 +88,13 @@ const mapStateToProps = state => {
     isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
-    sampleRecipes: state.sampleRecipes,
-    friendRecipes: state.friendRecipes,
-    createdRecipes: state.createdRecipes,
+    sampleRecipes: Object.values(state.sampleRecipes),
+    friendRecipes: Object.values(state.friendRecipes),
+    createdRecipes: !!state.activeUser && !!Object.keys(state.createdRecipes).length
+      ? state.activeUser.createdRecipeIds.sort(
+          (obj1, obj2) => obj2.timestamp - obj1.timestamp
+        ).map(obj => state.createdRecipes[obj.id])
+      : [],
     isDetailVisible: !!state.detailRecipe.id,
     detailRecipeId: state.detailRecipe.id,
     users: state.users,

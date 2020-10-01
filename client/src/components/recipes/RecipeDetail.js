@@ -71,7 +71,8 @@ class RecipeDetail extends React.Component {
             children={[]}
           >
             <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
-              {this.props.isLoggedIn && this.props.id === this.props.activeUser.id &&
+              {this.props.isLoggedIn &&
+                this.props.createdRecipeIds.includes(this.props.id) &&
                 <Fab
                   style={{
                     ...fabStyle,
@@ -136,7 +137,27 @@ class RecipeDetail extends React.Component {
             />
             <Typography style={titleStyle} variant="h3">Directions</Typography>
             <div style={{paddingLeft: isMobile ? '5px' : '0'}}>
-              <Typography style={sectionStyle}>{this.props.directions}</Typography>
+              {typeof this.props.directions === "string"
+              ? <Typography style={sectionStyle}>{this.props.directions}</Typography>
+              : <Grid container direction="column" style={{paddingBottom:'50%'}}>
+                  {this.props.directions.map((step, index) => (
+                    <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
+                      <Grid item style={{width:'8%'}}>
+                        <Typography style={{
+                          float: 'right',
+                          paddingRight: '5px',
+                          fontSize: '16px'
+                        }}>
+                          {index + 1 + "."}
+                        </Typography>
+                      </Grid>
+                      <Grid item style={{width:'89%', paddingLeft:'5px'}}>
+                        <Typography style={{fontSize:'16px'}}>{step}</Typography>
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Grid>
+              }
             </div>
           </CardMedia>
         </Card>
@@ -157,11 +178,11 @@ class RecipeDetail extends React.Component {
           }}
         >
           <Grid container direction="column">
-            <Grid item style={{background:'#292929', borderBottom: '1px solid white'}}>
+            <Grid item style={{background:'#292929', borderBottom:'1px solid white'}}>
               <Button
                 startIcon={<CreateIcon/>}
                 className={this.props.classes.button}
-                style={{fontSize: '16px', fontFamily:'Signika'}}
+                style={{fontSize:'16px', fontFamily:'Signika'}}
                 onClick={() => {
                   this.setState({ anchorEl: null });
                   this.props.toggleEditMode();
@@ -173,7 +194,7 @@ class RecipeDetail extends React.Component {
             <Grid item style={{background:'#292929'}}>
               <Button
                 className={this.props.classes.button}
-                style={{fontSize: '16px', width:'100%', fontFamily:'Signika'}}
+                style={{fontSize:'16px', width:'100%', fontFamily:'Signika'}}
                 onClick={() => {
                   this.setState({ anchorEl: null });
                 }}
@@ -190,8 +211,11 @@ class RecipeDetail extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
+    isLoggedIn: !!state.activeUser,
+    createdRecipeIds: !!state.activeUser
+      ? state.activeUser.createdRecipeIds.map(obj => obj.id)
+      : null,
     likedRecipeIds: !!state.activeUser
       ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null

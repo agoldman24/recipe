@@ -5,7 +5,11 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 import RecipeForms from './RecipeForms';
-import { TOGGLE_RECIPE_EDIT_MODE, TOGGLE_RECIPE_CREATE_MODE } from '../../actions';
+import {
+  TOGGLE_RECIPE_EDIT_MODE,
+  TOGGLE_RECIPE_CREATE_MODE,
+  CREATE_RECIPE_REQUESTED
+} from '../../actions';
 import {
   darkBackgroundStyle, detailStyle, containerStyle,
   buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
@@ -46,6 +50,14 @@ const RecipeDetailEdit = props => {
   const [isImageEmpty, setIsImageEmpty] = useState(props.isCreateMode);
   const [isIngredientsEmpty, setIsIngredientsEmpty] = useState(props.isCreateMode);
   const [isDirectionsEmpty, setIsDirectionsEmpty] = useState(props.isCreateMode);
+  const [name, setName] = useState(props.name);
+  const [image, setImage] = useState(props.image);
+  const [ingredients, setIngredients] = useState(props.ingredients);
+  const [directionsType, setDirectionsType] = useState(typeof props.directions);
+  const [directionsParagraph, setDirectionsParagraph] = useState(
+    directionsType === "string" ? props.directions : "");
+  const [directionSteps, setDirectionSteps] = useState(
+    directionsType === "string" ? [] : props.directions);
   return (
     <div style={darkBackgroundStyle}>
       <Card style={detailStyle}>
@@ -86,7 +98,15 @@ const RecipeDetailEdit = props => {
               : <Button
                   style={fixedSaveButtonStyle}
                   onClick={() => {
-                    setIsErrored(isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty);
+                    const empty = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
+                    if (empty) {
+                      setIsErrored(true);
+                    } else if (!props.isSpinnerVisible) {
+                      const directions = directionsType === "string"
+                        ? directionsParagraph
+                        : directionSteps;
+                      props.createRecipe(name, image, ingredients, directions);
+                    }
                   }}
                 >
                   Submit
@@ -132,6 +152,18 @@ const RecipeDetailEdit = props => {
           setIsImageEmpty={setIsImageEmpty}
           setIsIngredientsEmpty={setIsIngredientsEmpty}
           setIsDirectionsEmpty={setIsDirectionsEmpty}
+          name={name}
+          image={image}
+          ingredients={ingredients}
+          directionsType={directionsType}
+          directionsParagraph={directionsParagraph}
+          directionSteps={directionSteps}
+          setName={setName}
+          setImage={setImage}
+          setIngredients={setIngredients}
+          setDirectionsType={setDirectionsType}
+          setDirectionsParagraph={setDirectionsParagraph}
+          setDirectionSteps={setDirectionSteps}
         />
       </Card>
     </div>
@@ -141,13 +173,18 @@ const RecipeDetailEdit = props => {
 const mapStateToProps = state => {
   return {
     isEditMode: state.detailRecipe.editMode,
-    isCreateMode: state.detailRecipe.createMode
+    isCreateMode: state.detailRecipe.createMode,
+    isSpinnerVisible: state.isSpinnerVisible
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-  toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE })
+  toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE }),
+  createRecipe: (name, image, ingredients, directions) => dispatch({
+    type: CREATE_RECIPE_REQUESTED,
+    name, image, ingredients, directions
+  })
 });
 
 export default connect(

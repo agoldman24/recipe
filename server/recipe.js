@@ -8,7 +8,7 @@ const RecipeSchema = new Schema(
       type: String
     },
     ingredients: Array,
-    directions: String,
+    directions: Schema.Types.Mixed,
     authorName: String,
     authorId: String
   },

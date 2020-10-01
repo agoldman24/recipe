@@ -30,6 +30,7 @@ router.get("/getUser", userRoutes.getUser);
 router.get("/getAllUsers", userRoutes.getAllUsers);
 router.post("/createUser", userRoutes.createUser);
 router.post("/updateProfile", userRoutes.updateProfile);
+router.post("/updateCreatedRecipeIds", userRoutes.updateCreatedRecipeIds);
 router.post("/updateLikedRecipeIds", userRoutes.updateLikedRecipeIds);
 router.post("/updateFollowerIds", userRoutes.updateFollowerIds);
 router.post("/updateFollowingIds", userRoutes.updateFollowingIds);

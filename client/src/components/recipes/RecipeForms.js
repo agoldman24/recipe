@@ -38,21 +38,19 @@ const RecipeForms = ({
   isNameEmpty, setIsNameEmpty,
   isImageEmpty, setIsImageEmpty,
   isIngredientsEmpty, setIsIngredientsEmpty,
-  isDirectionsEmpty, setIsDirectionsEmpty
+  isDirectionsEmpty, setIsDirectionsEmpty,
+  name, setName,
+  image, setImage,
+  ingredients, setIngredients,
+  directionsType, setDirectionsType,
+  directionsParagraph, setDirectionsParagraph,
+  directionSteps, setDirectionSteps
 }) => {
   const classes = useStyles();
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState(isEditMode ? "image" : null);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [name, setName] = useState(originalName);
-  const [image, setImage] = useState(originalImage);
-  const [directionsParagraph, setDirectionsParagraph] = useState(
-    typeof originalDirections === "string" ? originalDirections : "");
-  const [directionSteps, setDirectionSteps] = useState(
-    typeof originalDirections === "string" ? [] : originalDirections);
-  const [directionsType, setDirectionsType] = useState(typeof originalDirections);
-  const [ingredients, setIngredients] = useState(originalIngredients);
 
   const setFocus = container => {
     if (container !== focusedContainer) {

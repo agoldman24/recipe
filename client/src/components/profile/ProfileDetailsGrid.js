@@ -76,7 +76,11 @@ export default function ProfileDetailsGrid(props) {
         </div>
       }
       {displayUserDetail.activeDetail === CREATED_RECIPES &&
-        <RecipeList recipes={Object.values(displayUserDetail.createdRecipes)}/>
+        <RecipeList recipes={
+          Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => {
+            return r2.timestamp - r1.timestamp;
+          })
+        }/>
       }
       {displayUserDetail.activeDetail === LIKED_RECIPES &&
         <RecipeList recipes={

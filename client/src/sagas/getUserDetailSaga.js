@@ -3,6 +3,7 @@ import Api from '../api/siteUrl';
 import {
   GET_USER_DETAIL_REQUESTED,
   GET_USER_DETAIL_SUCCEEDED,
+  APPEND_CREATED_RECIPES,
   SET_DISPLAY_USER_DETAIL,
   NETWORK_FAILED
 } from '../actions';
@@ -39,6 +40,10 @@ function* getUserDetail(action) {
     if (!!displayUserDetail && !!displayUserDetail.profileImage) {
       URL.revokeObjectURL(displayUserDetail.profileImage);
     }
+    yield put({
+      type: APPEND_CREATED_RECIPES,
+      recipes: res3.data.recipes
+    });
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
       profileImage: !!displayUser.profileImageId

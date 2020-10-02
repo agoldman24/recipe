@@ -48,6 +48,7 @@ import {
 } from '../actions';
 import {
   PROFILE_TAB,
+  CREATED_RECIPES,
   LIKED_RECIPES,
   FOLLOWERS,
   PROFILE,
@@ -227,7 +228,19 @@ const displayUser = (state = null, action) => {
       return action.user;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
-        // case CREATED_RECIPES:
+        case CREATED_RECIPES:
+          return {
+            ...state,
+            createdRecipeIds: action.keep
+            ? [
+                ...state.createdRecipeIds,
+                {
+                  id: action.recipe.id,
+                  timestamp: Date.now()
+                }
+              ]
+            : state.createdRecipeIds.filter(obj => obj.id !== action.recipe.id)
+          }
         case LIKED_RECIPES:
           return {
             ...state,
@@ -289,15 +302,45 @@ const displayUserDetail = (state = null, action) => {
         activeDetail: action.detail
       };
     case APPEND_LIKED_RECIPES:
-      return {
+      return !state ? state : {
         ...state,
         likedRecipes: {
           ...state.likedRecipes,
           ...action.recipes
         }
       }
+    case APPEND_CREATED_RECIPES:
+      return !state ? state : {
+        ...state,
+        createdRecipes: {
+          ...state.createdRecipes,
+          ...action.recipes
+        }
+      }
+    case ADD_CREATED_RECIPE:
+      return !state ? state : {
+        ...state,
+        createdRecipes: {
+          ...state.createdRecipes,
+          [action.recipe.id]: {
+            ...action.recipe,
+            timestamp: Date.now()
+          }
+        }
+      }
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
+        case CREATED_RECIPES:
+          return {
+            ...state,
+            createdRecipes: action.keep
+              ? { ...state.createdRecipes, [action.recipe.id]: action.recipe }
+              : Object.keys(state.createdRecipes).filter(id => id !== action.recipe.id)
+                .reduce((accum, id) => {
+                  accum[id] = state.createdRecipes[id];
+                  return accum;
+                }, {})
+          }
         case LIKED_RECIPES:
           return {
             ...state,
@@ -433,7 +476,10 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
     case ADD_CREATED_RECIPE:
       return {
         ...state,
-        [action.recipe.id]: action.recipe
+        [action.recipe.id]: {
+          ...action.recipe,
+          timestamp: Date.now()
+        }
       }
     case APPEND_CREATED_RECIPES:
       return {

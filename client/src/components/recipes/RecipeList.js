@@ -119,33 +119,40 @@ const mapDispatchToProps = dispatch => {
       activeUser,
       displayUser,
       displayUserDetail
-    ) => dispatch({
-      type: GET_RECIPES_REQUESTED,
-      requestType: activeTab.name === RECIPE_TAB
+    ) => {
+      const requestType = activeTab.name === RECIPE_TAB
         ? recipeCategory === "Anonymous"
           ? SAMPLE_RECIPES
           : recipeCategory === "By Friends"
             ? FRIEND_RECIPES
             : CREATED_RECIPES
-        : displayUserDetail.activeDetail,
-      ids: activeTab.name === RECIPE_TAB
-        ? recipeCategory === "By Friends"
-          ? activeUser.followingIds.reduce((accum, friendId) => {
-              users[friendId].createdRecipeIds.filter(obj =>
-                !Object.keys(friendRecipes).includes(obj.id)
-              ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-                .forEach(r => accum.push(r));
-              return accum;
-            }, [])
-          : recipeCategory === "By Me"
-            ? activeUser.createdRecipeIds.filter(obj =>
-                !Object.keys(createdRecipes).includes(obj.id)
-              ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-            : null
-        : displayUser.likedRecipeIds.filter(obj =>
+        : displayUserDetail.activeDetail;
+      let ids = null;
+      switch (requestType) {
+        case FRIEND_RECIPES:
+          ids = activeUser.followingIds.reduce((accum, friendId) => {
+            users[friendId].createdRecipeIds.filter(obj =>
+              !Object.keys(friendRecipes).includes(obj.id)
+            ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .forEach(r => accum.push(r));
+            return accum;
+          }, []);
+          break;
+        case CREATED_RECIPES:
+          ids = activeUser.createdRecipeIds.filter(obj =>
+            !Object.keys(createdRecipes).includes(obj.id)
+          ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
+          break;
+        case LIKED_RECIPES:
+          ids = displayUser.likedRecipeIds.filter(obj =>
             !Object.keys(displayUserDetail.likedRecipes).includes(obj.id)
-          ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-    }),
+          ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
+          break;
+        default:
+          break;
+      }
+      dispatch({ type: GET_RECIPES_REQUESTED, requestType, ids });
+    },
   };
 };
 

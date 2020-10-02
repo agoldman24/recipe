@@ -5,12 +5,18 @@ import {
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
   UPDATE_USER,
+  UPDATE_DISPLAY_USER_DETAIL,
   SET_ACTIVE_USER,
-  UPDATE_DISPLAY_USER_DETAIL
+  SET_ACTIVE_TAB,
+  SET_ACTIVE_DETAIL,
+  SET_RECIPE_CATEGORY,
+  ADD_CREATED_RECIPE
 } from '../actions';
 import {
   PROFILE,
+  RECIPE_TAB,
   CREATED_RECIPE_IDS,
+  CREATED_RECIPES,
   LIKED_RECIPE_IDS,
   LIKED_RECIPES,
   FOLLOWING_IDS,
@@ -71,6 +77,19 @@ function* updateUser(action) {
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
+        if (!!displayUser && activeUser.id === displayUser.id) {
+          yield put({
+            type: UPDATE_DISPLAY_USER_DETAIL,
+            updateType: CREATED_RECIPES,
+            recipe: displayUserDetail.createdRecipes[action.recipeId],
+            keep: action.keep,
+            user
+          });
+          yield put({ type: SET_ACTIVE_DETAIL, detail: CREATED_RECIPES });
+        } else {
+          yield put({ type: SET_ACTIVE_TAB, newTab: { name: RECIPE_TAB }});
+          yield put({ type: SET_RECIPE_CATEGORY, category: "By Me" });
+        }
         break;
       case LIKED_RECIPE_IDS:
         res = yield call(Api.post, '/updateLikedRecipeIds', {

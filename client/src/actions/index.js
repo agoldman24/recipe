@@ -1,5 +1,4 @@
 /* Async user actions */
-export const INIT_HYDRATION = 'INIT_HYDRATION';
 export const SIGN_UP_REQUESTED = 'SIGN_UP_REQUESTED';
 export const SIGN_IN_REQUESTED = 'SIGN_IN_REQUESTED';
 export const UPDATE_USER_REQUESTED = 'UPDATE_USER_REQUESTED';
@@ -53,4 +52,5 @@ export const GET_ICONS_REQUESTED = 'GET_ICONS_REQUESTED';
 export const GET_ICONS_FINISHED = 'GET_ICONS_FINISHED';
 
 /* Hydration actions */
+export const INIT_HYDRATION = 'INIT_HYDRATION';
 export const COMPLETE_HYDRATION = "COMPLETE_HYDRATION";

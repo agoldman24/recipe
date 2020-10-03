@@ -145,7 +145,8 @@ const mapDispatchToProps = dispatch => {
           break;
         case CREATED_RECIPES:
           let recipes, recipeIds;
-          if (activeTab.name === RECIPE_TAB || activeUser.id === displayUser.id) {
+          const activeUserIsDisplayUser = !!activeUser && !!displayUser && activeUser.id === displayUser.id;
+          if (activeTab.name === RECIPE_TAB || activeUserIsDisplayUser) {
             recipes = createdRecipes;
             recipeIds = activeUser.createdRecipeIds;
           } else {

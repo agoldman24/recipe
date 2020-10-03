@@ -18,7 +18,7 @@ const RecipeTab = props => {
   }, []);
   useEffect(() => {
     const id = isMobile ? 'root' : 'container';
-    document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
+    document.getElementById(id).scroll({ top: 0, left: 0 });
     fetchRecipes();
   }, [props.category]);
   

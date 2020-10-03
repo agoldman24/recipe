@@ -70,7 +70,7 @@ class App extends React.Component {
           : '50px',
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 110px)'
-        : '100vh',
+        : 'calc(100vh - 50px)',
       overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
     };
     return (

@@ -3,6 +3,7 @@ import { b64toBlob } from '../utilities/imageConverter';
 import StateTree from '../store/stateTree';
 import {
   INIT_HYDRATION,
+  COMPLETE_HYDRATION,
   SIGN_UP_REQUESTED,
   SIGN_IN_REQUESTED,
   UPDATE_USER_REQUESTED,
@@ -27,7 +28,6 @@ import {
   SET_RECIPE_CATEGORY,
   TOGGLE_RECIPE_DETAILS,
   SET_ACTIVE_TAB,
-  COMPLETE_HYDRATION,
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
@@ -69,6 +69,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case LOAD_RECIPE_DETAILS_START:
     case GET_ICONS_REQUESTED:
       return true;
+    case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case APPEND_SAMPLE_RECIPES:

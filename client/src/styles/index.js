@@ -171,7 +171,10 @@ export const backButtonStyle = {
   background: 'none',
   boxShadow: 'none',
   color: 'white',
-  position: 'fixed', top: '5px', left: '10px'
+  position: 'fixed',
+  top: '5px',
+  left: '10px',
+  zIndex: '5'
 };
 
 export const unfollowButtonStyle = {

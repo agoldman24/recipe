@@ -17,12 +17,9 @@ import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
 import {
-  SIGN_IN_REQUESTED,
-  GET_ALL_USERS,
-  SET_ACTIVE_TAB,
-  SET_DISPLAY_USER,
-  HYDRATION_COMPLETE,
-  GET_USER_DETAIL_REQUESTED
+  INIT_HYDRATION,
+  COMPLETE_HYDRATION,
+  SET_ACTIVE_TAB
 } from '../actions';
 import {
   SEARCH_TAB,
@@ -31,8 +28,7 @@ import {
   SIGN_IN_TAB,
   WELCOME_TAB,
   ABOUT_TAB,
-  PROFILE_TAB,
-  FOLLOWING
+  PROFILE_TAB
 } from '../variables/Constants';
 import { defaultTheme } from '../styles';
 
@@ -44,32 +40,7 @@ class App extends React.Component {
     document.getElementById('root').scrollTo(0, 0);
     const id = isMobile ? 'root' : 'container';
     document.getElementById(id).addEventListener('scroll', this.handleScroll);
-    this.props.getAllUsers();
-    const activeUserId = localStorage.getItem("activeUserId");
-    if (!!activeUserId && activeUserId !== "null") {
-      this.props.signIn(activeUserId);
-    }
-  }
-  componentDidUpdate() {
-    if (this.props.usersFetched && !this.props.isHydrated && Object.keys(this.props.users).length) {
-      const activeTabName = localStorage.getItem("activeTab");
-      const activeDetail = localStorage.getItem("activeDetail");
-      if (!!activeTabName && activeTabName !== "null") {
-        if (activeTabName === PROFILE_TAB) {
-          this.props.setDisplayUser(
-            this.props.users[localStorage.getItem("displayUserId")]
-          );
-          if (!activeDetail || activeDetail === "null") {
-            localStorage.setItem("activeDetail", FOLLOWING);
-          }
-          this.props.getUserDetail(localStorage.getItem("activeDetail"));
-        }
-        this.props.setActiveTab(activeTabName);
-      } else {
-        this.props.setActiveTab(WELCOME_TAB);
-      }
-      this.props.completeHydrate();
-    }
+    this.props.initHydration();
   }
   handleScroll = () => {
     const id = isMobile ? 'root' : 'container';
@@ -78,7 +49,6 @@ class App extends React.Component {
       this.setState({ showScrollButton: isScrollButtonVisible });
     }
   }
-
   render() {
     const activeTab = this.props.activeTab.name;
     const mobileStyle = {
@@ -111,10 +81,7 @@ class App extends React.Component {
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
         {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
-          <ScrollButton
-            scrollButtonTop={this.props.isLoggedIn ? '60px' : '10px'}
-            zIndex={!this.props.isLoggedIn ? '2' : '3'}
-          />
+          <ScrollButton isLoggedIn={this.props.isLoggedIn}/>
         }
         {this.props.recipeCreateMode &&
           <RecipeDetailEdit
@@ -155,24 +122,20 @@ const mapStateToProps = state => {
     recipeCreateMode: state.detailRecipe.createMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
-    users: state.users
+    users: state.users,
+    displayUser: state.displayUser
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    signIn: id => dispatch({ type: SIGN_IN_REQUESTED, id }),
-    getAllUsers: () => dispatch({ type: GET_ALL_USERS }),
+    initHydration: () => dispatch({ type: INIT_HYDRATION }),
     setActiveTab: name => dispatch({
       type: SET_ACTIVE_TAB, 
       currentTab: null,
       newTab: { name }
     }),
-    setDisplayUser: user => dispatch({ type: SET_DISPLAY_USER, user }),
-    getUserDetail: activeDetail => dispatch({
-      type: GET_USER_DETAIL_REQUESTED, activeDetail
-    }),
-    completeHydrate: () => dispatch({ type: HYDRATION_COMPLETE })
+    completeHydration: () => dispatch({ type: COMPLETE_HYDRATION })
   };
 }
 

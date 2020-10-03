@@ -86,7 +86,7 @@ const ProfileAvatar = props => {
         closeModal={() => setFileTypeModalVisible(false)}
         message={"Invalid file type. Please choose a PNG or JPEG file."}
       />
-      {isSpinnerVisible && <Spinner/>}
+      <Spinner isVisible={isSpinnerVisible}/>
       <div style={{height:'120px', textAlign:'center'}}>
       {profileImageLoaded
       ? <Avatar

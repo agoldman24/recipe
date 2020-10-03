@@ -3,25 +3,37 @@ import Api from '../api/siteUrl';
 import {
   CREATE_RECIPE_REQUESTED,
   UPDATE_USER_REQUESTED,
+  APPEND_CREATED_RECIPES,
   ADD_CREATED_RECIPE,
   TOGGLE_RECIPE_CREATE_MODE,
   NETWORK_FAILED
 } from '../actions';
-import { CREATED_RECIPE_IDS } from '../variables/Constants';
+import { CREATED_RECIPES, CREATED_RECIPE_IDS } from '../variables/Constants';
 
 const getActiveUser = state => state.activeUser;
-const getDisplayUser = state => state.displayUser;
-const getActiveTab = state => state.activeTab;
+const getCreatedRecipes = state => state.createdRecipes;
 
 function* createRecipe(action) {
   try {
     const activeUser = yield select(getActiveUser);
+    const createdRecipes = yield select(getCreatedRecipes);
     const authorName = activeUser.firstName + " " + activeUser.lastName;
     const authorId = activeUser.id;
     const { name, image, ingredients, directions } = action;
     const { data: { recipe } } = yield call(Api.post, '/createRecipe', {
       name, image, ingredients, directions, authorName, authorId
     });
+    if (activeUser.createdRecipeIds.length && !Object.keys(createdRecipes).length) {
+      const res = yield call(Api.get, '/getRecipesByIds?'
+        + 'ids=' + activeUser.createdRecipeIds.map(obj => obj.id)
+        + '&timestamps=' + activeUser.createdRecipeIds.map(obj => obj.timestamp)
+      );
+      yield put({
+        type: APPEND_CREATED_RECIPES,
+        recipes: res.data.recipes,
+        appendTo: CREATED_RECIPES
+      });
+    }
     yield put({ type: ADD_CREATED_RECIPE, recipe });
     yield put({ type: TOGGLE_RECIPE_CREATE_MODE });
     yield put({

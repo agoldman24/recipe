@@ -65,6 +65,7 @@ export default Object.assign({},
     samples: false,
     friends: false,
     created: false,
+    displayUserCreated: false,
     liked: false
   },
   icons: [],

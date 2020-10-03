@@ -4,21 +4,21 @@ import { defaultTheme } from '../../styles';
 import { isMobile } from 'react-device-detect';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-export default function ScrollButton({ scrollButtonTop, zIndex }) {
+export default function ScrollButton({ isLoggedIn }) {
   const buttonStyle = {
     color: 'black',
     fontWeight: 'bold',
     float: 'right',
-    marginRight: '1.5%',
+    marginRight: isMobile || isLoggedIn ? '1.5%' : '27px',
     background: defaultTheme.palette.primary.mainGradient
   }
   return (
     <div style={{
       position: 'fixed',
       width: '100vw',
-      top: scrollButtonTop,
+      top: isLoggedIn ? '60px' : '80px',
       textAlign: 'center',
-      zIndex
+      zIndex: isLoggedIn ? '2' : '3'
     }}>
       <Fab
         style={buttonStyle}

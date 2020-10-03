@@ -12,21 +12,16 @@ import { RECIPE_TAB } from '../variables/Constants';
 
 function* signIn(action) {
   try {
-    const { username, password, id } = action;
-    const { data } = !!username
-      ? yield call(Api.get, '/getUser?username=' + username + "&password=" + password)
-      : yield call(Api.get, '/getUserById?id=' + id);
+    const { username, password } = action;
+    const { data } = yield call(Api.get, '/getUser?username=' + username + "&password=" + password);
     if (data.success) {
-      const activeUserId = localStorage.getItem("activeUserId");
       yield put({ type: SET_ACTIVE_USER, user: data.user });
-      if (!activeUserId || activeUserId === "null") {
-        yield put({
-          type: SET_ACTIVE_TAB,
-          currentTab: null,
-          newTab: { name: RECIPE_TAB }
-        });
-        yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
-      }
+      yield put({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: RECIPE_TAB }
+      });
+      yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
     } else {
       yield put({ type: SIGN_IN_FAILED });
     }

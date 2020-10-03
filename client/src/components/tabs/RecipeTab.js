@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import RecipeList from '../recipes/RecipeList';
 import RecipeCategories from '../recipes/RecipeCategories';
 import { connect } from 'react-redux';
@@ -10,77 +10,72 @@ import {
 import { SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
 
-class RecipeTab extends React.Component {
-  componentDidMount() {
+const RecipeTab = props => {
+  useEffect(() => {
     window.scrollTo(0, 0);
-    this.fetchRecipes();
-  }
-  componentDidUpdate(prevProps) {
-    if (this.props.category !== prevProps.category) {
-      this.fetchRecipes();
-    }
-  }
-  fetchRecipes() {
+    fetchRecipes();
+  }, []);
+  useEffect(() => fetchRecipes(), [props.category]);
+  
+  const fetchRecipes = () => {
     let recipes, requestType;
-    switch (this.props.category) {
+    switch (props.category) {
       case "Anonymous":
-        recipes = this.props.sampleRecipes;
+        recipes = props.sampleRecipes;
         requestType = SAMPLE_RECIPES;
         break;
       case "By Friends":
-        recipes = this.props.friendRecipes;
+        recipes = props.friendRecipes;
         requestType = FRIEND_RECIPES;
         break;
       case "By Me":
-        recipes = this.props.createdRecipes;
+        recipes = props.createdRecipes;
         requestType = CREATED_RECIPES;
         break;
       default:
         break;
     }
     if (!recipes.length) {
-      this.props.getRecipes(
+      props.getRecipes(
         requestType,
-        this.props.users,
-        this.props.activeUser,
-        this.props.friendRecipes,
-        this.props.createdRecipes
+        props.users,
+        props.activeUser,
+        props.friendRecipes,
+        props.createdRecipes
       );
     }
   }
-  render() {
-    let recipes;
-    switch (this.props.category) {
-      case "Anonymous":
-        recipes = this.props.sampleRecipes;
-        break;
-      case "By Friends":
-        recipes = this.props.friendRecipes;
-        break;
-      case "By Me":
-        recipes = this.props.createdRecipes;
-        break;
-      default:
-        break;
-    }
-    return (
-      <div>
-        {this.props.networkFailed
-        ? <div style={errorStyle}>Network error</div>
-        : <div>
-            <RecipeList recipes={recipes}/>
-            {this.props.isLoggedIn &&
-              <RecipeCategories
-                category={this.props.category}
-                setCategory={this.props.setCategory}
-                toggleCreateMode={this.props.toggleCreateMode}
-              />
-            }
-          </div>
-        }
-      </div>
-    );
+  let recipes;
+  switch (props.category) {
+    case "Anonymous":
+      recipes = props.sampleRecipes;
+      break;
+    case "By Friends":
+      recipes = props.friendRecipes;
+      break;
+    case "By Me":
+      recipes = props.createdRecipes;
+      break;
+    default:
+      break;
   }
+  return (
+    <div>
+      {props.networkFailed
+      ? <div style={errorStyle}>Network error</div>
+      : <div>
+          <RecipeList recipes={recipes}/>
+          {props.isLoggedIn &&
+            <RecipeCategories
+              category={props.category}
+              setCategory={props.setCategory}
+              toggleCreateMode={props.toggleCreateMode}
+            />
+          }
+        </div>
+      }
+    </div>
+  );
 }
 
 const mapStateToProps = state => {
@@ -89,12 +84,8 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
     sampleRecipes: Object.values(state.sampleRecipes),
-    friendRecipes: Object.values(state.friendRecipes),
-    createdRecipes: !!state.activeUser && !!Object.keys(state.createdRecipes).length
-      ? state.activeUser.createdRecipeIds.sort(
-          (obj1, obj2) => obj2.timestamp - obj1.timestamp
-        ).map(obj => state.createdRecipes[obj.id])
-      : [],
+    friendRecipes: Object.values(state.friendRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp),
+    createdRecipes: Object.values(state.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp),
     isDetailVisible: !!state.detailRecipe.id,
     detailRecipeId: state.detailRecipe.id,
     users: state.users,

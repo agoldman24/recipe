@@ -15,12 +15,19 @@ import {
   rowStyle
 } from "../../styles";
 
-export default function ProfileDetailsGrid(props) {
-  const {
-    displayUser: { followerIds, followingIds, createdRecipeIds, likedRecipeIds },
-    displayUserDetail
-  } = props;
-
+export default function ProfileDetailsGrid({
+  displayUser: {
+    id,
+    followerIds,
+    followingIds,
+    createdRecipeIds,
+    likedRecipeIds
+  },
+  displayUserDetail,
+  setActiveDetail,
+  activeUser,
+  createdRecipes
+}) {
   return (
     <div>
       <Grid
@@ -28,36 +35,28 @@ export default function ProfileDetailsGrid(props) {
         direction="row"
         style={rowStyle}
       >
-        <Grid item className="clickable" style={columnStyle} onClick={() => {
-          props.setActiveDetail(FOLLOWERS);
-        }}>
+        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWERS)}>
           <ProfileDetail
             isSelected={displayUserDetail.activeDetail === FOLLOWERS}
             number={followerIds.length}
             text="Followers"
           />
         </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => {
-            props.setActiveDetail(FOLLOWING);
-          }}>
+        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWING)}>
           <ProfileDetail
             isSelected={displayUserDetail.activeDetail === FOLLOWING}
             number={followingIds.length}
             text="Following"
           />
         </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => {
-          props.setActiveDetail(CREATED_RECIPES);
-        }}>
+        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(CREATED_RECIPES)}>
           <ProfileDetail
             isSelected={displayUserDetail.activeDetail === CREATED_RECIPES}
             number={createdRecipeIds.length}
             text="Created Recipes"
           />
         </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => {
-          props.setActiveDetail(LIKED_RECIPES);
-        }}>
+        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(LIKED_RECIPES)}>
           <ProfileDetail
             isSelected={displayUserDetail.activeDetail === LIKED_RECIPES}
             number={likedRecipeIds.length}
@@ -76,17 +75,14 @@ export default function ProfileDetailsGrid(props) {
         </div>
       }
       {displayUserDetail.activeDetail === CREATED_RECIPES &&
-        <RecipeList recipes={
-          Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => {
-            return r2.timestamp - r1.timestamp;
-          })
+        <RecipeList recipes={!!activeUser && activeUser.id === id
+          ? Object.values(createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
+          : Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
         }/>
       }
       {displayUserDetail.activeDetail === LIKED_RECIPES &&
         <RecipeList recipes={
-          Object.values(displayUserDetail.likedRecipes).sort((r1, r2) => {
-            return r2.timestamp - r1.timestamp;
-          })
+          Object.values(displayUserDetail.likedRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
         }/>
       }
     </div>

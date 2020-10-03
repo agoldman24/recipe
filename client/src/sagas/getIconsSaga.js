@@ -16,10 +16,9 @@ function* getIcons({ searchWord }) {
       return accum;
     }, "");
     const { data } = yield call(Api.get, '/getIcons?searchWord=' + queryString);
-    yield put({ type: GET_ICONS_FINISHED, icons: data.icons });
+    yield put({ type: GET_ICONS_FINISHED, icons: !!data.icons ? data.icons : [] });
   } catch (err) {
     yield put({ type: GET_ICONS_FINISHED, icons: [] });
-    console.log(err);
   }
 }
 

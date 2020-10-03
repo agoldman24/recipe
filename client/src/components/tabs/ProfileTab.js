@@ -207,6 +207,8 @@ const ProfileTab = props => {
             displayUser={props.displayUser}
             displayUserDetail={props.displayUserDetail}
             setActiveDetail={props.setActiveDetail}
+            activeUser={props.activeUser}
+            createdRecipes={props.createdRecipes}
           />
         }
         <Dialog
@@ -262,6 +264,7 @@ const mapStateToProps = state => {
     users: state.users,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
+    createdRecipes: state.createdRecipes,
     activeUser: state.activeUser,
     profileEditor: state.profileEditor,
     networkFailed: state.errorMessages.networkFailed

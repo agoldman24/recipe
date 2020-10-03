@@ -7,14 +7,24 @@ import {
   SET_DISPLAY_USER_DETAIL,
   NETWORK_FAILED
 } from '../actions';
+import { RECIPE_TAB, CREATED_RECIPES, DISPLAY_USER } from '../variables/Constants';
 import { b64toBlob } from '../utilities/imageConverter';
 
+const getActiveUser = state => state.activeUser;
+const getActiveTab = state => state.activeTab.name;
 const getDisplayUser = state => state.displayUser;
 const getDisplayUserDetail = state => state.displayUserDetail;
 
-function* getUserDetail(action) {
+export function* getUserDetail() {
   try {
+    const activeUser = yield select(getActiveUser);
+    const activeTab = yield select(getActiveTab);
     const displayUser = yield select(getDisplayUser);
+    const displayUserDetail = yield select(getDisplayUserDetail);
+    const activeUserIsDisplayUser = !!activeUser && activeUser.id === displayUser.id;
+    const appendTo = activeTab === RECIPE_TAB || activeUserIsDisplayUser
+      ? CREATED_RECIPES
+      : DISPLAY_USER;
     const res0 = !!displayUser.profileImageId
       ? yield call(Api.get, '/getImageById?id=' + displayUser.profileImageId)
       : null;
@@ -36,13 +46,13 @@ function* getUserDetail(action) {
           + '&timestamps=' + displayUser.likedRecipeIds.map(obj => obj.timestamp)
         )
       : { data: { recipes: {} } };
-    const displayUserDetail = yield select(getDisplayUserDetail);
     if (!!displayUserDetail && !!displayUserDetail.profileImage) {
       URL.revokeObjectURL(displayUserDetail.profileImage);
     }
     yield put({
       type: APPEND_CREATED_RECIPES,
-      recipes: res3.data.recipes
+      recipes: res3.data.recipes,
+      appendTo
     });
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
@@ -53,7 +63,7 @@ function* getUserDetail(action) {
       following: res2.data.users,
       createdRecipes: res3.data.recipes,
       likedRecipes: res4.data.recipes,
-      activeDetail: action.activeDetail
+      activeUserIsDisplayUser
     });
     yield put({ type: GET_USER_DETAIL_SUCCEEDED })
   } catch (err) {

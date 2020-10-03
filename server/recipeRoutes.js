@@ -33,15 +33,17 @@ exports.getSamples = (req, res) => {
     ? req.query.ids.split(',').map(id => ObjectID(id))
     : [];
   db.collection("recipes").find(
-    { _id: { $nin: idArray } },
-    { authorId: null }
+    { _id: { $nin: idArray } }
   ).toArray().then(recipes => {
     return res.json({
       success: true,
-      recipes: recipes.sort(() => 0.5 - Math.random()).slice(0, 9).reduce((accum, recipe) => {
-        accum[recipe._id] = getDerivedRecipe(recipe);
-        return accum;
-      }, {})
+      recipes: recipes.filter(r => !r.authorId)
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 9)
+        .reduce((accum, recipe) => {
+          accum[recipe._id] = getDerivedRecipe(recipe);
+          return accum;
+        }, {})
     })
   })
 }

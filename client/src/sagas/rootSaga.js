@@ -4,7 +4,7 @@ import createRecipeSaga from './createRecipeSaga';
 import signUpSaga from './signUpSaga';
 import signInSaga from './signInSaga';
 import updateUserSaga from './updateUserSaga';
-import getAllUsersSaga from './getAllUsersSaga';
+import hydrationSaga from './hydrationSaga';
 import getUserDetailSaga from './getUserDetailSaga';
 import getIconsSaga from './getIconsSaga';
 
@@ -15,7 +15,7 @@ export default function* rootSaga() {
     signInSaga(),
     signUpSaga(),
     updateUserSaga(),
-    getAllUsersSaga(),
+    hydrationSaga(),
     getUserDetailSaga(),
     getIconsSaga()
   ])

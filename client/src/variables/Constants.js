@@ -6,6 +6,7 @@ export const WELCOME_TAB = "WELCOME_TAB";
 export const ABOUT_TAB = "ABOUT_TAB";
 export const PROFILE_TAB = "PROFILE_TAB";
 export const PROFILE = "PROFILE";
+export const DISPLAY_USER = "DISPLAY_USER";
 export const CREATED_RECIPE_IDS = "CREATED_RECIPE_IDS";
 export const LIKED_RECIPE_IDS = "LIKED_RECIPE_IDS";
 export const FOLLOWING_IDS = "FOLLOWING_IDS";

@@ -14,7 +14,7 @@ import {
 
 const RecipeList = props => {
   return (
-    <div style={{paddingBottom: isMobile ? '100px' : '30px'}}>
+    <div style={{paddingBottom:'100px'}} id="recipes">
       <Grid
         container
         direction={isMobile ? "column" : "row"}
@@ -101,8 +101,13 @@ const mapStateToProps = state => {
         (state.recipeCategory === "By Me" && state.allRecipesFetched.created)
       )) ||
       (!!state.displayUserDetail && (
-        (state.displayUserDetail.activeDetail === CREATED_RECIPES && state.allRecipesFetched.created) ||
-        (state.displayUserDetail.activeDetail === LIKED_RECIPES && state.allRecipesFetched.liked)
+        (state.displayUserDetail.activeDetail === CREATED_RECIPES
+          && (!!state.activeUser && !!state.displayUser && state.activeUser.id === state.displayUser.id
+            ? state.allRecipesFetched.created
+            : state.allRecipesFetched.displayUserCreated)
+        ) ||
+        (state.displayUserDetail.activeDetail === LIKED_RECIPES
+          && state.allRecipesFetched.liked)
       )
     )
   };
@@ -139,9 +144,16 @@ const mapDispatchToProps = dispatch => {
           }, []);
           break;
         case CREATED_RECIPES:
-          ids = activeUser.createdRecipeIds.filter(obj =>
-            !Object.keys(createdRecipes).includes(obj.id)
-          ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
+          let recipes, recipeIds;
+          if (activeTab.name === RECIPE_TAB || activeUser.id === displayUser.id) {
+            recipes = createdRecipes;
+            recipeIds = activeUser.createdRecipeIds;
+          } else {
+            recipes = displayUserDetail.createdRecipes;
+            recipeIds = displayUser.createdRecipeIds;
+          }
+          ids = recipeIds.filter(obj => !Object.keys(recipes).includes(obj.id))
+            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
           break;
         case LIKED_RECIPES:
           ids = displayUser.likedRecipeIds.filter(obj =>

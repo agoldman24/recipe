@@ -11,7 +11,7 @@ import {
   NETWORK_FAILED,
   SHOW_SNACKBAR
 } from '../actions';
-import { PROFILE_TAB, FOLLOWERS } from '../variables/Constants';
+import { PROFILE_TAB } from '../variables/Constants';
 
 function* signUp(action) {
   try {
@@ -31,8 +31,7 @@ function* signUp(action) {
         followers: {},
         following: {},
         createdRecipes: {},
-        likedRecipes: {},
-        activeDetail: FOLLOWERS
+        likedRecipes: {}
       })
       yield put({
         type: SET_ACTIVE_TAB,

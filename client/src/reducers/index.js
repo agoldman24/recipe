@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { b64toBlob } from '../utilities/imageConverter';
 import StateTree from '../store/stateTree';
 import {
-  GET_ALL_USERS,
+  INIT_HYDRATION,
   SIGN_UP_REQUESTED,
   SIGN_IN_REQUESTED,
   UPDATE_USER_REQUESTED,
@@ -27,7 +27,7 @@ import {
   SET_RECIPE_CATEGORY,
   TOGGLE_RECIPE_DETAILS,
   SET_ACTIVE_TAB,
-  HYDRATION_COMPLETE,
+  COMPLETE_HYDRATION,
   SIGN_IN_FAILED,
   SIGN_OUT,
   NETWORK_FAILED,
@@ -48,16 +48,18 @@ import {
 } from '../actions';
 import {
   PROFILE_TAB,
+  CREATED_RECIPE_IDS,
   CREATED_RECIPES,
   LIKED_RECIPES,
+  DISPLAY_USER,
   FOLLOWERS,
   PROFILE,
-  PUSH,
+  PUSH
 } from '../variables/Constants';
 
 const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
-    case GET_ALL_USERS:
+    case INIT_HYDRATION:
     case SIGN_UP_REQUESTED:
     case SIGN_IN_REQUESTED:
     case GET_USER_DETAIL_REQUESTED:
@@ -67,7 +69,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case LOAD_RECIPE_DETAILS_START:
     case GET_ICONS_REQUESTED:
       return true;
-    case POPULATE_USERS:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case APPEND_SAMPLE_RECIPES:
@@ -97,7 +98,7 @@ const isDrawerMenuVisible = (state = StateTree.isDrawerMenuVisible, action) => {
 
 const isHydrated = (state = StateTree.isHydrated, action) => {
   switch (action.type) {
-    case HYDRATION_COMPLETE:
+    case COMPLETE_HYDRATION:
       return true;
     default:
       return state;
@@ -228,18 +229,10 @@ const displayUser = (state = null, action) => {
       return action.user;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
-        case CREATED_RECIPES:
+        case CREATED_RECIPE_IDS:
           return {
             ...state,
-            createdRecipeIds: action.keep
-            ? [
-                ...state.createdRecipeIds,
-                {
-                  id: action.recipe.id,
-                  timestamp: Date.now()
-                }
-              ]
-            : state.createdRecipeIds.filter(obj => obj.id !== action.recipe.id)
+            createdRecipeIds: action.recipeIds
           }
         case LIKED_RECIPES:
           return {
@@ -288,12 +281,12 @@ const displayUserDetail = (state = null, action) => {
     case SET_DISPLAY_USER:
       return null;
     case SET_DISPLAY_USER_DETAIL:
-      localStorage.setItem("activeDetail", action.activeDetail);
       const {
-        profileImage, followers, following, createdRecipes, likedRecipes, activeDetail
+        profileImage, followers, following, createdRecipes, likedRecipes
       } = action;
       return {
-        profileImage, followers, following, createdRecipes, likedRecipes, activeDetail
+        profileImage, followers, following, createdRecipes, likedRecipes,
+        activeDetail: FOLLOWERS
       };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
@@ -310,37 +303,17 @@ const displayUserDetail = (state = null, action) => {
         }
       }
     case APPEND_CREATED_RECIPES:
-      return !state ? state : {
-        ...state,
-        createdRecipes: {
-          ...state.createdRecipes,
-          ...action.recipes
-        }
-      }
-    case ADD_CREATED_RECIPE:
-      return !state ? state : {
-        ...state,
-        createdRecipes: {
-          ...state.createdRecipes,
-          [action.recipe.id]: {
-            ...action.recipe,
-            timestamp: Date.now()
+      return !!state && action.appendTo === DISPLAY_USER
+      ? {
+          ...state,
+          createdRecipes: {
+            ...state.createdRecipes,
+            ...action.recipes
           }
         }
-      }
+      : state;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
-        case CREATED_RECIPES:
-          return {
-            ...state,
-            createdRecipes: action.keep
-              ? { ...state.createdRecipes, [action.recipe.id]: action.recipe }
-              : Object.keys(state.createdRecipes).filter(id => id !== action.recipe.id)
-                .reduce((accum, id) => {
-                  accum[id] = state.createdRecipes[id];
-                  return accum;
-                }, {})
-          }
         case LIKED_RECIPES:
           return {
             ...state,
@@ -377,7 +350,7 @@ const displayUserDetail = (state = null, action) => {
               : state.profileImage
           }
         default:
-          throw new Error('Invalid update type');
+          return state;
       }
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {
@@ -482,10 +455,12 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
         }
       }
     case APPEND_CREATED_RECIPES:
-      return {
-        ...state,
-        ...action.recipes
-      }
+      return action.appendTo === CREATED_RECIPES
+      ? {
+          ...state,
+          ...action.recipes
+        }
+      : state;
     case SIGN_OUT:
       return {};
     default:
@@ -520,34 +495,41 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
       return {
         ...state,
         samples: Object.keys(action.recipes).length < 9
-      };
+      }
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
         friends: Object.keys(action.recipes).length < 9
       }
     case APPEND_CREATED_RECIPES:
-      return {
-        ...state,
-        created: Object.keys(action.recipes).length < 9
-      }
+      return action.appendTo === CREATED_RECIPES
+      ? {
+          ...state,
+          created: Object.keys(action.recipes).length < 9
+        }
+      : {
+          ...state,
+          displayUserCreated: Object.keys(action.recipes).length < 9
+        }
     case APPEND_LIKED_RECIPES:
       return {
         ...state,
         liked: Object.keys(action.recipes).length < 9
-      };
+      }
     case SET_DISPLAY_USER_DETAIL:
       return {
         ...state,
-        created: Object.keys(action.createdRecipes).length < 9,
+        created: !action.activeUserIsDisplayUser
+          ? Object.keys(action.createdRecipes).length < 9
+          : state.created,
         liked: Object.keys(action.likedRecipes).length < 9
-      };
+      }
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {
         return {
           ...state,
           liked: false
-        };
+        }
       }
       return state;
     default:
@@ -569,7 +551,7 @@ const iconFetchMessage = (state = StateTree.iconFetchMessage, action) => {
     case GET_ICONS_FINISHED:
       return !!action.icons.length ? "" : "No icons found, try another search"
     default:
-      return "";
+      return state;
   }
 }
 

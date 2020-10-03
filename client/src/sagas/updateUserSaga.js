@@ -9,8 +9,7 @@ import {
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   SET_ACTIVE_DETAIL,
-  SET_RECIPE_CATEGORY,
-  ADD_CREATED_RECIPE
+  SET_RECIPE_CATEGORY
 } from '../actions';
 import {
   PROFILE,
@@ -63,26 +62,26 @@ function* updateUser(action) {
         });
         break;
       case CREATED_RECIPE_IDS:
+        const recipeIds = action.keep
+        ? [
+            ...activeUser.createdRecipeIds,
+            {
+              id: action.recipeId,
+              timestamp: Date.now()
+            }
+          ]
+        : activeUser.createdRecipeIds.filter(obj => obj.id !== action.recipeId)
         res = yield call(Api.post, '/updateCreatedRecipeIds', {
           id: action.id,
-          createdRecipeIds: action.keep
-          ? [
-              ...activeUser.createdRecipeIds,
-              {
-                id: action.recipeId,
-                timestamp: Date.now()
-              }
-            ]
-          : activeUser.createdRecipeIds.filter(obj => obj.id !== action.recipeId)
+          createdRecipeIds: recipeIds
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
         if (!!displayUser && activeUser.id === displayUser.id) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
-            updateType: CREATED_RECIPES,
-            recipe: displayUserDetail.createdRecipes[action.recipeId],
-            keep: action.keep,
+            updateType: CREATED_RECIPE_IDS,
+            recipeIds,
             user
           });
           yield put({ type: SET_ACTIVE_DETAIL, detail: CREATED_RECIPES });

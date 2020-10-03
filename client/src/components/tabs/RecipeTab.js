@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import RecipeList from '../recipes/RecipeList';
 import RecipeCategories from '../recipes/RecipeCategories';
 import { connect } from 'react-redux';
+import { isMobile } from 'react-device-detect';
 import {
   SET_RECIPE_CATEGORY,
   GET_RECIPES_REQUESTED,
@@ -15,7 +16,11 @@ const RecipeTab = props => {
     window.scrollTo(0, 0);
     fetchRecipes();
   }, []);
-  useEffect(() => fetchRecipes(), [props.category]);
+  useEffect(() => {
+    const id = isMobile ? 'root' : 'container';
+    document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
+    fetchRecipes();
+  }, [props.category]);
   
   const fetchRecipes = () => {
     let recipes, requestType;

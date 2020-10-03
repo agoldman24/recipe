@@ -411,6 +411,8 @@ const recipeCategory = (state = StateTree.recipeCategory, action) => {
   switch (action.type) {
     case SET_RECIPE_CATEGORY:
       return action.category;
+    case SIGN_OUT:
+      return StateTree.recipeCategory;
     default:
       return state;
   }

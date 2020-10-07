@@ -37,6 +37,7 @@ router.post("/updateFollowingIds", userRoutes.updateFollowingIds);
 
 router.get("/getSamples", recipeRoutes.getSamples);
 router.get("/getRecipesByIds", recipeRoutes.getRecipesByIds);
+router.get("/getRecipeDetail", recipeRoutes.getRecipeDetail);
 router.post("/createRecipe", recipeRoutes.createRecipe);
 
 router.get("/getImageById", imageRoutes.getImageById);

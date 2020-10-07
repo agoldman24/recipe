@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
@@ -8,27 +8,21 @@ import Fab from '@material-ui/core/Fab';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { LOAD_RECIPE_DETAILS_START, TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
+import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
 import '../../index.css';
 
-const useStyles = makeStyles(() => ({
+const styles = () => ({
   root: {
     marginTop: '-10px'
   }
-}));
+});
 
 const RecipeCard = props => {
-  const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
-  const openRecipeDetails = event => {
-    props.loadRecipeDetailsStart();
-    setTimeout(() => props.toggleDetailView(props.id), 1);
-    document.getElementById('root').style.overflowY = 'hidden';
-  }
   return (
-    <Card style={undetailedStyle}>
+    <Card style={undetailedStyle} onClick={() => props.toggleDetailView(props.id)}>
       <CardHeader
         title={
           <Typography
@@ -42,9 +36,8 @@ const RecipeCard = props => {
         }
         style={headerStyle}
         className="cardHeader"
-        onClick={openRecipeDetails}
       />
-      <div className="cardMedia" onClick={openRecipeDetails}>
+      <div className="cardMedia" id={props.id}>
         <div style={{...whiteFadeBackgroundStyle, backgroundImage:'none'}}>
           <CircularProgress style={{
             display: isLoading ? 'block' : 'none',
@@ -54,9 +47,7 @@ const RecipeCard = props => {
             height: 'auto'
           }}/>
           <img alt="icon" width="100%" src={props.image}
-            onLoad={() => {
-              setIsLoading(false);
-            }}
+            onLoad={() => setIsLoading(false)}
             style={{
               display: isLoading ? 'none' : 'block'
             }}
@@ -77,7 +68,7 @@ const RecipeCard = props => {
                   props.updateLikedRecipes(props.activeUser.id, props.id, false)
                 }}
                 style={{...fabStyle, float:'left'}}
-                classes={{ root: classes.root }}
+                classes={{ root: props.classes.root }}
               >
                 <FavoriteIcon style={iconStyle}/>
               </Fab>
@@ -87,7 +78,7 @@ const RecipeCard = props => {
                   props.updateLikedRecipes(props.activeUser.id, props.id, true)
                 }}
                 style={{...fabStyle, float:'left'}}
-                classes={{ root: classes.root }}
+                classes={{ root: props.classes.root }}
               >
                 <FavoriteBorderIcon style={iconStyle}/>
               </Fab>
@@ -118,7 +109,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loadRecipeDetailsStart: () => dispatch({ type: LOAD_RECIPE_DETAILS_START }),
     toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id }),
     updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
@@ -131,4 +121,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RecipeCard);
+)(withStyles(styles)(RecipeCard));

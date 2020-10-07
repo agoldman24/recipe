@@ -6,8 +6,7 @@ import {
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
-  NETWORK_FAILED,
-  CLEAR_ERROR_MESSAGES
+  NETWORK_FAILED
 } from '../actions';
 import {
   SAMPLE_RECIPES,
@@ -24,7 +23,6 @@ const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
 
 function* getRecipes(action) {
-  yield put({ type: CLEAR_ERROR_MESSAGES });
   try {
     let res;
     switch (action.requestType) {

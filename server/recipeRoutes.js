@@ -2,14 +2,10 @@ const Recipe = require('./recipe');
 const db = require('./database');
 const ObjectID = require('mongodb').ObjectID;
 
-const getDerivedRecipe = recipe => {
-  const {
-    _id, name, image, ingredients, directions,
-    authorName, authorId
-  } = recipe;
+const getRecipeSummary = recipe => {
+  const { _id, name, image, authorName, authorId } = recipe;
   return {
-    id: _id, name, image, ingredients, directions,
-    authorName, authorId
+    id: _id, name, image, authorName, authorId
   }
 }
 
@@ -24,7 +20,7 @@ exports.createRecipe = (req, res) => {
   });
   recipe.save(err => {
     if (err) return res.json({ success: false, error: err });
-    return res.json({ success: true, recipe: getDerivedRecipe(recipe) });
+    return res.json({ success: true, recipe: getRecipeSummary(recipe) });
   });
 }
 
@@ -41,7 +37,7 @@ exports.getSamples = (req, res) => {
         .sort(() => 0.5 - Math.random())
         .slice(0, 9)
         .reduce((accum, recipe) => {
-          accum[recipe._id] = getDerivedRecipe(recipe);
+          accum[recipe._id] = getRecipeSummary(recipe);
           return accum;
         }, {})
     })
@@ -71,11 +67,23 @@ exports.getRecipesByIds = (req, res) => {
       success: true,
       recipes: recipes.reduce((accum, recipe) => {
         accum[recipe._id] = {
-          ...getDerivedRecipe(recipe),
+          ...getRecipeSummary(recipe),
           timestamp: parseInt(idTimeMap[recipe._id])
         };
         return accum;
       }, {})
+    })
+  })
+}
+
+exports.getRecipeDetail = (req, res) => {
+  db.collection("recipes").findOne({
+    _id: ObjectID(req.query.id)
+  }).then(recipe => {
+    return res.json({
+      success: true,
+      ingredients: recipe.ingredients,
+      directions: recipe.directions
     })
   })
 }

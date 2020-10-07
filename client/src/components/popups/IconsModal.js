@@ -73,9 +73,6 @@ const IconsModal = props => {
         }}
         closeAfterTransition
         BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
       >
         <Fade in={isVisible}>
           <Grid container direction="column" className={classes.paper}

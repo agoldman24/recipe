@@ -53,20 +53,22 @@ export default Object.assign({},
   },
   profileEditor: null,
   recipeCategory: "Anonymous",
+  recipeCreateMode: false,
+  recipeEditMode: false,
   sampleRecipes: {},
   friendRecipes: {},
   createdRecipes: {},
   detailRecipe: {
     id: null,
-    editMode: false,
-    createMode: false
+    ingredients: null,
+    directions: null
   },
   allRecipesFetched: {
     samples: false,
     friends: false,
     created: false,
-    displayUserCreated: false,
-    liked: false
+    liked: false,
+    displayUserCreated: false
   },
   icons: [],
   iconFetchMessage: ""

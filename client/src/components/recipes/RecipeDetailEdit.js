@@ -11,8 +11,8 @@ import {
   CREATE_RECIPE_REQUESTED
 } from '../../actions';
 import {
-  darkBackgroundStyle, detailStyle, containerStyle,
-  buttonStyle, deleteButtonStyle, saveButtonStyle, cancelButtonStyle
+  detailStyle, containerStyle, buttonStyle,
+  deleteButtonStyle, saveButtonStyle, cancelButtonStyle
 } from '../../styles';
 
 const fixedContainerStyle = {
@@ -59,121 +59,118 @@ const RecipeDetailEdit = props => {
   const [directionSteps, setDirectionSteps] = useState(
     directionsType === "string" ? [] : props.directions);
   return (
-    <div style={darkBackgroundStyle}>
-      <Card style={detailStyle}>
-        <Grid
-          container
-          direction="column"
-          style={fixedContainerStyle}
-        >
-          <Grid item style={{
-            height: '45px',
-            width:'inherit'
+    <Card style={detailStyle}>
+      <Grid
+        container
+        direction="column"
+        style={fixedContainerStyle}
+      >
+        <Grid item style={{
+          height: '45px',
+          width:'inherit'
+        }}>
+          <div style={{
+            display: 'flex',
+            position: 'fixed',
+            zIndex: '99',
+            paddingLeft: '2px'
           }}>
-            <div style={{
-              display: 'flex',
-              position: 'fixed',
-              zIndex: '99',
-              paddingLeft: '2px'
-            }}>
-              {props.isEditMode
-              ? <div>
-                  <Button style={fixedDeleteButtonStyle}>
-                    Delete
-                  </Button>
-                  <Button
-                    startIcon={<SaveIcon/>}
-                    style={{
-                      ...fixedSaveButtonStyle,
-                      opacity: !isSaveEnabled ? '0.3' : '1.0'
-                    }}
-                    disabled={!isSaveEnabled}
-                    onClick={() => {
-                      setIsErrored(isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty);
-                    }}
-                  >
-                    Save
-                  </Button>
-                </div>
-              : <Button
-                  style={fixedSaveButtonStyle}
+            {props.isEditMode
+            ? <div>
+                <Button style={fixedDeleteButtonStyle}>
+                  Delete
+                </Button>
+                <Button
+                  startIcon={<SaveIcon/>}
+                  style={{
+                    ...fixedSaveButtonStyle,
+                    opacity: !isSaveEnabled ? '0.3' : '1.0'
+                  }}
+                  disabled={!isSaveEnabled}
                   onClick={() => {
-                    const empty = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
-                    if (empty) {
-                      setIsErrored(true);
-                    } else if (!props.isSpinnerVisible) {
-                      const directions = directionsType === "string"
-                        ? directionsParagraph
-                        : directionSteps;
-                      props.createRecipe(name, image, ingredients, directions);
-                    }
+                    setIsErrored(isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty);
                   }}
                 >
-                  Submit
+                  Save
                 </Button>
-              }
-              <Button
-                style={fixedCancelButtonStyle}
+              </div>
+            : <Button
+                style={fixedSaveButtonStyle}
                 onClick={() => {
-                  if (props.isEditMode) {
-                    props.toggleEditMode();
-                  } else {
-                    props.toggleCreateMode();
+                  const empty = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
+                  if (empty) {
+                    setIsErrored(true);
+                  } else if (!props.isSpinnerVisible) {
+                    const directions = directionsType === "string"
+                      ? directionsParagraph
+                      : directionSteps;
+                    props.createRecipe(name, image, ingredients, directions);
                   }
                 }}
               >
-                Cancel
+                Submit
               </Button>
-            </div>
-            <div style={{
-              zIndex: '98',
-              width: 'inherit',
-              height: '50px',
-              position: 'fixed',
-              background: '#292929',
-              borderBottom: '1px solid #a3a3a3'
-            }}/>
-          </Grid>
+            }
+            <Button
+              style={fixedCancelButtonStyle}
+              onClick={() => {
+                if (props.isEditMode) {
+                  props.toggleEditMode();
+                } else {
+                  props.toggleCreateMode();
+                }
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+          <div style={{
+            zIndex: '98',
+            width: 'inherit',
+            height: '50px',
+            position: 'fixed',
+            background: '#292929',
+            borderBottom: '1px solid #a3a3a3'
+          }}/>
         </Grid>
-        <RecipeForms
-          id={props.id}
-          originalName={props.name}
-          originalImage={props.image}
-          originalIngredients={props.ingredients}
-          originalDirections={props.directions}
-          isEditMode={props.isEditMode}
-          setIsSaveEnabled={setIsSaveEnabled}
-          isErrored={isErrored}
-          isNameEmpty={isNameEmpty}
-          isImageEmpty={isImageEmpty}
-          isIngredientsEmpty={isIngredientsEmpty}
-          isDirectionsEmpty={isDirectionsEmpty}
-          setIsNameEmpty={setIsNameEmpty}
-          setIsImageEmpty={setIsImageEmpty}
-          setIsIngredientsEmpty={setIsIngredientsEmpty}
-          setIsDirectionsEmpty={setIsDirectionsEmpty}
-          name={name}
-          image={image}
-          ingredients={ingredients}
-          directionsType={directionsType}
-          directionsParagraph={directionsParagraph}
-          directionSteps={directionSteps}
-          setName={setName}
-          setImage={setImage}
-          setIngredients={setIngredients}
-          setDirectionsType={setDirectionsType}
-          setDirectionsParagraph={setDirectionsParagraph}
-          setDirectionSteps={setDirectionSteps}
-        />
-      </Card>
-    </div>
+      </Grid>
+      <RecipeForms
+        originalName={props.name}
+        originalImage={props.image}
+        originalIngredients={props.ingredients}
+        originalDirections={props.directions}
+        isEditMode={props.isEditMode}
+        setIsSaveEnabled={setIsSaveEnabled}
+        isErrored={isErrored}
+        isNameEmpty={isNameEmpty}
+        isImageEmpty={isImageEmpty}
+        isIngredientsEmpty={isIngredientsEmpty}
+        isDirectionsEmpty={isDirectionsEmpty}
+        setIsNameEmpty={setIsNameEmpty}
+        setIsImageEmpty={setIsImageEmpty}
+        setIsIngredientsEmpty={setIsIngredientsEmpty}
+        setIsDirectionsEmpty={setIsDirectionsEmpty}
+        name={name}
+        image={image}
+        ingredients={ingredients}
+        directionsType={directionsType}
+        directionsParagraph={directionsParagraph}
+        directionSteps={directionSteps}
+        setName={setName}
+        setImage={setImage}
+        setIngredients={setIngredients}
+        setDirectionsType={setDirectionsType}
+        setDirectionsParagraph={setDirectionsParagraph}
+        setDirectionSteps={setDirectionSteps}
+      />
+    </Card>
   );
 };
 
 const mapStateToProps = state => {
   return {
-    isEditMode: state.detailRecipe.editMode,
-    isCreateMode: state.detailRecipe.createMode,
+    isEditMode: state.recipeEditMode,
+    isCreateMode: state.recipeCreateMode,
     isSpinnerVisible: state.isSpinnerVisible
   };
 };

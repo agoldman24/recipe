@@ -13,9 +13,9 @@ body {
 }
 
 .cardMedia {
-  height: 0;
   padding-top: 100%;
   position: relative;
+  background: #424242;
 }
 
 .fileContainer {

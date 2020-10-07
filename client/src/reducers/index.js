@@ -19,6 +19,7 @@ import {
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
+  GET_RECIPE_DETAIL_SUCCEEDED,
   CREATE_RECIPE_REQUESTED,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
@@ -39,8 +40,6 @@ import {
   TOGGLE_DRAWER_MENU,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
-  LOAD_RECIPE_DETAILS_START,
-  LOAD_RECIPE_DETAILS_FINISHED,
   TOGGLE_RECIPE_EDIT_MODE,
   TOGGLE_RECIPE_CREATE_MODE,
   GET_ICONS_REQUESTED,
@@ -66,7 +65,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case UPDATE_USER_REQUESTED:
     case GET_RECIPES_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
-    case LOAD_RECIPE_DETAILS_START:
     case GET_ICONS_REQUESTED:
       return true;
     case COMPLETE_HYDRATION:
@@ -80,7 +78,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
-    case LOAD_RECIPE_DETAILS_FINISHED:
     case GET_ICONS_FINISHED:
       return false;
     default:
@@ -419,6 +416,24 @@ const recipeCategory = (state = StateTree.recipeCategory, action) => {
   }
 }
 
+const recipeCreateMode = (state = StateTree.recipeCreateMode, action) => {
+  switch (action.type) {
+    case TOGGLE_RECIPE_CREATE_MODE:
+      return !state;
+    default:
+      return state;
+  }
+}
+
+const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
+  switch (action.type) {
+    case TOGGLE_RECIPE_EDIT_MODE:
+      return !state;
+    default:
+      return state;
+  }
+}
+
 const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
@@ -477,15 +492,11 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
       return !!action.id
         ? { ...state, id: action.id }
         : StateTree.detailRecipe
-    case TOGGLE_RECIPE_EDIT_MODE:
+    case GET_RECIPE_DETAIL_SUCCEEDED:
       return {
         ...state,
-        editMode: !state.editMode
-      }
-    case TOGGLE_RECIPE_CREATE_MODE:
-      return {
-        ...state,
-        createMode: !state.createMode
+        ingredients: action.ingredients,
+        directions: action.directions
       }
     default:
       return state;
@@ -573,6 +584,8 @@ export default combineReducers({
   displayUser,
   displayUserDetail,
   recipeCategory,
+  recipeCreateMode,
+  recipeEditMode,
   sampleRecipes,
   friendRecipes,
   createdRecipes,

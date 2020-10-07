@@ -2,8 +2,6 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import RecipeCard from './RecipeCard';
-import RecipeDetail from './RecipeDetail';
-import RecipeDetailEdit from './RecipeDetailEdit';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../../actions';
@@ -20,29 +18,11 @@ const RecipeList = props => {
         direction={isMobile ? "column" : "row"}
         justify="center"
       >
-        {props.recipes.map(recipe => {
+        {Object.values(props.recipes).sort((r1, r2) => r2.timestamp - r1.timestamp).map(recipe => {
           return (
             <Grid item key={recipe.id}
               style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
             >
-              {props.isDetailVisible && props.detailRecipeId === recipe.id
-                ? props.editMode
-                  ? <RecipeDetailEdit
-                      id={recipe.id}
-                      name={recipe.name}
-                      image={recipe.image}
-                      ingredients={recipe.ingredients}
-                      directions={recipe.directions}
-                    />
-                  : <RecipeDetail
-                      id={recipe.id}
-                      name={recipe.name}
-                      image={recipe.image}
-                      ingredients={recipe.ingredients}
-                      directions={recipe.directions}
-                    />
-                : null
-              }
               <RecipeCard
                 id={recipe.id}
                 name={recipe.name}
@@ -85,7 +65,7 @@ const mapStateToProps = state => {
     networkFailed: state.errorMessages.networkFailed,
     isDetailVisible: !!state.detailRecipe.id,
     detailRecipeId: state.detailRecipe.id,
-    editMode: state.detailRecipe.editMode,
+    editMode: state.recipeEditMode,
     activeTab: state.activeTab,
     recipeCategory: state.recipeCategory,
     friendRecipes: state.friendRecipes,

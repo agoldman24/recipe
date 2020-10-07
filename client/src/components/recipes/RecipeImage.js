@@ -38,9 +38,8 @@ export default function RecipeImage({
   originalImage,
   isImageEmpty,
   isErrored,
-  image, setImage,
+  image,
   setFocus,
-  setGlobalDiff,
   anchorEl, setAnchorEl,
   setIconsModalVisible,
   onImageChange
@@ -131,7 +130,10 @@ export default function RecipeImage({
                     <FileBase type="file" onDone={onImageChange}/>
                   </label>
                 </Button>
-                <Button style={roundedButtonStyle} onClick={() => setIconsModalVisible(true)}>
+                <Button style={roundedButtonStyle} onClick={() => {
+                  setIconsModalVisible(true);
+                  setAnchorEl(null);
+                }}>
                   Choose Icon
                 </Button>
               </div>

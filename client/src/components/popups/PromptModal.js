@@ -45,9 +45,6 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
         }}
         closeAfterTransition
         BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
       >
         <Fade in={isVisible}>
           <Grid container direction="column" className={classes.paper}>

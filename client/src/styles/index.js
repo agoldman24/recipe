@@ -281,7 +281,7 @@ export const darkBackgroundStyle = {
 
 export const whiteFadeBackgroundStyle = {
   position: 'absolute', top: '0', left: '0',
-  width: '100%', height: '30%', verticalAlign: 'text-top',
+  width: '100%', verticalAlign: 'text-top',
   backgroundImage: 'linear-gradient(white, rgba(0,0,0,0))',
   color: 'black', fontWeight: 'bold'
 }
@@ -292,7 +292,7 @@ export const detailStyle = {
   left: isMobile ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
-  overflowY: 'auto',
+  overflowY: 'scroll',
   zIndex: '5',
   top: '0'
 };
@@ -301,7 +301,8 @@ export const undetailedStyle = {
   borderRadius: '0',
   background: '#202020',
   boxShadow: 'none',
-  width: isMobile ? '100vw' : '30vw'
+  width: isMobile ? '100vw' : '30vw',
+  maxHeight:'100vh', overflow:'auto'
 };
 
 export const headerStyle = {
@@ -317,9 +318,8 @@ export const titleStyle = {
 }
 
 export const sectionStyle = {
-  marginLeft: '5%',
-  width: '90%',
-  fontSize: '16px',
+  margin: '0 15px',
+  fontSize: '14px',
   paddingBottom: '50%',
   lineHeight: '2'
 }

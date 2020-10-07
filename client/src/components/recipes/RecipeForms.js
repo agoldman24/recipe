@@ -243,6 +243,7 @@ const RecipeForms = ({
               onClick={e => {
                 e.stopPropagation();
                 setIconsModalVisible(true);
+                setAnchorEl(null);
               }}
             >
               Choose icon

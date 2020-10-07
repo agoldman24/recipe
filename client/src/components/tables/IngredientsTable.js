@@ -8,8 +8,8 @@ const columns = [
 ].map(column => {
   return {
     ...column,
-    headerStyle: { color: '#ffaa16' , fontSize: 16, padding: '10px 5px' },
-    cellStyle: { padding: '5px' }
+    headerStyle: { color: '#ffaa16' , fontSize: 14, padding: '10px 5px' },
+    cellStyle: { padding: '5px', fontSize: 14 }
   }
 });
 
@@ -32,7 +32,7 @@ const IngredientsTable = ({ ingredients }) => {
       }}
       style={{
         width: '100%',
-        padding: '0 20px'
+        padding: '0 10px'
       }}
     />
   );

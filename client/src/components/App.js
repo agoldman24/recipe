@@ -13,7 +13,7 @@ import AboutTab from './tabs/AboutTab';
 import RecipeTab from './tabs/RecipeTab';
 import SearchTab from './tabs/SearchTab';
 import ProfileTab from './tabs/ProfileTab';
-import RecipeDetailEdit from './recipes/RecipeDetailEdit';
+import RecipeDetail from './recipes/RecipeDetail';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
 import {
@@ -57,7 +57,7 @@ class App extends React.Component {
         : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '0 0 10px 0'
           : activeTab === ABOUT_TAB ? '20px 0 5px 0' : '50px 0 10px',
-      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+      overflowY: 'auto'
     };
     const desktopStyle = {
       position: 'relative',
@@ -70,8 +70,9 @@ class App extends React.Component {
           : '50px',
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 110px)'
-        : 'calc(100vh - 50px)',
-      overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+        : '100vh',
+      // overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
+      overflowY: 'auto'
     };
     return (
       <ThemeProvider theme={
@@ -83,15 +84,7 @@ class App extends React.Component {
         {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
           <ScrollButton isLoggedIn={this.props.isLoggedIn}/>
         }
-        {this.props.recipeCreateMode &&
-          <RecipeDetailEdit
-            id={""}
-            name={""}
-            image={""}
-            ingredients={[]}
-            directions={[]}
-          />
-        }
+        {(this.props.isDetailVisible || this.props.recipeCreateMode) && <RecipeDetail />}
         <Container
           id="container"
           component="main"
@@ -119,7 +112,7 @@ const mapStateToProps = state => {
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
     isDetailVisible: !!state.detailRecipe.id,
-    recipeCreateMode: state.detailRecipe.createMode,
+    recipeCreateMode: state.recipeCreateMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
     users: state.users,

@@ -53,16 +53,10 @@ export default Object.assign({},
   },
   profileEditor: null,
   recipeCategory: "Anonymous",
-  recipeCreateMode: false,
   recipeEditMode: false,
   sampleRecipes: {},
   friendRecipes: {},
   createdRecipes: {},
-  detailRecipe: {
-    id: null,
-    ingredients: null,
-    directions: null
-  },
   allRecipesFetched: {
     samples: false,
     friends: false,

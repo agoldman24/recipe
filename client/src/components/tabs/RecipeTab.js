@@ -3,11 +3,7 @@ import RecipeList from '../recipes/RecipeList';
 import RecipeCategories from '../recipes/RecipeCategories';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import {
-  SET_RECIPE_CATEGORY,
-  GET_RECIPES_REQUESTED,
-  TOGGLE_RECIPE_CREATE_MODE
-} from '../../actions';
+import { SET_RECIPE_CATEGORY, GET_RECIPES_REQUESTED } from '../../actions';
 import { SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
 
@@ -23,26 +19,9 @@ const RecipeTab = props => {
   }, [props.category]);
   
   const fetchRecipes = () => {
-    let recipes, requestType;
-    switch (props.category) {
-      case "Anonymous":
-        recipes = props.sampleRecipes;
-        requestType = SAMPLE_RECIPES;
-        break;
-      case "By Friends":
-        recipes = props.friendRecipes;
-        requestType = FRIEND_RECIPES;
-        break;
-      case "By Me":
-        recipes = props.createdRecipes;
-        requestType = CREATED_RECIPES;
-        break;
-      default:
-        break;
-    }
-    if (!recipes.length) {
+    if (!Object.keys(props.recipes).length) {
       props.getRecipes(
-        requestType,
+        props.requestType,
         props.users,
         props.activeUser,
         props.friendRecipes,
@@ -50,26 +29,13 @@ const RecipeTab = props => {
       );
     }
   }
-  let recipes;
-  switch (props.category) {
-    case "Anonymous":
-      recipes = props.sampleRecipes;
-      break;
-    case "By Friends":
-      recipes = props.friendRecipes;
-      break;
-    case "By Me":
-      recipes = props.createdRecipes;
-      break;
-    default:
-      break;
-  }
+
   return (
     <div>
       {props.networkFailed
       ? <div style={errorStyle}>Network error</div>
       : <div>
-          <RecipeList recipes={recipes}/>
+          <RecipeList recipes={props.recipes}/>
           {props.isLoggedIn &&
             <RecipeCategories
               category={props.category}
@@ -88,11 +54,18 @@ const mapStateToProps = state => {
     isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
-    sampleRecipes: state.sampleRecipes,
     friendRecipes: state.friendRecipes,
     createdRecipes: state.createdRecipes,
-    isDetailVisible: !!state.detailRecipe.id,
-    detailRecipeId: state.detailRecipe.id,
+    recipes: state.recipeCategory === "Anonymous"
+      ? state.sampleRecipes
+      : state.recipeCategory === "By Friends"
+        ? state.friendRecipes
+        : state.createdRecipes,
+    requestType: state.recipeCategory === "Anonymous"
+      ? SAMPLE_RECIPES
+      : state.recipeCategory === "By Friends"
+        ? FRIEND_RECIPES
+        : CREATED_RECIPES,
     users: state.users,
     activeUser: state.activeUser
   };
@@ -117,8 +90,7 @@ const mapDispatchToProps = dispatch => {
           : activeUser.createdRecipeIds.filter(obj =>
               !Object.keys(createdRecipes).includes(obj.id)
             ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-    }),
-    toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE })
+    })
   };
 };
 

@@ -1,7 +1,10 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import Slide from '@material-ui/core/Slide';
+import Dialog from '@material-ui/core/Dialog';
 import RecipeCard from './RecipeCard';
+import RecipeDetail from './RecipeDetail';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { GET_RECIPES_REQUESTED } from '../../actions';
@@ -10,15 +13,41 @@ import {
   CREATED_RECIPES, LIKED_RECIPES
 } from "../../variables/Constants";
 
-const RecipeList = props => {
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+});
+
+class RecipeList extends React.Component {
+  state = {
+    isDetailOpen: false,
+    detailRecipeId: null
+  }
+  render() {
   return (
     <div style={{paddingBottom:'100px'}} id="recipes">
+      <Dialog
+        disableBackdropClick
+        open={this.state.isDetailOpen}
+        TransitionComponent={Transition}
+      >
+        {this.state.detailRecipeId &&
+        <RecipeDetail
+          id={this.state.detailRecipeId}
+          name={this.props.recipes[this.state.detailRecipeId].name}
+          image={this.props.recipes[this.state.detailRecipeId].image}
+          onClose={() => {
+            this.setState({ isDetailOpen: false });
+            setTimeout(() => this.setState({ detailRecipeId: null }), 1);
+          }}
+        />
+        }
+      </Dialog>
       <Grid
         container
         direction={isMobile ? "column" : "row"}
         justify="center"
       >
-        {Object.values(props.recipes).sort((r1, r2) => r2.timestamp - r1.timestamp).map(recipe => {
+        {Object.values(this.props.recipes).sort((r1, r2) => r2.timestamp - r1.timestamp).map(recipe => {
           return (
             <Grid item key={recipe.id}
               style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
@@ -27,28 +56,32 @@ const RecipeList = props => {
                 id={recipe.id}
                 name={recipe.name}
                 image={recipe.image}
+                onClick={() => {
+                  this.setState({ isDetailOpen: true });
+                  this.setState({ detailRecipeId: recipe.id });
+                }}
               />
             </Grid>
           );
         })
         }
       </Grid>
-      {!props.allRecipesFetched &&
+      {!this.props.allRecipesFetched &&
         <div style={{width:'100%', textAlign:'center', paddingTop:'20px'}}>
           <Link
             href="#"
             style={{fontSize:'16px'}}
             onClick={e => {
               e.preventDefault();
-              props.getRecipes(
-                props.activeTab,
-                props.recipeCategory,
-                props.friendRecipes,
-                props.createdRecipes,
-                props.users,
-                props.activeUser,
-                props.displayUser,
-                props.displayUserDetail
+              this.props.getRecipes(
+                this.props.activeTab,
+                this.props.recipeCategory,
+                this.props.friendRecipes,
+                this.props.createdRecipes,
+                this.props.users,
+                this.props.activeUser,
+                this.props.displayUser,
+                this.props.displayUserDetail
               );
             }}
           >
@@ -58,13 +91,12 @@ const RecipeList = props => {
       }
     </div>
   );
+  }
 }
 
 const mapStateToProps = state => {
   return {
     networkFailed: state.errorMessages.networkFailed,
-    isDetailVisible: !!state.detailRecipe.id,
-    detailRecipeId: state.detailRecipe.id,
     editMode: state.recipeEditMode,
     activeTab: state.activeTab,
     recipeCategory: state.recipeCategory,

@@ -5,7 +5,6 @@ import {
   UPDATE_USER_REQUESTED,
   APPEND_CREATED_RECIPES,
   ADD_CREATED_RECIPE,
-  TOGGLE_RECIPE_CREATE_MODE,
   NETWORK_FAILED
 } from '../actions';
 import { CREATED_RECIPES, CREATED_RECIPE_IDS } from '../variables/Constants';
@@ -35,7 +34,6 @@ function* createRecipe(action) {
       });
     }
     yield put({ type: ADD_CREATED_RECIPE, recipe });
-    yield put({ type: TOGGLE_RECIPE_CREATE_MODE });
     yield put({
       type: UPDATE_USER_REQUESTED,
       updateType: CREATED_RECIPE_IDS,

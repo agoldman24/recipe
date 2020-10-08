@@ -8,7 +8,7 @@ import Fab from '@material-ui/core/Fab';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { TOGGLE_RECIPE_DETAILS, UPDATE_USER_REQUESTED } from '../../actions';
+import { UPDATE_USER_REQUESTED } from '../../actions';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
 import { fabStyle, iconStyle, headerStyle, undetailedStyle, whiteFadeBackgroundStyle } from '../../styles';
 import '../../index.css';
@@ -22,13 +22,14 @@ const styles = () => ({
 const RecipeCard = props => {
   const [isLoading, setIsLoading] = useState(true);
   return (
-    <Card style={undetailedStyle} onClick={() => props.toggleDetailView(props.id)}>
+    <Card style={undetailedStyle} onClick={props.onClick}>
       <CardHeader
         title={
           <Typography
             variant="h4"
             style={{
-              fontWeight:'bold', fontFamily:'Shadows Into Light'
+              fontWeight: 'bold',
+              fontFamily: 'Shadows Into Light'
             }}
           >
             {props.name}
@@ -86,11 +87,11 @@ const RecipeCard = props => {
           </div>
         </div>
         <div style={{
-          position:'absolute',
-          bottom:'0',
-          width:'100%',
-          height:'50px',
-          backgroundImage:'linear-gradient(rgba(0,0,0,0), #202020)',
+          position: 'absolute',
+          bottom: '0',
+          width: '100%',
+          height: '50px',
+          backgroundImage: 'linear-gradient(rgba(0,0,0,0), #202020)',
         }}/>
       </div>
     </Card>
@@ -109,7 +110,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleDetailView: id => dispatch({ type: TOGGLE_RECIPE_DETAILS, id }),
     updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: LIKED_RECIPE_IDS,

@@ -57,7 +57,7 @@ const NavigationMenu = props => {
         >
           <Tab style={tabStyle} label="Users" value={SEARCH_TAB}/>
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
-          <DrawerMenu />
+          <DrawerMenu toggleCreateMode={props.toggleCreateMode}/>
         </Tabs>
       : props.activeTab.name !== WELCOME_TAB
         ? <Fab

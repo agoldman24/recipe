@@ -18,8 +18,7 @@ import {
   SET_ACTIVE_TAB,
   SHOW_SNACKBAR,
   GET_USER_DETAIL_REQUESTED,
-  TOGGLE_DRAWER_MENU,
-  TOGGLE_RECIPE_CREATE_MODE
+  TOGGLE_DRAWER_MENU
 } from '../../actions';
 import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../../variables/Constants';
 
@@ -157,7 +156,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     toggleDrawerMenu: () => dispatch({ type: TOGGLE_DRAWER_MENU }),
-    toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE }),
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({

@@ -61,104 +61,102 @@ const IconsModal = props => {
     setIcons(props.icons.map(icon => ({ url: icon, isLoading: true })));
   }, [props.icons]);
   return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={isVisible}
-        onClose={e => {
-          e.stopPropagation();
-          closeModal();
-        }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-      >
-        <Fade in={isVisible}>
-          <Grid container direction="column" className={classes.paper}
-            style={{paddingBottom:'5px', paddingRight:'5px'}}
-          >
-            <Grid item style={{height:'55px', width:'97.5%'}}>
-              <div className={classes.searchIcon}>
-                <SearchIcon />
-              </div>
-              <InputBase
-                placeholder="Search icons..."
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                onKeyPress={event => {
-                  if (!!searchVal.length && event.charCode === 13) {
-                    document.getElementById('search').click();
-                  }
-                }}
-                autoFocus
-                inputProps={{'aria-label':'search'}}
-                onClick={e => e.stopPropagation()}
-                onChange={e => setSearchVal(e.target.value.toLowerCase())}
-              />
-              <Button id="search"
-                className={classes.button}
-                disabled={!searchVal.length}
-                onClick={e => {
-                  e.stopPropagation();
-                  props.getIcons(searchVal)
-                }}
-              >
-                Search
-              </Button>
-            </Grid>
-            {!!icons.length &&
-            [0,1,2,3,4].map(row =>
-              <Grid container direction="column" key={"row_" + row}>
-                <Grid container direction="row">
-                  {[0,1,2,3].map(column => !!icons[4*row + column] &&
-                  <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
-                    style={{
-                      width: isMobile ? '68px' : '90px',
-                      padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
-                      borderRadius: '10px'
-                    }}
-                    onClick={e => {
-                      e.stopPropagation();
-                      onConfirm(icons[4*row + column].url);
-                      closeModal();
-                    }}
-                  >
-                    <CircularProgress size={isMobile ? 45 : 65} style={{
-                      display: icons[4*row + column].isLoading ? 'block' : 'none'
-                    }}/>
-                    <img alt="icon" src={icons[4*row + column].url}
-                      onLoad={() => {
-                        let currentIcons = [...icons];
-                        currentIcons[4*row + column].isLoading = false;
-                        setIcons(currentIcons);
-                      }}
-                      height={isMobile ? "46px" : "65px"} style={{
-                        display: icons[4*row + column].isLoading ? 'none' : 'block',
-                        maxWidth: isMobile ? '65px' : '85px'
-                    }}/>
-                  </Grid>
-                  )}
-                </Grid>
-              </Grid>
-            )}
-            <Grid item>
-              <p style={{fontSize:'14px', paddingLeft:'5px'}}>{iconFetchMessage}</p>
-            </Grid>
-            <Grid item style={{width:'100%'}}>
-              <Button style={{float:'right'}}
-                onClick={e => {
-                  e.stopPropagation();
-                  closeModal();
-                }}
-              >Close</Button>
-            </Grid>
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={isVisible}
+      onClose={e => {
+        e.stopPropagation();
+        closeModal();
+      }}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+    >
+      <Fade in={isVisible}>
+        <Grid container direction="column" className={classes.paper}
+          style={{paddingBottom:'5px', paddingRight:'5px'}}
+        >
+          <Grid item style={{height:'55px', width:'97.5%'}}>
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search icons..."
+              classes={{
+                root: classes.inputRoot,
+                input: classes.inputInput,
+              }}
+              onKeyPress={event => {
+                if (!!searchVal.length && event.charCode === 13) {
+                  document.getElementById('search').click();
+                }
+              }}
+              autoFocus
+              inputProps={{'aria-label':'search'}}
+              onClick={e => e.stopPropagation()}
+              onChange={e => setSearchVal(e.target.value.toLowerCase())}
+            />
+            <Button id="search"
+              className={classes.button}
+              disabled={!searchVal.length}
+              onClick={e => {
+                e.stopPropagation();
+                props.getIcons(searchVal)
+              }}
+            >
+              Search
+            </Button>
           </Grid>
-        </Fade>
-      </Modal>
-    </div>
+          {!!icons.length &&
+          [0,1,2,3,4].map(row =>
+            <Grid container direction="column" key={"row_" + row}>
+              <Grid container direction="row">
+                {[0,1,2,3].map(column => !!icons[4*row + column] &&
+                <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
+                  style={{
+                    width: isMobile ? '68px' : '90px',
+                    padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                    borderRadius: '10px'
+                  }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onConfirm(icons[4*row + column].url);
+                    closeModal();
+                  }}
+                >
+                  <CircularProgress size={isMobile ? 45 : 65} style={{
+                    display: icons[4*row + column].isLoading ? 'block' : 'none'
+                  }}/>
+                  <img alt="icon" src={icons[4*row + column].url}
+                    onLoad={() => {
+                      let currentIcons = [...icons];
+                      currentIcons[4*row + column].isLoading = false;
+                      setIcons(currentIcons);
+                    }}
+                    height={isMobile ? "46px" : "65px"} style={{
+                      display: icons[4*row + column].isLoading ? 'none' : 'block',
+                      maxWidth: isMobile ? '65px' : '85px'
+                  }}/>
+                </Grid>
+                )}
+              </Grid>
+            </Grid>
+          )}
+          <Grid item>
+            <p style={{fontSize:'14px', paddingLeft:'5px'}}>{iconFetchMessage}</p>
+          </Grid>
+          <Grid item style={{width:'100%'}}>
+            <Button style={{float:'right'}}
+              onClick={e => {
+                e.stopPropagation();
+                closeModal();
+              }}
+            >Close</Button>
+          </Grid>
+        </Grid>
+      </Fade>
+    </Modal>
   );
 }
 

@@ -33,64 +33,62 @@ const useStyles = makeStyles(theme => ({
 const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onConfirmParam }) => {
   const classes = useStyles();
   return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={isVisible}
-        onClose={e => {
-          e.stopPropagation();
-          closeModal();
-        }}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-      >
-        <Fade in={isVisible}>
-          <Grid container direction="column" className={classes.paper}>
-            <Grid item>
-              <h3 id="transition-modal-title">{message}</h3>
-            </Grid>
-            {modalType === "delete"
-            ? <Grid item>
-                <Button
-                  className={classes.button}
-                  style={deleteButtonStyle}
-                  onClick={e => {
-                    e.stopPropagation();
-                    onConfirm(onConfirmParam)
-                  }}
-                >
-                  Delete
-                </Button>
-                <Button
-                  className={classes.button}
-                  style={cancelButtonStyle}
-                  onClick={e => {
-                    e.stopPropagation();
-                    closeModal();
-                  }}
-                >
-                  Cancel
-                </Button>
-              </Grid>
-            : <Grid item>
-                <Button
-                  className={classes.button}
-                  style={cancelButtonStyle}
-                  onClick={e => {
-                    e.stopPropagation();
-                    closeModal();
-                  }}
-                >
-                  Okay
-                </Button>
-              </Grid>
-            }
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={isVisible}
+      onClose={e => {
+        e.stopPropagation();
+        closeModal();
+      }}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+    >
+      <Fade in={isVisible}>
+        <Grid container direction="column" className={classes.paper}>
+          <Grid item>
+            <h3 id="transition-modal-title">{message}</h3>
           </Grid>
-        </Fade>
-      </Modal>
-    </div>
+          {modalType === "delete"
+          ? <Grid item>
+              <Button
+                className={classes.button}
+                style={deleteButtonStyle}
+                onClick={e => {
+                  e.stopPropagation();
+                  onConfirm(onConfirmParam)
+                }}
+              >
+                Delete
+              </Button>
+              <Button
+                className={classes.button}
+                style={cancelButtonStyle}
+                onClick={e => {
+                  e.stopPropagation();
+                  closeModal();
+                }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          : <Grid item>
+              <Button
+                className={classes.button}
+                style={cancelButtonStyle}
+                onClick={e => {
+                  e.stopPropagation();
+                  closeModal();
+                }}
+              >
+                Okay
+              </Button>
+            </Grid>
+          }
+        </Grid>
+      </Fade>
+    </Modal>
   );
 }
 

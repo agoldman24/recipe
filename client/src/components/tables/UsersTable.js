@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 
 const textStyle = {
   fontSize: '16px',
-  float:'left'
+  float: 'left'
 }
 
 const UsersTable = props => {
@@ -30,7 +30,7 @@ const UsersTable = props => {
 
   return (
     <TableContainer>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table}>
         <TableBody>
           {props.users.map(user => (
             <TableRow

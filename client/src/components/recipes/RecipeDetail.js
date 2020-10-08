@@ -7,8 +7,6 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
-import Slide from '@material-ui/core/Slide';
-import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
@@ -19,13 +17,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
-import {
-  TOGGLE_RECIPE_DETAILS,
-  TOGGLE_RECIPE_EDIT_MODE,
-  UPDATE_USER_REQUESTED,
-  GET_RECIPE_DETAIL_REQUESTED
-} from '../../actions';
-import { RECIPE_TAB, CREATED_RECIPES, LIKED_RECIPE_IDS } from '../../variables/Constants';
+import Api from '../../api/siteUrl';
+import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
+import { LIKED_RECIPE_IDS } from '../../variables/Constants';
 import {
   fabStyle, iconStyle, blackIconStyle, whiteFadeBackgroundStyle,
   detailStyle, headerStyle, titleStyle, sectionStyle
@@ -50,36 +44,32 @@ const loadingTextStyle = {
   marginTop:'20px'
 }
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
-});
-
 class RecipeDetail extends React.Component {
   state = {
-    anchorEl: null
+    anchorEl: null,
+    ingredients: null,
+    directions: null
   }
   componentDidMount() {
-    if (!this.props.createMode) {
-      this.props.fetchRecipeDetails(this.props.id);
-    }
+    Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
+      this.setState({
+        ingredients: res.data.ingredients,
+        directions: res.data.directions
+      });
+    });
   }
   render() {
-    const { id, name, image, ingredients, directions } = this.props;
-    return (
-      <Dialog
-        disableBackdropClick
-        open={this.props.open}
-        onClose={this.props.toggleDetailView}
-        TransitionComponent={Transition}
-      >
-        {this.props.editMode || this.props.createMode
-        ? <RecipeDetailEdit
-            name={name}
-            image={image}
-            ingredients={ingredients}
-            directions={directions}
-          />
-        : <div>
+    const { id, name, image } = this.props;
+    const { ingredients, directions } = this.state;
+    return this.props.editMode
+      ? <RecipeDetailEdit
+          name={name}
+          image={image}
+          ingredients={ingredients}
+          directions={directions}
+          isCreateMode={false}
+        />
+      : <div>
           <Card style={detailStyle}>
             <CardHeader
               title={
@@ -129,7 +119,7 @@ class RecipeDetail extends React.Component {
                     top: '65px',
                     right: isMobile ? '0' : 'calc(50vw - 240px)'
                   }}
-                  onClick={() => this.props.toggleDetailView()}
+                  onClick={this.props.onClose}
                 >
                   <CloseRoundedIcon style={blackIconStyle} />
                 </Fab>
@@ -163,30 +153,29 @@ class RecipeDetail extends React.Component {
                 </div>
                 <IngredientsTable ingredients={ingredients}/>
                 <Typography style={{...titleStyle, padding:'10px'}} variant="h4">Directions</Typography>
-                <div style={{paddingLeft: isMobile ? '5px' : '0'}}>
-                  {typeof directions === "string"
-                  ? <Typography style={sectionStyle}>{directions}</Typography>
-                  : <Grid container direction="column" style={{paddingBottom:'50%'}}>
-                      {directions.map((step, index) => (
-                        <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                          <Grid item style={{width:'6%'}}>
-                            <Typography style={{
-                              float: 'right',
-                              paddingRight: '5px',
-                              fontSize: '14px'
-                            }}>
-                              {index + 1 + "."}
-                            </Typography>
-                          </Grid>
-                          <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                            <Typography style={{fontSize:'14px'}}>{step}</Typography>
-                          </Grid>
+                {typeof directions === "string"
+                ? <Typography style={sectionStyle}>{directions}</Typography>
+                : <Grid container direction="column" style={{paddingBottom:'50%'}}>
+                    {directions.map((step, index) => (
+                      <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
+                        <Grid item style={{width:'6%'}}>
+                          <Typography style={{
+                            float: 'right',
+                            paddingRight: '5px',
+                            fontSize: '14px'
+                          }}>
+                            {index + 1 + "."}
+                          </Typography>
                         </Grid>
-                      ))}
-                    </Grid>
+                        <Grid item style={{width:'91%', paddingLeft:'5px'}}>
+                          <Typography style={{fontSize:'14px'}}>{step}</Typography>
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
                   }
-                </div>
-              </div>}
+              </div>
+              }
             </CardMedia>
           </Card>
           <Popover
@@ -233,26 +222,10 @@ class RecipeDetail extends React.Component {
             </Grid>
           </Popover>
         </div>
-        }
-      </Dialog>
-    );
   }
 };
 
 const mapStateToProps = state => {
-  const recipe = !state.detailRecipe.id
-    ? { name: "", image: "" }
-    : state.activeTab.name === RECIPE_TAB
-      ? state.recipeCategory === "Anonymous"
-        ? state.sampleRecipes[state.detailRecipe.id]
-        : state.recipeCategory === "By Friends"
-          ? state.friendRecipes[state.detailRecipe.id]
-          : state.createdRecipes[state.detailRecipe.id]
-      : state.displayUserDetail.activeDetail === CREATED_RECIPES
-        ? !!state.activeUser && state.activeUser.id === state.displayUser.id
-          ? state.createdRecipes[state.detailRecipe.id]
-          : state.displayUserDetail.createdRecipes[state.detailRecipe.id]
-        : state.displayUserDetail.likedRecipes[state.detailRecipe.id];
   return {
     activeUser: state.activeUser,
     isLoggedIn: !!state.activeUser,
@@ -262,21 +235,12 @@ const mapStateToProps = state => {
     likedRecipeIds: !!state.activeUser
       ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null,
-    open: !!state.detailRecipe.id || state.recipeCreateMode,
-    id: state.detailRecipe.id,
-    name: recipe.name,
-    image: recipe.image,
-    ingredients: state.recipeCreateMode ? [] : state.detailRecipe.ingredients,
-    directions: state.recipeCreateMode ? [] : state.detailRecipe.directions,
     editMode: state.recipeEditMode,
-    createMode: state.recipeCreateMode
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleDetailView: () => dispatch({ type: TOGGLE_RECIPE_DETAILS }),
-    fetchRecipeDetails: id => dispatch({ type: GET_RECIPE_DETAIL_REQUESTED, id }),
     toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
     updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,

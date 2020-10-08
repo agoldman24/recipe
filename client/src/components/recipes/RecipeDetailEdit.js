@@ -5,11 +5,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import SaveIcon from '@material-ui/icons/Save';
 import RecipeForms from './RecipeForms';
-import {
-  TOGGLE_RECIPE_EDIT_MODE,
-  TOGGLE_RECIPE_CREATE_MODE,
-  CREATE_RECIPE_REQUESTED
-} from '../../actions';
+import { TOGGLE_RECIPE_EDIT_MODE, CREATE_RECIPE_REQUESTED } from '../../actions';
 import {
   detailStyle, containerStyle, buttonStyle,
   deleteButtonStyle, saveButtonStyle, cancelButtonStyle
@@ -59,7 +55,7 @@ const RecipeDetailEdit = props => {
   const [directionSteps, setDirectionSteps] = useState(
     directionsType === "string" ? [] : props.directions);
   return (
-    <Card style={detailStyle}>
+    <Card style={{ ...detailStyle, overflowY: 'auto' }}>
       <Grid
         container
         direction="column"
@@ -104,6 +100,7 @@ const RecipeDetailEdit = props => {
                     const directions = directionsType === "string"
                       ? directionsParagraph
                       : directionSteps;
+                    props.onClose();
                     props.createRecipe(name, image, ingredients, directions);
                   }
                 }}
@@ -117,7 +114,7 @@ const RecipeDetailEdit = props => {
                 if (props.isEditMode) {
                   props.toggleEditMode();
                 } else {
-                  props.toggleCreateMode();
+                  props.onClose();
                 }
               }}
             >
@@ -170,14 +167,12 @@ const RecipeDetailEdit = props => {
 const mapStateToProps = state => {
   return {
     isEditMode: state.recipeEditMode,
-    isCreateMode: state.recipeCreateMode,
     isSpinnerVisible: state.isSpinnerVisible
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-  toggleCreateMode: () => dispatch({ type: TOGGLE_RECIPE_CREATE_MODE }),
   createRecipe: (name, image, ingredients, directions) => dispatch({
     type: CREATE_RECIPE_REQUESTED,
     name, image, ingredients, directions

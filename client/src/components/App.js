@@ -4,6 +4,8 @@ import { isMobile } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
 import Spinner from './popups/Spinner';
 import NavigationMenu from './menus/NavigationMenu';
 import SignInTab from './tabs/SignInTab';
@@ -13,7 +15,7 @@ import AboutTab from './tabs/AboutTab';
 import RecipeTab from './tabs/RecipeTab';
 import SearchTab from './tabs/SearchTab';
 import ProfileTab from './tabs/ProfileTab';
-import RecipeDetail from './recipes/RecipeDetail';
+import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
 import {
@@ -32,9 +34,14 @@ import {
 } from '../variables/Constants';
 import { defaultTheme } from '../styles';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+});
+
 class App extends React.Component {
   state = {
-    showScrollButton: false
+    showScrollButton: false,
+    recipeCreateMode: false,
   }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
@@ -71,20 +78,31 @@ class App extends React.Component {
       height: this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB
         ? 'calc(100vh - 110px)'
         : '100vh',
-      // overflowY: this.props.isDetailVisible ? 'hidden' : 'auto'
       overflowY: 'auto'
     };
     return (
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
       }>
-        <NavigationMenu/>
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
+        <NavigationMenu toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>
         {this.state.showScrollButton && this.props.activeTab.name !== SEARCH_TAB &&
-          <ScrollButton isLoggedIn={this.props.isLoggedIn}/>
-        }
-        {(this.props.isDetailVisible || this.props.recipeCreateMode) && <RecipeDetail />}
+          <ScrollButton isLoggedIn={this.props.isLoggedIn}/>}
+        <Dialog
+          disableBackdropClick
+          open={this.state.recipeCreateMode}
+          TransitionComponent={Transition}
+        >
+          <RecipeDetailEdit
+            name=""
+            image=""
+            ingredients={[]}
+            directions={[]}
+            isCreateMode={true}
+            onClose={() => this.setState({ recipeCreateMode: false })}
+          />
+        </Dialog>
         <Container
           id="container"
           component="main"
@@ -92,14 +110,15 @@ class App extends React.Component {
           style={isMobile ? mobileStyle : desktopStyle}
         >
           <CssBaseline />
+          {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}
+          {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
           {this.props.activeTab.name === SEARCH_TAB && <SearchTab/>}
           {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
           {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
           {this.props.activeTab.name === ABOUT_TAB &&
             <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>}
-          {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
-          {this.props.activeTab.name === RECIPE_TAB && <RecipeTab/>}
-          {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}
+          {this.props.activeTab.name === RECIPE_TAB &&
+            <RecipeTab toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>}
         </Container>
       </ThemeProvider>
     );
@@ -111,7 +130,6 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
-    isDetailVisible: !!state.detailRecipe.id,
     recipeCreateMode: state.recipeCreateMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
@@ -123,12 +141,12 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     initHydration: () => dispatch({ type: INIT_HYDRATION }),
+    completeHydration: () => dispatch({ type: COMPLETE_HYDRATION }),
     setActiveTab: name => dispatch({
       type: SET_ACTIVE_TAB, 
       currentTab: null,
       newTab: { name }
-    }),
-    completeHydration: () => dispatch({ type: COMPLETE_HYDRATION })
+    })
   };
 }
 

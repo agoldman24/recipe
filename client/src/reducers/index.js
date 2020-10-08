@@ -19,7 +19,6 @@ import {
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
-  GET_RECIPE_DETAIL_SUCCEEDED,
   CREATE_RECIPE_REQUESTED,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
@@ -27,7 +26,6 @@ import {
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   SET_RECIPE_CATEGORY,
-  TOGGLE_RECIPE_DETAILS,
   SET_ACTIVE_TAB,
   SIGN_IN_FAILED,
   SIGN_OUT,
@@ -41,7 +39,6 @@ import {
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
   TOGGLE_RECIPE_EDIT_MODE,
-  TOGGLE_RECIPE_CREATE_MODE,
   GET_ICONS_REQUESTED,
   GET_ICONS_FINISHED,
 } from '../actions';
@@ -416,15 +413,6 @@ const recipeCategory = (state = StateTree.recipeCategory, action) => {
   }
 }
 
-const recipeCreateMode = (state = StateTree.recipeCreateMode, action) => {
-  switch (action.type) {
-    case TOGGLE_RECIPE_CREATE_MODE:
-      return !state;
-    default:
-      return state;
-  }
-}
-
 const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
   switch (action.type) {
     case TOGGLE_RECIPE_EDIT_MODE:
@@ -481,23 +469,6 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
       : state;
     case SIGN_OUT:
       return {};
-    default:
-      return state;
-  }
-}
-
-const detailRecipe = (state = StateTree.detailRecipe, action) => {
-  switch (action.type) {
-    case TOGGLE_RECIPE_DETAILS:
-      return !!action.id
-        ? { ...state, id: action.id }
-        : StateTree.detailRecipe
-    case GET_RECIPE_DETAIL_SUCCEEDED:
-      return {
-        ...state,
-        ingredients: action.ingredients,
-        directions: action.directions
-      }
     default:
       return state;
   }
@@ -584,12 +555,10 @@ export default combineReducers({
   displayUser,
   displayUserDetail,
   recipeCategory,
-  recipeCreateMode,
   recipeEditMode,
   sampleRecipes,
   friendRecipes,
   createdRecipes,
-  detailRecipe,
   allRecipesFetched,
   icons,
   iconFetchMessage

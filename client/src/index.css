@@ -12,12 +12,6 @@ body {
   overflow-y: auto;
 }
 
-.cardMedia {
-  padding-top: 100%;
-  position: relative;
-  background: #424242;
-}
-
 .fileContainer {
   overflow: hidden;
   position: relative;

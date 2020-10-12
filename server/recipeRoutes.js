@@ -35,7 +35,7 @@ exports.getSamples = (req, res) => {
       success: true,
       recipes: recipes.filter(r => !r.authorId)
         .sort(() => 0.5 - Math.random())
-        .slice(0, 9)
+        .slice(0, 20)
         .reduce((accum, recipe) => {
           accum[recipe._id] = getRecipeSummary(recipe);
           return accum;
@@ -55,7 +55,7 @@ exports.getRecipesByIds = (req, res) => {
     });
   const sortedArray = timestamps
     .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-    .slice(0, 9);
+    .slice(0, 20);
   const idTimeMap = sortedArray.reduce((accum, obj) => {
     accum[obj.id] = obj.timestamp;
     return accum;

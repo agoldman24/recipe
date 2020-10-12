@@ -18,7 +18,6 @@ import {
   SET_DISPLAY_USER_DETAIL,
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
-  GET_RECIPES_REQUESTED,
   CREATE_RECIPE_REQUESTED,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
@@ -60,17 +59,12 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_REQUESTED:
     case GET_USER_DETAIL_REQUESTED:
     case UPDATE_USER_REQUESTED:
-    case GET_RECIPES_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
     case GET_ICONS_REQUESTED:
       return true;
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
-    case APPEND_SAMPLE_RECIPES:
-    case APPEND_FRIEND_RECIPES:
-    case APPEND_CREATED_RECIPES:
-    case APPEND_LIKED_RECIPES:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
@@ -479,35 +473,35 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
     case APPEND_SAMPLE_RECIPES:
       return {
         ...state,
-        samples: Object.keys(action.recipes).length < 9
+        samples: Object.keys(action.recipes).length < 20
       }
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
-        friends: Object.keys(action.recipes).length < 9
+        friends: Object.keys(action.recipes).length < 20
       }
     case APPEND_CREATED_RECIPES:
       return action.appendTo === CREATED_RECIPES
       ? {
           ...state,
-          created: Object.keys(action.recipes).length < 9
+          created: Object.keys(action.recipes).length < 20
         }
       : {
           ...state,
-          displayUserCreated: Object.keys(action.recipes).length < 9
+          displayUserCreated: Object.keys(action.recipes).length < 20
         }
     case APPEND_LIKED_RECIPES:
       return {
         ...state,
-        liked: Object.keys(action.recipes).length < 9
+        liked: Object.keys(action.recipes).length < 20
       }
     case SET_DISPLAY_USER_DETAIL:
       return {
         ...state,
         created: !action.activeUserIsDisplayUser
-          ? Object.keys(action.createdRecipes).length < 9
+          ? Object.keys(action.createdRecipes).length < 20
           : state.created,
-        liked: Object.keys(action.likedRecipes).length < 9
+        liked: Object.keys(action.likedRecipes).length < 20
       }
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {

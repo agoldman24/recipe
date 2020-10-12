@@ -297,14 +297,6 @@ export const detailStyle = {
   top: '0'
 };
 
-export const undetailedStyle = {
-  borderRadius: '0',
-  background: '#202020',
-  boxShadow: 'none',
-  width: isMobile ? '100vw' : '30vw',
-  maxHeight:'100vh', overflow:'auto'
-};
-
 export const headerStyle = {
   background: 'white',
   color: 'black',

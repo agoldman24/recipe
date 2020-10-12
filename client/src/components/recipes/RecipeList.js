@@ -1,20 +1,65 @@
-import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
-import Slide from '@material-ui/core/Slide';
-import Dialog from '@material-ui/core/Dialog';
-import RecipeCard from './RecipeCard';
-import RecipeDetail from './RecipeDetail';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
-import { GET_RECIPES_REQUESTED } from '../../actions';
+import { withStyles } from '@material-ui/styles';
+import InfiniteScroll from "react-infinite-scroll-component";
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import IconButton from '@material-ui/core/IconButton';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Slide from '@material-ui/core/Slide';
+import Dialog from '@material-ui/core/Dialog';
+import RecipeDetail from './RecipeDetail';
+import { GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED } from '../../actions';
 import {
   RECIPE_TAB, SAMPLE_RECIPES, FRIEND_RECIPES,
-  CREATED_RECIPES, LIKED_RECIPES
+  CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
 } from "../../variables/Constants";
+import "../../index.css";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+});
+
+const Image = ({ src, alt }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  return (
+    <Fragment>
+      <CircularProgress style={{
+        display: isLoading ? 'block' : 'none',
+        marginTop: '50%',
+        width: '30%',
+        marginLeft: '35%',
+        height: 'auto'
+      }}/>
+      <img src={src} alt={alt} onLoad={() => setIsLoading(false)}
+        style={{
+          left: '50%',
+          height: '100%',
+          position: 'relative',
+          transform: 'translateX(-50%)',
+          display: isLoading ? 'block' : 'initial',
+        }}
+      />
+    </Fragment>
+  );
+}
+
+const styles = () => ({
+  gridList: {
+    transform: 'translateZ(0)',
+  },
+  titleBar: {
+    background:
+      'linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, ' +
+      'rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+  },
+  icon: {
+    color: 'white',
+  }
 });
 
 class RecipeList extends React.Component {
@@ -24,7 +69,23 @@ class RecipeList extends React.Component {
   }
   render() {
   return (
-    <div style={{paddingBottom:'100px'}} id="recipes">
+    <InfiniteScroll
+      dataLength={Object.keys(this.props.recipes).length}
+      next={() => this.props.getRecipes(
+        this.props.activeTab,
+        this.props.recipeCategory,
+        this.props.friendRecipes,
+        this.props.createdRecipes,
+        this.props.users,
+        this.props.activeUser,
+        this.props.displayUser,
+        this.props.displayUserDetail
+      )}
+      scrollableTarget={document.getElementById('container')}
+      hasMore={!this.props.allRecipesFetched}
+      loader={<h4>Loading...</h4>}
+      style={{overflowX:'hidden'}}
+    >
       <Dialog
         disableBackdropClick
         open={this.state.isDetailOpen}
@@ -42,54 +103,56 @@ class RecipeList extends React.Component {
         />
         }
       </Dialog>
-      <Grid
-        container
-        direction={isMobile ? "column" : "row"}
-        justify="center"
+      <GridList cellHeight={250}
+        className={this.props.classes.gridList}
+        cols={isMobile ? 1 : 5}
       >
-        {Object.values(this.props.recipes).sort((r1, r2) => r2.timestamp - r1.timestamp).map(recipe => {
-          return (
-            <Grid item key={recipe.id}
-              style={{padding: isMobile ? '0' : '10px 5px 0 5px'}}
+        {Object.values(this.props.recipes)
+          .sort((r1, r2) => r2.timestamp - r1.timestamp)
+          .map((recipe) => (
+            <GridListTile key={recipe.id} className="cardMedia"
+              onClick={() => {
+                this.setState({ isDetailOpen: true });
+                this.setState({ detailRecipeId: recipe.id });
+              }}
             >
-              <RecipeCard
-                id={recipe.id}
-                name={recipe.name}
-                image={recipe.image}
-                onClick={() => {
-                  this.setState({ isDetailOpen: true });
-                  this.setState({ detailRecipeId: recipe.id });
-                }}
+              <Image src={recipe.image} alt={recipe.name} />
+              <GridListTileBar
+                title={recipe.name}
+                titlePosition="top"
+                actionIcon={this.props.isLoggedIn
+                  ? this.props.likedRecipeIds.includes(recipe.id)
+                    ? <IconButton
+                        className={this.props.classes.icon}
+                        onClick={event => {
+                          event.stopPropagation();
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id,
+                            recipe.id, false
+                          );
+                        }}>
+                        <FavoriteIcon/>
+                      </IconButton>
+                    : <IconButton
+                        className={this.props.classes.icon}
+                        onClick={event => {
+                          event.stopPropagation();
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id,
+                            recipe.id, true
+                          );
+                        }}>
+                        <FavoriteBorderIcon/>
+                      </IconButton>
+                    : null
+                }
+                actionPosition="left"
+                className={this.props.classes.titleBar}
               />
-            </Grid>
-          );
-        })
-        }
-      </Grid>
-      {!this.props.allRecipesFetched &&
-        <div style={{width:'100%', textAlign:'center', paddingTop:'20px'}}>
-          <Link
-            href="#"
-            style={{fontSize:'16px'}}
-            onClick={e => {
-              e.preventDefault();
-              this.props.getRecipes(
-                this.props.activeTab,
-                this.props.recipeCategory,
-                this.props.friendRecipes,
-                this.props.createdRecipes,
-                this.props.users,
-                this.props.activeUser,
-                this.props.displayUser,
-                this.props.displayUserDetail
-              );
-            }}
-          >
-            Load more recipes
-          </Link>
-        </div>
-      }
-    </div>
+            </GridListTile>
+        ))}
+      </GridList>
+    </InfiniteScroll>
   );
   }
 }
@@ -103,7 +166,11 @@ const mapStateToProps = state => {
     friendRecipes: state.friendRecipes,
     createdRecipes: state.createdRecipes,
     users: state.users,
+    isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
+    likedRecipeIds: !!state.activeUser
+      ? state.activeUser.likedRecipeIds.map(obj => obj.id)
+      : null,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     allRecipesFetched:
@@ -127,6 +194,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    updateLikedRecipes: (id, recipeId, keep) => dispatch({
+      type: UPDATE_USER_REQUESTED,
+      updateType: LIKED_RECIPE_IDS,
+      id, recipeId, keep
+    }),
     getRecipes: (
       activeTab,
       recipeCategory,
@@ -184,4 +256,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(RecipeList);
+)(withStyles(styles)(RecipeList));

@@ -26,6 +26,7 @@ const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
 const getDisplayUserDetail = state => state.displayUserDetail;
+const getCreatedRecipes = state => state.createdRecipes;
 
 function* updateUser(action) {
   try {
@@ -106,10 +107,13 @@ function* updateUser(action) {
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
         if (!!displayUser && activeUser.id === displayUser.id) {
+          const createdRecipes = yield select(getCreatedRecipes);
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: LIKED_RECIPES,
-            recipe: displayUserDetail.likedRecipes[action.recipeId],
+            recipe: displayUserDetail.activeDetail === CREATED_RECIPES
+              ? createdRecipes[action.recipeId]
+              : displayUserDetail.likedRecipes[action.recipeId],
             keep: action.keep,
             user
           });

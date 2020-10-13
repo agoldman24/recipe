@@ -18,6 +18,7 @@ import {
   SET_DISPLAY_USER_DETAIL,
   SET_ACTIVE_DETAIL,
   UPDATE_DISPLAY_USER_DETAIL,
+  GET_RECIPES_REQUESTED,
   CREATE_RECIPE_REQUESTED,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
@@ -45,6 +46,7 @@ import {
   PROFILE_TAB,
   CREATED_RECIPE_IDS,
   CREATED_RECIPES,
+  LIKED_RECIPE_IDS,
   LIKED_RECIPES,
   DISPLAY_USER,
   FOLLOWERS,
@@ -58,10 +60,11 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_UP_REQUESTED:
     case SIGN_IN_REQUESTED:
     case GET_USER_DETAIL_REQUESTED:
-    case UPDATE_USER_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
     case GET_ICONS_REQUESTED:
       return true;
+    case UPDATE_USER_REQUESTED:
+      return action.updateType !== LIKED_RECIPE_IDS
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
@@ -468,6 +471,31 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
   }
 }
 
+const isLiking = (state = StateTree.isLiking, action) => {
+  switch (action.type) {
+    case UPDATE_USER_REQUESTED:
+      return action.updateType === LIKED_RECIPE_IDS;
+    case UPDATE_USER_SUCCEEDED:
+      return false;
+    default:
+      return state;
+  }
+}
+
+const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
+  switch (action.type) {
+    case GET_RECIPES_REQUESTED:
+      return true;
+    case APPEND_CREATED_RECIPES:
+    case APPEND_FRIEND_RECIPES:
+    case APPEND_LIKED_RECIPES:
+    case APPEND_SAMPLE_RECIPES:
+      return false;
+    default:
+      return state;
+  }
+}
+
 const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
@@ -553,6 +581,8 @@ export default combineReducers({
   sampleRecipes,
   friendRecipes,
   createdRecipes,
+  isLiking,
+  isFetchingRecipes,
   allRecipesFetched,
   icons,
   iconFetchMessage

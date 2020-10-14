@@ -3,27 +3,26 @@ import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import Fab from '@material-ui/core/Fab';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CloseIcon from '@material-ui/icons/Close';
 import CreateIcon from '@material-ui/icons/Create';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-import CloseRoundedIcon from '@material-ui/icons/CloseRounded';
 import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
 import Api from '../../api/siteUrl';
 import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
-import {
-  fabStyle, iconStyle, blackIconStyle, whiteFadeBackgroundStyle,
-  detailStyle, headerStyle, titleStyle, sectionStyle
-} from '../../styles';
+import { detailStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
   button: {
@@ -35,6 +34,13 @@ const styles = () => ({
   },
   root: {
     marginTop: '-10px'
+  },
+  appBar: {
+    position: 'fixed',
+    background: '#303030',
+    width: isMobile ? '100vw' : '500px',
+    left: isMobile ? '0' : 'calc(50vw - 250px)',
+    height: '60px'
   }
 });
 
@@ -48,7 +54,8 @@ class RecipeDetail extends React.Component {
   state = {
     anchorEl: null,
     ingredients: null,
-    directions: null
+    directions: null,
+    likedId: null
   }
   componentDidMount() {
     Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
@@ -57,6 +64,11 @@ class RecipeDetail extends React.Component {
         directions: res.data.directions
       });
     });
+  }
+  componentDidUpdate(prevProps) {
+    if (!this.props.isLiking && prevProps.isLiking) {
+      this.setState({ likedId: null });
+    }
   }
   render() {
     const { id, name, image } = this.props;
@@ -71,81 +83,60 @@ class RecipeDetail extends React.Component {
         />
       : <div>
           <Card style={detailStyle}>
-            <CardHeader
-              title={
-                <Typography
-                  variant="h3"
-                  style={{
-                    fontWeight:'bold', fontFamily:'Shadows Into Light'
-                  }}
-                >
+            <AppBar className={this.props.classes.appBar}>
+              <Toolbar style={{padding:'0'}}>
+                {this.props.isLoggedIn
+                ? this.props.isLiking && this.state.likedId === id
+                  ? <CircularProgress style={{
+                      width:'20px', height:'20px', margin:'12px', color:'white'
+                    }}/>
+                  : this.props.likedRecipeIds.includes(id)
+                    ? <IconButton
+                        className={this.props.classes.icon}
+                        onClick={() => {
+                          this.setState({ likedId: id });
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id, id, false
+                          );
+                        }}>
+                        <FavoriteIcon/>
+                      </IconButton>
+                    : <IconButton
+                        className={this.props.classes.icon}
+                        onClick={() => {
+                          this.setState({ likedId: id });
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id, id, true
+                          );
+                        }}>
+                        <FavoriteBorderIcon/>
+                      </IconButton>
+                    : null
+                }
+                <Typography variant="h4"
+                  style={{width:'100%', fontFamily:'Shadows Into Light', color:'white'}}>
                   {name}
                 </Typography>
-              }
-              style={headerStyle}
-            />
+                <div style={{display:'flex'}}>
+                  {this.props.isLoggedIn && this.props.createdRecipeIds.includes(id) &&
+                    <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                      disabled={!ingredients}
+                      style={{float:'right', paddingRight:'0', color:'white'}}>
+                      <MoreHorizIcon/>
+                    </IconButton>
+                  }
+                  <IconButton onClick={this.props.onClose}
+                    style={{marginRight:'5px', color:'white'}}>
+                    <CloseIcon/>
+                  </IconButton>
+                </div>
+              </Toolbar>
+            </AppBar>
             <CardMedia
-              style={{height:"0", paddingTop:"100%", position:'relative'}}
+              style={{height:'0', top:'60px', paddingTop:'100%', position:'relative'}}
               image={image}
-              children={[]}
+              children={[]}s
             >
-              <div style={{...whiteFadeBackgroundStyle, zIndex:'99'}}>
-                {this.props.isLoggedIn &&
-                  this.props.createdRecipeIds.includes(id) &&
-                  <Fab
-                    style={{
-                      ...fabStyle,
-                      position: 'fixed',
-                      top: '15px',
-                      right: isMobile ? '0' : 'calc(50vw - 240px)'
-                    }}
-                    disabled={!ingredients}
-                  >
-                    <MenuRoundedIcon
-                      style={{
-                        ...iconStyle,
-                        background: !!this.state.anchorEl ? '#292929' : 'none',
-                        color: !!this.state.anchorEl ? 'white' : 'black',
-                        border: !!this.state.anchorEl ? '1px solid white' : 'none'
-                      }}
-                      onClick={e => this.setState({ anchorEl: e.currentTarget })}
-                    />
-                  </Fab>
-                }
-                <Fab
-                  style={{
-                    ...fabStyle,
-                    position: 'fixed',
-                    top: '65px',
-                    right: isMobile ? '0' : 'calc(50vw - 240px)'
-                  }}
-                  onClick={this.props.onClose}
-                >
-                  <CloseRoundedIcon style={blackIconStyle} />
-                </Fab>
-                {this.props.isLoggedIn
-                ? this.props.likedRecipeIds.includes(id)
-                  ? <Fab
-                      onClick={() => this.props.updateLikedRecipes(
-                        this.props.activeUser.id, id, false
-                      )}
-                      style={{...fabStyle, float:'left'}}
-                      classes={{ root: this.props.classes.root }}
-                    >
-                      <FavoriteIcon style={iconStyle}/>
-                    </Fab>
-                  : <Fab
-                      onClick={() => this.props.updateLikedRecipes(
-                        this.props.activeUser.id, id, true
-                      )}
-                      style={{...fabStyle, float:'left'}}
-                      classes={{ root: this.props.classes.root }}
-                    >
-                      <FavoriteBorderIcon style={iconStyle}/>
-                    </Fab>
-                : null
-                }
-              </div>
               {!ingredients ? <div style={loadingTextStyle}>Loading...</div> :
               <div>
                 <div style={{width:'100%', display:'flex'}}>
@@ -183,12 +174,12 @@ class RecipeDetail extends React.Component {
             anchorEl={this.state.anchorEl}
             onClose={() => this.setState({ anchorEl: null })}
             anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'left',
+              vertical: 'bottom',
+              horizontal: 'center',
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'center',
             }}
             classes={{
               paper: this.props.classes.paper
@@ -235,6 +226,7 @@ const mapStateToProps = state => {
     likedRecipeIds: !!state.activeUser
       ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null,
+    isLiking: state.isLiking,
     editMode: state.recipeEditMode,
   };
 };

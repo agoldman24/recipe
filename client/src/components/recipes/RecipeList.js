@@ -41,7 +41,7 @@ const Image = ({ src, alt }) => {
           width: '100%',
           position: 'relative',
           transform: 'translateX(-50%)',
-          display: isLoading ? 'block' : 'initial',
+          display: isLoading ? 'none' : 'block',
         }}
       />
     </Fragment>
@@ -53,9 +53,15 @@ const styles = () => ({
     transform: 'translateZ(0)',
   },
   titleBar: {
-    background:
-      'linear-gradient(to bottom, black 0%, ' +
-      'rgba(0,0,0,0.5) 70%, rgba(0,0,0,0) 100%)',
+    background: 'linear-gradient(to bottom, black, rgba(0,0,0,0))',
+    alignItems: 'normal',
+    height: '80px'
+  },
+  title: {
+    paddingTop: '10px',
+    fontFamily: 'Shadows Into Light',
+    fontSize: '20px',
+    height: '50px'
   },
   icon: {
     color: 'white',
@@ -107,13 +113,13 @@ class RecipeList extends React.Component {
         </Dialog>
         <GridList cellHeight={250}
           className={this.props.classes.gridList}
-          cols={isMobile ? 1 : 5}
+          cols={isMobile ? 1 : 4}
         >
           {Object.values(this.props.recipes)
             .sort((r1, r2) => r2.timestamp - r1.timestamp)
             .map((recipe) => (
               <GridListTile key={recipe.id} className="cardMedia"
-                style={{height:'fit-content'}}
+                style={{height:'fit-content', padding:'0'}}
                 onClick={() => {
                   this.setState({ isDetailOpen: true });
                   this.setState({ detailRecipeId: recipe.id });
@@ -122,13 +128,14 @@ class RecipeList extends React.Component {
                 <Image src={recipe.image} alt={recipe.name} />
                 <GridListTileBar
                   className={this.props.classes.titleBar}
+                  classes={{ title: this.props.classes.title }}
                   title={recipe.name}
                   titlePosition="top"
                   actionPosition="left"
                   actionIcon={this.props.isLoggedIn
                   ? this.props.isLiking && this.state.likedId === recipe.id
                     ? <CircularProgress style={{
-                        width:'20px', height:'20px', margin:'0 12px', color:'white'
+                        width:'20px', height:'20px', margin:'12px', color:'white'
                       }}/>
                     : this.props.likedRecipeIds.includes(recipe.id)
                       ? <IconButton

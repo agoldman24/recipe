@@ -4,7 +4,7 @@ import { defaultTheme } from '../../styles';
 import { isMobile } from 'react-device-detect';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-export default function ScrollButton({ isLoggedIn }) {
+export default function ScrollButton({ isVisible, isLoggedIn }) {
   const buttonStyle = {
     color: 'black',
     fontWeight: 'bold',
@@ -14,6 +14,7 @@ export default function ScrollButton({ isLoggedIn }) {
   }
   return (
     <div style={{
+      display: isVisible ? 'block' : 'none',
       position: 'fixed',
       width: '100vw',
       top: isLoggedIn ? '60px' : '80px',

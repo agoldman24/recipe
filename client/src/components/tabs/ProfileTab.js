@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
+import CloseIcon from '@material-ui/icons/Close';
 import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
@@ -44,13 +46,20 @@ import {
   checkIconStyle
 } from "../../styles";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
+  dialog: {
+    height: '100vh',
+    width: isMobile ? '100vw' : '500px',
+    maxHeight: 'none',
+    maxWidth: 'none',
+    margin: '0'
+  },
   appBar: {
     position: 'relative',
     background: '#424242'
   },
   title: {
-    marginLeft: theme.spacing(2),
+    marginLeft: '-35px',
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
@@ -152,7 +161,7 @@ const ProfileTab = props => {
         >
           {!!props.tabHistory.length &&
             <Fab
-              style={backButtonStyle}
+              style={{...backButtonStyle, top: !!props.activeUser ? '35px' : '20px'}}
               onClick={() => {
                 const tabHistory = props.tabHistory;
                 const { displayUserId } = tabHistory[tabHistory.length - 1];
@@ -212,22 +221,12 @@ const ProfileTab = props => {
           />
         }
         <Dialog
-          fullScreen open={open}
+          open={open} disableBackdropClick
+          classes={{ paper: classes.dialog }}
           TransitionComponent={Transition}
         >
           <AppBar className={classes.appBar}>
-            <Toolbar>
-              <Button
-                edge="start"
-                onClick={handleClickClose}
-                aria-label="close"
-                style={{color:'white'}}
-              >
-                Cancel
-              </Button>
-              <Typography variant="h6" className={classes.title}>
-                Edit Profile
-              </Typography>
+            <Toolbar style={{padding:'0 5px'}}>
               <Button
                 style={{color: updateOccurred ? 'white' : 'grey'}}
                 onClick={handleSave}
@@ -235,6 +234,17 @@ const ProfileTab = props => {
               >
                 Save
               </Button>
+              <Typography variant="h6" className={classes.title}>
+                Edit Profile
+              </Typography>
+              <IconButton
+                edge="start"
+                onClick={handleClickClose}
+                aria-label="close"
+                style={{color:'white'}}
+              >
+                <CloseIcon/>
+              </IconButton>
             </Toolbar>
           </AppBar>
           <Grid
@@ -246,7 +256,7 @@ const ProfileTab = props => {
               background: defaultTheme.palette.background.default
             }}
           >
-            <Grid item style={{margin:'auto'}}>
+            <Grid item style={{margin:'50px auto'}}>
               <ProfileAvatar/>
               <ProfileEditor/>
             </Grid>

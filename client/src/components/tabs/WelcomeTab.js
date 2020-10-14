@@ -24,7 +24,7 @@ const WelcomeTab = props => {
       direction="column"
       style={{alignItems:'center'}}
     >
-      <Grid item style={{marginBottom:'20px'}}>
+      <Grid item style={{margin:'50px 0 20px'}}>
         <Typography
           variant="h1"
           style={{

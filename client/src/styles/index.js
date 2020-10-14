@@ -172,7 +172,6 @@ export const backButtonStyle = {
   boxShadow: 'none',
   color: 'white',
   position: 'fixed',
-  top: '5px',
   left: '10px',
   zIndex: '5'
 };

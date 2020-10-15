@@ -169,7 +169,7 @@ class RecipeList extends React.Component {
         {!this.props.allRecipesFetched &&
           <div style={{
             width: '100%', textAlign: 'center', marginTop: '20px',
-            marginBotom: isMobile ? '100px' : '40px'
+            marginBottom: isMobile ? '100px' : '40px'
           }}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>

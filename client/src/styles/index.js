@@ -291,9 +291,9 @@ export const detailStyle = {
   left: isMobile ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
-  overflowY: 'scroll',
+  overflowY: 'hidden',
   zIndex: '5',
-  top: '60px'
+  top: '0'
 };
 
 export const headerStyle = {

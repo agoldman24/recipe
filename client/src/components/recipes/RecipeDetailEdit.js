@@ -55,7 +55,7 @@ const RecipeDetailEdit = props => {
   const [directionSteps, setDirectionSteps] = useState(
     directionsType === "string" ? [] : props.directions);
   return (
-    <Card style={{...detailStyle, overflowY: 'auto', top: '0'}}>
+    <Card style={detailStyle}>
       <Grid
         container
         direction="column"

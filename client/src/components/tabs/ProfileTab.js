@@ -216,7 +216,7 @@ const ProfileTab = props => {
           />
         }
         <Dialog disableBackdropClick open={open} TransitionComponent={Transition}>
-          <Card style={{...detailStyle, overflowY:'hidden', top:'0'}}>
+          <Card style={detailStyle}>
             <AppBar className={classes.appBar}>
               <Toolbar style={{padding:'0 5px'}}>
                 <Button

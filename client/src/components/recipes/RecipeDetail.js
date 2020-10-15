@@ -36,11 +36,8 @@ const styles = () => ({
     marginTop: '-10px'
   },
   appBar: {
-    position: 'fixed',
-    background: '#292929',
-    width: isMobile ? '100vw' : '500px',
-    left: isMobile ? '0' : 'calc(50vw - 250px)',
-    height: '60px'
+    position: 'relative',
+    background: '#292929'
   }
 });
 
@@ -131,39 +128,41 @@ class RecipeDetail extends React.Component {
                 </div>
               </Toolbar>
             </AppBar>
-            <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
-              {!ingredients
-              ? <div style={loadingTextStyle}>Loading...</div>
-              : <div>
-                  <div style={{width:'100%', display:'flex'}}>
-                    <Typography style={titleStyle} variant="h5">Ingredients</Typography>
+            <div style={{height:'100%', overflowY:'auto'}}>
+              <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
+                {!ingredients
+                ? <div style={loadingTextStyle}>Loading...</div>
+                : <div>
+                    <div style={{width:'100%', display:'flex'}}>
+                      <Typography style={titleStyle} variant="h5">Ingredients</Typography>
+                    </div>
+                    <IngredientsTable ingredients={ingredients}/>
+                    <Typography style={titleStyle} variant="h5">Directions</Typography>
+                    {typeof directions === "string"
+                    ? <Typography style={sectionStyle}>{directions}</Typography>
+                    : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
+                        {directions.map((step, index) => (
+                          <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
+                            <Grid item style={{width:'6%'}}>
+                              <Typography style={{
+                                float: 'right',
+                                paddingRight: '5px',
+                                fontSize: '12px'
+                              }}>
+                                {index + 1 + "."}
+                              </Typography>
+                            </Grid>
+                            <Grid item style={{width:'91%', paddingLeft:'5px'}}>
+                              <Typography style={{fontSize:'12px'}}>{step}</Typography>
+                            </Grid>
+                          </Grid>
+                        ))}
+                      </Grid>
+                      }
                   </div>
-                  <IngredientsTable ingredients={ingredients}/>
-                  <Typography style={titleStyle} variant="h5">Directions</Typography>
-                  {typeof directions === "string"
-                  ? <Typography style={sectionStyle}>{directions}</Typography>
-                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
-                      {directions.map((step, index) => (
-                        <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                          <Grid item style={{width:'6%'}}>
-                            <Typography style={{
-                              float: 'right',
-                              paddingRight: '5px',
-                              fontSize: '12px'
-                            }}>
-                              {index + 1 + "."}
-                            </Typography>
-                          </Grid>
-                          <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                            <Typography style={{fontSize:'12px'}}>{step}</Typography>
-                          </Grid>
-                        </Grid>
-                      ))}
-                    </Grid>
-                    }
-                </div>
-              }
-            </CardMedia>
+                }
+              </CardMedia>
+            </div>
           </Card>
           <Popover
             open={!!this.state.anchorEl}

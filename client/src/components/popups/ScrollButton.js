@@ -7,18 +7,14 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 export default function ScrollButton({ isVisible, isLoggedIn }) {
   const buttonStyle = {
     color: 'black',
-    fontWeight: 'bold',
-    float: 'right',
-    marginRight: isMobile || isLoggedIn ? '1.5%' : '27px',
     background: defaultTheme.palette.primary.mainGradient
   }
   return (
     <div style={{
-      display: isVisible ? 'initial' : 'none',
       position: 'fixed',
-      width: '100vw',
+      display: isVisible ? 'initial' : 'none',
+      right: isMobile || isLoggedIn ? '1.5%' : '27px',
       top: isLoggedIn ? '60px' : '80px',
-      textAlign: 'center',
       zIndex: isLoggedIn ? '2' : '3'
     }}>
       <Fab

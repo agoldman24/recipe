@@ -20,34 +20,6 @@ import {
 } from "../../variables/Constants";
 import "../../index.css";
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
-});
-
-const Image = ({ src, alt }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  return (
-    <Fragment>
-      <CircularProgress style={{
-        display: isLoading ? 'block' : 'none',
-        marginTop: '50%',
-        width: '30%',
-        marginLeft: '35%',
-        height: 'auto'
-      }}/>
-      <img src={src} alt={alt} onLoad={() => setIsLoading(false)}
-        style={{
-          left: '50%',
-          width: '100%',
-          position: 'relative',
-          transform: 'translateX(-50%)',
-          display: isLoading ? 'none' : 'block',
-        }}
-      />
-    </Fragment>
-  );
-}
-
 const styles = () => ({
   gridList: {
     transform: 'translateZ(0)',
@@ -67,6 +39,33 @@ const styles = () => ({
     color: 'white',
   }
 });
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+});
+
+const Image = ({ src, alt }) => {
+  const [isLoading, setIsLoading] = useState(true);
+  return (
+    <Fragment>
+      <CircularProgress style={{
+        display: isLoading ? 'block' : 'none',
+        margin: '40%',
+        width: '20%',
+        height: 'auto'
+      }}/>
+      <img src={src} alt={alt} onLoad={() => setIsLoading(false)}
+        style={{
+          left: '50%',
+          width: '100%',
+          position: 'relative',
+          transform: 'translateX(-50%)',
+          display: isLoading ? 'none' : 'block',
+        }}
+      />
+    </Fragment>
+  );
+}
 
 class RecipeList extends React.Component {
   state = {
@@ -168,7 +167,10 @@ class RecipeList extends React.Component {
           ))}
         </GridList>
         {!this.props.allRecipesFetched &&
-          <div style={{width:'100%', margin:'20px 0 40px', textAlign:'center'}}>
+          <div style={{
+            width: '100%', textAlign: 'center', marginTop: '20px',
+            marginBotom: isMobile ? '100px' : '40px'
+          }}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>
               : <Link style={{fontSize:'14px'}} href="#"

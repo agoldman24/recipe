@@ -54,6 +54,8 @@ import {
   PUSH
 } from '../variables/Constants';
 
+const isDefined = v => !!v && v !== "null" && v !== "undefined";
+
 const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
     case INIT_HYDRATION:
@@ -273,12 +275,11 @@ const displayUserDetail = (state = null, action) => {
     case SET_DISPLAY_USER:
       return null;
     case SET_DISPLAY_USER_DETAIL:
-      const {
-        profileImage, followers, following, createdRecipes, likedRecipes
-      } = action;
+      const { profileImage, followers, following, createdRecipes, likedRecipes } = action;
+      const activeDetail = localStorage.getItem("activeDetail");
       return {
         profileImage, followers, following, createdRecipes, likedRecipes,
-        activeDetail: FOLLOWERS
+        activeDetail: isDefined(activeDetail) ? activeDetail : FOLLOWERS
       };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
@@ -402,6 +403,7 @@ const profileEditor = (state = StateTree.profileEditor, action) => {
 const recipeCategory = (state = StateTree.recipeCategory, action) => {
   switch (action.type) {
     case SET_RECIPE_CATEGORY:
+      localStorage.setItem("recipeCategory", action.category);
       return action.category;
     case SIGN_OUT:
       return StateTree.recipeCategory;

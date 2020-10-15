@@ -8,6 +8,7 @@ import {
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   SET_DISPLAY_USER,
+  SET_RECIPE_CATEGORY,
   COMPLETE_HYDRATION
 } from '../actions';
 import {
@@ -22,11 +23,15 @@ function* runHydration() {
     const { data } = yield call(Api.get, '/getAllUsers');
     yield put({ type: POPULATE_USERS, users: data.users });
     const activeUserId = localStorage.getItem("activeUserId");
+    const activeTab = localStorage.getItem("activeTab");
+    const category = localStorage.getItem("recipeCategory");
     if (isDefined(activeUserId)) {
       const res = yield call(Api.get, '/getUserById?id=' + activeUserId);
       yield put({ type: SET_ACTIVE_USER, user: res.data.user });
     }
-    const activeTab = localStorage.getItem("activeTab");
+    if (isDefined(category)) {
+      yield put({ type: SET_RECIPE_CATEGORY, category });
+    }
     if (isDefined(activeTab)) {
       if (activeTab === PROFILE_TAB) {
         yield put({

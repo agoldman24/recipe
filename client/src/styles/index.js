@@ -293,7 +293,7 @@ export const detailStyle = {
   position: 'fixed',
   overflowY: 'scroll',
   zIndex: '5',
-  top: '0'
+  top: '60px'
 };
 
 export const headerStyle = {
@@ -303,14 +303,14 @@ export const headerStyle = {
 }
 
 export const titleStyle = {
-  padding: '20px',
+  padding: '10px 0 5px 10px',
   fontFamily: 'Shadows Into Light',
   width: '50%'
 }
 
 export const sectionStyle = {
-  margin: '0 15px',
-  fontSize: '14px',
+  margin: '3px 15px',
+  fontSize: '12px',
   paddingBottom: '50%',
   lineHeight: '2'
 }

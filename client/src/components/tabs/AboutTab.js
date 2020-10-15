@@ -9,7 +9,7 @@ export default function AboutTab(props) {
     <Grid
       container
       direction="column"
-      style={{alignItems:'center', paddingTop:'50px'}}
+      style={{alignItems:'center'}}
     >
       <Grid item>
         <Typography

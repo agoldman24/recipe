@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 
 const IngredientsTable = ({ ingredients }) => {
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} style={{boxShadow:'none', paddingBottom:'10px'}}>
       <Table size="small">
         <TableHead>
           <TableRow>

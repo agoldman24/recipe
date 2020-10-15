@@ -14,7 +14,7 @@ export default function ScrollButton({ isVisible, isLoggedIn }) {
   }
   return (
     <div style={{
-      display: isVisible ? 'block' : 'none',
+      display: isVisible ? 'initial' : 'none',
       position: 'fixed',
       width: '100vw',
       top: isLoggedIn ? '60px' : '80px',

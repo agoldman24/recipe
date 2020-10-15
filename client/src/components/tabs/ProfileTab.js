@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -7,7 +9,6 @@ import Fab from '@material-ui/core/Fab';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -34,6 +35,7 @@ import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import {
   defaultTheme,
+  detailStyle,
   gridStyle,
   errorStyle,
   usernameStyle,
@@ -47,13 +49,6 @@ import {
 } from "../../styles";
 
 const useStyles = makeStyles(() => ({
-  dialog: {
-    height: '100vh',
-    width: isMobile ? '100vw' : '500px',
-    maxHeight: 'none',
-    maxWidth: 'none',
-    margin: '0'
-  },
   appBar: {
     position: 'relative',
     background: '#424242'
@@ -220,47 +215,45 @@ const ProfileTab = props => {
             createdRecipes={props.createdRecipes}
           />
         }
-        <Dialog
-          open={open} disableBackdropClick
-          classes={{ paper: classes.dialog }}
-          TransitionComponent={Transition}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar style={{padding:'0 5px'}}>
-              <Button
-                style={{color: updateOccurred ? 'white' : 'grey'}}
-                onClick={handleSave}
-                disabled={!updateOccurred}
-              >
-                Save
-              </Button>
-              <Typography variant="h6" className={classes.title}>
-                Edit Profile
-              </Typography>
-              <IconButton
-                edge="start"
-                onClick={handleClickClose}
-                aria-label="close"
-                style={{color:'white'}}
-              >
-                <CloseIcon/>
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <Grid
-            container
-            direction="column"
-            style={{
-              width: '100%',
-              height: '100%',
-              background: defaultTheme.palette.background.default
-            }}
-          >
-            <Grid item style={{margin:'50px auto'}}>
-              <ProfileAvatar/>
-              <ProfileEditor/>
+        <Dialog disableBackdropClick open={open} TransitionComponent={Transition}>
+          <Card style={{...detailStyle, overflowY:'hidden', top:'0'}}>
+            <AppBar className={classes.appBar}>
+              <Toolbar style={{padding:'0 5px'}}>
+                <Button
+                  style={{color: updateOccurred ? 'white' : 'grey'}}
+                  onClick={handleSave}
+                  disabled={!updateOccurred}
+                >
+                  Save
+                </Button>
+                <Typography variant="h6" className={classes.title}>
+                  Edit Profile
+                </Typography>
+                <IconButton
+                  edge="start"
+                  onClick={handleClickClose}
+                  aria-label="close"
+                  style={{color:'white'}}
+                >
+                  <CloseIcon/>
+                </IconButton>
+              </Toolbar>
+            </AppBar>
+            <Grid
+              container
+              direction="column"
+              style={{
+                width: '100%',
+                height: '100%',
+                background: defaultTheme.palette.background.default
+              }}
+            >
+              <Grid item style={{margin:'50px auto'}}>
+                <ProfileAvatar/>
+                <ProfileEditor/>
+              </Grid>
             </Grid>
-          </Grid>
+          </Card>
         </Dialog>
       </div>
     }

@@ -57,6 +57,29 @@ class App extends React.Component {
     }
   }
   render() {
+    const activeTab = this.props.activeTab.name;	
+    const mobileStyle = {	
+      padding: this.props.isLoggedIn	
+        ? '50px 0 10px'	
+        : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
+          ? '0 0 10px 0'	
+          : activeTab === ABOUT_TAB ? '20px 0 5px 0' : '50px 0 10px',	
+      overflowY: 'auto',
+      overflowX: 'hidden'	
+    };	
+    const desktopStyle = {
+      position: 'relative',
+      top: this.props.isLoggedIn
+        ? '50px'
+        : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
+          ? '0' : '50px',
+      height: !this.props.isLoggedIn ? '100vh'
+        : this.props.activeTab.name === RECIPE_TAB
+          ? 'calc(100vh - 110px)'
+          : 'calc(100vh - 50px)',
+      overflowY: 'auto',
+      overflowX: 'hidden'
+    };
     return (
       <ThemeProvider theme={
         createMuiTheme(defaultTheme)
@@ -83,16 +106,7 @@ class App extends React.Component {
           id="container"
           component="main"
           maxWidth={isMobile ? "xs" : false}
-          style={{
-            position: 'relative',
-            top: this.props.isLoggedIn ? '50px' : '0',
-            height: !this.props.isLoggedIn ? '100vh'
-              : this.props.activeTab.name === RECIPE_TAB
-                ? 'calc(100vh - 110px)'
-                : 'calc(100vh - 50px)',
-            overflowY: 'auto',
-            overflowX: 'hidden'
-          }}
+          style={isMobile ? mobileStyle : desktopStyle}
         >
           <CssBaseline />
           {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}

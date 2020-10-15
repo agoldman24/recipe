@@ -37,7 +37,7 @@ const styles = () => ({
   },
   appBar: {
     position: 'fixed',
-    background: '#303030',
+    background: '#292929',
     width: isMobile ? '100vw' : '500px',
     left: isMobile ? '0' : 'calc(50vw - 250px)',
     height: '60px'
@@ -113,9 +113,9 @@ class RecipeDetail extends React.Component {
                       </IconButton>
                     : null
                 }
-                <Typography variant="h4"
-                  style={{width:'100%', fontFamily:'Shadows Into Light', color:'white'}}>
-                  {name}
+                <Typography noWrap={true}
+                  style={{width:'100%', fontSize:'24px', fontFamily:'Shadows Into Light', color:'white'}}>
+                    {name}
                 </Typography>
                 <div style={{display:'flex'}}>
                   {this.props.isLoggedIn && this.props.createdRecipeIds.includes(id) &&
@@ -125,47 +125,43 @@ class RecipeDetail extends React.Component {
                       <MoreHorizIcon/>
                     </IconButton>
                   }
-                  <IconButton onClick={this.props.onClose}
-                    style={{marginRight:'5px', color:'white'}}>
+                  <IconButton onClick={this.props.onClose} style={{marginRight:'5px', color:'white'}}>
                     <CloseIcon/>
                   </IconButton>
                 </div>
               </Toolbar>
             </AppBar>
-            <CardMedia
-              style={{height:'0', top:'60px', paddingTop:'100%', position:'relative'}}
-              image={image}
-              children={[]}s
-            >
-              {!ingredients ? <div style={loadingTextStyle}>Loading...</div> :
-              <div>
-                <div style={{width:'100%', display:'flex'}}>
-                  <Typography style={{...titleStyle, padding:'10px'}} variant="h4">Ingredients</Typography>
+            <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
+              {!ingredients
+              ? <div style={loadingTextStyle}>Loading...</div>
+              : <div>
+                  <div style={{width:'100%', display:'flex'}}>
+                    <Typography style={titleStyle} variant="h5">Ingredients</Typography>
+                  </div>
+                  <IngredientsTable ingredients={ingredients}/>
+                  <Typography style={titleStyle} variant="h5">Directions</Typography>
+                  {typeof directions === "string"
+                  ? <Typography style={sectionStyle}>{directions}</Typography>
+                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
+                      {directions.map((step, index) => (
+                        <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
+                          <Grid item style={{width:'6%'}}>
+                            <Typography style={{
+                              float: 'right',
+                              paddingRight: '5px',
+                              fontSize: '12px'
+                            }}>
+                              {index + 1 + "."}
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{width:'91%', paddingLeft:'5px'}}>
+                            <Typography style={{fontSize:'12px'}}>{step}</Typography>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    }
                 </div>
-                <IngredientsTable ingredients={ingredients}/>
-                <Typography style={{...titleStyle, padding:'10px'}} variant="h4">Directions</Typography>
-                {typeof directions === "string"
-                ? <Typography style={sectionStyle}>{directions}</Typography>
-                : <Grid container direction="column" style={{paddingBottom:'50%'}}>
-                    {directions.map((step, index) => (
-                      <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                        <Grid item style={{width:'6%'}}>
-                          <Typography style={{
-                            float: 'right',
-                            paddingRight: '5px',
-                            fontSize: '14px'
-                          }}>
-                            {index + 1 + "."}
-                          </Typography>
-                        </Grid>
-                        <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                          <Typography style={{fontSize:'14px'}}>{step}</Typography>
-                        </Grid>
-                      </Grid>
-                    ))}
-                  </Grid>
-                  }
-              </div>
               }
             </CardMedia>
           </Card>

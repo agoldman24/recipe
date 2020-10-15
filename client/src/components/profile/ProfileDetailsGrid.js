@@ -29,7 +29,7 @@ export default function ProfileDetailsGrid({
   createdRecipes
 }) {
   return (
-    <div>
+    <div style={{paddingBottom:'30px'}}>
       <Grid
         container
         direction="row"

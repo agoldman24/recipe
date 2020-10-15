@@ -243,7 +243,7 @@ export const tableStyle = {
 export const rowStyle = {
   width: isMobile ? '100%' : '50%',
   margin: 'auto',
-  paddingTop: '20px'
+  padding: '20px 0 15px'
 }
 
 export const fabStyle = {

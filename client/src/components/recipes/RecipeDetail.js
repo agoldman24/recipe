@@ -143,7 +143,7 @@ class RecipeDetail extends React.Component {
                     : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
                         {directions.map((step, index) => (
                           <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                            <Grid item style={{width:'6%'}}>
+                            <Grid item style={{width:'30px'}}>
                               <Typography style={{
                                 float: 'right',
                                 paddingRight: '5px',

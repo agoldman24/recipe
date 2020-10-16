@@ -61,7 +61,7 @@ const RecipeForms = ({
   const [anchorEl, setAnchorEl] = useState(null);
   const [anchorElChanged, setAnchorElChanged] = useState(false);
   const prevAnchorEl = usePrevious(anchorEl);
-  useEffect(() => setAnchorElChanged(prevAnchorEl !== anchorEl));
+  useEffect(() => setAnchorElChanged(prevAnchorEl !== anchorEl), [prevAnchorEl, anchorEl]);
 
   const setFocus = container => {
     if (container !== focusedContainer) {

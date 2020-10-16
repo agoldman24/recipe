@@ -73,7 +73,10 @@ class App extends React.Component {
         ? '50px'
         : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '0' : '50px',
-      height: !this.props.isLoggedIn ? '100vh'
+      height: !this.props.isLoggedIn
+        ? activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
+          ? '100vh'
+          : 'calc(100vh - 50px)'
         : this.props.activeTab.name === RECIPE_TAB
           ? 'calc(100vh - 110px)'
           : 'calc(100vh - 50px)',

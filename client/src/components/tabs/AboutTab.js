@@ -1,6 +1,7 @@
 import React from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { gradientTextStyle } from '../../styles';
 
@@ -25,7 +26,7 @@ export default function AboutTab(props) {
       </Grid>
       <Grid item style={{padding: isMobileOnly ? '10px 20px 100px 20px' : '20px'}}>
         <Typography style={{fontFamily:'Raleway', fontSize:'20px', fontWeight:'bold'}}>
-          RecipeBook is an online collection of recipes supplied by food enthusiasts wishing to share their culinary creations. Anyone with a desire to expand their cooking portfolio or simply decide what to make for dinner will find value in this digital hub of ideas. The site's content is facilitated by the exchange of recipes among users, especially those who are passionate about food and want to explore new things to cook. Creating an account is free; once registered, you can submit recipes by entering the ingredients, directions, and photograph of each dish. Visit the <a href="#" onClick={props.visitSignup}>Sign Up</a> page to get started!
+          RecipeBook is an online collection of recipes supplied by food enthusiasts wishing to share their culinary creations. Anyone with a desire to expand their cooking portfolio or simply decide what to make for dinner will find value in this digital hub of ideas. The site's content is facilitated by the exchange of recipes among users, especially those who are passionate about food and want to explore new things to cook. Creating an account is free; once registered, you can submit recipes by entering the ingredients, directions, and photograph of each dish. Visit the <Link href="#" onClick={props.visitSignup}>Sign Up</Link> page to get started!
         </Typography>
       </Grid>
     </Grid>

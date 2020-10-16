@@ -22,7 +22,7 @@ export default function RecipeItemField({
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalValue);
-  useEffect(() => setValue(ingredients[index].item), [ingredients]);
+  useEffect(() => setValue(ingredients[index].item), [ingredients, index]);
   return (
     <TextField
       InputProps={{

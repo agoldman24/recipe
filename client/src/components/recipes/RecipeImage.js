@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -80,12 +79,12 @@ export default function RecipeImage({
               <div style={rightSideActionStyle}>
                 {focusedContainer === "image"
                 ? !!image &&
-                  <IconButton
+                  <Fab
                     style={iconButtonStyle}
                     onClick={e => setAnchorEl(e.currentTarget)}
                   >
                     <MoreHorizIcon/>
-                  </IconButton>
+                  </Fab>
                 : <Fab
                     style={iconButtonStyle}
                     onClick={e => {

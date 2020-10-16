@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import RecipeList from '../recipes/RecipeList';
 import RecipeCategories from '../recipes/RecipeCategories';
 import { connect } from 'react-redux';
@@ -7,46 +7,48 @@ import { SET_RECIPE_CATEGORY, GET_RECIPES_REQUESTED } from '../../actions';
 import { SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
 
-const RecipeTab = props => {
-  useEffect(() => {
+class RecipeTab extends React.Component {
+  componentDidMount() {
     window.scrollTo(0, 0);
-    fetchRecipes();
-  }, []);
-  useEffect(() => {
-    const id = isMobileOnly ? 'root' : 'container';
-    document.getElementById(id).scroll({ top: 0, left: 0 });
-    fetchRecipes();
-  }, [props.category]);
-  
-  const fetchRecipes = () => {
-    if (!Object.keys(props.recipes).length) {
-      props.getRecipes(
-        props.requestType,
-        props.users,
-        props.activeUser,
-        props.friendRecipes,
-        props.createdRecipes
+    this.fetchRecipes();
+  }
+  componentDidUpdate(prevProps) {
+    if (prevProps.category !== this.props.category) {
+      const id = isMobileOnly ? 'root' : 'container';
+      document.getElementById(id).scrollTo(0, 0);
+      this.fetchRecipes();
+    }
+  }
+  fetchRecipes = () => {
+    if (!Object.keys(this.props.recipes).length) {
+      this.props.getRecipes(
+        this.props.requestType,
+        this.props.users,
+        this.props.activeUser,
+        this.props.friendRecipes,
+        this.props.createdRecipes
       );
     }
   }
-
-  return (
-    <div>
-      {props.networkFailed
-      ? <div style={errorStyle}>Network error</div>
-      : <div>
-          <RecipeList recipes={props.recipes}/>
-          {props.isLoggedIn &&
-            <RecipeCategories
-              category={props.category}
-              setCategory={props.setCategory}
-              toggleCreateMode={props.toggleCreateMode}
-            />
-          }
-        </div>
-      }
-    </div>
-  );
+  render() {
+    return (
+      <div>
+        {this.props.networkFailed
+        ? <div style={errorStyle}>Network error</div>
+        : <div>
+            <RecipeList recipes={this.props.recipes}/>
+            {this.props.isLoggedIn &&
+              <RecipeCategories
+                category={this.props.category}
+                setCategory={this.props.setCategory}
+                toggleCreateMode={this.props.toggleCreateMode}
+              />
+            }
+          </div>
+        }
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => {

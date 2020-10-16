@@ -22,7 +22,7 @@ export default function RecipeStepField({
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalValue);
-  useEffect(() => setValue(directionSteps[index]), [directionSteps]);
+  useEffect(() => setValue(directionSteps[index]), [directionSteps, index]);
   return (
     <TextField
       InputProps={{

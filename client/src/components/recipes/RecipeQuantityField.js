@@ -19,7 +19,7 @@ export default function RecipeQuantityField({
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalValue);
-  useEffect(() => setValue(ingredients[index].quantity), [ingredients]);
+  useEffect(() => setValue(ingredients[index].quantity), [ingredients, index]);
   return (
     <TextField
       InputProps={{

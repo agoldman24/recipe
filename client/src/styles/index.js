@@ -1,4 +1,4 @@
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 
 export const defaultTheme = {
   palette: {
@@ -164,7 +164,7 @@ export const buttonStyle = {
   border: '1px solid white',
   fontSize: '14px',
   padding: '2px',
-  width: isMobile ? '90%' : '40%'
+  width: isMobileOnly ? '90%' : '40%'
 };
 
 export const backButtonStyle = {
@@ -215,7 +215,7 @@ export const addButtonStyle = {
 
 export const rightSideActionStyle = {
   float: 'right',
-  width: isMobile ? '40%' : '30%'
+  width: isMobileOnly ? '40%' : '30%'
 }
 
 export const fullWidth = {
@@ -236,12 +236,12 @@ export const checkIconStyle = {
 }
 
 export const tableStyle = {
-  width: isMobile ? '100%' : '60%',
+  width: isMobileOnly ? '100%' : '60%',
   margin: 'auto'
 }
 
 export const rowStyle = {
-  width: isMobile ? '100%' : '50%',
+  width: isMobileOnly ? '100%' : '50%',
   margin: 'auto',
   padding: '20px 0 15px'
 }
@@ -287,8 +287,8 @@ export const whiteFadeBackgroundStyle = {
 
 export const detailStyle = {
   borderRadius: '0',
-  width: isMobile ? '100vw' : '500px',
-  left: isMobile ? '0' : 'calc(50vw - 250px)',
+  width: isMobileOnly ? '100vw' : '500px',
+  left: isMobileOnly ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
   overflowY: 'hidden',

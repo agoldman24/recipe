@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/styles';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Collapse from '@material-ui/core/Collapse';
@@ -102,7 +102,7 @@ export default function RecipeIngredients({
             <Grid item id="ingredients"
               style={{
                 ...fullWidth,
-                maxHeight: isMobile ? '320px' : '280px',
+                maxHeight: isMobileOnly ? '320px' : '280px',
                 width: '99%',
                 marginLeft: '0.5%',
                 overflow:'auto'

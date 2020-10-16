@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -45,12 +45,12 @@ class App extends React.Component {
   }
   componentDidMount() {
     document.getElementById('root').scrollTo(0, 0);
-    const id = isMobile ? 'root' : 'container';
+    const id = isMobileOnly ? 'root' : 'container';
     document.getElementById(id).addEventListener('scroll', this.handleScroll);
     this.props.initHydration();
   }
   handleScroll = () => {
-    const id = isMobile ? 'root' : 'container';
+    const id = isMobileOnly ? 'root' : 'container';
     const isScrollButtonVisible = !!document.getElementById(id).scrollTop;
     if (isScrollButtonVisible !== this.state.showScrollButton) {
       this.setState({ showScrollButton: isScrollButtonVisible });
@@ -105,8 +105,8 @@ class App extends React.Component {
         <Container
           id="container"
           component="main"
-          maxWidth={isMobile ? "xs" : false}
-          style={isMobile ? mobileStyle : desktopStyle}
+          maxWidth={isMobileOnly ? "xs" : false}
+          style={isMobileOnly ? mobileStyle : desktopStyle}
         >
           <CssBaseline />
           {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}

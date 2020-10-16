@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Link from '@material-ui/core/Link';
 import Slide from '@material-ui/core/Slide';
@@ -107,7 +107,7 @@ class RecipeList extends React.Component {
         </Dialog>
         <GridList cellHeight={250}
           className={this.props.classes.gridList}
-          cols={isMobile ? 1 : 4}
+          cols={isMobileOnly ? 1 : 4}
         >
           {Object.values(this.props.recipes)
             .sort((r1, r2) => r2.timestamp - r1.timestamp)
@@ -162,7 +162,7 @@ class RecipeList extends React.Component {
         {!this.props.allRecipesFetched &&
           <div style={{
             width: '100%', textAlign: 'center', marginTop: '20px',
-            marginBottom: isMobile ? '100px' : '40px'
+            marginBottom: isMobileOnly ? '100px' : '40px'
           }}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>

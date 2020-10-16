@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,8 +14,8 @@ import '../../index.css';
 
 const useStyles = makeStyles({
   table: {
-    marginLeft: isMobile ? '5%' : '10%',
-    width: isMobile ? '90%' : '80%'
+    marginLeft: isMobileOnly ? '5%' : '10%',
+    width: isMobileOnly ? '90%' : '80%'
   }
 });
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import RecipeList from '../recipes/RecipeList';
 import RecipeCategories from '../recipes/RecipeCategories';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { SET_RECIPE_CATEGORY, GET_RECIPES_REQUESTED } from '../../actions';
 import { SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
 import { errorStyle } from '../../styles';
@@ -13,7 +13,7 @@ const RecipeTab = props => {
     fetchRecipes();
   }, []);
   useEffect(() => {
-    const id = isMobile ? 'root' : 'container';
+    const id = isMobileOnly ? 'root' : 'container';
     document.getElementById(id).scroll({ top: 0, left: 0 });
     fetchRecipes();
   }, [props.category]);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/styles';
 import Collapse from '@material-ui/core/Collapse';
 import Typography from '@material-ui/core/Typography';
@@ -113,7 +113,7 @@ export default function RecipeImage({
                 image={image}
                 style={{
                   height: !!image
-                    ? isMobile ? '320px' : '280px'
+                    ? isMobileOnly ? '320px' : '280px'
                     : 'initial',
                   width: '350px',
                   padding: '0',

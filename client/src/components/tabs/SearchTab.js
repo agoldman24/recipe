@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -11,8 +11,8 @@ const useStyles = makeStyles(theme => ({
     position: 'fixed',
     left: 0,
     marginTop: '15px',
-    width: isMobile ? '90%' : '80%',
-    marginLeft: isMobile ? '5%' : '11%',
+    width: isMobileOnly ? '90%' : '80%',
+    marginLeft: isMobileOnly ? '5%' : '11%',
   },
   searchIcon: {
     position: 'absolute',
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: isMobile ? '100%' : '97%',
+    width: isMobileOnly ? '100%' : '97%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'

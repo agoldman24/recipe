@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -30,10 +30,10 @@ const NavigationMenu = props => {
 
   const fabStyle = {
     position: 'fixed',
-    right: isMobile ? 10 : 20,
-    bottom: isMobile ? 10 : 'initial',
-    top: isMobile ? 'initial' : 10,
-    background: isMobile
+    right: isMobileOnly ? 10 : 20,
+    bottom: isMobileOnly ? 10 : 'initial',
+    top: isMobileOnly ? 'initial' : 10,
+    background: isMobileOnly
       ? 'linear-gradient(to top left, #202020, grey)'
       : 'linear-gradient(to bottom left, #202020, grey)',
     boxShadow: 'none',

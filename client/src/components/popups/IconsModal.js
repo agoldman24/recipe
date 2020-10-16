@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2),
-    width: isMobile ? '300px' : '400px'
+    width: isMobileOnly ? '300px' : '400px'
   },
   button: {
     float: 'right',
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: isMobile ? '71.5%' : '79%',
+    width: isMobileOnly ? '71.5%' : '79%',
     outline: '1px solid white',
     background: '#202020',
     fontSize: '16px'
@@ -115,8 +115,8 @@ const IconsModal = props => {
                 {[0,1,2,3].map(column => !!icons[4*row + column] &&
                 <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
                   style={{
-                    width: isMobile ? '68px' : '90px',
-                    padding: isMobile ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                    width: isMobileOnly ? '68px' : '90px',
+                    padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
                     borderRadius: '10px'
                   }}
                   onClick={e => {
@@ -125,7 +125,7 @@ const IconsModal = props => {
                     closeModal();
                   }}
                 >
-                  <CircularProgress size={isMobile ? 45 : 65} style={{
+                  <CircularProgress size={isMobileOnly ? 45 : 65} style={{
                     display: icons[4*row + column].isLoading ? 'block' : 'none'
                   }}/>
                   <img alt="icon" src={icons[4*row + column].url}
@@ -134,9 +134,9 @@ const IconsModal = props => {
                       currentIcons[4*row + column].isLoading = false;
                       setIcons(currentIcons);
                     }}
-                    height={isMobile ? "46px" : "65px"} style={{
+                    height={isMobileOnly ? "46px" : "65px"} style={{
                       display: icons[4*row + column].isLoading ? 'none' : 'block',
-                      maxWidth: isMobile ? '65px' : '85px'
+                      maxWidth: isMobileOnly ? '65px' : '85px'
                   }}/>
                 </Grid>
                 )}

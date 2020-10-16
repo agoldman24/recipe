@@ -120,7 +120,7 @@ class RecipeDetail extends React.Component {
                     <Typography noWrap={true} style={headerStyle}>{name}</Typography>
                   </Grid>
                   <Grid item style={{width:'12%'}}>
-                    <IconButton onClick={this.props.onClose} style={{color:'white', paddingLeft:'28px'}}>
+                    <IconButton onClick={this.props.onClose} style={{color:'white', paddingLeft:'45%'}}>
                       <CloseIcon/>
                     </IconButton>
                   </Grid>

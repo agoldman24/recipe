@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -42,8 +43,8 @@ const styles = () => ({
 
 const loadingTextStyle = {
   textAlign: 'center',
-  fontSize:'16px',
-  marginTop:'20px'
+  fontSize: '16px',
+  marginTop: '20px'
 }
 
 class RecipeDetail extends React.Component {
@@ -82,7 +83,7 @@ class RecipeDetail extends React.Component {
             <AppBar className={this.props.classes.appBar}>
               <Toolbar style={{padding:'0'}}>
                 <Grid container direction="row">
-                  <Grid item style={{width:'10%'}}>
+                  <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
                     {this.props.isLoggedIn
                     ? this.props.createdRecipeIds.includes(id)
                       ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
@@ -116,11 +117,16 @@ class RecipeDetail extends React.Component {
                     : null
                     }
                   </Grid>
-                  <Grid item style={{width:'78%', margin:'auto'}}>
-                    <Typography noWrap={true} style={headerStyle}>{name}</Typography>
+                  <Grid item style={{
+                    margin: 'auto',
+                    width: this.props.isLoggedIn ? '78%' : '88%',
+                    paddingLeft: this.props.isLoggedIn ? '0' : '5%'
+                  }}>
+                    <Typography noWrap style={headerStyle}>{name}</Typography>
                   </Grid>
                   <Grid item style={{width:'12%'}}>
-                    <IconButton onClick={this.props.onClose} style={{color:'white', paddingLeft:'45%'}}>
+                    <IconButton onClick={this.props.onClose}
+                      style={{color:'white', paddingLeft: isMobileOnly ? '20%' : '45%'}}>
                       <CloseIcon/>
                     </IconButton>
                   </Grid>

@@ -297,9 +297,11 @@ export const detailStyle = {
 };
 
 export const headerStyle = {
-  background: 'white',
-  color: 'black',
-  padding: '16px 50px 10px 16px'
+  width: '100%',
+  textAlign: 'center',
+  fontSize: '24px',
+  fontFamily: 'Shadows Into Light',
+  color: 'white'
 }
 
 export const titleStyle = {

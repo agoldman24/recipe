@@ -26,6 +26,7 @@ import {
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   SET_RECIPE_CATEGORY,
+  SET_DETAIL_RECIPE,
   SET_ACTIVE_TAB,
   SIGN_IN_FAILED,
   SIGN_OUT,
@@ -421,6 +422,15 @@ const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
   }
 }
 
+const detailRecipe = (state = StateTree.detailRecipe, action) => {
+  switch (action.type) {
+    case SET_DETAIL_RECIPE:
+      return action.recipe;
+    default:
+      return state;
+  }
+}
+
 const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
   switch (action.type) {
     case APPEND_SAMPLE_RECIPES:
@@ -580,6 +590,7 @@ export default combineReducers({
   displayUserDetail,
   recipeCategory,
   recipeEditMode,
+  detailRecipe,
   sampleRecipes,
   friendRecipes,
   createdRecipes,

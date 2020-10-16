@@ -27,12 +27,15 @@ const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
 const getDisplayUserDetail = state => state.displayUserDetail;
 const getCreatedRecipes = state => state.createdRecipes;
+const getDetailRecipe = state => state.detailRecipe;
 
 function* updateUser(action) {
   try {
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
     const displayUserDetail = yield select(getDisplayUserDetail);
+    const createdRecipes = yield select(getCreatedRecipes);
+    const detailRecipe = yield select(getDetailRecipe);
     let res, res2, user, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE:
@@ -107,13 +110,12 @@ function* updateUser(action) {
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
         if (!!displayUser && activeUser.id === displayUser.id) {
-          const createdRecipes = yield select(getCreatedRecipes);
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: LIKED_RECIPES,
             recipe: displayUserDetail.activeDetail === CREATED_RECIPES
               ? createdRecipes[action.recipeId]
-              : displayUserDetail.likedRecipes[action.recipeId],
+              : action.keep ? detailRecipe : displayUserDetail.likedRecipes[action.recipeId],
             keep: action.keep,
             user
           });

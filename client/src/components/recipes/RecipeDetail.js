@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isMobile } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -22,14 +21,14 @@ import IngredientsTable from '../tables/IngredientsTable';
 import Api from '../../api/siteUrl';
 import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
-import { detailStyle, titleStyle, sectionStyle } from '../../styles';
+import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
   button: {
     textTransform: 'none'
   },
   paper: {
-    borderRadius: '4px 0 4px 4px',
+    borderRadius: '0 4px 4px 4px',
     border: '1px solid white'
   },
   root: {
@@ -82,53 +81,53 @@ class RecipeDetail extends React.Component {
           <Card style={detailStyle}>
             <AppBar className={this.props.classes.appBar}>
               <Toolbar style={{padding:'0'}}>
-                {this.props.isLoggedIn
-                ? this.props.isLiking && this.state.likedId === id
-                  ? <CircularProgress style={{
-                      width:'20px', height:'20px', margin:'12px', color:'white'
-                    }}/>
-                  : this.props.likedRecipeIds.includes(id)
-                    ? <IconButton
-                        className={this.props.classes.icon}
-                        onClick={() => {
-                          this.setState({ likedId: id });
-                          this.props.updateLikedRecipes(
-                            this.props.activeUser.id, id, false
-                          );
-                        }}>
-                        <FavoriteIcon/>
-                      </IconButton>
-                    : <IconButton
-                        className={this.props.classes.icon}
-                        onClick={() => {
-                          this.setState({ likedId: id });
-                          this.props.updateLikedRecipes(
-                            this.props.activeUser.id, id, true
-                          );
-                        }}>
-                        <FavoriteBorderIcon/>
-                      </IconButton>
+                <Grid container direction="row">
+                  <Grid item style={{width:'10%'}}>
+                    {this.props.isLoggedIn
+                    ? this.props.createdRecipeIds.includes(id)
+                      ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                          disabled={!ingredients}
+                          style={{color:'white'}}>
+                          <MoreHorizIcon/>
+                        </IconButton>
+                      : this.props.isLiking && this.state.likedId === id
+                        ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
+                        : this.props.likedRecipeIds.includes(id)
+                          ? <IconButton
+                              style={{padding:'12px 9px'}}
+                              onClick={() => {
+                                this.setState({ likedId: id });
+                                this.props.updateLikedRecipes(
+                                  this.props.activeUser.id, id, false
+                                );
+                              }}>
+                              <FavoriteIcon/>
+                            </IconButton>
+                          : <IconButton
+                              style={{padding:'12px 9px'}}
+                              onClick={() => {
+                                this.setState({ likedId: id });
+                                this.props.updateLikedRecipes(
+                                  this.props.activeUser.id, id, true
+                                );
+                              }}>
+                              <FavoriteBorderIcon/>
+                            </IconButton>
                     : null
-                }
-                <Typography noWrap={true}
-                  style={{width:'100%', fontSize:'24px', fontFamily:'Shadows Into Light', color:'white'}}>
-                    {name}
-                </Typography>
-                <div style={{display:'flex'}}>
-                  {this.props.isLoggedIn && this.props.createdRecipeIds.includes(id) &&
-                    <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
-                      disabled={!ingredients}
-                      style={{float:'right', paddingRight:'0', color:'white'}}>
-                      <MoreHorizIcon/>
+                    }
+                  </Grid>
+                  <Grid item style={{width:'78%', margin:'auto'}}>
+                    <Typography noWrap={true} style={headerStyle}>{name}</Typography>
+                  </Grid>
+                  <Grid item style={{width:'12%'}}>
+                    <IconButton onClick={this.props.onClose} style={{color:'white', paddingLeft:'28px'}}>
+                      <CloseIcon/>
                     </IconButton>
-                  }
-                  <IconButton onClick={this.props.onClose} style={{marginRight:'5px', color:'white'}}>
-                    <CloseIcon/>
-                  </IconButton>
-                </div>
+                  </Grid>
+                </Grid>
               </Toolbar>
             </AppBar>
-            <div style={{height:'100%', overflowY:'auto'}}>
+            <div style={{height:'100%', overflowY:'scroll'}}>
               <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
                 {!ingredients
                 ? <div style={loadingTextStyle}>Loading...</div>
@@ -169,12 +168,12 @@ class RecipeDetail extends React.Component {
             anchorEl={this.state.anchorEl}
             onClose={() => this.setState({ anchorEl: null })}
             anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'center',
+              vertical: 'center',
+              horizontal: 'right',
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'center',
+              horizontal: 'left',
             }}
             classes={{
               paper: this.props.classes.paper

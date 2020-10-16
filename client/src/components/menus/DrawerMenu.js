@@ -57,8 +57,6 @@ const DrawerMenu = props => {
       case "Profile":
         props.visitUserProfile(props.activeUser);
         break;
-      case "Drafts":
-        break;
       case "Create":
         props.toggleCreateMode();
         break;
@@ -74,8 +72,6 @@ const DrawerMenu = props => {
     switch (text) {
       case "Profile":
         return <PersonIcon />
-      case "Drafts":
-        return <MenuBookIcon />;
       case "Create":
         return <CreateIcon />;
       case "Sign Out":
@@ -92,7 +88,7 @@ const DrawerMenu = props => {
       onClick={toggleDrawer}
     >
       <List>
-        {['Profile', 'Drafts', 'Create', 'Sign Out']
+        {['Profile', 'Create', 'Sign Out']
         .map(text => (
           <ListItem
             button

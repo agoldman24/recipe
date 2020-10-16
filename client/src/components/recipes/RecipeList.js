@@ -2,6 +2,9 @@ import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobile } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
+import Link from '@material-ui/core/Link';
+import Slide from '@material-ui/core/Slide';
+import Dialog from '@material-ui/core/Dialog';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -9,11 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Link from '@material-ui/core/Link';
-import Slide from '@material-ui/core/Slide';
-import Dialog from '@material-ui/core/Dialog';
 import RecipeDetail from './RecipeDetail';
-import { GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED } from '../../actions';
+import { GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED, SET_DETAIL_RECIPE } from '../../actions';
 import {
   RECIPE_TAB, SAMPLE_RECIPES, FRIEND_RECIPES,
   CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
@@ -34,9 +34,6 @@ const styles = () => ({
     fontFamily: 'Shadows Into Light',
     fontSize: '20px',
     height: '50px'
-  },
-  icon: {
-    color: 'white',
   }
 });
 
@@ -70,7 +67,7 @@ const Image = ({ src, alt }) => {
 class RecipeList extends React.Component {
   state = {
     isDetailOpen: false,
-    detailRecipeId: null,
+    detailRecipe: null,
     likedId: null
   }
   componentDidUpdate(prevProps) {
@@ -91,6 +88,7 @@ class RecipeList extends React.Component {
     );
   }
   render() {
+    console.log(this.state);
     return (
       <div>
         <Dialog
@@ -98,15 +96,12 @@ class RecipeList extends React.Component {
           open={this.state.isDetailOpen}
           TransitionComponent={Transition}
         >
-          {this.state.detailRecipeId &&
+          {this.state.detailRecipe &&
           <RecipeDetail
-            id={this.state.detailRecipeId}
-            name={this.props.recipes[this.state.detailRecipeId].name}
-            image={this.props.recipes[this.state.detailRecipeId].image}
-            onClose={() => {
-              this.setState({ isDetailOpen: false });
-              setTimeout(() => this.setState({ detailRecipeId: null }), 1);
-            }}
+            id={this.state.detailRecipe.id}
+            name={this.state.detailRecipe.name}
+            image={this.state.detailRecipe.image}
+            onClose={() => this.setState({ isDetailOpen: false })}
           />
           }
         </Dialog>
@@ -120,8 +115,8 @@ class RecipeList extends React.Component {
               <GridListTile key={recipe.id} className="cardMedia"
                 style={{height:'fit-content', padding:'0'}}
                 onClick={() => {
-                  this.setState({ isDetailOpen: true });
-                  this.setState({ detailRecipeId: recipe.id });
+                  this.setState({ isDetailOpen: true, detailRecipe: recipe });
+                  this.props.setDetailRecipe(recipe);
                 }}
               >
                 <Image src={recipe.image} alt={recipe.name} />
@@ -133,9 +128,7 @@ class RecipeList extends React.Component {
                   actionPosition="left"
                   actionIcon={this.props.isLoggedIn
                   ? this.props.isLiking && this.state.likedId === recipe.id
-                    ? <CircularProgress style={{
-                        width:'20px', height:'20px', margin:'12px', color:'white'
-                      }}/>
+                    ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
                     : this.props.likedRecipeIds.includes(recipe.id)
                       ? <IconButton
                           className={this.props.classes.icon}
@@ -222,6 +215,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    setDetailRecipe: recipe => dispatch({ type: SET_DETAIL_RECIPE, recipe }),
     updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: LIKED_RECIPE_IDS,

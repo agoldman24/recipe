@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
@@ -27,6 +27,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
 const RecipeForms = ({
   originalName,
   originalImage,
@@ -51,6 +59,9 @@ const RecipeForms = ({
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [focusedContainer, setFocusedContainer] = useState(isEditMode ? "image" : null);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorElChanged, setAnchorElChanged] = useState(false);
+  const prevAnchorEl = usePrevious(anchorEl);
+  useEffect(() => setAnchorElChanged(prevAnchorEl !== anchorEl));
 
   const setFocus = container => {
     if (container !== focusedContainer) {
@@ -134,7 +145,7 @@ const RecipeForms = ({
   return (
     <ClickAwayListener
       onClickAway={e => {
-        if (!anchorEl &&
+        if (!anchorElChanged &&
           !isIconsModalVisible &&
           !isFileTypeModalVisible
         ) {
@@ -218,7 +229,7 @@ const RecipeForms = ({
           setAnchorEl(null)
         }}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'center',
           horizontal: 'left',
         }}
         transformOrigin={{

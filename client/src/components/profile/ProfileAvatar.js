@@ -88,30 +88,30 @@ const ProfileAvatar = props => {
       />
       <Spinner isVisible={isSpinnerVisible}/>
       <div style={{height:'120px', textAlign:'center'}}>
-      {profileImageLoaded
-      ? <Avatar
-          alt="Profile"
-          src={!!profileEditor
-            ? profileEditor.profileImage
-            : displayUserDetail.profileImage
-          }
-          style={imageStyle}
-        />
-      : <Avatar alt="Profile" style={imageStyle}>
-          <div style={{textAlign:'center'}}>
-            <Typography style={highlightedNumberStyle}>
-              {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
-            </Typography>
-          </div>
-        </Avatar>
-      }
-      {!!profileEditor &&
-        <label style={editPhotoButtonStyle} className="fileContainer"
-          onClick={e => setAnchorEl(e.currentTarget)}
-        >
-          Change Profile Photo
-        </label>
-      }
+        {profileImageLoaded
+        ? <Avatar
+            alt="Profile"
+            src={!!profileEditor
+              ? profileEditor.profileImage
+              : displayUserDetail.profileImage
+            }
+            style={imageStyle}
+          />
+        : <Avatar alt="Profile" style={imageStyle}>
+            <div style={{textAlign:'center'}}>
+              <Typography style={highlightedNumberStyle}>
+                {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
+              </Typography>
+            </div>
+          </Avatar>
+        }
+        {!!profileEditor &&
+          <label style={editPhotoButtonStyle} className="fileContainer"
+            onClick={e => setAnchorEl(e.currentTarget)}
+          >
+            Change Profile Photo
+          </label>
+        }
       </div>
       <Popover
         open={!!anchorEl}

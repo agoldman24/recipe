@@ -78,97 +78,95 @@ class RecipeDetail extends React.Component {
           directions={directions}
           isCreateMode={false}
         />
-      : <div>
-          <Card style={detailStyle}>
-            <AppBar className={this.props.classes.appBar}>
-              <Toolbar style={{padding:'0'}}>
-                <Grid container direction="row">
-                  <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
-                    {this.props.isLoggedIn
-                    ? this.props.createdRecipeIds.includes(id)
-                      ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
-                          disabled={!ingredients}
-                          style={{color:'white'}}>
-                          <MoreHorizIcon/>
-                        </IconButton>
-                      : this.props.isLiking && this.state.likedId === id
-                        ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
-                        : this.props.likedRecipeIds.includes(id)
-                          ? <IconButton
-                              style={{padding:'12px 9px'}}
-                              onClick={() => {
-                                this.setState({ likedId: id });
-                                this.props.updateLikedRecipes(
-                                  this.props.activeUser.id, id, false
-                                );
-                              }}>
-                              <FavoriteIcon/>
-                            </IconButton>
-                          : <IconButton
-                              style={{padding:'12px 9px'}}
-                              onClick={() => {
-                                this.setState({ likedId: id });
-                                this.props.updateLikedRecipes(
-                                  this.props.activeUser.id, id, true
-                                );
-                              }}>
-                              <FavoriteBorderIcon/>
-                            </IconButton>
-                    : null
-                    }
-                  </Grid>
-                  <Grid item style={{
-                    margin: 'auto',
-                    width: this.props.isLoggedIn ? '78%' : '88%',
-                    paddingLeft: this.props.isLoggedIn ? '0' : '5%'
-                  }}>
-                    <Typography noWrap style={headerStyle}>{name}</Typography>
-                  </Grid>
-                  <Grid item style={{width:'12%'}}>
-                    <IconButton onClick={this.props.onClose}
-                      style={{color:'white', paddingLeft: isMobileOnly ? '20%' : '45%'}}>
-                      <CloseIcon/>
-                    </IconButton>
-                  </Grid>
+      : <Card style={detailStyle}>
+          <AppBar className={this.props.classes.appBar}>
+            <Toolbar style={{padding:'0'}}>
+              <Grid container direction="row">
+                <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
+                  {this.props.isLoggedIn
+                  ? this.props.createdRecipeIds.includes(id)
+                    ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                        disabled={!ingredients}
+                        style={{color:'white'}}>
+                        <MoreHorizIcon/>
+                      </IconButton>
+                    : this.props.isLiking && this.state.likedId === id
+                      ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
+                      : this.props.likedRecipeIds.includes(id)
+                        ? <IconButton
+                            style={{padding:'12px 9px'}}
+                            onClick={() => {
+                              this.setState({ likedId: id });
+                              this.props.updateLikedRecipes(
+                                this.props.activeUser.id, id, false
+                              );
+                            }}>
+                            <FavoriteIcon/>
+                          </IconButton>
+                        : <IconButton
+                            style={{padding:'12px 9px'}}
+                            onClick={() => {
+                              this.setState({ likedId: id });
+                              this.props.updateLikedRecipes(
+                                this.props.activeUser.id, id, true
+                              );
+                            }}>
+                            <FavoriteBorderIcon/>
+                          </IconButton>
+                  : null
+                  }
                 </Grid>
-              </Toolbar>
-            </AppBar>
-            <div style={{height:'100%', overflowY:'scroll'}}>
-              <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
-                {!ingredients
-                ? <div style={loadingTextStyle}>Loading...</div>
-                : <div>
-                    <div style={{width:'100%', display:'flex'}}>
-                      <Typography style={titleStyle} variant="h5">Ingredients</Typography>
-                    </div>
-                    <IngredientsTable ingredients={ingredients}/>
-                    <Typography style={titleStyle} variant="h5">Directions</Typography>
-                    {typeof directions === "string"
-                    ? <Typography style={sectionStyle}>{directions}</Typography>
-                    : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
-                        {directions.map((step, index) => (
-                          <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                            <Grid item style={{width:'30px'}}>
-                              <Typography style={{
-                                float: 'right',
-                                paddingRight: '5px',
-                                fontSize: '12px'
-                              }}>
-                                {index + 1 + "."}
-                              </Typography>
-                            </Grid>
-                            <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                              <Typography style={{fontSize:'12px'}}>{step}</Typography>
-                            </Grid>
-                          </Grid>
-                        ))}
-                      </Grid>
-                      }
+                <Grid item style={{
+                  margin: 'auto',
+                  width: this.props.isLoggedIn ? '78%' : '88%',
+                  paddingLeft: this.props.isLoggedIn ? '0' : '5%'
+                }}>
+                  <Typography noWrap style={headerStyle}>{name}</Typography>
+                </Grid>
+                <Grid item style={{width:'12%'}}>
+                  <IconButton onClick={this.props.onClose}
+                    style={{color:'white', paddingLeft: isMobileOnly ? '30%' : '45%'}}>
+                    <CloseIcon/>
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </Toolbar>
+          </AppBar>
+          <div style={{height:'100%', overflowY:'scroll'}}>
+            <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
+              {!ingredients
+              ? <div style={loadingTextStyle}>Loading...</div>
+              : <div>
+                  <div style={{width:'100%', display:'flex'}}>
+                    <Typography style={titleStyle} variant="h5">Ingredients</Typography>
                   </div>
-                }
-              </CardMedia>
-            </div>
-          </Card>
+                  <IngredientsTable ingredients={ingredients}/>
+                  <Typography style={titleStyle} variant="h5">Directions</Typography>
+                  {typeof directions === "string"
+                  ? <Typography style={sectionStyle}>{directions}</Typography>
+                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
+                      {directions.map((step, index) => (
+                        <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
+                          <Grid item style={{width:'30px'}}>
+                            <Typography style={{
+                              float: 'right',
+                              paddingRight: '5px',
+                              fontSize: '12px'
+                            }}>
+                              {index + 1 + "."}
+                            </Typography>
+                          </Grid>
+                          <Grid item style={{width:'91%', paddingLeft:'5px'}}>
+                            <Typography style={{fontSize:'12px'}}>{step}</Typography>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Grid>
+                    }
+                </div>
+              }
+            </CardMedia>
+          </div>
           <Popover
             open={!!this.state.anchorEl}
             anchorEl={this.state.anchorEl}
@@ -212,7 +210,7 @@ class RecipeDetail extends React.Component {
               </Grid>
             </Grid>
           </Popover>
-        </div>
+        </Card>
   }
 };
 

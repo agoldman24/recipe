@@ -6,14 +6,15 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FileBase from 'react-file-base64';
 import {
   borderStyle, sectionTitleStyle, rightSideActionStyle, fullWidth,
-  iconStyle, iconButtonStyle, errorMessageStyle
+  iconButtonStyle, errorMessageStyle
 } from '../../styles';
 import '../../index.css';
 
@@ -40,7 +41,7 @@ export default function RecipeImage({
   isErrored,
   image,
   setFocus,
-  anchorEl, setAnchorEl,
+  setAnchorEl,
   setIconsModalVisible,
   onImageChange
 }) {
@@ -78,20 +79,13 @@ export default function RecipeImage({
               </Typography>
               <div style={rightSideActionStyle}>
                 {focusedContainer === "image"
-                ? !!image && <Fab
+                ? !!image &&
+                  <IconButton
                     style={iconButtonStyle}
-                    onClick={e => {
-                      e.stopPropagation();
-                      setAnchorEl(e.currentTarget)
-                    }}
+                    onClick={e => setAnchorEl(e.currentTarget)}
                   >
-                    <MenuRoundedIcon
-                      style={{
-                        ...iconStyle,
-                        background: !!anchorEl ? '#292929' : 'none'
-                      }}
-                    />
-                  </Fab>
+                    <MoreHorizIcon/>
+                  </IconButton>
                 : <Fab
                     style={iconButtonStyle}
                     onClick={e => {

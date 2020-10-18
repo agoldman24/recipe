@@ -120,11 +120,13 @@ const RecipeForms = ({
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
       setFileTypeModalVisible(true);
     } else {
-      const data = file.base64.toString();
-      const newImage = URL.createObjectURL(b64toBlob(data));
-      setImage(newImage);
       setAnchorEl(null);
-      setGlobalDiff(undefined, newImage);
+      setTimeout(() => {
+        const data = file.base64.toString();
+        const newImage = URL.createObjectURL(b64toBlob(data));
+        setImage(newImage);
+        setGlobalDiff(undefined, newImage);
+      }, 1);
     }
   }
 
@@ -242,7 +244,7 @@ const RecipeForms = ({
       >
         <Grid container direction="column">
           <Grid item style={{background:'#292929', borderBottom: '1px solid white', padding:'10px'}}>
-            <label className="fileContainer" style={{fontSize:'16px'}} onClick={e => e.stopPropagation()}>
+            <label className="fileContainer" style={{fontSize:'16px'}}>
               Upload Photo
               <FileBase type="file" onDone={onImageChange}/>
             </label>

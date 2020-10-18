@@ -226,9 +226,7 @@ const ProfileTab = props => {
                 >
                   Save
                 </Button>
-                <Typography variant="h6" className={classes.title}>
-                  Edit Profile
-                </Typography>
+                <Typography className={classes.title}>Edit Profile</Typography>
                 <IconButton
                   edge="start"
                   onClick={handleClickClose}

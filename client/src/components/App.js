@@ -57,7 +57,7 @@ class App extends React.Component {
     }
   }
   render() {
-    const activeTab = this.props.activeTab.name;	
+    const activeTab = this.props.activeTab.name;
     const mobileStyle = {	
       padding: this.props.isLoggedIn	
         ? '50px 0 10px'	

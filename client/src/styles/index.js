@@ -194,11 +194,6 @@ export const deleteButtonStyle = {
   border: '2px solid #ff4621'
 }
 
-export const saveButtonStyle = {
-  color: '#df52ff',
-  border: '2px solid #df52ff'
-}
-
 export const cancelButtonStyle = {
   color: '#cccccc',
   border: '2px solid #cccccc'
@@ -276,13 +271,6 @@ export const darkBackgroundStyle = {
   width: '100vw',
   zIndex: '4',
   background: 'rgba(0,0,0,0.7)'
-}
-
-export const whiteFadeBackgroundStyle = {
-  position: 'absolute', top: '0', left: '0',
-  width: '100%', verticalAlign: 'text-top',
-  backgroundImage: 'linear-gradient(white, rgba(0,0,0,0))',
-  color: 'black', fontWeight: 'bold'
 }
 
 export const detailStyle = {

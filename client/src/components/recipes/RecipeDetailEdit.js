@@ -1,45 +1,36 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import SaveIcon from '@material-ui/icons/Save';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
 import RecipeForms from './RecipeForms';
 import { TOGGLE_RECIPE_EDIT_MODE, CREATE_RECIPE_REQUESTED } from '../../actions';
-import {
-  detailStyle, containerStyle, buttonStyle,
-  deleteButtonStyle, saveButtonStyle, cancelButtonStyle
-} from '../../styles';
+import { detailStyle } from '../../styles';
 
-const fixedContainerStyle = {
-  ...containerStyle,
-  border: 'none',
-  margin: '0',
-  width: 'inherit'
-}
-
-const fixedButtonStyle = {
-  ...buttonStyle,
-  width: '100px',
-  margin: '10px 0 10px 10px'
-}
-
-const fixedDeleteButtonStyle = {
-  ...fixedButtonStyle,
-  ...deleteButtonStyle
-}
-
-const fixedSaveButtonStyle = {
-  ...fixedButtonStyle,
-  ...saveButtonStyle
-}
-
-const fixedCancelButtonStyle = {
-  ...fixedButtonStyle,
-  ...cancelButtonStyle
-}
+const useStyles = makeStyles(() => ({
+  appBar: {
+    position: 'relative',
+    background: '#292929'
+  },
+  title: {
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: 'bold',
+    fontFamily: 'Raleway',
+    fontSize: '20px',
+    flex: 1,
+  },
+  button: {
+    color: '#45bbff'
+  }
+}));
 
 const RecipeDetailEdit = props => {
+  const classes = useStyles();
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [isErrored, setIsErrored] = useState(false);
   const [isNameEmpty, setIsNameEmpty] = useState(props.isCreateMode);
@@ -54,47 +45,20 @@ const RecipeDetailEdit = props => {
     directionsType === "string" ? props.directions : "");
   const [directionSteps, setDirectionSteps] = useState(
     directionsType === "string" ? [] : props.directions);
+  const emptyField = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
   return (
     <Card style={detailStyle}>
-      <Grid
-        container
-        direction="column"
-        style={fixedContainerStyle}
-      >
-        <Grid item style={{
-          height: '45px',
-          width:'inherit'
-        }}>
-          <div style={{
-            display: 'flex',
-            position: 'fixed',
-            zIndex: '99',
-            paddingLeft: '2px'
-          }}>
-            {props.isEditMode
-            ? <div>
-                <Button style={fixedDeleteButtonStyle}>
-                  Delete
-                </Button>
-                <Button
-                  startIcon={<SaveIcon/>}
-                  style={{
-                    ...fixedSaveButtonStyle,
-                    opacity: !isSaveEnabled ? '0.3' : '1.0'
-                  }}
-                  disabled={!isSaveEnabled}
-                  onClick={() => {
-                    setIsErrored(isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty);
-                  }}
-                >
+      <AppBar className={classes.appBar}>
+        <Toolbar style={{padding:'0'}}>
+          <Grid container direction="row">
+            <Grid item style={{width:'14%'}}>
+              {props.isEditMode
+              ? <Button className={classes.button}
+                  disabled={!isSaveEnabled} onClick={() => setIsErrored(emptyField)}>
                   Save
                 </Button>
-              </div>
-            : <Button
-                style={fixedSaveButtonStyle}
-                onClick={() => {
-                  const empty = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
-                  if (empty) {
+              : <Button className={classes.button} style={{float:'right'}} onClick={() => {
+                  if (emptyField) {
                     setIsErrored(true);
                   } else if (!props.isSpinnerVisible) {
                     const directions = directionsType === "string"
@@ -103,34 +67,30 @@ const RecipeDetailEdit = props => {
                     props.onClose();
                     props.createRecipe(name, image, ingredients, directions);
                   }
-                }}
-              >
-                Submit
-              </Button>
-            }
-            <Button
-              style={fixedCancelButtonStyle}
-              onClick={() => {
+                }}>
+                  Submit
+                </Button>
+              }
+            </Grid>
+            <Grid item style={{margin:'auto', width:'71%'}}>
+              <Typography className={classes.title}>
+                {props.isEditMode ? "Edit Recipe" : "Create Recipe"}
+              </Typography>
+            </Grid>
+            <Grid item style={{width:'15%', textAlign:'center'}}>
+              <Button onClick={() => {
                 if (props.isEditMode) {
                   props.toggleEditMode();
                 } else {
                   props.onClose();
                 }
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-          <div style={{
-            zIndex: '98',
-            width: 'inherit',
-            height: '50px',
-            position: 'fixed',
-            background: '#292929',
-            borderBottom: '1px solid #a3a3a3'
-          }}/>
-        </Grid>
-      </Grid>
+              }}>
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
       <RecipeForms
         originalName={props.name}
         originalImage={props.image}

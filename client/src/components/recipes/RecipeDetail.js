@@ -32,9 +32,6 @@ const styles = () => ({
     borderRadius: '0 4px 4px 4px',
     border: '1px solid white'
   },
-  root: {
-    marginTop: '-10px'
-  },
   appBar: {
     position: 'relative',
     background: '#292929'
@@ -172,8 +169,8 @@ class RecipeDetail extends React.Component {
             anchorEl={this.state.anchorEl}
             onClose={() => this.setState({ anchorEl: null })}
             anchorOrigin={{
-              vertical: 'center',
-              horizontal: 'right',
+              vertical: 'bottom',
+              horizontal: 'center',
             }}
             transformOrigin={{
               vertical: 'top',

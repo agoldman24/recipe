@@ -55,13 +55,17 @@ const IconsModal = props => {
   const classes = useStyles();
   const { isVisible, closeModal, onConfirm } = props;
   const [searchVal, setSearchVal] = useState("");
+  const [lastSearchVal, setLastSearchVal] = useState("");
   const [icons, setIcons] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [message, setMessage] = useState("");
   useEffect(() => {
     if (isFetching) {
       setMessage("");
-      setIcons([]);
+      if (searchVal.trim() === lastSearchVal.trim()) {
+        setIcons([]);
+      }
+      setLastSearchVal(searchVal);
       const wordArray = searchVal.split(' ');
       const queryString = wordArray.reduce((accum, current, index) => {
         accum += current;
@@ -89,8 +93,6 @@ const IconsModal = props => {
   }, [isFetching, searchVal]);
   return (
     <Modal
-      aria-labelledby="transition-modal-title"
-      aria-describedby="transition-modal-description"
       className={classes.modal}
       open={isVisible}
       onClose={e => {
@@ -135,45 +137,43 @@ const IconsModal = props => {
               {isFetching ? <CircularProgress size={20} style={{color:'white'}}/> : "Search"}
             </Button>
           </Grid>
-          <div style={{height: isMobileOnly ? '310px' : '380px'}}>
-            <Grid item><p style={{fontSize:'14px', paddingLeft:'5px'}}>{message}</p></Grid>
-            {!!icons.length &&
-            [0,1,2,3,4].map(row =>
-              <Grid container direction="column" key={"row_" + row}>
-                <Grid container direction="row">
-                  {[0,1,2,3].map(column => !!icons[4*row + column] &&
-                  <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
-                    style={{
-                      width: isMobileOnly ? '68px' : '90px',
-                      padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
-                      borderRadius: '10px'
+          <Grid item><p style={{fontSize:'14px', paddingLeft:'5px'}}>{message}</p></Grid>
+          {!!icons.length &&
+          [0,1,2,3,4].map(row =>
+            <Grid container direction="column" key={"row_" + row}>
+              <Grid container direction="row">
+                {[0,1,2,3].map(column => !!icons[4*row + column] &&
+                <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
+                  style={{
+                    width: isMobileOnly ? '68px' : '90px',
+                    padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                    borderRadius: '10px'
+                  }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    onConfirm(icons[4*row + column].url);
+                    closeModal();
+                  }}
+                >
+                  <CircularProgress size={isMobileOnly ? 45 : 65} style={{
+                    display: icons[4*row + column].isLoading ? 'block' : 'none'
+                  }}/>
+                  <img alt="icon" src={icons[4*row + column].url}
+                    onLoad={() => {
+                      let currentIcons = [...icons];
+                      currentIcons[4*row + column].isLoading = false;
+                      setIcons(currentIcons);
+                      setIsFetching(false);
                     }}
-                    onClick={e => {
-                      e.stopPropagation();
-                      onConfirm(icons[4*row + column].url);
-                      closeModal();
-                    }}
-                  >
-                    <CircularProgress size={isMobileOnly ? 45 : 65} style={{
-                      display: icons[4*row + column].isLoading ? 'block' : 'none'
-                    }}/>
-                    <img alt="icon" src={icons[4*row + column].url}
-                      onLoad={() => {
-                        let currentIcons = [...icons];
-                        currentIcons[4*row + column].isLoading = false;
-                        setIcons(currentIcons);
-                        setIsFetching(false);
-                      }}
-                      height={isMobileOnly ? "46px" : "65px"} style={{
-                        display: icons[4*row + column].isLoading ? 'none' : 'block',
-                        maxWidth: isMobileOnly ? '65px' : '85px'
-                    }}/>
-                  </Grid>
-                  )}
+                    height={isMobileOnly ? "46px" : "65px"} style={{
+                      display: icons[4*row + column].isLoading ? 'none' : 'block',
+                      maxWidth: isMobileOnly ? '65px' : '85px'
+                  }}/>
                 </Grid>
+                )}
               </Grid>
-            )}
-          </div>
+            </Grid>
+          )}
           <Grid item style={{width:'100%'}}>
             <Button style={{float:'right'}}
               onClick={e => {

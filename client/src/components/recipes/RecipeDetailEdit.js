@@ -57,7 +57,7 @@ const RecipeDetailEdit = props => {
       <AppBar className={classes.appBar}>
         <Toolbar style={{padding:'0'}}>
           <Grid container direction="row" style={{padding:'0 15px'}}>
-            <Grid item style={{width:'30%'}}>
+            <Grid item style={{width:'25%'}}>
               {props.isEditMode
               ? <Button style={buttonStyle} className={classes.button}
                   disabled={!isSaveEnabled} onClick={() => setIsErrored(emptyField)}>
@@ -78,12 +78,12 @@ const RecipeDetailEdit = props => {
                 </Button>
               }
             </Grid>
-            <Grid item style={{margin:'auto', width:'40%'}}>
+            <Grid item style={{margin:'auto', width:'50%'}}>
               <Typography className={classes.title}>
                 {props.isEditMode ? "Edit Recipe" : "Create Recipe"}
               </Typography>
             </Grid>
-            <Grid item style={{width:'30%'}}>
+            <Grid item style={{width:'25%'}}>
               <Button style={{...buttonStyle, float:'right'}} onClick={() => {
                 if (props.isEditMode) {
                   props.toggleEditMode();

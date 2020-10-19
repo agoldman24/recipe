@@ -220,7 +220,6 @@ const ProfileTab = props => {
             <AppBar className={classes.appBar}>
               <Toolbar style={{padding:'0 5px'}}>
                 <Button
-                  style={{color: updateOccurred ? 'white' : 'grey'}}
                   onClick={handleSave}
                   disabled={!updateOccurred}
                 >

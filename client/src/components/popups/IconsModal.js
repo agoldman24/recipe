@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
@@ -10,7 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { GET_ICONS_REQUESTED } from '../../actions';
+import Api from '../../api/siteUrl';
 import '../../index.css';
 
 const useStyles = makeStyles(theme => ({
@@ -54,12 +53,40 @@ const useStyles = makeStyles(theme => ({
 
 const IconsModal = props => {
   const classes = useStyles();
-  const { isVisible, closeModal, onConfirm, iconFetchMessage } = props;
+  const { isVisible, closeModal, onConfirm } = props;
   const [searchVal, setSearchVal] = useState("");
   const [icons, setIcons] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {
-    setIcons(props.icons.map(icon => ({ url: icon, isLoading: true })));
-  }, [props.icons]);
+    if (isFetching) {
+      setMessage("");
+      setIcons([]);
+      const wordArray = searchVal.split(' ');
+      const queryString = wordArray.reduce((accum, current, index) => {
+        accum += current;
+        if (index < wordArray.length - 1) {
+          accum += '%20';
+        }
+        return accum;
+      }, "");
+      Api.get('/getIcons?searchWord=' + queryString)
+        .then(res => {
+          if (!!res.data.icons && !!res.data.icons.length) {
+            setIcons(res.data.icons.map(icon => ({ url: icon, isLoading: true })));
+          } else {
+            setIcons([]);
+            setIsFetching(false);
+            setMessage("No icons found, try another search");
+          }
+        })
+        .catch(() => {
+          setIcons([]);
+          setIsFetching(false);
+          setMessage("No icons found, try another search");
+        });
+    }
+  }, [isFetching, searchVal]);
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -102,50 +129,51 @@ const IconsModal = props => {
               disabled={!searchVal.length}
               onClick={e => {
                 e.stopPropagation();
-                props.getIcons(searchVal)
+                setIsFetching(true);
               }}
             >
-              Search
+              {isFetching ? <CircularProgress size={20} style={{color:'white'}}/> : "Search"}
             </Button>
           </Grid>
-          {!!icons.length &&
-          [0,1,2,3,4].map(row =>
-            <Grid container direction="column" key={"row_" + row}>
-              <Grid container direction="row">
-                {[0,1,2,3].map(column => !!icons[4*row + column] &&
-                <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
-                  style={{
-                    width: isMobileOnly ? '68px' : '90px',
-                    padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
-                    borderRadius: '10px'
-                  }}
-                  onClick={e => {
-                    e.stopPropagation();
-                    onConfirm(icons[4*row + column].url);
-                    closeModal();
-                  }}
-                >
-                  <CircularProgress size={isMobileOnly ? 45 : 65} style={{
-                    display: icons[4*row + column].isLoading ? 'block' : 'none'
-                  }}/>
-                  <img alt="icon" src={icons[4*row + column].url}
-                    onLoad={() => {
-                      let currentIcons = [...icons];
-                      currentIcons[4*row + column].isLoading = false;
-                      setIcons(currentIcons);
+          <div style={{height: isMobileOnly ? '310px' : '380px'}}>
+            <Grid item><p style={{fontSize:'14px', paddingLeft:'5px'}}>{message}</p></Grid>
+            {!!icons.length &&
+            [0,1,2,3,4].map(row =>
+              <Grid container direction="column" key={"row_" + row}>
+                <Grid container direction="row">
+                  {[0,1,2,3].map(column => !!icons[4*row + column] &&
+                  <Grid item className="iconContainer" key={"row_" + row + "_column_" + column}
+                    style={{
+                      width: isMobileOnly ? '68px' : '90px',
+                      padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                      borderRadius: '10px'
                     }}
-                    height={isMobileOnly ? "46px" : "65px"} style={{
-                      display: icons[4*row + column].isLoading ? 'none' : 'block',
-                      maxWidth: isMobileOnly ? '65px' : '85px'
-                  }}/>
+                    onClick={e => {
+                      e.stopPropagation();
+                      onConfirm(icons[4*row + column].url);
+                      closeModal();
+                    }}
+                  >
+                    <CircularProgress size={isMobileOnly ? 45 : 65} style={{
+                      display: icons[4*row + column].isLoading ? 'block' : 'none'
+                    }}/>
+                    <img alt="icon" src={icons[4*row + column].url}
+                      onLoad={() => {
+                        let currentIcons = [...icons];
+                        currentIcons[4*row + column].isLoading = false;
+                        setIcons(currentIcons);
+                        setIsFetching(false);
+                      }}
+                      height={isMobileOnly ? "46px" : "65px"} style={{
+                        display: icons[4*row + column].isLoading ? 'none' : 'block',
+                        maxWidth: isMobileOnly ? '65px' : '85px'
+                    }}/>
+                  </Grid>
+                  )}
                 </Grid>
-                )}
               </Grid>
-            </Grid>
-          )}
-          <Grid item>
-            <p style={{fontSize:'14px', paddingLeft:'5px'}}>{iconFetchMessage}</p>
-          </Grid>
+            )}
+          </div>
           <Grid item style={{width:'100%'}}>
             <Button style={{float:'right'}}
               onClick={e => {
@@ -160,20 +188,4 @@ const IconsModal = props => {
   );
 }
 
-const mapStateToProps = state => {
-  return {
-    icons: state.icons,
-    iconFetchMessage: state.iconFetchMessage
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    getIcons: searchWord => dispatch({ type: GET_ICONS_REQUESTED, searchWord })
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(IconsModal);
+export default IconsModal;

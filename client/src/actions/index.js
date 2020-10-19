@@ -44,10 +44,6 @@ export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
 export const TOGGLE_PROFILE_EDITOR = 'TOGGLE_PROFILE_EDITOR';
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 
-/* Icon actions */
-export const GET_ICONS_REQUESTED = 'GET_ICONS_REQUESTED';
-export const GET_ICONS_FINISHED = 'GET_ICONS_FINISHED';
-
 /* Hydration actions */
 export const INIT_HYDRATION = 'INIT_HYDRATION';
 export const COMPLETE_HYDRATION = "COMPLETE_HYDRATION";

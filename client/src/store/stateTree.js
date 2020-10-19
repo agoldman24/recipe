@@ -66,7 +66,5 @@ export default Object.assign({},
     created: false,
     liked: false,
     displayUserCreated: false
-  },
-  icons: [],
-  iconFetchMessage: ""
+  }
 });

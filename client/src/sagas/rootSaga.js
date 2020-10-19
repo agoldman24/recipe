@@ -6,7 +6,6 @@ import signInSaga from './signInSaga';
 import updateUserSaga from './updateUserSaga';
 import hydrationSaga from './hydrationSaga';
 import getUserDetailSaga from './getUserDetailSaga';
-import getIconsSaga from './getIconsSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -16,7 +15,6 @@ export default function* rootSaga() {
     signUpSaga(),
     updateUserSaga(),
     hydrationSaga(),
-    getUserDetailSaga(),
-    getIconsSaga()
+    getUserDetailSaga()
   ])
 }

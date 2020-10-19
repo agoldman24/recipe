@@ -39,9 +39,7 @@ import {
   TOGGLE_DRAWER_MENU,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
-  TOGGLE_RECIPE_EDIT_MODE,
-  GET_ICONS_REQUESTED,
-  GET_ICONS_FINISHED,
+  TOGGLE_RECIPE_EDIT_MODE
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -64,7 +62,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_REQUESTED:
     case GET_USER_DETAIL_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
-    case GET_ICONS_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
       return action.updateType !== LIKED_RECIPE_IDS
@@ -75,7 +72,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
-    case GET_ICONS_FINISHED:
       return false;
     default:
       return state;
@@ -556,24 +552,6 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
   }
 }
 
-const icons = (state = StateTree.icons, action) => {
-  switch (action.type) {
-    case GET_ICONS_FINISHED:
-      return action.icons;
-    default:
-      return state;
-  }
-}
-
-const iconFetchMessage = (state = StateTree.iconFetchMessage, action) => {
-  switch (action.type) {
-    case GET_ICONS_FINISHED:
-      return !!action.icons.length ? "" : "No icons found, try another search"
-    default:
-      return state;
-  }
-}
-
 export default combineReducers({
   activeTab,
   tabHistory,
@@ -596,7 +574,5 @@ export default combineReducers({
   createdRecipes,
   isLiking,
   isFetchingRecipes,
-  allRecipesFetched,
-  icons,
-  iconFetchMessage
+  allRecipesFetched
 });

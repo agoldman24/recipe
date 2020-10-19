@@ -29,6 +29,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const buttonStyle = {
+  paddingLeft: '0',
+  paddingRight: '0',
+  minWidth: '0'
+}
+
 const RecipeDetailEdit = props => {
   const classes = useStyles();
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
@@ -50,14 +56,14 @@ const RecipeDetailEdit = props => {
     <Card style={detailStyle}>
       <AppBar className={classes.appBar}>
         <Toolbar style={{padding:'0'}}>
-          <Grid container direction="row">
-            <Grid item style={{width:'14%'}}>
+          <Grid container direction="row" style={{padding:'0 15px'}}>
+            <Grid item style={{width:'30%'}}>
               {props.isEditMode
-              ? <Button className={classes.button}
+              ? <Button style={buttonStyle} className={classes.button}
                   disabled={!isSaveEnabled} onClick={() => setIsErrored(emptyField)}>
                   Save
                 </Button>
-              : <Button className={classes.button} style={{float:'right'}} onClick={() => {
+              : <Button style={buttonStyle} className={classes.button} onClick={() => {
                   if (emptyField) {
                     setIsErrored(true);
                   } else if (!props.isSpinnerVisible) {
@@ -72,13 +78,13 @@ const RecipeDetailEdit = props => {
                 </Button>
               }
             </Grid>
-            <Grid item style={{margin:'auto', width:'71%'}}>
+            <Grid item style={{margin:'auto', width:'40%'}}>
               <Typography className={classes.title}>
                 {props.isEditMode ? "Edit Recipe" : "Create Recipe"}
               </Typography>
             </Grid>
-            <Grid item style={{width:'15%', textAlign:'center'}}>
-              <Button onClick={() => {
+            <Grid item style={{width:'30%'}}>
+              <Button style={{...buttonStyle, float:'right'}} onClick={() => {
                 if (props.isEditMode) {
                   props.toggleEditMode();
                 } else {

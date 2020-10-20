@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
@@ -190,7 +191,10 @@ const ProfileTab = props => {
                       onClick={() => updateFollowingIds(activeUser.id, id, false)}
                       style={unfollowButtonStyle}
                     >
-                      Unfollow
+                      {props.isUpdatingFollowers
+                        ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
+                        : "Unfollow"
+                      }
                     </Button>
                     <Typography style={followingButtonStyle}>
                       Following
@@ -201,7 +205,10 @@ const ProfileTab = props => {
                     onClick={() => updateFollowingIds(activeUser.id, id, true)}
                     style={buttonStyle}
                   >
-                    Follow
+                    {props.isUpdatingFollowers
+                      ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
+                      : "Follow"
+                    }
                   </Button>
             : null
           }
@@ -229,7 +236,6 @@ const ProfileTab = props => {
                 <IconButton
                   edge="start"
                   onClick={handleClickClose}
-                  aria-label="close"
                   style={{color:'white'}}
                 >
                   <CloseIcon/>
@@ -267,6 +273,7 @@ const mapStateToProps = state => {
     createdRecipes: state.createdRecipes,
     activeUser: state.activeUser,
     profileEditor: state.profileEditor,
+    isUpdatingFollowers: state.isUpdatingFollowers,
     networkFailed: state.errorMessages.networkFailed
   };
 }

@@ -50,7 +50,8 @@ import {
   DISPLAY_USER,
   FOLLOWERS,
   PROFILE,
-  PUSH
+  PUSH,
+  FOLLOWING_IDS
 } from '../variables/Constants';
 
 const isDefined = v => !!v && v !== "null" && v !== "undefined";
@@ -64,7 +65,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case CREATE_RECIPE_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
-      return action.updateType !== LIKED_RECIPE_IDS
+      return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
@@ -490,6 +491,17 @@ const isLiking = (state = StateTree.isLiking, action) => {
   }
 }
 
+const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
+  switch (action.type) {
+    case UPDATE_USER_REQUESTED:
+      return action.updateType === FOLLOWING_IDS;
+    case UPDATE_USER_SUCCEEDED:
+      return false;
+    default:
+      return state;
+  }
+}
+
 const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
   switch (action.type) {
     case GET_RECIPES_REQUESTED:
@@ -573,6 +585,7 @@ export default combineReducers({
   friendRecipes,
   createdRecipes,
   isLiking,
+  isUpdatingFollowers,
   isFetchingRecipes,
   allRecipesFetched
 });

@@ -59,6 +59,7 @@ export default Object.assign({},
   friendRecipes: {},
   createdRecipes: {},
   isLiking: false,
+  isUpdatingFollowers: false,
   isFetchingRecipes: false,
   allRecipesFetched: {
     samples: false,

@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-
 import { errorStyle, errorMessageStyle, defaultTheme } from '../../styles';
 
 const useStyles = makeStyles(() => ({
@@ -69,6 +68,12 @@ export default function RecipeNameField({
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalName);
+  useEffect(() => document.addEventListener("keydown", e => {
+    if (focusedContainer === "name" && e.key === 'Enter') {
+      document.getElementById("name").blur();
+    }
+  }), [focusedContainer]);
+  
   return (
     <Grid container direction="row"
       style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
@@ -78,6 +83,7 @@ export default function RecipeNameField({
         paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '7px' : '0'
       }}>
         <TextField
+          id="name"
           InputProps={{
             classes: {
               input: classes.inputText

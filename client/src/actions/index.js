@@ -40,7 +40,6 @@ export const EMPTY_FIELDS = 'EMPTY_FIELDS';
 /* UI control actions */
 export const SHOW_SNACKBAR = 'SHOW_SNACKBAR';
 export const HIDE_SNACKBAR = 'HIDE_SNACKBAR';
-export const TOGGLE_DRAWER_MENU = 'TOGGLE_DRAWER_MENU';
 export const TOGGLE_PROFILE_EDITOR = 'TOGGLE_PROFILE_EDITOR';
 export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
 

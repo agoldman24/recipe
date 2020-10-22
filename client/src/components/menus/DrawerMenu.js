@@ -16,8 +16,7 @@ import {
   SET_DISPLAY_USER,
   SET_ACTIVE_TAB,
   SHOW_SNACKBAR,
-  GET_USER_DETAIL_REQUESTED,
-  TOGGLE_DRAWER_MENU
+  GET_USER_DETAIL_REQUESTED
 } from '../../actions';
 import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../../variables/Constants';
 
@@ -41,15 +40,7 @@ const useStyles = makeStyles({
 const DrawerMenu = props => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const toggleDrawer = () => {
-    if (open) {
-      setOpen(false);
-      setTimeout(() => props.toggleDrawerMenu(), 1);
-    } else {
-      props.toggleDrawerMenu();
-      setTimeout(() => setOpen(true), 1);
-    }
-  };
+  const toggleDrawer = () => setOpen(!open);
 
   const clickHandler = text => {
     switch (text) {
@@ -123,24 +114,21 @@ const DrawerMenu = props => {
       >
         {props.activeUser.firstName}
       </Button>
-      {props.isDrawerMenuVisible &&
-        <SwipeableDrawer
-          style={{zIndex:'3'}}
-          anchor="right"
-          open={open}
-          onClose={toggleDrawer}
-          onOpen={toggleDrawer}
-        >
-          {sideList()}
-        </SwipeableDrawer>
-      }
+      <SwipeableDrawer
+        style={{zIndex:'3'}}
+        anchor="right"
+        open={open}
+        onClose={toggleDrawer}
+        onOpen={toggleDrawer}
+      >
+        {sideList()}
+      </SwipeableDrawer>
     </div>
   );
 }
 
 const mapStateToProps = state => {
   return {
-    isDrawerMenuVisible: state.isDrawerMenuVisible,
     activeUser: state.activeUser,
     activeUserProfile: state.activeTab.name === PROFILE_TAB
       && !!state.activeUser && !!state.displayUser
@@ -150,7 +138,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    toggleDrawerMenu: () => dispatch({ type: TOGGLE_DRAWER_MENU }),
     visitUserProfile: user => {
       dispatch({ type: SET_DISPLAY_USER, user })
       dispatch({

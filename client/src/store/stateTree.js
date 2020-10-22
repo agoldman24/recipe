@@ -4,7 +4,6 @@ export default Object.assign({},
 {
   activeTab: { name: WELCOME_TAB },
   isSpinnerVisible: false,
-  isDrawerMenuVisible: false,
   isHydrated: false,
   tabHistory: [],
   snackbar: {
@@ -27,7 +26,6 @@ export default Object.assign({},
     profileImage: null,
     followerIds: [],
     followingIds: [],
-    draftRecipeIds: [],
     createdRecipeIds: [],
     likedRecipeIds: []
   },
@@ -39,7 +37,6 @@ export default Object.assign({},
     profileImage: null,
     followerIds: [],
     followingIds: [],
-    draftRecipeIds: [],
     createdRecipeIds: [],
     likedRecipeIds: []
   },

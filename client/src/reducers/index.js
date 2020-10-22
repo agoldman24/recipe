@@ -36,7 +36,6 @@ import {
   EMPTY_FIELDS,
   SHOW_SNACKBAR,
   HIDE_SNACKBAR,
-  TOGGLE_DRAWER_MENU,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
   TOGGLE_RECIPE_EDIT_MODE
@@ -74,15 +73,6 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
       return false;
-    default:
-      return state;
-  }
-}
-
-const isDrawerMenuVisible = (state = StateTree.isDrawerMenuVisible, action) => {
-  switch (action.type) {
-    case TOGGLE_DRAWER_MENU:
-      return !state;
     default:
       return state;
   }
@@ -567,7 +557,6 @@ const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
 export default combineReducers({
   activeTab,
   tabHistory,
-  isDrawerMenuVisible,
   isSpinnerVisible,
   profileEditor,
   isHydrated,

@@ -7,11 +7,11 @@ const saltRounds = 10;
 const getDerivedUser = user => {
   const {
     _id, username, firstName, lastName, profileImageId,
-    followerIds, followingIds, draftRecipeIds, createdRecipeIds, likedRecipeIds
+    followerIds, followingIds, createdRecipeIds, likedRecipeIds
   } = user;
   return {
     id: _id, username, firstName, lastName, profileImageId,
-    followerIds, followingIds, draftRecipeIds, createdRecipeIds, likedRecipeIds
+    followerIds, followingIds, createdRecipeIds, likedRecipeIds
   }
 }
 

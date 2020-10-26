@@ -71,7 +71,9 @@ class RecipeList extends React.Component {
     likedId: null
   }
   componentDidUpdate(prevProps) {
-    if (!this.props.isLiking && prevProps.isLiking) {
+    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible) {
+      this.setState({ detailRecipe: this.props.detailRecipe });
+    } else if (!this.props.isLiking && prevProps.isLiking) {
       this.setState({ likedId: null });
     }
   }
@@ -96,12 +98,12 @@ class RecipeList extends React.Component {
           TransitionComponent={Transition}
         >
           {this.state.detailRecipe &&
-          <RecipeDetail
-            id={this.state.detailRecipe.id}
-            name={this.state.detailRecipe.name}
-            image={this.state.detailRecipe.image}
-            onClose={() => this.setState({ isDetailOpen: false })}
-          />
+            <RecipeDetail
+              id={this.state.detailRecipe.id}
+              name={this.state.detailRecipe.name}
+              image={this.state.detailRecipe.image}
+              onClose={() => this.setState({ isDetailOpen: false })}
+            />
           }
         </Dialog>
         <GridList cellHeight={250}
@@ -183,6 +185,7 @@ const mapStateToProps = state => {
     recipeCategory: state.recipeCategory,
     friendRecipes: state.friendRecipes,
     createdRecipes: state.createdRecipes,
+    detailRecipe: state.detailRecipe,
     users: state.users,
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
@@ -192,6 +195,7 @@ const mapStateToProps = state => {
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     isLiking: state.isLiking,
+    isSpinnerVisible: state.isSpinnerVisible,
     isFetchingRecipes: state.isFetchingRecipes,
     allRecipesFetched:
       (state.activeTab.name === RECIPE_TAB && (

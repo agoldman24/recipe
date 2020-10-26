@@ -8,7 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import RecipeForms from './RecipeForms';
-import { TOGGLE_RECIPE_EDIT_MODE, CREATE_RECIPE_REQUESTED } from '../../actions';
+import {
+  TOGGLE_RECIPE_EDIT_MODE,
+  CREATE_RECIPE_REQUESTED,
+  UPDATE_RECIPE_REQUESTED
+} from '../../actions';
 import { detailStyle } from '../../styles';
 
 const useStyles = makeStyles(() => ({
@@ -52,6 +56,36 @@ const RecipeDetailEdit = props => {
   const [directionSteps, setDirectionSteps] = useState(
     directionsType === "string" ? [] : props.directions);
   const emptyField = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
+
+  const handleSubmitSave = () => {
+    if (emptyField) {
+      setIsErrored(true);
+    } else if (!props.isSpinnerVisible) {
+      if (props.isEditMode) {
+        props.toggleEditMode();
+      } else {
+        props.onClose();
+      }
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', image, true);
+      xhr.responseType = 'blob';
+      xhr.onload = function() {
+        if (this.status === 200) {
+          const reader = new FileReader();
+          reader.readAsDataURL(this.response); 
+          reader.onloadend = function() {
+            const directions = directionsType === "string" ? directionsParagraph : directionSteps;
+            if (props.isEditMode) {
+              props.updateRecipe(name, reader.result, ingredients, directions);
+            } else {
+              props.createRecipe(name, reader.result, ingredients, directions);
+            }
+          }
+        }
+      };
+      xhr.send();
+    }
+  }
   return (
     <Card style={detailStyle}>
       <AppBar className={classes.appBar}>
@@ -60,20 +94,11 @@ const RecipeDetailEdit = props => {
             <Grid item style={{width:'25%'}}>
               {props.isEditMode
               ? <Button style={buttonStyle} className={classes.button}
-                  disabled={!isSaveEnabled} onClick={() => setIsErrored(emptyField)}>
+                  disabled={!isSaveEnabled} onClick={handleSubmitSave}>
                   Save
                 </Button>
-              : <Button style={buttonStyle} className={classes.button} onClick={() => {
-                  if (emptyField) {
-                    setIsErrored(true);
-                  } else if (!props.isSpinnerVisible) {
-                    const directions = directionsType === "string"
-                      ? directionsParagraph
-                      : directionSteps;
-                    props.onClose();
-                    props.createRecipe(name, image, ingredients, directions);
-                  }
-                }}>
+              : <Button style={buttonStyle} className={classes.button}
+                  onClick={handleSubmitSave}>
                   Submit
                 </Button>
               }
@@ -141,6 +166,10 @@ const mapDispatchToProps = dispatch => ({
   toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
   createRecipe: (name, image, ingredients, directions) => dispatch({
     type: CREATE_RECIPE_REQUESTED,
+    name, image, ingredients, directions
+  }),
+  updateRecipe: (name, image, ingredients, directions) => dispatch({
+    type: UPDATE_RECIPE_REQUESTED,
     name, image, ingredients, directions
   })
 });

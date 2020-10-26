@@ -20,6 +20,8 @@ import {
   UPDATE_DISPLAY_USER_DETAIL,
   GET_RECIPES_REQUESTED,
   CREATE_RECIPE_REQUESTED,
+  UPDATE_RECIPE_REQUESTED,
+  UPDATE_DETAIL_RECIPE,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
   APPEND_FRIEND_RECIPES,
@@ -62,12 +64,14 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_REQUESTED:
     case GET_USER_DETAIL_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
+    case UPDATE_RECIPE_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
+    case UPDATE_DETAIL_RECIPE:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
@@ -412,6 +416,7 @@ const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
 const detailRecipe = (state = StateTree.detailRecipe, action) => {
   switch (action.type) {
     case SET_DETAIL_RECIPE:
+    case UPDATE_DETAIL_RECIPE:
       return action.recipe;
     default:
       return state;
@@ -454,6 +459,14 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
         [action.recipe.id]: {
           ...action.recipe,
           timestamp: Date.now()
+        }
+      }
+    case UPDATE_DETAIL_RECIPE:
+      return {
+        ...state,
+        [action.recipe.id]: {
+          ...state[action.recipe.id],
+          ...action.recipe
         }
       }
     case APPEND_CREATED_RECIPES:

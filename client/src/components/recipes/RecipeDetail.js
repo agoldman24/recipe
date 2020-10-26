@@ -20,8 +20,8 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
 import Api from '../../api/siteUrl';
-import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
+import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
 import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
@@ -60,7 +60,14 @@ class RecipeDetail extends React.Component {
     });
   }
   componentDidUpdate(prevProps) {
-    if (!this.props.isLiking && prevProps.isLiking) {
+    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible) {
+      Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
+        this.setState({
+          ingredients: res.data.ingredients,
+          directions: res.data.directions
+        });
+      });
+    } else if (!this.props.isLiking && prevProps.isLiking) {
       this.setState({ likedId: null });
     }
   }
@@ -88,7 +95,7 @@ class RecipeDetail extends React.Component {
                         <MoreHorizIcon/>
                       </IconButton>
                     : this.props.isLiking && this.state.likedId === id
-                      ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
+                      ? <CircularProgress size={20} style={{margin:'12px', color:'white'}}/>
                       : this.props.likedRecipeIds.includes(id)
                         ? <IconButton
                             style={{padding:'12px 9px'}}
@@ -222,6 +229,7 @@ const mapStateToProps = state => {
       ? state.activeUser.likedRecipeIds.map(obj => obj.id)
       : null,
     isLiking: state.isLiking,
+    isSpinnerVisible: state.isSpinnerVisible,
     editMode: state.recipeEditMode,
   };
 };

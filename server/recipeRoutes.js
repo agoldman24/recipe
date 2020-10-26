@@ -4,15 +4,17 @@ const ObjectID = require('mongodb').ObjectID;
 
 const getRecipeSummary = recipe => {
   const { _id, name, image, authorName, authorId } = recipe;
-  return {
-    id: _id, name, image, authorName, authorId
-  }
+  return { id: _id, name, image, authorName, authorId }
+}
+
+const getRecipeFields = recipe => {
+  const { name, image, ingredients, directions } = recipe;
+  return { name, image, ingredients, directions }
 }
 
 exports.createRecipe = (req, res) => {
   const {
-    name, image, ingredients, directions,
-    authorName, authorId
+    name, image, ingredients, directions, authorName, authorId
   } = req.body;
   const recipe = new Recipe({
     name, image, ingredients, directions,
@@ -21,6 +23,16 @@ exports.createRecipe = (req, res) => {
   recipe.save(err => {
     if (err) return res.json({ success: false, error: err });
     return res.json({ success: true, recipe: getRecipeSummary(recipe) });
+  });
+}
+
+exports.updateRecipe = (req, res) => {
+  const { id, name, image, ingredients, directions } = req.body;
+  Recipe.findByIdAndUpdate(id, {
+    name, image, ingredients, directions
+  }, { new: true }, (error, recipe) => {
+    if (error) return res.json({ success: false, error });
+    return res.json({ success: true, recipe: getRecipeFields(recipe) });
   });
 }
 

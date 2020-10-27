@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme => ({
   },
   inputRoot: {
     width: isMobileOnly ? '100%' : '97%',
-    outline: '1px solid white',
+    border: '1px solid white',
+    borderRadius: '50px',
     background: '#202020',
     fontSize: '16px'
   },

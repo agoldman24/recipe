@@ -68,12 +68,6 @@ export default function RecipeNameField({
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalName);
-  useEffect(() => document.addEventListener("keydown", e => {
-    if (focusedContainer === "name" && e.key === 'Enter') {
-      document.getElementById("name").blur();
-    }
-  }), [focusedContainer]);
-  
   return (
     <Grid container direction="row"
       style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
@@ -83,7 +77,6 @@ export default function RecipeNameField({
         paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '7px' : '0'
       }}>
         <TextField
-          id="name"
           InputProps={{
             classes: {
               input: classes.inputText

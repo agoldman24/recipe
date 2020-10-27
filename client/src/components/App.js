@@ -47,6 +47,10 @@ class App extends React.Component {
     document.getElementById('root').scrollTo(0, 0);
     const id = isMobileOnly ? 'root' : 'container';
     document.getElementById(id).addEventListener('scroll', this.handleScroll);
+    document.addEventListener("keydown", e => {
+      if (e.key === 'Enter' && !!document.activeElement)
+        document.activeElement.blur();
+    });
     this.props.initHydration();
   }
   handleScroll = () => {

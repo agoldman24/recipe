@@ -96,6 +96,11 @@ const ProfileAvatar = props => {
               : displayUserDetail.profileImage
             }
             style={imageStyle}
+            imgProps={{
+              style: {
+                height: 'initial'
+              }
+            }}
           />
         : <Avatar alt="Profile" style={imageStyle}>
             <div style={{textAlign:'center'}}>

@@ -27,6 +27,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const blurFocusedElement = e => {
+  if (e.key === 'Enter' && !!document.activeElement)
+    document.activeElement.blur();
+}
+
 function usePrevious(value) {
   const ref = useRef();
   useEffect(() => {
@@ -62,6 +67,19 @@ const RecipeForms = ({
   const [anchorElChanged, setAnchorElChanged] = useState(false);
   const prevAnchorEl = usePrevious(anchorEl);
   useEffect(() => setAnchorElChanged(prevAnchorEl !== anchorEl), [prevAnchorEl, anchorEl]);
+  useEffect(() => {
+    document.addEventListener("keydown", blurFocusedElement);
+    return () => {
+      document.removeEventListener("keydown", blurFocusedElement);
+    }
+  }, []);
+  useEffect(() => {
+    if (isIconsModalVisible) {
+      document.removeEventListener("keydown", blurFocusedElement);
+    } else {
+      document.addEventListener("keydown", blurFocusedElement);
+    }
+  }, [isIconsModalVisible]);
 
   const setFocus = container => {
     if (container !== focusedContainer) {

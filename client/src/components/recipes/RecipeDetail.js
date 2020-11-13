@@ -107,7 +107,7 @@ class RecipeDetail extends React.Component {
                       ? <CircularProgress size={20} style={{margin:'12px', color:'white'}}/>
                       : this.props.likedRecipeIds.includes(id)
                         ? <IconButton
-                            style={{padding:'12px 9px'}}
+                            style={{padding:'12px'}}
                             onClick={() => {
                               this.setState({ likedId: id });
                               this.props.updateLikedRecipes(
@@ -117,7 +117,7 @@ class RecipeDetail extends React.Component {
                             <FavoriteIcon/>
                           </IconButton>
                         : <IconButton
-                            style={{padding:'12px 9px'}}
+                            style={{padding:'12px'}}
                             onClick={() => {
                               this.setState({ likedId: id });
                               this.props.updateLikedRecipes(

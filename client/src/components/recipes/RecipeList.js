@@ -26,15 +26,17 @@ const styles = () => ({
     transform: 'translateZ(0)',
   },
   titleBar: {
-    background: 'linear-gradient(to bottom, black, rgba(0,0,0,0))',
+    background: 'black',
     alignItems: 'normal',
-    height: '80px'
+    height: '60px'
   },
   title: {
-    paddingTop: '10px',
+    padding: '10px 0 5px 0',
     fontFamily: 'Shadows Into Light',
-    fontSize: '20px',
-    height: '50px'
+    fontSize: '20px'
+  },
+  tile: {
+    paddingTop: '60px'
   }
 });
 
@@ -118,7 +120,13 @@ class RecipeList extends React.Component {
         >
           {this.props.recipes.map(recipe => !recipe ? null : (
             <GridListTile key={recipe.id} className="cardMedia"
-              style={{height:'fit-content', padding:'0'}}
+              style={{
+                padding: '0',
+                height: 'fit-content',
+                width: isMobileOnly ? 'initial' : '24.8%',
+                marginRight: isMobileOnly ? '0' : '2px'
+              }}
+              classes={{ tile: this.props.classes.tile }}
               onClick={() => {
                 this.setState({ isDetailOpen: true, detailRecipe: recipe });
                 this.props.setDetailRecipe(recipe);
@@ -129,11 +137,12 @@ class RecipeList extends React.Component {
                 className={this.props.classes.titleBar}
                 classes={{ title: this.props.classes.title }}
                 title={recipe.name}
+                subtitle={!recipe.authorName ? 'Anonymous' : recipe.authorName}
                 titlePosition="top"
                 actionPosition="left"
                 actionIcon={this.props.isLoggedIn
                 ? this.props.isLiking && this.state.likedId === recipe.id
-                  ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
+                  ? <CircularProgress size={20} style={{margin:'12px', color:'white'}}/>
                   : this.props.likedRecipeIds.includes(recipe.id)
                     ? <IconButton
                         className={this.props.classes.icon}
@@ -166,7 +175,10 @@ class RecipeList extends React.Component {
         </GridList>
         {!this.props.isFetchingRecipes && !this.props.recipes.length &&
           <div style={centeredTextStyle}>
-            <h4>No Posts Yet</h4>
+            <h4>{!!this.props.displayUserDetail && this.props.displayUserDetail.activeDetail === LIKED_RECIPES
+              ? "No Liked Posts Yet"
+              : "No Posts Yet"
+            }</h4>
           </div>
         }
         {!this.props.allRecipesFetched &&
@@ -174,7 +186,7 @@ class RecipeList extends React.Component {
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>
               : <Link style={{fontSize:'14px'}} href="#"
-                  onClick={() => this.fetchRecipes()}>Load more posts</Link>
+                  onClick={() => this.fetchRecipes()}>Load more recipes</Link>
             }
           </div>
         }

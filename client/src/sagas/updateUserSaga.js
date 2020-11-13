@@ -9,7 +9,8 @@ import {
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
   SET_ACTIVE_DETAIL,
-  SET_RECIPE_CATEGORY
+  SET_RECIPE_CATEGORY,
+  SHOW_SNACKBAR
 } from '../actions';
 import {
   PROFILE,
@@ -64,6 +65,7 @@ function* updateUser(action) {
           updateType: PROFILE, 
           imageData, user
         });
+        yield put({ type: SHOW_SNACKBAR, message: "Profile updated successfully" })
         break;
       case CREATED_RECIPE_IDS:
         res = yield call(Api.post, '/updateCreatedRecipeIds', {
@@ -84,6 +86,7 @@ function* updateUser(action) {
           yield put({ type: SET_ACTIVE_TAB, newTab: { name: RECIPE_TAB }});
           yield put({ type: SET_RECIPE_CATEGORY, category: "By Me" });
         }
+        yield put({ type: SHOW_SNACKBAR, message: "Recipe posted successfully" });
         break;
       case LIKED_RECIPE_IDS:
         res = yield call(Api.post, '/updateLikedRecipeIds', {

@@ -40,7 +40,6 @@ import {
   gridStyle,
   errorStyle,
   usernameStyle,
-  nameBoxStyle,
   nameStyle,
   buttonStyle,
   backButtonStyle,
@@ -63,6 +62,9 @@ const useStyles = makeStyles(() => ({
     fontSize: '20px',
     flex: 1,
   },
+  button: {
+    color: '#45bbff'
+  }
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -170,10 +172,10 @@ const ProfileTab = props => {
               <ArrowBackIosIcon/>
             </Fab>
           }
-          <Grid item style={{paddingTop: !!props.activeUser ? '0' : '30px'}}>
+          <Grid item style={{paddingTop: !!props.activeUser ? '0' : '15px'}}>
             <Typography variant="h5" style={usernameStyle}>{username}</Typography>
           </Grid>
-          <Grid item style={nameBoxStyle}>
+          <Grid item style={{display:'inline-flex', paddingBottom: !!props.activeUser ? '20px' : '0'}}>
             <ProfileAvatar />
             <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
           </Grid>
@@ -229,6 +231,7 @@ const ProfileTab = props => {
                 <Button
                   onClick={handleSave}
                   disabled={!updateOccurred}
+                  className={classes.button}
                 >
                   Save
                 </Button>

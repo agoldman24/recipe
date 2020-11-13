@@ -112,12 +112,7 @@ export const gradientTextStyle2 = {
 export const usernameStyle = {
   ...textStyle,
   fontFamily: 'Raleway',
-  padding: '10px 0'
-}
-
-export const nameBoxStyle = {
-  display: 'inline-flex',
-  paddingBottom: '20px'
+  padding: '10px 0 20px 0'
 }
 
 export const nameStyle = {

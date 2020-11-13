@@ -5,7 +5,8 @@ import {
   UPDATE_RECIPE_REQUESTED,
   UPDATE_DETAIL_RECIPE,
   DELETE_RECIPE_REQUESTED,
-  DELETE_RECIPE
+  DELETE_RECIPE,
+  SHOW_SNACKBAR
 } from '../actions';
 
 const getDetailRecipe = state => state.detailRecipe;
@@ -21,7 +22,8 @@ function* updateRecipe(action) {
     yield put({
       type: UPDATE_DETAIL_RECIPE,
       recipe: { ...detailRecipe, name, image }
-    })
+    });
+    yield put({ type: SHOW_SNACKBAR, message: "Update successful"})
   } catch (error) {
     yield put({ type: NETWORK_FAILED });
     console.log(error);
@@ -34,6 +36,7 @@ function* deleteRecipe() {
     const { id, authorId } = detailRecipe;
     const { data: { likedByIds } } = yield call(Api.post, '/deleteRecipe', { id });
     yield put({ type: DELETE_RECIPE, id, authorId, likedByIds });
+    yield put({ type: SHOW_SNACKBAR, message: "Recipe deleted" })
   } catch (error) {
     yield put({ type: NETWORK_FAILED });
     console.log(error);

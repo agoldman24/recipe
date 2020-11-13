@@ -123,7 +123,7 @@ class RecipeList extends React.Component {
               style={{
                 padding: '0',
                 height: 'fit-content',
-                width: isMobileOnly ? 'initial' : '24.8%',
+                width: isMobileOnly ? '100%' : '24.8%',
                 marginRight: isMobileOnly ? '0' : '2px'
               }}
               classes={{ tile: this.props.classes.tile }}

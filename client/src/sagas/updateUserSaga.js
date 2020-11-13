@@ -65,7 +65,7 @@ function* updateUser(action) {
           updateType: PROFILE, 
           imageData, user
         });
-        yield put({ type: SHOW_SNACKBAR, message: "Profile updated successfully" })
+        yield put({ type: SHOW_SNACKBAR, message: "Update successful" });
         break;
       case CREATED_RECIPE_IDS:
         res = yield call(Api.post, '/updateCreatedRecipeIds', {

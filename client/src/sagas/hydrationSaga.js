@@ -53,9 +53,9 @@ function* runHydration() {
       });
     }
     yield put({ type: COMPLETE_HYDRATION })
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

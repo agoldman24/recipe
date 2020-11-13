@@ -65,9 +65,9 @@ function* getRecipes(action) {
       default:
         throw new Error('Unrecognized request type');
     }
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

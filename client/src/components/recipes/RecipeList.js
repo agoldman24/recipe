@@ -18,6 +18,7 @@ import {
   RECIPE_TAB, SAMPLE_RECIPES, FRIEND_RECIPES,
   CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
 } from "../../variables/Constants";
+import { centeredTextStyle } from "../../styles";
 import "../../index.css";
 
 const styles = () => ({
@@ -72,7 +73,12 @@ class RecipeList extends React.Component {
   }
   componentDidUpdate(prevProps) {
     if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible) {
-      this.setState({ detailRecipe: this.props.detailRecipe });
+      if (!this.props.detailRecipe) {
+        this.setState({ isDetailOpen: false });
+        setTimeout(() => this.setState({ detailRecipe: null }), 1);
+      } else {
+        this.setState({ detailRecipe: this.props.detailRecipe });
+      }
     } else if (!this.props.isLiking && prevProps.isLiking) {
       this.setState({ likedId: null });
     }
@@ -110,65 +116,65 @@ class RecipeList extends React.Component {
           className={this.props.classes.gridList}
           cols={isMobileOnly ? 1 : 4}
         >
-          {Object.values(this.props.recipes)
-            .sort((r1, r2) => r2.timestamp - r1.timestamp)
-            .map((recipe) => (
-              <GridListTile key={recipe.id} className="cardMedia"
-                style={{height:'fit-content', padding:'0'}}
-                onClick={() => {
-                  this.setState({ isDetailOpen: true, detailRecipe: recipe });
-                  this.props.setDetailRecipe(recipe);
-                }}
-              >
-                <Image src={recipe.image} alt={recipe.name} />
-                <GridListTileBar
-                  className={this.props.classes.titleBar}
-                  classes={{ title: this.props.classes.title }}
-                  title={recipe.name}
-                  titlePosition="top"
-                  actionPosition="left"
-                  actionIcon={this.props.isLoggedIn
-                  ? this.props.isLiking && this.state.likedId === recipe.id
-                    ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
-                    : this.props.likedRecipeIds.includes(recipe.id)
-                      ? <IconButton
-                          className={this.props.classes.icon}
-                          onClick={event => {
-                            event.stopPropagation();
-                            this.setState({ likedId: recipe.id });
-                            this.props.updateLikedRecipes(
-                              this.props.activeUser.id,
-                              recipe.id, false
-                            );
-                          }}>
-                          <FavoriteIcon/>
-                        </IconButton>
-                      : <IconButton
-                          className={this.props.classes.icon}
-                          onClick={event => {
-                            event.stopPropagation();
-                            this.setState({ likedId: recipe.id });
-                            this.props.updateLikedRecipes(
-                              this.props.activeUser.id,
-                              recipe.id, true
-                            );
-                          }}>
-                          <FavoriteBorderIcon/>
-                        </IconButton>
-                      : null
-                  }/>
-              </GridListTile>
+          {this.props.recipes.map(recipe => !recipe ? null : (
+            <GridListTile key={recipe.id} className="cardMedia"
+              style={{height:'fit-content', padding:'0'}}
+              onClick={() => {
+                this.setState({ isDetailOpen: true, detailRecipe: recipe });
+                this.props.setDetailRecipe(recipe);
+              }}
+            >
+              <Image src={recipe.image} alt={recipe.name} />
+              <GridListTileBar
+                className={this.props.classes.titleBar}
+                classes={{ title: this.props.classes.title }}
+                title={recipe.name}
+                titlePosition="top"
+                actionPosition="left"
+                actionIcon={this.props.isLoggedIn
+                ? this.props.isLiking && this.state.likedId === recipe.id
+                  ? <CircularProgress style={{width:'20px', height:'20px', margin:'12px', color:'white'}}/>
+                  : this.props.likedRecipeIds.includes(recipe.id)
+                    ? <IconButton
+                        className={this.props.classes.icon}
+                        onClick={event => {
+                          event.stopPropagation();
+                          this.setState({ likedId: recipe.id });
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id,
+                            recipe.id, false
+                          );
+                        }}>
+                        <FavoriteIcon/>
+                      </IconButton>
+                    : <IconButton
+                        className={this.props.classes.icon}
+                        onClick={event => {
+                          event.stopPropagation();
+                          this.setState({ likedId: recipe.id });
+                          this.props.updateLikedRecipes(
+                            this.props.activeUser.id,
+                            recipe.id, true
+                          );
+                        }}>
+                        <FavoriteBorderIcon/>
+                      </IconButton>
+                    : null
+                }/>
+            </GridListTile>
           ))}
         </GridList>
+        {!this.props.isFetchingRecipes && !this.props.recipes.length &&
+          <div style={centeredTextStyle}>
+            <h4>No Posts Yet</h4>
+          </div>
+        }
         {!this.props.allRecipesFetched &&
-          <div style={{
-            width: '100%', textAlign: 'center', marginTop: '20px',
-            marginBottom: isMobileOnly ? '100px' : '40px'
-          }}>
+          <div style={centeredTextStyle}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>
               : <Link style={{fontSize:'14px'}} href="#"
-                  onClick={() => this.fetchRecipes()}>Load more recipes</Link>
+                  onClick={() => this.fetchRecipes()}>Load more posts</Link>
             }
           </div>
         }

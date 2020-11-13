@@ -36,14 +36,16 @@ class RecipeTab extends React.Component {
         {this.props.networkFailed
         ? <div style={errorStyle}>Network error</div>
         : <div>
-            <RecipeList recipes={this.props.recipes}/>
-            {this.props.isLoggedIn &&
-              <RecipeCategories
-                category={this.props.category}
-                setCategory={this.props.setCategory}
-                toggleCreateMode={this.props.toggleCreateMode}
-              />
-            }
+            <RecipeList recipes={Object.values(this.props.recipes)
+              .sort((r1, r2) => r2.timestamp - r1.timestamp)}
+            />
+              {this.props.isLoggedIn &&
+                <RecipeCategories
+                  category={this.props.category}
+                  setCategory={this.props.setCategory}
+                  toggleCreateMode={this.props.toggleCreateMode}
+                />
+              }
           </div>
         }
       </div>

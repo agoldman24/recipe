@@ -1,4 +1,5 @@
 const Recipe = require('./recipe');
+const User = require('./user');
 const db = require('./database');
 const ObjectID = require('mongodb').ObjectID;
 
@@ -13,15 +14,13 @@ const getRecipeFields = recipe => {
 }
 
 exports.createRecipe = (req, res) => {
-  const {
-    name, image, ingredients, directions, authorName, authorId
-  } = req.body;
+  const { name, image, ingredients, directions, authorName, authorId } = req.body;
   const recipe = new Recipe({
     name, image, ingredients, directions,
-    authorName, authorId
+    authorName, authorId, likedByIds: []
   });
-  recipe.save(err => {
-    if (err) return res.json({ success: false, error: err });
+  recipe.save(error => {
+    if (error) return res.json({ success: false, error });
     return res.json({ success: true, recipe: getRecipeSummary(recipe) });
   });
 }
@@ -34,6 +33,30 @@ exports.updateRecipe = (req, res) => {
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, recipe: getRecipeFields(recipe) });
   });
+}
+
+exports.deleteRecipe = (req, res) => {
+  Recipe.findById(req.body.id).then(recipe => {
+    const { authorId, likedByIds } = recipe;
+    User.findById(authorId).then(user => {
+      const createdRecipeIds = user.createdRecipeIds.filter(({ id }) => id !== req.body.id);
+      User.findByIdAndUpdate(authorId, { createdRecipeIds }, {}, error => {
+        if (error) return res.json({ success: false, error });
+      });
+    })
+    likedByIds.forEach(userId => {
+      User.findById(userId).then(user => {
+        const likedRecipeIds = user.likedRecipeIds.filter(({ id }) => id !== req.body.id);
+        User.findByIdAndUpdate(userId, { likedRecipeIds }, {}, error => {
+          if (error) return res.json({ success: false, error });
+        });
+      })
+    });
+    Recipe.findByIdAndRemove(req.body.id, error => {
+      if (error) return res.json({ success: false, error });
+      return res.json({ success: true, likedByIds });
+    });
+  })
 }
 
 exports.getSamples = (req, res) => {
@@ -89,9 +112,7 @@ exports.getRecipesByIds = (req, res) => {
 }
 
 exports.getRecipeDetail = (req, res) => {
-  db.collection("recipes").findOne({
-    _id: ObjectID(req.query.id)
-  }).then(recipe => {
+  Recipe.findById(req.query.id).then(recipe => {
     return res.json({
       success: true,
       ingredients: recipe.ingredients,

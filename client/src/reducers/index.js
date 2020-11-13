@@ -21,7 +21,9 @@ import {
   GET_RECIPES_REQUESTED,
   CREATE_RECIPE_REQUESTED,
   UPDATE_RECIPE_REQUESTED,
+  DELETE_RECIPE_REQUESTED,
   UPDATE_DETAIL_RECIPE,
+  DELETE_RECIPE,
   ADD_CREATED_RECIPE,
   APPEND_SAMPLE_RECIPES,
   APPEND_FRIEND_RECIPES,
@@ -65,6 +67,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
     case UPDATE_RECIPE_REQUESTED:
+    case DELETE_RECIPE_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
@@ -72,6 +75,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case UPDATE_DETAIL_RECIPE:
+    case DELETE_RECIPE:
     case NETWORK_FAILED:
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
@@ -168,6 +172,22 @@ const users = (state = StateTree.users, action) => {
         ...state,
         [action.user.id]: action.user
       };
+    case DELETE_RECIPE:
+      const usersUpdate = action.likedByIds.reduce((accum, userId) => {
+        accum[userId] = {
+          ...state[userId],
+          likedRecipeIds: state[userId].likedRecipeIds.filter(({ id }) => id !== action.id)
+        }
+        return accum;
+      }, {});
+      return {
+        ...state,
+        ...usersUpdate,
+        [action.authorId]: {
+          ...state[action.authorId],
+          createdRecipeIds: state[action.authorId].createdRecipeIds.filter(({ id }) => id !== action.id)
+        }
+      }
     default:
       return state;
   }
@@ -200,6 +220,12 @@ const activeUser = (state = null, action) => {
         default:
           return state;
       }
+    case DELETE_RECIPE:
+      return {
+        ...state,
+        createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id),
+        likedRecipeIds: state.likedRecipeIds.filter(({ id }) => id !== action.id)
+      }
     case SIGN_OUT:
       localStorage.clear();
       return null;
@@ -218,27 +244,17 @@ const displayUser = (state = null, action) => {
         case CREATED_RECIPE_IDS:
           return {
             ...state,
-            createdRecipeIds: action.recipeIds
+            createdRecipeIds: action.user.createdRecipeIds
           }
         case LIKED_RECIPES:
           return {
             ...state,
-            likedRecipeIds: action.keep
-            ? [
-                ...state.likedRecipeIds,
-                {
-                  id: action.recipe.id,
-                  timestamp: Date.now()
-                }
-              ]
-            : state.likedRecipeIds.filter(obj => obj.id !== action.recipe.id)
+            likedRecipeIds: action.user.likedRecipeIds
           }
         case FOLLOWERS:
           return {
             ...state,
-            followerIds: action.keep
-            ? [ ...state.followerIds, action.user.id ]
-            : state.followerIds.filter(id => id !== action.user.id)
+            followerIds: action.user2.followerIds
           }
         case PROFILE:
           return {
@@ -251,6 +267,15 @@ const displayUser = (state = null, action) => {
         default:
           return state;
       }
+    case DELETE_RECIPE:
+      if (!!state) {
+        return {
+          ...state,
+          createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id),
+          likedRecipeIds: state.likedRecipeIds.filter(({ id }) => id !== action.id)
+        }
+      }
+      return state;
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {
         return null;
@@ -297,6 +322,13 @@ const displayUserDetail = (state = null, action) => {
           }
         }
       : state;
+    case DELETE_RECIPE:
+      if (!!state) {
+        const newState = { ...state };
+        delete newState.likedRecipes[action.id];
+        return newState;
+      }
+      return state;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
         case LIKED_RECIPES:
@@ -418,6 +450,8 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
     case SET_DETAIL_RECIPE:
     case UPDATE_DETAIL_RECIPE:
       return action.recipe;
+    case DELETE_RECIPE:
+      return null
     default:
       return state;
   }
@@ -476,6 +510,10 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
           ...action.recipes
         }
       : state;
+    case DELETE_RECIPE:
+      const newState = { ...state };
+      delete newState[action.id];
+      return newState;
     case SIGN_OUT:
       return {};
     default:

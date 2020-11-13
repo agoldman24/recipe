@@ -3,7 +3,9 @@ import Api from '../api/siteUrl';
 import {
   NETWORK_FAILED,
   UPDATE_RECIPE_REQUESTED,
-  UPDATE_DETAIL_RECIPE
+  UPDATE_DETAIL_RECIPE,
+  DELETE_RECIPE_REQUESTED,
+  DELETE_RECIPE
 } from '../actions';
 
 const getDetailRecipe = state => state.detailRecipe;
@@ -20,14 +22,27 @@ function* updateRecipe(action) {
       type: UPDATE_DETAIL_RECIPE,
       recipe: { ...detailRecipe, name, image }
     })
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
+  }
+}
+
+function* deleteRecipe() {
+  try {
+    const detailRecipe = yield select(getDetailRecipe);
+    const { id, authorId } = detailRecipe;
+    const { data: { likedByIds } } = yield call(Api.post, '/deleteRecipe', { id });
+    yield put({ type: DELETE_RECIPE, id, authorId, likedByIds });
+  } catch (error) {
+    yield put({ type: NETWORK_FAILED });
+    console.log(error);
   }
 }
 
 function* updateRecipeSaga() {
   yield takeEvery(UPDATE_RECIPE_REQUESTED, updateRecipe);
+  yield takeEvery(DELETE_RECIPE_REQUESTED, deleteRecipe);
 }
 
 export default updateRecipeSaga;

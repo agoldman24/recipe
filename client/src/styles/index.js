@@ -92,6 +92,11 @@ export const textStyle = {
   lineHeight: 1,
 }
 
+export const centeredTextStyle = {
+  width: '100%', textAlign: 'center', marginTop: '20px',
+  marginBottom: isMobileOnly ? '100px' : '40px'
+}
+
 export const gradientTextStyle = {
   background: 'linear-gradient(to top right, #ff4000, yellow)',
 	WebkitBackgroundClip: 'text',

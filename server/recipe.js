@@ -10,7 +10,8 @@ const RecipeSchema = new Schema(
     ingredients: Array,
     directions: Schema.Types.Mixed,
     authorName: String,
-    authorId: String
+    authorId: String,
+    likedByIds: Array
   },
   { timestamps: true }
 );

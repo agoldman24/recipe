@@ -1,4 +1,5 @@
 const User = require('./user');
+const Recipe = require('./recipe');
 const db = require('./database');
 const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
@@ -17,7 +18,7 @@ const getUserFields = user => {
 
 exports.getUserById = (req, res) => {
   const { id } = req.query;
-  User.findById(id).then(function(user) {
+  User.findById(id).then(user => {
     if (!user) {
       return res.json({ success: false });
     } else {
@@ -30,7 +31,7 @@ exports.getUsersByIds = (req, res) => {
   const idArray = req.query.ids.split(',');
   db.collection("users").find(
     { _id: { $in: idArray.map(id => ObjectID(id)) } }
-  ).toArray().then(function(users) {
+  ).toArray().then(users => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
@@ -43,11 +44,11 @@ exports.getUsersByIds = (req, res) => {
 
 exports.getUser = (req, res) => {
   const { username, password } = req.query;
-  db.collection("users").findOne({ username }).then(function (user) {
+  db.collection("users").findOne({ username }).then(user => {
     if (!user) {
       return res.json({ success: false });
     } else {
-      bcrypt.compare(password, user.password, function (error, result) {
+      bcrypt.compare(password, user.password, (error, result) => {
         if (result) {
           return res.json({ success: true, user: getUserFields(user) });
         } else {
@@ -59,7 +60,7 @@ exports.getUser = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
-  db.collection("users").find({}, {}).toArray().then(function (users) {
+  db.collection("users").find({}, {}).toArray().then(users => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
@@ -72,11 +73,11 @@ exports.getAllUsers = (req, res) => {
 
 exports.createUser = (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-  db.collection("users").findOne({ username }).then(function (user) {
+  db.collection("users").findOne({ username }).then(user => {
     if (user) {
       return res.json({ success: false });
     } else {
-      bcrypt.hash(password, saltRounds, function (error, hash) {
+      bcrypt.hash(password, saltRounds, (e, hash) => {
         const user = new User({
           firstName, lastName, username,
           password: hash,
@@ -109,18 +110,36 @@ exports.updateProfile = (req, res) => {
 }
 
 exports.updateCreatedRecipeIds = (req, res) => {
-  const { id, createdRecipeIds } = req.body;
-  User.findByIdAndUpdate(id, { createdRecipeIds }, { new: true }, (error, user) => {
-    if (error) return res.json({ success: false, error });
-    return res.json({ success: true, user: getUserFields(user) });
+  const { id, recipeId, keep } = req.body;
+  User.findById(id).then(user => {
+    const createdRecipeIds = keep
+      ? [ ...user.createdRecipeIds, { id: recipeId, timestamp: Date.now() } ]
+      : user.createdRecipeIds.filter(obj => obj.id !== recipeId);
+    User.findByIdAndUpdate(id, { createdRecipeIds }, { new: true }, (error, user) => {
+      if (error) return res.json({ success: false, error });
+      return res.json({ success: true, user: getUserFields(user) });
+    });
   });
 }
 
 exports.updateLikedRecipeIds = (req, res) => {
-  const { id, likedRecipeIds } = req.body;
-  User.findByIdAndUpdate(id, { likedRecipeIds }, { new: true }, (error, user) => {
-    if (error) return res.json({ success: false, error });
-    return res.json({ success: true, user: getUserFields(user) });
+  const { id, recipeId, keep } = req.body;
+  User.findById(id).then(user => {
+    Recipe.findById(recipeId).then(recipe => {
+      const likedByIds = keep
+        ? [ ...recipe.likedByIds, id ]
+        : recipe.likedByIds.filter(i => i !== id);
+      Recipe.findByIdAndUpdate(recipeId, { likedByIds }, {}, error => {
+        if (error) return res.json({ success: false, error });
+      });
+    });
+    const likedRecipeIds = keep
+      ? [ ...user.likedRecipeIds, { id: recipeId, timestamp: Date.now() } ]
+      : user.likedRecipeIds.filter(obj => obj.id !== recipeId);
+    User.findByIdAndUpdate(id, { likedRecipeIds }, { new: true }, (error, user) => {
+      if (error) return res.json({ success: false, error });
+      return res.json({ success: true, user: getUserFields(user) });
+    });
   });
 }
 

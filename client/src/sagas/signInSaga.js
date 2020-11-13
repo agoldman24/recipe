@@ -25,9 +25,9 @@ function* signIn(action) {
     } else {
       yield put({ type: SIGN_IN_FAILED });
     }
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

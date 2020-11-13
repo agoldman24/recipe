@@ -41,9 +41,9 @@ function* createRecipe(action) {
       recipeId: recipe.id,
       keep: true
     });
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

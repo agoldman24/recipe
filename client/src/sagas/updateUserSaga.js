@@ -66,18 +66,10 @@ function* updateUser(action) {
         });
         break;
       case CREATED_RECIPE_IDS:
-        const recipeIds = action.keep
-        ? [
-            ...activeUser.createdRecipeIds,
-            {
-              id: action.recipeId,
-              timestamp: Date.now()
-            }
-          ]
-        : activeUser.createdRecipeIds.filter(obj => obj.id !== action.recipeId)
         res = yield call(Api.post, '/updateCreatedRecipeIds', {
           id: action.id,
-          createdRecipeIds: recipeIds
+          recipeId: action.recipeId,
+          keep: action.keep
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
@@ -85,7 +77,6 @@ function* updateUser(action) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: CREATED_RECIPE_IDS,
-            recipeIds,
             user
           });
           yield put({ type: SET_ACTIVE_DETAIL, detail: CREATED_RECIPES });
@@ -97,15 +88,8 @@ function* updateUser(action) {
       case LIKED_RECIPE_IDS:
         res = yield call(Api.post, '/updateLikedRecipeIds', {
           id: action.id,
-          likedRecipeIds: action.keep
-          ? [
-              ...activeUser.likedRecipeIds,
-              {
-                id: action.recipeId,
-                timestamp: Date.now()
-              }
-            ]
-          : activeUser.likedRecipeIds.filter(obj => obj.id !== action.recipeId)
+          recipeId: action.recipeId,
+          keep: action.keep
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
@@ -127,22 +111,21 @@ function* updateUser(action) {
         res = yield call(Api.post, '/updateFollowingIds', {
           id: action.id,
           followingIds: action.keep
-          ? [ ...activeUser.followingIds, action.friendId ]
-          : activeUser.followingIds.filter(id => id !== action.friendId)
+            ? [ ...activeUser.followingIds, action.friendId ]
+            : activeUser.followingIds.filter(id => id !== action.friendId)
         });
         res2 = yield call(Api.post, '/updateFollowerIds', {
           id: action.friendId,
           followerIds: action.keep
-          ? [ ...friend.followerIds, action.id ]
-          : friend.followerIds.filter(id => id !== action.id)
+            ? [ ...friend.followerIds, action.id ]
+            : friend.followerIds.filter(id => id !== action.id)
         });
         user = res.data.user;
-        yield put({ type: SET_ACTIVE_USER, user: res.data.user });
+        yield put({ type: SET_ACTIVE_USER, user });
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: FOLLOWERS,
-          keep: action.keep,
-          user
+          user, user2: res2.data.user
         });
         yield put({ type: UPDATE_USER, user });
         break;
@@ -150,9 +133,9 @@ function* updateUser(action) {
         break;
     }
     yield put({ type: UPDATE_USER_SUCCEEDED });
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

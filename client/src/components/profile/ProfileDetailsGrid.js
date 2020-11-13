@@ -76,12 +76,15 @@ export default function ProfileDetailsGrid({
       }
       {displayUserDetail.activeDetail === CREATED_RECIPES &&
         <RecipeList recipes={!!activeUser && activeUser.id === id
-          ? createdRecipes
-          : displayUserDetail.createdRecipes
+          ? Object.values(createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
+          : Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
         }/>
       }
       {displayUserDetail.activeDetail === LIKED_RECIPES &&
-        <RecipeList recipes={displayUserDetail.likedRecipes}/>
+        <RecipeList recipes={likedRecipeIds
+          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+          .map(({ id }) => displayUserDetail.likedRecipes[id])}
+        />
       }
     </div>
   );

@@ -40,9 +40,9 @@ function* signUp(action) {
       });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" });
     }
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

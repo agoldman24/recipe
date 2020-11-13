@@ -19,9 +19,10 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
+import PromptModal from '../popups/PromptModal';
 import Api from '../../api/siteUrl';
 import { LIKED_RECIPE_IDS } from '../../variables/Constants';
-import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED } from '../../actions';
+import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED } from '../../actions';
 import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
@@ -49,7 +50,8 @@ class RecipeDetail extends React.Component {
     anchorEl: null,
     ingredients: null,
     directions: null,
-    likedId: null
+    likedId: null,
+    isDeleteModalVisible: false
   }
   componentDidMount() {
     Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
@@ -60,7 +62,7 @@ class RecipeDetail extends React.Component {
     });
   }
   componentDidUpdate(prevProps) {
-    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible) {
+    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible && this.props.detailRecipe) {
       Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
         this.setState({
           ingredients: res.data.ingredients,
@@ -83,6 +85,13 @@ class RecipeDetail extends React.Component {
           isCreateMode={false}
         />
       : <Card style={detailStyle}>
+          <PromptModal
+            modalType="delete"
+            isVisible={this.state.isDeleteModalVisible}
+            closeModal={() => this.setState({ isDeleteModalVisible: false })}
+            onConfirm={this.props.deleteRecipe}
+            message={"Are you sure want to delete this recipe?"}
+          />
           <AppBar className={this.props.classes.appBar}>
             <Toolbar style={{padding:'0'}}>
               <Grid container direction="row">
@@ -205,9 +214,7 @@ class RecipeDetail extends React.Component {
                 <Button
                   className={this.props.classes.button}
                   style={{fontSize:'16px', width:'100%', fontFamily:'Signika'}}
-                  onClick={() => {
-                    this.setState({ anchorEl: null });
-                  }}
+                  onClick={() => this.setState({ anchorEl: null, isDeleteModalVisible: true })}
                 >
                   Delete
                 </Button>
@@ -242,6 +249,7 @@ const mapDispatchToProps = dispatch => {
       updateType: LIKED_RECIPE_IDS,
       id, recipeId, keep
     }),
+    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED })
   };
 };
 

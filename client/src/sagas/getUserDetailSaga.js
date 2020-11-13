@@ -66,9 +66,9 @@ export function* getUserDetail() {
       activeUserIsDisplayUser
     });
     yield put({ type: GET_USER_DETAIL_SUCCEEDED })
-  } catch (err) {
+  } catch (error) {
     yield put({ type: NETWORK_FAILED });
-    console.log(err);
+    console.log(error);
   }
 }
 

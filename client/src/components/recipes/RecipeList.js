@@ -24,8 +24,8 @@ import "../../index.css";
 const styles = () => ({
   gridList: {
     transform: 'translateZ(0)',
-    margin: '-2px 0 0 0',
-    paddingLeft: isMobileOnly ? '0' : '2px'
+    paddingLeft: isMobileOnly ? '0' : '2px',
+    paddingTop: isMobileOnly ? '3px' : '0'
   },
   titleBar: {
     background: 'black',

@@ -9,7 +9,7 @@ import Fab from '@material-ui/core/Fab';
 import DrawerMenu from './DrawerMenu';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
-import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB } from '../../variables/Constants';
+import { RECIPE_TAB, USERS_TAB, WELCOME_TAB } from '../../variables/Constants';
 import { defaultTheme } from '../../styles';
 
 const fabStyle = {
@@ -55,7 +55,7 @@ const NavigationMenu = props => {
             props.setActiveTab(newValue);
           }}
         >
-          <Tab style={tabStyle} label="Users" value={SEARCH_TAB}/>
+          <Tab style={tabStyle} label="Users" value={USERS_TAB}/>
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
           <DrawerMenu
             open={isDrawerOpen}
@@ -88,7 +88,7 @@ const mapStateToProps = state => {
   return {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
-    highlightTab: state.activeTab.name === SEARCH_TAB
+    highlightTab: state.activeTab.name === USERS_TAB
       || state.activeTab.name === RECIPE_TAB
   };
 };

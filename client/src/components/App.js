@@ -13,7 +13,7 @@ import SignUpTab from './tabs/SignUpTab';
 import WelcomeTab from './tabs/WelcomeTab';
 import AboutTab from './tabs/AboutTab';
 import RecipeTab from './tabs/RecipeTab';
-import SearchTab from './tabs/SearchTab';
+import UsersTab from './tabs/UsersTab';
 import ProfileTab from './tabs/ProfileTab';
 import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import ScrollButton from './popups/ScrollButton';
@@ -24,7 +24,7 @@ import {
   SET_ACTIVE_TAB
 } from '../actions';
 import {
-  SEARCH_TAB,
+  USERS_TAB,
   SIGN_UP_TAB,
   RECIPE_TAB,
   SIGN_IN_TAB,
@@ -61,7 +61,7 @@ class App extends React.Component {
     const mobileStyle = {	
       padding: this.props.isLoggedIn	
         ? '50px 0 10px'	
-        : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
+        : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
           ? '0 0 10px 0'	
           : activeTab === ABOUT_TAB ? '20px 0 5px 0' : '50px 0 10px',	
       overflowY: 'auto',
@@ -71,10 +71,10 @@ class App extends React.Component {
       position: 'relative',
       top: this.props.isLoggedIn
         ? '50px'
-        : activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
+        : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '0' : '50px',
       height: !this.props.isLoggedIn
-        ? activeTab === SEARCH_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
+        ? activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
           ? '100vh'
           : 'calc(100vh - 50px)'
         : this.props.activeTab.name === RECIPE_TAB
@@ -114,7 +114,7 @@ class App extends React.Component {
           <CssBaseline />
           {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}
           {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
-          {this.props.activeTab.name === SEARCH_TAB && <SearchTab/>}
+          {this.props.activeTab.name === USERS_TAB && <UsersTab/>}
           {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
           {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
           {this.props.activeTab.name === ABOUT_TAB &&

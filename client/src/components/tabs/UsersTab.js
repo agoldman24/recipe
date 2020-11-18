@@ -10,9 +10,10 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
     left: 0,
-    marginTop: '15px',
+    padding: '15px 0',
     width: isMobileOnly ? '90%' : '80%',
     marginLeft: isMobileOnly ? '5%' : '11%',
+    background: '#202020'
   },
   searchIcon: {
     position: 'absolute',
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SearchTab = props => {
+const UsersTab = props => {
   const classes = useStyles();
   const [searchVal, setSearchVal] = useState("");
   return (
@@ -50,11 +51,10 @@ const SearchTab = props => {
             root: classes.inputRoot,
             input: classes.inputInput,
           }}
-          inputProps={{'aria-label':'search'}}
           onChange={e => setSearchVal(e.target.value.toLowerCase())}
         />
       </div>
-      <div style={{padding:'25px 0'}}/>
+      <div style={{height:'55px'}}/>
       <UsersTable
         users={
           props.usersArray.filter(user =>
@@ -81,4 +81,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SearchTab);
+)(UsersTab);

@@ -123,7 +123,6 @@ const IconsModal = props => {
                 }
               }}
               autoFocus
-              inputProps={{'aria-label':'search'}}
               onClick={e => e.stopPropagation()}
               onChange={e => setSearchVal(e.target.value.toLowerCase())}
             />

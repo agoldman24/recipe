@@ -33,7 +33,7 @@ const ProfileEditor = props => {
 
   return (
     <TableContainer>
-      <Table className={classes.table} aria-label="simple table">
+      <Table className={classes.table}>
         <TableBody>
           <TableRow>
             <TableCell style={cellStyle}>

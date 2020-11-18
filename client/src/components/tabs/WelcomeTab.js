@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { SET_ACTIVE_TAB } from '../../actions';
-import { SIGN_IN_TAB, SIGN_UP_TAB, SEARCH_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
+import { SIGN_IN_TAB, SIGN_UP_TAB, USERS_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
 import { gradientTextStyle, errorStyle } from "../../styles";
 
 const buttonStyle = {
@@ -100,7 +100,7 @@ const WelcomeTab = props => {
                 borderColor: '#ff441f',
                 color: '#ff441f'
               }}
-              onClick={() => props.setActiveTab(SEARCH_TAB)}
+              onClick={() => props.setActiveTab(USERS_TAB)}
             >
               Users
             </Button>

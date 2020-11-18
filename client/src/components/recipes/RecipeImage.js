@@ -29,7 +29,7 @@ const roundedButtonStyle = {
   border: '2px solid orange',
   fontWeight: 'bold',
   borderRadius: '50px',
-  background: '#292929',
+  background: '#202020',
   margin: '5px 10%'
 }
 
@@ -100,7 +100,7 @@ export default function RecipeImage({
               </div>
             </Grid>
           </Grid>
-          <Card style={{width:'95%', margin:'auto', boxShadow:'none', background:'#202020'}}>
+          <Card style={{width:'95%', margin:'auto', boxShadow:'none', background:'#303030'}}>
             {!!image
             ? <CardMedia
                 image={image}

@@ -13,10 +13,13 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import RecipeDetail from './RecipeDetail';
-import { GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED, SET_DETAIL_RECIPE } from '../../actions';
 import {
-  RECIPE_TAB, SAMPLE_RECIPES, FRIEND_RECIPES,
-  CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
+  GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED, SET_DETAIL_RECIPE,
+  SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED
+} from '../../actions';
+import {
+  RECIPE_TAB, PROFILE_TAB, PUSH, FOLLOWERS, SAMPLE_RECIPES,
+  FRIEND_RECIPES, CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
 } from "../../variables/Constants";
 import { centeredTextStyle } from "../../styles";
 import "../../index.css";
@@ -41,6 +44,12 @@ const styles = () => ({
     paddingTop: '60px'
   }
 });
+
+const getDate = timestamp => {
+  const dateArray = new Date(timestamp).toDateString().split(' ').slice(1);
+  const date = dateArray[0] + ' ' + dateArray[1] + ', ' + dateArray[2];
+  return date;
+}
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
@@ -114,8 +123,9 @@ class RecipeList extends React.Component {
               image={this.state.detailRecipe.image}
               authorName={this.state.detailRecipe.authorName}
               authorId={this.state.detailRecipe.authorId}
-              timestamp={this.state.detailRecipe.timestamp}
+              date={getDate(this.state.detailRecipe.timestamp)}
               onClose={() => this.setState({ isDetailOpen: false })}
+              visitUserProfile={this.props.visitUserProfile}
             />
           }
         </Dialog>
@@ -126,13 +136,16 @@ class RecipeList extends React.Component {
           {this.props.recipes.map(recipe => !recipe ? null : (
             <GridListTile key={recipe.id} className="cardMedia"
               style={{
-                padding: '0',
                 height: 'fit-content',
                 width: isMobileOnly ? '100%' : '25%',
-                paddingRight: isMobileOnly ? '0' : '2px',
-                paddingBottom: '2px'
+                padding: '0',
+                background: '#303030',
+                borderRight: isMobileOnly ? 'none' : '2px solid #202020',
+                borderBottom: '2px solid #202020'
               }}
-              classes={{ tile: this.props.classes.tile }}
+              classes={{
+                tile: this.props.classes.tile
+              }}
               onClick={() => {
                 this.setState({ isDetailOpen: true, detailRecipe: recipe });
                 this.props.setDetailRecipe(recipe);
@@ -143,7 +156,18 @@ class RecipeList extends React.Component {
                 className={this.props.classes.titleBar}
                 classes={{ title: this.props.classes.title }}
                 title={recipe.name}
-                subtitle={!recipe.authorName ? 'Anonymous' : recipe.authorName}
+                subtitle={
+                  <div style={{color:'#bbbbbb'}}>
+                    {!recipe.authorName ? 'Anonymous' :
+                      <div><Link href="#" onClick={() => this.props.visitUserProfile(
+                        this.props.users[recipe.authorId],
+                        this.props.activeTab,
+                        this.props.displayUser
+                      )} style={{color:'#45bbff'}}>
+                        {recipe.authorName}
+                      </Link> · {getDate(recipe.timestamp)}</div>
+                    }
+                  </div>}
                 titlePosition="top"
                 actionPosition="left"
                 actionIcon={this.props.isLoggedIn
@@ -299,6 +323,19 @@ const mapDispatchToProps = dispatch => {
       }
       dispatch({ type: GET_RECIPES_REQUESTED, requestType, ids });
     },
+    visitUserProfile: (user, currentTab, displayUser) => {
+      dispatch({ type: SET_DISPLAY_USER, user });
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: {
+          name: currentTab.name,
+          displayUserId: !!displayUser ? displayUser.id : null
+        },
+        newTab: { name: PROFILE_TAB },
+        operation: PUSH
+      });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+    }
   };
 };
 

@@ -178,7 +178,7 @@ const RecipeForms = ({
         }
       }}
     >
-    <div style={{width:'100%', background:'#202020', height:'calc(100% - ' + headerHeight + 'px)'}}>
+    <div style={{width:'100%', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setTimeout(() => setIconsModalVisible(false), 1)}

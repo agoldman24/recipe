@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { SIGN_UP_TAB } from '../../variables/Constants';
 import { SIGN_IN_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES } from '../../actions';
-import { formTheme, errorStyle } from '../../styles';
+import { defaultTheme, formTheme, errorStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
 
@@ -87,8 +87,7 @@ const SignInTab = props => {
             <Grid item>
               <Link
                 href="#"
-                variant="body2"
-                color="primary"
+                style={{color: defaultTheme.palette.primary.main}}
                 onClick={() => {
                   props.clearErrorMessages();
                   props.setActiveTab(SIGN_UP_TAB)

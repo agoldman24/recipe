@@ -135,13 +135,13 @@ const ProfileAvatar = props => {
         }}
       >
         <Grid container direction="column">
-          <Grid item style={{background:'#292929', borderBottom: '1px solid white', padding:'10px'}}>
+          <Grid item style={{background:'black', borderBottom: '1px solid white', padding:'10px'}}>
             <label className="fileContainer" style={{fontSize:'16px'}}>
               Upload Photo
               <FileBase type="file" onDone={onImageChange}/>
             </label>
           </Grid>
-          <Grid item style={{background:'#292929'}}>
+          <Grid item style={{background:'black'}}>
             <Button
               className={classes.button}
               style={{fontSize: '16px', width:'100%', fontFamily: 'Signika'}}

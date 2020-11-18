@@ -89,7 +89,7 @@ const RecipeDetailEdit = props => {
   return (
     <Card style={detailStyle}>
       <AppBar className={classes.appBar} id="editRecipeHeader">
-        <Toolbar style={{padding:'0'}}>
+        <Toolbar style={{minHeight:'0', padding:'10px 0'}}>
           <Grid container direction="row" style={{padding:'0 15px'}}>
             <Grid item style={{width:'25%'}}>
               {props.isEditMode

@@ -22,11 +22,8 @@ import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import Api from '../../api/siteUrl';
-import { LIKED_RECIPE_IDS, PROFILE_TAB, PUSH, FOLLOWERS } from '../../variables/Constants';
-import {
-  TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED,
-  SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED
-} from '../../actions';
+import { LIKED_RECIPE_IDS } from '../../variables/Constants';
+import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED } from '../../actions';
 import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
@@ -55,22 +52,27 @@ class RecipeDetail extends React.Component {
     ingredients: null,
     directions: null,
     likedId: null,
+    isFetching: true,
     isDeleteModalVisible: false
   }
   componentDidMount() {
     Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
       this.setState({
         ingredients: res.data.ingredients,
-        directions: res.data.directions
+        directions: res.data.directions,
+        isFetching: false
       });
     });
   }
   componentDidUpdate(prevProps) {
-    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible && this.props.detailRecipe) {
+    console.log(!!this.state.ingredients)
+    if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible && !!this.state.ingredients) {
+      this.setState({ isFetching: true });
       Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
         this.setState({
           ingredients: res.data.ingredients,
-          directions: res.data.directions
+          directions: res.data.directions,
+          isFetching: false
         });
       });
     } else if (!this.props.isLiking && prevProps.isLiking) {
@@ -78,9 +80,8 @@ class RecipeDetail extends React.Component {
     }
   }
   render() {
-    const { id, name, image, authorName, authorId, timestamp } = this.props;
+    const { id, name, image, authorName, authorId, date } = this.props;
     const { ingredients, directions } = this.state;
-    const date = new Date(timestamp).toDateString();
     const headerHeight = !!document.getElementById("recipeHeader")
       ? document.getElementById("recipeHeader").offsetHeight
       : 0;
@@ -153,14 +154,14 @@ class RecipeDetail extends React.Component {
               </Grid>
             </Toolbar>
             {!!authorName &&
-              <div style={{display:'flex', background:'#101010', padding:'10px'}}>
+              <div style={{display:'flex', background:'linear-gradient(45deg, black, #303030)', padding:'10px'}}>
                 <div style={{margin:'auto'}}>
                   <div style={{color:'white'}}>
                     Posted by <Link href="#" onClick={() => this.props.visitUserProfile(
                       this.props.users[authorId],
                       this.props.activeTab,
                       this.props.displayUser
-                    )}>
+                    )} style={{color:'#45bbff'}}>
                       {authorName}
                     </Link> on {date}
                   </div>
@@ -168,11 +169,9 @@ class RecipeDetail extends React.Component {
               </div>
             }
           </AppBar>
-          <div style={{overflowY:'scroll', background:'#202020',
-            height:'calc(100% - ' + headerHeight + 'px)'
-          }}>
+          <div style={{overflowY:'scroll', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
             <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
-              {!ingredients
+              {this.state.isFetching
               ? <div style={loadingTextStyle}>Loading...</div>
               : <div>
                   <div style={{width:'100%', display:'flex'}}>
@@ -277,20 +276,7 @@ const mapDispatchToProps = dispatch => {
       updateType: LIKED_RECIPE_IDS,
       id, recipeId, keep
     }),
-    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED }),
-    visitUserProfile: (user, currentTab, displayUser) => {
-      dispatch({ type: SET_DISPLAY_USER, user });
-      dispatch({
-        type: SET_ACTIVE_TAB,
-        currentTab: {
-          name: currentTab.name,
-          displayUserId: !!displayUser ? displayUser.id : null
-        },
-        newTab: { name: PROFILE_TAB },
-        operation: PUSH
-      });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
-    }
+    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED })
   };
 };
 

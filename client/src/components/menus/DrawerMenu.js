@@ -117,7 +117,6 @@ const DrawerMenu = props => {
         anchor="right"
         open={props.open}
         onClose={props.toggleDrawer}
-        onOpen={props.toggleDrawer}
       >
         {sideList()}
       </Drawer>

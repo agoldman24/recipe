@@ -162,6 +162,10 @@ const RecipeForms = ({
     setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
   }
 
+  const headerHeight = !!document.getElementById("editRecipeHeader")
+    ? document.getElementById("editRecipeHeader").offsetHeight
+    : 0;
+
   return (
     <ClickAwayListener
       onClickAway={e => {
@@ -174,7 +178,7 @@ const RecipeForms = ({
         }
       }}
     >
-    <div style={fullWidth}>
+    <div style={{width:'100%', background:'#202020', height:'calc(100% - ' + headerHeight + 'px)'}}>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setTimeout(() => setIconsModalVisible(false), 1)}
@@ -261,13 +265,13 @@ const RecipeForms = ({
         }}
       >
         <Grid container direction="column">
-          <Grid item style={{background:'#292929', borderBottom: '1px solid white', padding:'10px'}}>
+          <Grid item style={{background:'black', borderBottom: '1px solid white', padding:'10px'}}>
             <label className="fileContainer" style={{fontSize:'16px'}}>
               Upload Photo
               <FileBase type="file" onDone={onImageChange}/>
             </label>
           </Grid>
-          <Grid item style={{background:'#292929'}}>
+          <Grid item style={{background:'black'}}>
             <Button
               className={classes.button}
               style={{fontSize: '16px', width:'100%', fontFamily: 'Signika'}}

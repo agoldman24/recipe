@@ -18,7 +18,7 @@ import { detailStyle } from '../../styles';
 const useStyles = makeStyles(() => ({
   appBar: {
     position: 'relative',
-    background: '#292929'
+    background: 'black'
   },
   title: {
     textAlign: 'center',
@@ -88,7 +88,7 @@ const RecipeDetailEdit = props => {
   }
   return (
     <Card style={detailStyle}>
-      <AppBar className={classes.appBar}>
+      <AppBar className={classes.appBar} id="editRecipeHeader">
         <Toolbar style={{padding:'0'}}>
           <Grid container direction="row" style={{padding:'0 15px'}}>
             <Grid item style={{width:'25%'}}>

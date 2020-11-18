@@ -100,7 +100,7 @@ export default function RecipeImage({
               </div>
             </Grid>
           </Grid>
-          <Card style={{width:'95%', margin:'auto', boxShadow:'none'}}>
+          <Card style={{width:'95%', margin:'auto', boxShadow:'none', background:'#202020'}}>
             {!!image
             ? <CardMedia
                 image={image}

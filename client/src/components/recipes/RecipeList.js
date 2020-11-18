@@ -112,6 +112,9 @@ class RecipeList extends React.Component {
               id={this.state.detailRecipe.id}
               name={this.state.detailRecipe.name}
               image={this.state.detailRecipe.image}
+              authorName={this.state.detailRecipe.authorName}
+              authorId={this.state.detailRecipe.authorId}
+              timestamp={this.state.detailRecipe.timestamp}
               onClose={() => this.setState({ isDetailOpen: false })}
             />
           }

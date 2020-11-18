@@ -70,7 +70,7 @@ export default function RecipeNameField({
   const [value, setValue] = useState(originalName);
   return (
     <Grid container direction="row"
-      style={{display:'flex', margin:'15px 10px 5px 10px', width:'initial'}}
+      style={{display:'flex', padding:'15px 10px 5px 10px', width:'initial'}}
     >
       <Grid item style={{
         width: focusedContainer !== "name" && isNameEmpty && isErrored ? '65%' : '100%',

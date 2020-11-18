@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,8 +27,6 @@ const textStyle = {
 
 const UsersTable = props => {
   const classes = useStyles();
-  const [selectedId, setSelectedId] = useState(0);
-
   return (
     <TableContainer>
       <Table className={classes.table}>
@@ -37,11 +35,7 @@ const UsersTable = props => {
             <TableRow
               key={user.id}
               className="clickable"
-              selected={selectedId === user.id}
-              onClick={() => {
-                setSelectedId(user.id);
-                props.visitUserProfile(user, props.activeTab, props.displayUser);
-              }}>
+              onClick={() => props.visitUserProfile(user, props.activeTab, props.displayUser)}>
               <TableCell>
                 <Typography style={textStyle}>{user.firstName + " " + user.lastName}</Typography>
                 <Typography style={{...textStyle, color:'grey', paddingLeft:'10px'}}>{user.username}</Typography>

@@ -7,6 +7,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
+import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -21,8 +22,11 @@ import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import Api from '../../api/siteUrl';
-import { LIKED_RECIPE_IDS } from '../../variables/Constants';
-import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED } from '../../actions';
+import { LIKED_RECIPE_IDS, PROFILE_TAB, PUSH, FOLLOWERS } from '../../variables/Constants';
+import {
+  TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED,
+  SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED
+} from '../../actions';
 import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
@@ -35,7 +39,7 @@ const styles = () => ({
   },
   appBar: {
     position: 'relative',
-    background: '#292929'
+    background: 'black'
   }
 });
 
@@ -74,8 +78,12 @@ class RecipeDetail extends React.Component {
     }
   }
   render() {
-    const { id, name, image } = this.props;
+    const { id, name, image, authorName, authorId, timestamp } = this.props;
     const { ingredients, directions } = this.state;
+    const date = new Date(timestamp).toDateString();
+    const headerHeight = !!document.getElementById("recipeHeader")
+      ? document.getElementById("recipeHeader").offsetHeight
+      : 0;
     return this.props.editMode
       ? <RecipeDetailEdit
           name={name}
@@ -92,8 +100,8 @@ class RecipeDetail extends React.Component {
             onConfirm={this.props.deleteRecipe}
             message={"Are you sure want to delete this recipe?"}
           />
-          <AppBar className={this.props.classes.appBar}>
-            <Toolbar style={{padding:'0'}}>
+          <AppBar className={this.props.classes.appBar} id="recipeHeader">
+            <Toolbar style={{minHeight:'0', padding:'5px 0'}}>
               <Grid container direction="row">
                 <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
                   {this.props.isLoggedIn
@@ -134,7 +142,7 @@ class RecipeDetail extends React.Component {
                   width: this.props.isLoggedIn ? '78%' : '88%',
                   paddingLeft: this.props.isLoggedIn ? '0' : '5%'
                 }}>
-                  <Typography noWrap style={headerStyle}>{name}</Typography>
+                  <Typography style={headerStyle}>{name}</Typography>
                 </Grid>
                 <Grid item style={{width:'12%'}}>
                   <IconButton onClick={this.props.onClose}
@@ -144,8 +152,25 @@ class RecipeDetail extends React.Component {
                 </Grid>
               </Grid>
             </Toolbar>
+            {!!authorName &&
+              <div style={{display:'flex', background:'#101010', padding:'10px'}}>
+                <div style={{margin:'auto'}}>
+                  <div style={{color:'white'}}>
+                    Posted by <Link href="#" onClick={() => this.props.visitUserProfile(
+                      this.props.users[authorId],
+                      this.props.activeTab,
+                      this.props.displayUser
+                    )}>
+                      {authorName}
+                    </Link> on {date}
+                  </div>
+                </div>
+              </div>
+            }
           </AppBar>
-          <div style={{height:'100%', overflowY:'scroll'}}>
+          <div style={{overflowY:'scroll', background:'#202020',
+            height:'calc(100% - ' + headerHeight + 'px)'
+          }}>
             <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
               {!ingredients
               ? <div style={loadingTextStyle}>Loading...</div>
@@ -197,7 +222,7 @@ class RecipeDetail extends React.Component {
             }}
           >
             <Grid container direction="column">
-              <Grid item style={{background:'#292929', borderBottom:'1px solid white'}}>
+              <Grid item style={{background:'black', borderBottom:'1px solid white'}}>
                 <Button
                   startIcon={<CreateIcon/>}
                   className={this.props.classes.button}
@@ -210,7 +235,7 @@ class RecipeDetail extends React.Component {
                   Edit
                 </Button>
               </Grid>
-              <Grid item style={{background:'#292929'}}>
+              <Grid item style={{background:'black'}}>
                 <Button
                   className={this.props.classes.button}
                   style={{fontSize:'16px', width:'100%', fontFamily:'Signika'}}
@@ -229,6 +254,9 @@ const mapStateToProps = state => {
   return {
     activeUser: state.activeUser,
     isLoggedIn: !!state.activeUser,
+    displayUser: state.displayUser,
+    users: state.users,
+    activeTab: state.activeTab,
     createdRecipeIds: !!state.activeUser
       ? state.activeUser.createdRecipeIds.map(obj => obj.id)
       : null,
@@ -249,7 +277,20 @@ const mapDispatchToProps = dispatch => {
       updateType: LIKED_RECIPE_IDS,
       id, recipeId, keep
     }),
-    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED })
+    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED }),
+    visitUserProfile: (user, currentTab, displayUser) => {
+      dispatch({ type: SET_DISPLAY_USER, user });
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: {
+          name: currentTab.name,
+          displayUserId: !!displayUser ? displayUser.id : null
+        },
+        newTab: { name: PROFILE_TAB },
+        operation: PUSH
+      });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+    }
   };
 };
 

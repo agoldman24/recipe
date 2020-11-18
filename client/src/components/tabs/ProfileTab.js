@@ -51,7 +51,7 @@ import {
 const useStyles = makeStyles(() => ({
   appBar: {
     position: 'relative',
-    background: '#424242'
+    background: 'black'
   },
   title: {
     marginLeft: '-35px',

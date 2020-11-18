@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import Paper from '@material-ui/core/Paper';
@@ -12,33 +12,30 @@ import { SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES } from '../../actions';
 import { RECIPE_TAB, SEARCH_TAB, WELCOME_TAB } from '../../variables/Constants';
 import { defaultTheme } from '../../styles';
 
+const fabStyle = {
+  position: 'fixed',
+  right: isMobileOnly ? 10 : 20,
+  bottom: isMobileOnly ? 10 : 'initial',
+  top: isMobileOnly ? 'initial' : 10,
+  background: isMobileOnly
+    ? 'linear-gradient(to top left, #202020, grey)'
+    : 'linear-gradient(to bottom left, #202020, grey)',
+  boxShadow: 'none',
+  color: defaultTheme.palette.primary.main,
+  zIndex: '3'
+};
+
+const tabStyle = {
+  fontSize:'13px'
+};
+
 const NavigationMenu = props => {
-
-  const handleChange = (event, newValue) => {
-    props.clearFailureMessages();
-    props.setActiveTab(newValue);
-  };
-
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [navBarZindex, setNavBarZindex] = useState('initial');
   const navBarStyle = {
-    width:'100%', height:'50px', left:'0', position:'fixed',
-    backgroundImage: props.isLoggedIn ? 'linear-gradient(black, #202020)' : 'none'
-  };
-
-  const tabStyle = {
-    fontSize:'13px'
-  };
-
-  const fabStyle = {
-    position: 'fixed',
-    right: isMobileOnly ? 10 : 20,
-    bottom: isMobileOnly ? 10 : 'initial',
-    top: isMobileOnly ? 'initial' : 10,
-    background: isMobileOnly
-      ? 'linear-gradient(to top left, #202020, grey)'
-      : 'linear-gradient(to bottom left, #202020, grey)',
-    boxShadow: 'none',
-    color: defaultTheme.palette.primary.main,
-    zIndex: '3'
+    width: '100%', height: '50px', left: '0', position: 'fixed',
+    backgroundImage: props.isLoggedIn ? 'linear-gradient(black, #202020)' : 'none',
+    zIndex: isMobileOnly ? '4' : navBarZindex
   };
 
   return (
@@ -53,11 +50,25 @@ const NavigationMenu = props => {
           variant="fullWidth"
           indicatorColor="primary"
           textColor="primary"
-          onChange={handleChange}
+          onChange={(event, newValue) => {
+            props.clearFailureMessages();
+            props.setActiveTab(newValue);
+          }}
         >
           <Tab style={tabStyle} label="Users" value={SEARCH_TAB}/>
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
-          <DrawerMenu toggleCreateMode={props.toggleCreateMode}/>
+          <DrawerMenu
+            open={isDrawerOpen}
+            toggleDrawer={() => {
+              setIsDrawerOpen(!isDrawerOpen);
+              if (isDrawerOpen) {
+                setTimeout(() => setNavBarZindex('initial'), 500);
+              } else {
+                setNavBarZindex('4');
+              }
+            }}
+            toggleCreateMode={props.toggleCreateMode}
+          />
         </Tabs>
       : props.activeTab.name !== WELCOME_TAB
         ? <Fab

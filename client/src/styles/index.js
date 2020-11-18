@@ -133,7 +133,7 @@ export const unselected = {
 
 export const selected = {
   paddingBottom: '10px',
-  borderBottom:'2px solid #ffc800'
+  borderBottom: '2px solid #ffc800'
 }
 
 export const highlightedNumberStyle = {
@@ -320,7 +320,7 @@ export const sectionTitleStyle = (focusedContainer, container) => ({
 
 export const recipeButtonStyle = (value, currentVal) => ({
   borderTop: value === currentVal
-    ? '2px solid ' + defaultTheme.palette.primary.main
+    ? '3px solid ' + defaultTheme.palette.primary.main
     : 'none',
   color: value === currentVal ? defaultTheme.palette.primary.main : 'white'
 })

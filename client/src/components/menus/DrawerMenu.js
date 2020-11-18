@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -39,8 +39,6 @@ const useStyles = makeStyles({
 
 const DrawerMenu = props => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const toggleDrawer = () => setOpen(!open);
 
   const clickHandler = text => {
     switch (text) {
@@ -75,7 +73,7 @@ const DrawerMenu = props => {
     <div
       className={classes.list}
       role="presentation"
-      onClick={toggleDrawer}
+      onClick={props.toggleDrawer}
     >
       <List>
         {['Profile', 'Create', 'Sign Out']
@@ -98,31 +96,31 @@ const DrawerMenu = props => {
     <div style={{display:'flex'}}>
       <Button
         style={{
-          width:'33.33vw',
-          fontSize:'13px',
-          height:'50px',
-          borderRadius:'0',
-          borderBottom: props.activeUserProfile ? '2px solid #ffe100' : 'none',
+          width: '33.33vw',
+          fontSize: '13px',
+          height: '50px',
+          borderRadius: '0',
+          borderBottom: props.activeUserProfile ? '3px solid #ffe100' : 'none',
           color: props.activeUserProfile ? '#ffe100' : 'white',
-          opacity: open || props.activeUserProfile ? '1.0' : '0.7',
-          background: open
+          opacity: props.open || props.activeUserProfile ? '1.0' : '0.7',
+          background: props.open
             ? 'linear-gradient(black, #303030)'
             : 'linear-gradient(black, #202020)'
         }}
         startIcon={<AccountCircleIcon />}
-        onClick={toggleDrawer}
+        onClick={props.toggleDrawer}
       >
         {props.activeUser.firstName}
       </Button>
-      <SwipeableDrawer
+      <Drawer
         style={{zIndex:'3'}}
         anchor="right"
-        open={open}
-        onClose={toggleDrawer}
-        onOpen={toggleDrawer}
+        open={props.open}
+        onClose={props.toggleDrawer}
+        onOpen={props.toggleDrawer}
       >
         {sideList()}
-      </SwipeableDrawer>
+      </Drawer>
     </div>
   );
 }

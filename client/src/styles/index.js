@@ -172,7 +172,7 @@ export const backButtonStyle = {
   boxShadow: 'none',
   color: 'white',
   position: 'fixed',
-  left: '10px',
+  left: '0',
   zIndex: '5'
 };
 
@@ -253,24 +253,6 @@ export const iconButtonStyle = {
   float: 'right',
   height: '20px',
   width: '30px'
-}
-
-export const blackIconStyle = {
-  width: '27',
-  height: '27',
-  background: 'black',
-  color: 'white',
-  borderRadius: '50px'
-};
-
-export const darkBackgroundStyle = {
-  position: 'fixed',
-  top: '0',
-  left: '0',
-  height: '100vh',
-  width: '100vw',
-  zIndex: '4',
-  background: 'rgba(0,0,0,0.7)'
 }
 
 export const detailStyle = {

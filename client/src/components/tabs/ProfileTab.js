@@ -159,7 +159,7 @@ const ProfileTab = props => {
         >
           {!!props.tabHistory.length &&
             <Fab
-              style={{...backButtonStyle, top: !!props.activeUser ? '35px' : '20px'}}
+              style={{...backButtonStyle, top: !!props.activeUser ? '42px' : '7px'}}
               onClick={() => {
                 const tabHistory = props.tabHistory;
                 const { displayUserId } = tabHistory[tabHistory.length - 1];

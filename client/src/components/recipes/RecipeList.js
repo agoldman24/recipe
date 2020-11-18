@@ -24,6 +24,8 @@ import "../../index.css";
 const styles = () => ({
   gridList: {
     transform: 'translateZ(0)',
+    margin: '-2px 0 0 0',
+    paddingLeft: isMobileOnly ? '0' : '2px'
   },
   titleBar: {
     background: 'black',
@@ -123,8 +125,9 @@ class RecipeList extends React.Component {
               style={{
                 padding: '0',
                 height: 'fit-content',
-                width: isMobileOnly ? '100%' : '24.8%',
-                marginRight: isMobileOnly ? '0' : '2px'
+                width: isMobileOnly ? '100%' : '25%',
+                paddingRight: isMobileOnly ? '0' : '2px',
+                paddingBottom: '2px'
               }}
               classes={{ tile: this.props.classes.tile }}
               onClick={() => {

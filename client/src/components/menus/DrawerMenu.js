@@ -12,13 +12,10 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { connect } from 'react-redux';
 import {
-  SIGN_OUT,
-  SET_DISPLAY_USER,
-  SET_ACTIVE_TAB,
-  SHOW_SNACKBAR,
-  GET_USER_DETAIL_REQUESTED
+  SIGN_OUT, SET_DISPLAY_USER, SET_ACTIVE_TAB,
+  SHOW_SNACKBAR, GET_USER_DETAIL_REQUESTED
 } from '../../actions';
-import { WELCOME_TAB, PROFILE_TAB, FOLLOWERS } from '../../variables/Constants';
+import { WELCOME_TAB, PROFILE_TAB } from '../../variables/Constants';
 
 const useStyles = makeStyles({
   list: {
@@ -142,7 +139,7 @@ const mapDispatchToProps = dispatch => {
         currentTab: null,
         newTab: { name: PROFILE_TAB }
       });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED });
     },
     signOut: () => {
       dispatch({

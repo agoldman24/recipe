@@ -108,7 +108,7 @@ class App extends React.Component {
         <Container
           id="container"
           component="main"
-          maxWidth={isMobileOnly ? "xs" : false}
+          maxWidth={false}
           style={isMobileOnly ? mobileStyle : desktopStyle}
         >
           <CssBaseline />

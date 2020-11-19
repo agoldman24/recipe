@@ -293,10 +293,15 @@ const displayUserDetail = (state = null, action) => {
       return null;
     case SET_DISPLAY_USER_DETAIL:
       const { profileImage, followers, following, createdRecipes, likedRecipes } = action;
-      const activeDetail = localStorage.getItem("activeDetail");
+      const cachedActiveDetail = localStorage.getItem("activeDetail");
+      const activeDetail = action.activeUserIsDisplayUser
+        ? isDefined(cachedActiveDetail)
+          ? cachedActiveDetail
+          : FOLLOWERS
+        : FOLLOWERS;
+      localStorage.setItem("activeDetail", activeDetail);
       return {
-        profileImage, followers, following, createdRecipes, likedRecipes,
-        activeDetail: isDefined(activeDetail) ? activeDetail : FOLLOWERS
+        profileImage, followers, following, createdRecipes, likedRecipes, activeDetail
       };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);

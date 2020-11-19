@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -17,6 +19,7 @@ import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from '../profile/ProfileAvatar';
 import ProfileEditor from '../profile/ProfileEditor';
 import ProfileDetailsGrid from '../profile/ProfileDetailsGrid';
+import { FOLLOWING_IDS, PROFILE_TAB, PROFILE, POP } from '../../variables/Constants';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
@@ -25,15 +28,6 @@ import {
   SET_DISPLAY_USER,
   TOGGLE_PROFILE_EDITOR
 } from '../../actions';
-import {
-  FOLLOWERS,
-  FOLLOWING_IDS,
-  PROFILE_TAB,
-  PROFILE,
-  POP
-} from '../../variables/Constants';
-import { connect } from 'react-redux';
-import { isMobileOnly } from 'react-device-detect';
 import {
   defaultTheme,
   detailStyle,
@@ -295,7 +289,7 @@ const mapDispatchToProps = dispatch => {
     },
     setDisplayUser: user => {
       dispatch({ type: SET_DISPLAY_USER, user });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED });
     },
     setActiveTab: newTab => {
       dispatch({

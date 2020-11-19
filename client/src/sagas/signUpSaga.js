@@ -27,6 +27,7 @@ function* signUp(action) {
       yield put({ type: SET_DISPLAY_USER, user: data.user });
       yield put({
         type: SET_DISPLAY_USER_DETAIL,
+        activeUserIsDisplayUser: true,
         profileImage: null,
         followers: {},
         following: {},

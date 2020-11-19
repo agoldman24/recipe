@@ -18,8 +18,8 @@ import {
   SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED
 } from '../../actions';
 import {
-  RECIPE_TAB, PROFILE_TAB, PUSH, FOLLOWERS, SAMPLE_RECIPES,
-  FRIEND_RECIPES, CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
+  RECIPE_TAB, PROFILE_TAB, PUSH, SAMPLE_RECIPES, FRIEND_RECIPES,
+  CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
 } from "../../variables/Constants";
 import { centeredTextStyle } from "../../styles";
 import "../../index.css";
@@ -334,7 +334,7 @@ const mapDispatchToProps = dispatch => {
         newTab: { name: PROFILE_TAB },
         operation: PUSH
       });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED });
     }
   };
 };

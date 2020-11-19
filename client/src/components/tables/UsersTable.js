@@ -9,13 +9,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import { SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED } from '../../actions';
-import { PROFILE_TAB, FOLLOWERS, PUSH } from '../../variables/Constants';
+import { PROFILE_TAB, PUSH } from '../../variables/Constants';
 import '../../index.css';
 
 const useStyles = makeStyles({
   table: {
-    marginLeft: isMobileOnly ? '5%' : '10%',
-    width: isMobileOnly ? '90%' : '80%',
+    width: isMobileOnly ? '100%' : '90%',
+    margin: isMobileOnly ? '0' : '0 5%',
     borderTop: '1px solid rgba(81, 81, 81, 1)'
   }
 });
@@ -68,7 +68,7 @@ const mapDispatchToProps = dispatch => {
         newTab: { name: PROFILE_TAB },
         operation: PUSH
       });
-      dispatch({ type: GET_USER_DETAIL_REQUESTED, activeDetail: FOLLOWERS });
+      dispatch({ type: GET_USER_DETAIL_REQUESTED });
     }
   }
 }

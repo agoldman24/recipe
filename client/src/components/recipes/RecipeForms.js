@@ -12,7 +12,6 @@ import RecipeIngredients from './RecipeIngredients';
 import RecipeDirections from './RecipeDirections';
 import FileBase from 'react-file-base64';
 import { b64toBlob } from '../../utilities/imageConverter';
-import { fullWidth } from '../../styles';
 import { directionsAreDifferent, ingredientsAreDifferent } from './utils';
 import '../../index.css';
 

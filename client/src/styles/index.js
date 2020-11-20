@@ -283,7 +283,7 @@ export const titleStyle = {
 
 export const sectionStyle = {
   margin: '3px 15px',
-  fontSize: '12px',
+  fontSize: '12.5px',
   paddingBottom: '50%',
   lineHeight: '2'
 }

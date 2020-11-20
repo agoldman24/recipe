@@ -84,9 +84,7 @@ class App extends React.Component {
       overflowX: 'hidden'
     };
     return (
-      <ThemeProvider theme={
-        createMuiTheme(defaultTheme)
-      }>
+      <ThemeProvider theme={createMuiTheme(defaultTheme)}>
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
         <ScrollButton isVisible={this.state.showScrollButton} isLoggedIn={this.props.isLoggedIn}/>

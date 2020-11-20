@@ -10,6 +10,7 @@ import {
 } from '../actions';
 
 const getDetailRecipe = state => state.detailRecipe;
+const getActiveUser = state => state.activeUser;
 
 function* updateRecipe(action) {
   try {
@@ -30,10 +31,12 @@ function* updateRecipe(action) {
   }
 }
 
-function* deleteRecipe() {
+function* deleteRecipe(action) {
   try {
     const detailRecipe = yield select(getDetailRecipe);
-    const { id, authorId } = detailRecipe;
+    const activeUser = yield select(getActiveUser);
+    const id = !!action.id ? action.id : detailRecipe.id;
+    const authorId = activeUser.id;
     const { data: { likedByIds } } = yield call(Api.post, '/deleteRecipe', { id });
     yield put({ type: DELETE_RECIPE, id, authorId, likedByIds });
     yield put({ type: SHOW_SNACKBAR, message: "Recipe deleted" })

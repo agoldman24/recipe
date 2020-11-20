@@ -7,21 +7,29 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
+const textStyle = {
+  fontSize: '12.5px'
+}
+const greyTextStyle = {
+  ...textStyle,
+  color: '#999999'
+}
+
 const IngredientsTable = ({ ingredients }) => {
   return (
-    <TableContainer component={Paper} style={{boxShadow:'none', background:'#303030', paddingBottom:'10px'}}>
+    <TableContainer component={Paper} style={{boxShadow:'none', background:'none', paddingBottom:'10px'}}>
       <Table size="small">
-        <TableHead>
+        <TableHead >
           <TableRow>
-            <TableCell>Item</TableCell>
-            <TableCell>Quantity</TableCell>
+            <TableCell style={greyTextStyle}>Item</TableCell>
+            <TableCell style={greyTextStyle}>Quantity</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {ingredients.map(({ item, quantity }, index) => (
             <TableRow key={index}>
-              <TableCell>{item}</TableCell>
-              <TableCell>{quantity}</TableCell>
+              <TableCell style={textStyle}>{item}</TableCell>
+              <TableCell style={textStyle}>{quantity}</TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -13,8 +13,8 @@ export default function ScrollButton({ isVisible, isLoggedIn }) {
     <div style={{
       position: 'fixed',
       display: isVisible ? 'initial' : 'none',
-      right: isMobileOnly || isLoggedIn ? '1.5%' : '27px',
-      top: isLoggedIn ? '60px' : '80px',
+      right: '28px',
+      top: isLoggedIn ? '60px' : isMobileOnly ? '18px' : '80px',
       zIndex: isLoggedIn ? '2' : '3'
     }}>
       <Fab

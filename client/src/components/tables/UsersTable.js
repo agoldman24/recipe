@@ -14,8 +14,8 @@ import '../../index.css';
 
 const useStyles = makeStyles({
   table: {
-    width: isMobileOnly ? '100%' : '90%',
-    margin: isMobileOnly ? '0' : '0 5%',
+    width: isMobileOnly ? '100%' : '84%',
+    margin: isMobileOnly ? '0' : '0 8%',
     borderTop: '1px solid rgba(81, 81, 81, 1)'
   }
 });

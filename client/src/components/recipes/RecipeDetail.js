@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -22,8 +21,6 @@ import RecipeDetailEdit from './RecipeDetailEdit';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import Api from '../../api/siteUrl';
-import { LIKED_RECIPE_IDS } from '../../variables/Constants';
-import { TOGGLE_RECIPE_EDIT_MODE, UPDATE_USER_REQUESTED, DELETE_RECIPE_REQUESTED } from '../../actions';
 import { detailStyle, headerStyle, titleStyle, sectionStyle } from '../../styles';
 
 const styles = () => ({
@@ -65,7 +62,6 @@ class RecipeDetail extends React.Component {
     });
   }
   componentDidUpdate(prevProps) {
-    console.log(!!this.state.ingredients)
     if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible && !!this.state.ingredients) {
       this.setState({ isFetching: true });
       Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
@@ -81,11 +77,11 @@ class RecipeDetail extends React.Component {
   }
   render() {
     const { id, name, image, authorName, authorId, date } = this.props;
-    const { ingredients, directions } = this.state;
+    const { ingredients, directions, isFetching } = this.state;
     const headerHeight = !!document.getElementById("recipeHeader")
       ? document.getElementById("recipeHeader").offsetHeight
       : 0;
-    return this.props.editMode
+    return this.props.editMode && !isFetching
       ? <RecipeDetailEdit
           name={name}
           image={image}
@@ -94,26 +90,19 @@ class RecipeDetail extends React.Component {
           isCreateMode={false}
         />
       : <Card style={detailStyle}>
-          <PromptModal
-            modalType="delete"
-            isVisible={this.state.isDeleteModalVisible}
-            closeModal={() => this.setState({ isDeleteModalVisible: false })}
-            onConfirm={this.props.deleteRecipe}
-            message={"Are you sure want to delete this recipe?"}
-          />
           <AppBar className={this.props.classes.appBar} id="recipeHeader">
             <Toolbar style={{minHeight:'0', padding:'5px 0'}}>
               <Grid container direction="row">
                 <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
                   {this.props.isLoggedIn
-                  ? this.props.createdRecipeIds.includes(id)
+                  ? this.props.isEditable
                     ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
                         disabled={!ingredients}
                         style={{color:'white'}}>
                         <MoreHorizIcon/>
                       </IconButton>
                     : this.props.isLiking && this.state.likedId === id
-                      ? <CircularProgress size={20} style={{margin:'12px', color:'white'}}/>
+                      ? <CircularProgress size={21} style={{margin:'12px 12px 8px 12px', color:'white'}}/>
                       : this.props.likedRecipeIds.includes(id)
                         ? <IconButton
                             style={{padding:'12px'}}
@@ -171,9 +160,9 @@ class RecipeDetail extends React.Component {
           </AppBar>
           <div style={{overflowY:'scroll', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
             <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
-              {this.state.isFetching
+              {isFetching
               ? <div style={loadingTextStyle}>Loading...</div>
-              : <div>
+              : <div style={{background:'linear-gradient(45deg, #101010, transparent)'}}>
                   <div style={{width:'100%', display:'flex'}}>
                     <Typography style={titleStyle} variant="h5">Ingredients</Typography>
                   </div>
@@ -188,13 +177,13 @@ class RecipeDetail extends React.Component {
                             <Typography style={{
                               float: 'right',
                               paddingRight: '5px',
-                              fontSize: '12px'
+                              fontSize: '12.5px'
                             }}>
                               {index + 1 + "."}
                             </Typography>
                           </Grid>
                           <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                            <Typography style={{fontSize:'12px'}}>{step}</Typography>
+                            <Typography style={{fontSize:'12.5px'}}>{step}</Typography>
                           </Grid>
                         </Grid>
                       ))}
@@ -245,42 +234,18 @@ class RecipeDetail extends React.Component {
               </Grid>
             </Grid>
           </Popover>
+          <PromptModal
+            modalType="delete"
+            isVisible={this.state.isDeleteModalVisible}
+            closeModal={() => this.setState({ isDeleteModalVisible: false })}
+            onConfirm={() => {
+              this.setState({ isDeleteModalVisible: false });
+              this.props.deleteRecipe();
+            }}
+            message={"Are you sure want to delete this recipe?"}
+          />
         </Card>
   }
 };
 
-const mapStateToProps = state => {
-  return {
-    activeUser: state.activeUser,
-    isLoggedIn: !!state.activeUser,
-    displayUser: state.displayUser,
-    users: state.users,
-    activeTab: state.activeTab,
-    createdRecipeIds: !!state.activeUser
-      ? state.activeUser.createdRecipeIds.map(obj => obj.id)
-      : null,
-    likedRecipeIds: !!state.activeUser
-      ? state.activeUser.likedRecipeIds.map(obj => obj.id)
-      : null,
-    isLiking: state.isLiking,
-    isSpinnerVisible: state.isSpinnerVisible,
-    editMode: state.recipeEditMode,
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-    updateLikedRecipes: (id, recipeId, keep) => dispatch({
-      type: UPDATE_USER_REQUESTED,
-      updateType: LIKED_RECIPE_IDS,
-      id, recipeId, keep
-    }),
-    deleteRecipe: () => dispatch({ type: DELETE_RECIPE_REQUESTED })
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(RecipeDetail));
+export default withStyles(styles)(RecipeDetail);

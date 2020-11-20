@@ -5,35 +5,45 @@ import { withStyles } from '@material-ui/styles';
 import Link from '@material-ui/core/Link';
 import Slide from '@material-ui/core/Slide';
 import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
+import Popover from '@material-ui/core/Popover';
+import Grid from '@material-ui/core/Grid';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
+import CreateIcon from '@material-ui/icons/Create';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import RecipeDetail from './RecipeDetail';
+import PromptModal from '../popups/PromptModal';
 import {
   GET_RECIPES_REQUESTED, UPDATE_USER_REQUESTED, SET_DETAIL_RECIPE,
-  SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED
+  SET_DISPLAY_USER, SET_ACTIVE_TAB, GET_USER_DETAIL_REQUESTED,
+  TOGGLE_RECIPE_EDIT_MODE, DELETE_RECIPE_REQUESTED
 } from '../../actions';
 import {
-  RECIPE_TAB, PROFILE_TAB, PUSH, SAMPLE_RECIPES, FRIEND_RECIPES,
-  CREATED_RECIPES, LIKED_RECIPES, LIKED_RECIPE_IDS
+  SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES, LIKED_RECIPES,
+  LIKED_RECIPE_IDS, RECIPE_TAB, PROFILE_TAB, PUSH
 } from "../../variables/Constants";
-import { centeredTextStyle } from "../../styles";
+import { centeredTextStyle, defaultTheme } from "../../styles";
 import "../../index.css";
 
 const styles = () => ({
   gridList: {
     transform: 'translateZ(0)',
     paddingLeft: isMobileOnly ? '0' : '2px',
-    paddingTop: isMobileOnly ? '3px' : '0'
+    paddingTop: '3px'
   },
   titleBar: {
     background: 'black',
     alignItems: 'normal',
     height: '60px'
+  },
+  titleWrapActionPosRight: {
+    marginLeft: '10px'
   },
   title: {
     padding: '10px 0 5px 0',
@@ -42,7 +52,14 @@ const styles = () => ({
   },
   tile: {
     paddingTop: '60px'
-  }
+  },
+  paper: {
+    borderRadius: '0 4px 4px 4px',
+    border: '1px solid white'
+  },
+  button: {
+    textTransform: 'none'
+  },
 });
 
 const getDate = timestamp => {
@@ -81,8 +98,11 @@ const Image = ({ src, alt }) => {
 class RecipeList extends React.Component {
   state = {
     isDetailOpen: false,
+    isDeleteModalVisible: false,
     detailRecipe: null,
-    likedId: null
+    likedId: null,
+    pickedIndex: null,
+    anchorEl: null
   }
   componentDidUpdate(prevProps) {
     if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible) {
@@ -126,6 +146,20 @@ class RecipeList extends React.Component {
               date={getDate(this.state.detailRecipe.timestamp)}
               onClose={() => this.setState({ isDetailOpen: false })}
               visitUserProfile={this.props.visitUserProfile}
+              toggleEditMode={this.props.toggleEditMode}
+              deleteRecipe={this.props.deleteRecipe}
+              updateLikedRecipes={this.props.updateLikedRecipes}
+              activeUser={this.props.activeUser}
+              isLoggedIn={this.props.isLoggedIn}
+              displayUser={this.props.displayUser}
+              users={this.props.users}
+              activeTab={this.props.activeTab}
+              likedRecipeIds={this.props.likedRecipeIds}
+              isLiking={this.props.isLiking}
+              isSpinnerVisible={this.props.isSpinnerVisible}
+              editMode={this.props.editMode}
+              isEditable={!this.props.createdRecipeIds ? null :
+                this.props.createdRecipeIds.includes(this.state.detailRecipe.id)}
             />
           }
         </Dialog>
@@ -133,7 +167,7 @@ class RecipeList extends React.Component {
           className={this.props.classes.gridList}
           cols={isMobileOnly ? 1 : 4}
         >
-          {this.props.recipes.map(recipe => !recipe ? null : (
+          {this.props.recipes.map((recipe, index) => !recipe ? null : (
             <GridListTile key={recipe.id} className="cardMedia"
               style={{
                 height: 'fit-content',
@@ -154,7 +188,10 @@ class RecipeList extends React.Component {
               <Image src={recipe.image} alt={recipe.name} />
               <GridListTileBar
                 className={this.props.classes.titleBar}
-                classes={{ title: this.props.classes.title }}
+                classes={{
+                  title: this.props.classes.title,
+                  titleWrapActionPosRight: this.props.classes.titleWrapActionPosRight
+                }}
                 title={recipe.name}
                 subtitle={
                   <div style={{color:'#bbbbbb'}}>
@@ -171,34 +208,39 @@ class RecipeList extends React.Component {
                 titlePosition="top"
                 actionPosition="left"
                 actionIcon={this.props.isLoggedIn
-                ? this.props.isLiking && this.state.likedId === recipe.id
-                  ? <CircularProgress size={20} style={{margin:'12px', color:'white'}}/>
-                  : this.props.likedRecipeIds.includes(recipe.id)
-                    ? <IconButton
-                        className={this.props.classes.icon}
-                        onClick={event => {
-                          event.stopPropagation();
-                          this.setState({ likedId: recipe.id });
-                          this.props.updateLikedRecipes(
-                            this.props.activeUser.id,
-                            recipe.id, false
-                          );
-                        }}>
-                        <FavoriteIcon/>
+                  ? this.props.createdRecipeIds.includes(recipe.id)
+                    ? <IconButton style={{padding:'20px 10px'}} onClick={event => {
+                        event.stopPropagation();
+                        this.setState({ pickedIndex: index, anchorEl: event.currentTarget })
+                      }}>
+                        <MoreVertIcon/>
                       </IconButton>
-                    : <IconButton
-                        className={this.props.classes.icon}
-                        onClick={event => {
-                          event.stopPropagation();
-                          this.setState({ likedId: recipe.id });
-                          this.props.updateLikedRecipes(
-                            this.props.activeUser.id,
-                            recipe.id, true
-                          );
-                        }}>
-                        <FavoriteBorderIcon/>
-                      </IconButton>
-                    : null
+                    : this.props.isLiking && this.state.likedId === recipe.id
+                      ? <CircularProgress size={21} style={{margin:'20px 10px', color:'white'}}/>
+                      : this.props.likedRecipeIds.includes(recipe.id)
+                        ? <IconButton
+                            style={{padding:'20px 10px'}}
+                            onClick={event => {
+                              event.stopPropagation();
+                              this.setState({ likedId: recipe.id });
+                              this.props.updateLikedRecipes(
+                                this.props.activeUser.id, recipe.id, false
+                              );
+                            }}>
+                            <FavoriteIcon/>
+                          </IconButton>
+                        : <IconButton
+                            style={{padding:'20px 10px'}}
+                            onClick={event => {
+                              event.stopPropagation();
+                              this.setState({ likedId: recipe.id });
+                              this.props.updateLikedRecipes(
+                                this.props.activeUser.id, recipe.id, true
+                              );
+                            }}>
+                            <FavoriteBorderIcon/>
+                          </IconButton>
+                  : null
                 }/>
             </GridListTile>
           ))}
@@ -215,11 +257,64 @@ class RecipeList extends React.Component {
           <div style={centeredTextStyle}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>
-              : <Link style={{fontSize:'14px'}} href="#"
+              : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
                   onClick={() => this.fetchRecipes()}>Load more recipes</Link>
             }
           </div>
         }
+        <Popover
+          open={!!this.state.anchorEl}
+          anchorEl={this.state.anchorEl}
+          onClose={() => this.setState({ anchorEl: null })}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          classes={{
+            paper: this.props.classes.paper
+          }}
+        >
+          <Grid container direction="column">
+            <Grid item style={{background:'black', borderBottom:'1px solid white'}}>
+              <Button
+                startIcon={<CreateIcon/>}
+                className={this.props.classes.button}
+                style={{fontSize:'16px', fontFamily:'Signika'}}
+                onClick={() => {
+                  const detailRecipe = this.props.recipes[this.state.pickedIndex];
+                  this.setState({ detailRecipe, isDetailOpen: true, anchorEl: null });
+                  this.props.setDetailRecipe(detailRecipe);
+                  this.props.toggleEditMode();
+                }}
+              >
+                Edit
+              </Button>
+            </Grid>
+            <Grid item style={{background:'black'}}>
+              <Button
+                className={this.props.classes.button}
+                style={{fontSize:'16px', width:'100%', fontFamily:'Signika'}}
+                onClick={() => this.setState({ anchorEl: null, isDeleteModalVisible: true })}
+              >
+                Delete
+              </Button>
+            </Grid>
+          </Grid>
+        </Popover>
+        <PromptModal
+          modalType="delete"
+          isVisible={this.state.isDeleteModalVisible}
+          closeModal={() => this.setState({ isDeleteModalVisible: false })}
+          onConfirm={() => {
+            this.setState({ isDeleteModalVisible: false });
+            this.props.deleteRecipe(this.props.recipes[this.state.pickedIndex].id);
+          }}
+          message={"Are you sure want to delete this recipe?"}
+        />
       </div>
     );
   }
@@ -239,6 +334,9 @@ const mapStateToProps = state => {
     activeUser: state.activeUser,
     likedRecipeIds: !!state.activeUser
       ? state.activeUser.likedRecipeIds.map(obj => obj.id)
+      : null,
+    createdRecipeIds: !!state.activeUser
+      ? state.activeUser.createdRecipeIds.map(obj => obj.id)
       : null,
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
@@ -267,6 +365,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setDetailRecipe: recipe => dispatch({ type: SET_DETAIL_RECIPE, recipe }),
+    toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
+    deleteRecipe: id => dispatch({ type: DELETE_RECIPE_REQUESTED, id }),
     updateLikedRecipes: (id, recipeId, keep) => dispatch({
       type: UPDATE_USER_REQUESTED,
       updateType: LIKED_RECIPE_IDS,

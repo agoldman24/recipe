@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
     left: 0,
-    padding: '15px 5%',
+    padding: isMobileOnly ? '15px 10%' : '22px 10%',
     width: '100%',
     background: '#202020'
   },
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center'
   },
   inputRoot: {
-    width: isMobileOnly ? '100%' : '97%',
+    width: '100%',
     border: '1px solid white',
     borderRadius: '50px',
     background: '#202020',
@@ -53,7 +53,7 @@ const UsersTab = props => {
           onChange={e => setSearchVal(e.target.value.toLowerCase())}
         />
       </div>
-      <div style={{height:'55px'}}/>
+      <div style={{height: isMobileOnly ? '55px' : '70px'}}/>
       <UsersTable
         users={
           props.usersArray.filter(user =>

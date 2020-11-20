@@ -19,7 +19,7 @@ const fabStyle = {
   top: isMobileOnly ? 'initial' : 10,
   background: isMobileOnly
     ? 'linear-gradient(to top left, #202020, grey)'
-    : 'linear-gradient(to bottom left, #202020, grey)',
+    : 'linear-gradient(to top right, #202020, grey)',
   boxShadow: 'none',
   color: defaultTheme.palette.primary.main,
   zIndex: '3'
@@ -71,10 +71,7 @@ const NavigationMenu = props => {
           />
         </Tabs>
       : props.activeTab.name !== WELCOME_TAB
-        ? <Fab
-            style={fabStyle}
-            onClick={() => props.setActiveTab(WELCOME_TAB)}
-          >
+        ? <Fab style={fabStyle} onClick={() => props.setActiveTab(WELCOME_TAB)}>
             <HomeOutlinedIcon style={{height:'40', width:'40'}}/>
           </Fab>
         : null

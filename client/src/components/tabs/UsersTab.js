@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
     left: 0,
-    padding: isMobileOnly ? '15px 10%' : '22px 10%',
+    padding: isMobileOnly ? '15px 5%' : '22px 10%',
     width: '100%',
     background: '#202020'
   },

@@ -10,12 +10,10 @@ import Fab from '@material-ui/core/Fab';
 import Grid from '@material-ui/core/Grid';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import FileBase from 'react-file-base64';
 import {
   borderStyle, sectionTitleStyle, rightSideActionStyle, fullWidth,
   iconButtonStyle, errorMessageStyle
 } from '../../styles';
-import '../../index.css';
 
 const useStyles = makeStyles(() => ({
   wrapper: {
@@ -108,20 +106,14 @@ export default function RecipeImage({
                   height: !!image
                     ? isMobileOnly ? '320px' : '280px'
                     : 'initial',
-                  width: '350px',
                   padding: '0',
-                  margin: 'auto',
                   borderRadius: '10px 10px 0 0'
                 }}
               />
             : <div style={{paddingBottom:'10px'}}>
-                <Button style={roundedButtonStyle}
-                  onClick={() => document.getElementById("fileUpload").click()}
-                >
+                <Button style={roundedButtonStyle} onClick={() => document.getElementById("fileUpload").click()}>
                   Upload Photo
-                  <label className="fileContainer" id="fileUpload">
-                    <FileBase type="file" onDone={onImageChange}/>
-                  </label>
+                  <input id="fileUpload" type="file" accept="image/*" onChange={onImageChange} style={{display:'none'}}/>
                 </Button>
                 <Button style={roundedButtonStyle} onClick={() => {
                   setIconsModalVisible(true);

@@ -9,12 +9,9 @@ import Typography from '@material-ui/core/Typography';
 import Spinner from '../popups/Spinner';
 import IconsModal from '../popups/IconsModal';
 import PromptModal from '../popups/PromptModal';
-import {
-  TOGGLE_PROFILE_EDITOR,
-  UPDATE_PROFILE_EDITOR
-} from '../../actions';
-import FileBase from 'react-file-base64';
+import imageCompression from 'browser-image-compression';
 import { b64toBlob } from '../../utilities/imageConverter';
+import { TOGGLE_PROFILE_EDITOR, UPDATE_PROFILE_EDITOR } from '../../actions';
 import { highlightedNumberStyle } from '../../styles';
 import "../../index.css";
 
@@ -62,14 +59,18 @@ const ProfileAvatar = props => {
       : 'radial-gradient(black, black, black, black, #222222, #333333, #333333, grey, grey)'
   }
 
-  const onImageChange = file => {
+  const onImageChange = event => {
+    const file = event.target.files[0];
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
       setFileTypeModalVisible(true);
     } else {
-      const data = file.base64.toString();
-      const imageUrl = URL.createObjectURL(b64toBlob(data));
-      props.updateProfileEditor(imageUrl);
       setAnchorEl(null);
+      setTimeout(async () => {
+        const compressedFile = await imageCompression(file, { maxSizeMB: 1 });
+        const data = await imageCompression.getDataUrlFromFile(compressedFile);
+        const newImage = URL.createObjectURL(b64toBlob(data));
+        props.updateProfileEditor(newImage);
+      }, 1);
     }
   }
   
@@ -138,7 +139,7 @@ const ProfileAvatar = props => {
           <Grid item style={{background:'black', borderBottom: '1px solid white', padding:'10px'}}>
             <label className="fileContainer" style={{fontSize:'16px'}}>
               Upload Photo
-              <FileBase type="file" onDone={onImageChange}/>
+              <input type="file" accept="image/*" onChange={onImageChange} style={{display:'none'}}/>
             </label>
           </Grid>
           <Grid item style={{background:'black'}}>

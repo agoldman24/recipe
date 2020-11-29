@@ -10,7 +10,7 @@ import RecipeNameField from './RecipeNameField';
 import RecipeImage from './RecipeImage';
 import RecipeIngredients from './RecipeIngredients';
 import RecipeDirections from './RecipeDirections';
-import FileBase from 'react-file-base64';
+import imageCompression from 'browser-image-compression';
 import { b64toBlob } from '../../utilities/imageConverter';
 import { directionsAreDifferent, ingredientsAreDifferent } from './utils';
 import '../../index.css';
@@ -133,13 +133,15 @@ const RecipeForms = ({
     );
   }
 
-  const onImageChange = file => {
+  const onImageChange = event => {
+    const file = event.target.files[0];
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
       setFileTypeModalVisible(true);
     } else {
       setAnchorEl(null);
-      setTimeout(() => {
-        const data = file.base64.toString();
+      setTimeout(async () => {
+        const compressedFile = await imageCompression(file, { maxSizeMB: 1 });
+        const data = await imageCompression.getDataUrlFromFile(compressedFile);
         const newImage = URL.createObjectURL(b64toBlob(data));
         setImage(newImage);
         setGlobalDiff(undefined, newImage);
@@ -267,7 +269,7 @@ const RecipeForms = ({
           <Grid item style={{background:'black', borderBottom: '1px solid white', padding:'10px'}}>
             <label className="fileContainer" style={{fontSize:'16px'}}>
               Upload Photo
-              <FileBase type="file" onDone={onImageChange}/>
+              <input type="file" accept="image/*" onChange={onImageChange} style={{display:'none'}}/>
             </label>
           </Grid>
           <Grid item style={{background:'black'}}>

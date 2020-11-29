@@ -86,8 +86,10 @@ const Image = ({ src, alt }) => {
         style={{
           left: '50%',
           width: '100%',
+          height: '400px',
           position: 'relative',
           transform: 'translateX(-50%)',
+          objectFit: 'cover',
           display: isLoading ? 'none' : 'block',
         }}
       />

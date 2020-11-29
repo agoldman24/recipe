@@ -93,8 +93,9 @@ export const textStyle = {
 }
 
 export const centeredTextStyle = {
-  width: '100%', textAlign: 'center', marginTop: '20px',
-  marginBottom: isMobileOnly ? '100px' : '40px'
+  width: '100%',
+  textAlign: 'center',
+  margin: '20px 0 40px'
 }
 
 export const gradientTextStyle = {
@@ -162,9 +163,10 @@ export const unhighlightedTextStyle = {
 
 export const buttonStyle = {
   border: '1px solid white',
+  borderRadius: '50px',
   fontSize: '14px',
   padding: '2px',
-  width: isMobileOnly ? '90%' : '40%'
+  width: isMobileOnly ? '90%' : '30%'
 };
 
 export const backButtonStyle = {
@@ -258,8 +260,8 @@ export const iconButtonStyle = {
 export const detailStyle = {
   borderRadius: '0',
   border: isMobileOnly ? 'none' : '1px solid grey',
-  width: isMobileOnly ? '100vw' : '500px',
-  left: isMobileOnly ? '0' : 'calc(50vw - 250px)',
+  width: isMobileOnly ? '100vw' : '600px',
+  left: isMobileOnly ? '0' : 'calc(50vw - 300px)',
   height: '100vh',
   position: 'fixed',
   overflowY: 'hidden',

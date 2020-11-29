@@ -3,6 +3,7 @@ import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Button from '@material-ui/core/Button';
@@ -159,10 +160,11 @@ class RecipeDetail extends React.Component {
             }
           </AppBar>
           <div style={{overflowY:'scroll', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
-            <CardMedia image={image} style={{height:'0', paddingTop:'100%', position:'relative'}}>
+            <CardMedia component="img" image={image}/>
+            <CardContent style={{background:'linear-gradient(45deg, #101010, transparent)', padding:'0'}}>
               {isFetching
               ? <div style={loadingTextStyle}>Loading...</div>
-              : <div style={{background:'linear-gradient(45deg, #101010, transparent)'}}>
+              : <div>
                   <div style={{width:'100%', display:'flex'}}>
                     <Typography style={titleStyle} variant="h5">Ingredients</Typography>
                   </div>
@@ -191,7 +193,7 @@ class RecipeDetail extends React.Component {
                     }
                 </div>
               }
-            </CardMedia>
+            </CardContent>
           </div>
           <Popover
             open={!!this.state.anchorEl}

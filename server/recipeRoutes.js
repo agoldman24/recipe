@@ -20,6 +20,7 @@ exports.createRecipe = (req, res) => {
     authorName, authorId, likedByIds: []
   });
   recipe.save(error => {
+    console.log("recipe: ", recipe);
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, recipe: getRecipeSummary(recipe) });
   });

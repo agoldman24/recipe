@@ -19,9 +19,11 @@ function* createRecipe(action) {
     const authorName = activeUser.firstName + " " + activeUser.lastName;
     const authorId = activeUser.id;
     const { name, image, ingredients, directions } = action;
-    const { data: { recipe } } = yield call(Api.post, '/createRecipe', {
+    console.log("image:", image);
+    const response = yield call(Api.post, '/createRecipe', {
       name, image, ingredients, directions, authorName, authorId
     });
+    console.log("response:", response);
     if (activeUser.createdRecipeIds.length && !Object.keys(createdRecipes).length) {
       const res = yield call(Api.get, '/getRecipesByIds?'
         + 'ids=' + activeUser.createdRecipeIds.map(obj => obj.id)
@@ -33,12 +35,12 @@ function* createRecipe(action) {
         appendTo: CREATED_RECIPES
       });
     }
-    yield put({ type: ADD_CREATED_RECIPE, recipe });
+    yield put({ type: ADD_CREATED_RECIPE, recipe: response.data.recipe });
     yield put({
       type: UPDATE_USER_REQUESTED,
       updateType: CREATED_RECIPE_IDS,
       id: activeUser.id,
-      recipeId: recipe.id,
+      recipeId: response.data.recipe.id,
       keep: true
     });
   } catch (error) {

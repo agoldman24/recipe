@@ -60,10 +60,10 @@ class App extends React.Component {
     const activeTab = this.props.activeTab.name;
     const mobileStyle = {	
       padding: this.props.isLoggedIn	
-        ? '50px 0 10px'	
+        ? activeTab === RECIPE_TAB ? '50px 0 80px' : '50px 0 10px'	
         : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
-          ? '0 0 10px 0'	
-          : activeTab === ABOUT_TAB ? '20px 0 5px 0' : '50px 0 10px',	
+          ? '0 0 10px'
+          : activeTab === ABOUT_TAB ? '20px 0 5px' : '50px 0 10px',	
       overflowY: 'auto',
       overflowX: 'hidden'	
     };	

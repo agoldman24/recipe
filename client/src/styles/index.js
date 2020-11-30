@@ -284,10 +284,10 @@ export const titleStyle = {
 }
 
 export const sectionStyle = {
-  margin: '3px 15px',
   fontSize: '12.5px',
-  paddingBottom: '50%',
-  lineHeight: '2'
+  lineHeight: '2',
+  margin: '3px 15px',
+  paddingBottom: isMobileOnly ? '50%' : '30%',
 }
 
 export const containerStyle = {

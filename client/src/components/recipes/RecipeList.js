@@ -86,7 +86,7 @@ const Image = ({ src, alt }) => {
         style={{
           left: '50%',
           width: '100%',
-          height: '400px',
+          height: '250px',
           position: 'relative',
           transform: 'translateX(-50%)',
           objectFit: 'cover',
@@ -315,7 +315,10 @@ class RecipeList extends React.Component {
             this.setState({ isDeleteModalVisible: false });
             this.props.deleteRecipe(this.props.recipes[this.state.pickedIndex].id);
           }}
-          message={"Are you sure want to delete this recipe?"}
+          message={!!this.state.pickedIndex
+            ? "Are you sure want to delete recipe '"
+              + this.props.recipes[this.state.pickedIndex].name + "'?"
+            : ""}
         />
       </div>
     );

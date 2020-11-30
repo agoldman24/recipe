@@ -8,8 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import PromptModal from '../popups/PromptModal';
 import { UPDATE_PROFILE_EDITOR } from '../../actions';
-import { formTheme } from '../../styles';
+import { formTheme, deleteButtonStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
 
@@ -27,9 +29,15 @@ const textStyle = {
 
 const ProfileEditor = props => {
   const classes = useStyles();
+  const inputProps = {
+    classes: {
+      input: classes.inputText
+    }
+  }
   const [firstName, setFirstName] = useState(props.activeUser.firstName);
   const [lastName, setLastName] = useState(props.activeUser.lastName);
   const [username, setUsername] = useState(props.activeUser.username);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   return (
     <TableContainer>
@@ -41,11 +49,7 @@ const ProfileEditor = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText
-                  }
-                }}
+                InputProps={inputProps}
                 variant="outlined"
                 value={firstName}
                 onChange={e => {
@@ -61,11 +65,7 @@ const ProfileEditor = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText
-                  }
-                }}
+                InputProps={inputProps}
                 variant="outlined"
                 value={lastName}
                 onChange={e => {
@@ -81,11 +81,7 @@ const ProfileEditor = props => {
             </TableCell>
             <TableCell style={cellStyle}>
               <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText
-                  }
-                }}
+                InputProps={inputProps}
                 variant="outlined"
                 value={username}
                 onChange={e => {
@@ -97,6 +93,21 @@ const ProfileEditor = props => {
           </TableRow>
         </TableBody>
       </Table>
+      <Button variant="outlined" style={{
+        ...deleteButtonStyle, width:'94%', margin:'0 3%', borderRadius:'50px'
+      }} onClick={() => setIsDeleteModalVisible(true)}
+      >
+        Delete Account
+      </Button>
+      <PromptModal
+        modalType="delete"
+        isVisible={isDeleteModalVisible}
+        closeModal={() => setIsDeleteModalVisible(false)}
+        onConfirm={() => {
+          setIsDeleteModalVisible(false);
+        }}
+        message={"Are you sure want to delete your account?"}
+      />
     </TableContainer>
   );
 }

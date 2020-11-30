@@ -41,7 +41,8 @@ const styles = () => ({
 const loadingTextStyle = {
   textAlign: 'center',
   fontSize: '16px',
-  marginTop: '20px'
+  paddingTop: '20px',
+  paddingBottom: isMobileOnly ? '50%' : '30%'
 }
 
 class RecipeDetail extends React.Component {
@@ -172,7 +173,7 @@ class RecipeDetail extends React.Component {
                   <Typography style={titleStyle} variant="h5">Directions</Typography>
                   {typeof directions === "string"
                   ? <Typography style={sectionStyle}>{directions}</Typography>
-                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0'}}>
+                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0 0'}}>
                       {directions.map((step, index) => (
                         <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
                           <Grid item style={{width:'30px'}}>
@@ -244,7 +245,7 @@ class RecipeDetail extends React.Component {
               this.setState({ isDeleteModalVisible: false });
               this.props.deleteRecipe();
             }}
-            message={"Are you sure want to delete this recipe?"}
+            message={"Are you sure want to delete recipe '" + name + "'?"}
           />
         </Card>
   }

@@ -86,7 +86,7 @@ const Image = ({ src, alt }) => {
         style={{
           left: '50%',
           width: '100%',
-          height: '250px',
+          height: '350px',
           position: 'relative',
           transform: 'translateX(-50%)',
           objectFit: 'cover',
@@ -213,6 +213,7 @@ class RecipeList extends React.Component {
                   ? this.props.createdRecipeIds.includes(recipe.id)
                     ? <IconButton style={{padding:'20px 10px'}} onClick={event => {
                         event.stopPropagation();
+                        console.log("index:", index);
                         this.setState({ pickedIndex: index, anchorEl: event.currentTarget })
                       }}>
                         <MoreVertIcon/>
@@ -315,7 +316,7 @@ class RecipeList extends React.Component {
             this.setState({ isDeleteModalVisible: false });
             this.props.deleteRecipe(this.props.recipes[this.state.pickedIndex].id);
           }}
-          message={!!this.state.pickedIndex
+          message={this.state.isDeleteModalVisible
             ? "Are you sure want to delete recipe '"
               + this.props.recipes[this.state.pickedIndex].name + "'?"
             : ""}

@@ -82,12 +82,6 @@ class RecipeDetail extends React.Component {
     const headerHeight = !!document.getElementById("recipeHeader")
       ? document.getElementById("recipeHeader").offsetHeight
       : 0;
-    const imageHeight = !!document.getElementById("recipeImage")
-      ? document.getElementById("recipeImage").offsetHeight
-      : 0;
-    const tableHeight = !!document.getElementById("recipeTables")
-      ? document.getElementById("recipeTables").offsetHeight
-      : 0;
     return this.props.editMode && !isFetching
       ? <RecipeDetailEdit
           name={name}

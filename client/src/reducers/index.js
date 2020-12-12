@@ -12,7 +12,7 @@ import {
   GET_USER_DETAIL_SUCCEEDED,
   POPULATE_USERS,
   ADD_USER,
-  UPDATE_USER,
+  UPDATE_USERS,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
   SET_DISPLAY_USER_DETAIL,
@@ -164,13 +164,18 @@ const users = (state = StateTree.users, action) => {
     case POPULATE_USERS:
       return action.users;
     case ADD_USER:
-    case UPDATE_USER:
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:
       return {
         ...state,
         [action.user.id]: action.user
+      };
+    case UPDATE_USERS:
+      return {
+        ...state,
+        [action.user.id]: action.user,
+        [action.user2.id]: action.user2
       };
     case DELETE_RECIPE:
       const usersUpdate = action.likedByIds.reduce((accum, userId) => {
@@ -357,7 +362,7 @@ const displayUserDetail = (state = null, action) => {
                   accum[id] = state.followers[id];
                   return accum;
                 }, {}),
-            following: Object.keys(state.following).includes(action.user.id)
+            following: Object.keys(state.following).includes(action.user2.id)
               ? {
                   ...state.following,
                   [action.user.id]: action.user

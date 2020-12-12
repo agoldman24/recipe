@@ -42,7 +42,6 @@ const loadingTextStyle = {
   textAlign: 'center',
   fontSize: '16px',
   paddingTop: '20px',
-  paddingBottom: isMobileOnly ? '50%' : '30%'
 }
 
 class RecipeDetail extends React.Component {
@@ -71,7 +70,7 @@ class RecipeDetail extends React.Component {
           ingredients: res.data.ingredients,
           directions: res.data.directions,
           isFetching: false
-        });
+        })
       });
     } else if (!this.props.isLiking && prevProps.isLiking) {
       this.setState({ likedId: null });
@@ -82,6 +81,12 @@ class RecipeDetail extends React.Component {
     const { ingredients, directions, isFetching } = this.state;
     const headerHeight = !!document.getElementById("recipeHeader")
       ? document.getElementById("recipeHeader").offsetHeight
+      : 0;
+    const imageHeight = !!document.getElementById("recipeImage")
+      ? document.getElementById("recipeImage").offsetHeight
+      : 0;
+    const tableHeight = !!document.getElementById("recipeTables")
+      ? document.getElementById("recipeTables").offsetHeight
       : 0;
     return this.props.editMode && !isFetching
       ? <RecipeDetailEdit
@@ -161,8 +166,9 @@ class RecipeDetail extends React.Component {
             }
           </AppBar>
           <div style={{overflowY:'scroll', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
-            <CardMedia component="img" image={image}/>
-            <CardContent style={{background:'linear-gradient(45deg, #101010, transparent)', padding:'0'}}>
+            <CardMedia id="recipeImage" component="img" image={image}/>
+            <CardContent id="recipeTables" style={{background:'linear-gradient(45deg, #101010, transparent)',
+              padding:'0', paddingBottom: isMobileOnly ? '50%' : '30%'}}>
               {isFetching
               ? <div style={loadingTextStyle}>Loading...</div>
               : <div>
@@ -173,7 +179,7 @@ class RecipeDetail extends React.Component {
                   <Typography style={titleStyle} variant="h5">Directions</Typography>
                   {typeof directions === "string"
                   ? <Typography style={sectionStyle}>{directions}</Typography>
-                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0 0'}}>
+                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0 0', padding:'0'}}>
                       {directions.map((step, index) => (
                         <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
                           <Grid item style={{width:'30px'}}>

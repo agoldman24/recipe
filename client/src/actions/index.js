@@ -9,7 +9,7 @@ export const GET_USER_DETAIL_SUCCEEDED = 'GET_USER_DETAIL_SUCCEEDED';
 /* Synchronous user action */
 export const POPULATE_USERS = 'POPULATE_USERS';
 export const ADD_USER = 'ADD_USER';
-export const UPDATE_USER = 'UPDATE_USER';
+export const UPDATE_USERS = 'UPDATE_USERS';
 export const SET_ACTIVE_USER = 'SET_ACTIVE_USER';
 export const SET_DISPLAY_USER = 'SET_DISPLAY_USER';
 export const SET_DISPLAY_USER_DETAIL = 'SET_DISPLAY_USER_DETAIL';

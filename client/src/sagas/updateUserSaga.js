@@ -4,7 +4,7 @@ import {
   NETWORK_FAILED,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
-  UPDATE_USER,
+  UPDATE_USERS,
   UPDATE_DISPLAY_USER_DETAIL,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
@@ -37,7 +37,7 @@ function* updateUser(action) {
     const displayUserDetail = yield select(getDisplayUserDetail);
     const createdRecipes = yield select(getCreatedRecipes);
     const detailRecipe = yield select(getDetailRecipe);
-    let res, res2, user, profileImageId = activeUser.profileImageId;
+    let res, res2, user, user2, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE:
         const { imageData, firstName, lastName, username } = action;
@@ -124,13 +124,15 @@ function* updateUser(action) {
             : friend.followerIds.filter(id => id !== action.id)
         });
         user = res.data.user;
+        user2 = res2.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
         yield put({
           type: UPDATE_DISPLAY_USER_DETAIL,
           updateType: FOLLOWERS,
-          user, user2: res2.data.user
+          keep: action.keep,
+          user, user2
         });
-        yield put({ type: UPDATE_USER, user });
+        yield put({ type: UPDATE_USERS, user, user2 });
         break;
       default:
         break;

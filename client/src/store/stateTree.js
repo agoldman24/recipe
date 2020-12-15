@@ -56,6 +56,7 @@ export default Object.assign({},
   friendRecipes: {},
   createdRecipes: {},
   isLiking: false,
+  isPosting: false,
   isUpdatingFollowers: false,
   isFetchingRecipes: false,
   allRecipesFetched: {

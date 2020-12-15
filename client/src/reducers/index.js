@@ -42,7 +42,8 @@ import {
   HIDE_SNACKBAR,
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
-  TOGGLE_RECIPE_EDIT_MODE
+  TOGGLE_RECIPE_EDIT_MODE,
+  TOGGLE_IS_POSTING
 } from '../actions';
 import {
   PROFILE_TAB,
@@ -542,6 +543,15 @@ const isLiking = (state = StateTree.isLiking, action) => {
   }
 }
 
+const isPosting = (state = StateTree.isPosting, action) => {
+  switch (action.type) {
+    case TOGGLE_IS_POSTING:
+      return !state;
+    default:
+      return state;
+  }
+}
+
 const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
   switch (action.type) {
     case UPDATE_USER_REQUESTED:
@@ -635,6 +645,7 @@ export default combineReducers({
   friendRecipes,
   createdRecipes,
   isLiking,
+  isPosting,
   isUpdatingFollowers,
   isFetchingRecipes,
   allRecipesFetched

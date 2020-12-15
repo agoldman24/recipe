@@ -1,5 +1,6 @@
 const User = require('./user');
 const Recipe = require('./recipe');
+const Image = require('./image');
 const db = require('./database');
 const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
@@ -157,4 +158,53 @@ exports.updateFollowingIds = (req, res) => {
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, user: getUserFields(user) });
   })
+}
+
+exports.deleteUserById = (req, res) => {
+  const { id, profileImageId, followingIds, followerIds, likedRecipeIds, createdRecipeIds } = req.body.user;
+  const updatedUsers = {};
+  const updatedRecipes = {};
+  Image.findByIdAndRemove(profileImageId, error => {
+    if (error) return res.json({ success: false, error });
+  });
+  followingIds.forEach(followingId => {
+    User.findById(followingId).then(user => {
+      const followerIds = user.followerIds.filter(i => i !== id);
+      User.findByIdAndUpdate(followingId, { followerIds }, { new: true }, (error, user) => {
+        if (error) return res.json({ success: false, error });
+        updatedUsers[user._id] = user;
+      });
+    });
+  });
+  followerIds.forEach(followerId => {
+    User.findById(followerId).then(user => {
+      const followingIds = user.followingIds.filter(i => i !== id);
+      User.findByIdAndUpdate(followerId, { followingIds }, { new: true }, (error, user) => {
+        if (error) return res.json({ success: false, error });
+        updatedUsers[user._id] = user;
+      });
+    });
+  });
+  likedRecipeIds.forEach(likedRecipeId => {
+    Recipe.findById(likedRecipeId).then(recipe => {
+      const likedByIds = recipe.likedByIds.filter(i => i !== id);
+      Recipe.findByIdAndUpdate(likedRecipeId, { likedByIds }, { new: true }, (error, recipe) => {
+        if (error) return res.json({ success: false, error });
+        updatedRecipes[recipe._id] = recipe;
+      });
+    });
+  });
+  createdRecipeIds.forEach(createdRecipeId => {
+    Recipe.findById(createdRecipeId).then(recipe => {
+      recipe.likedByIds.forEach(userId => {
+        User.findById(userId).then(user => {
+          const likedRecipeIds = user.likedRecipeIds.filter(i => i !== id);
+          User.findByIdAndUpdate(userId, { likedRecipeIds }, { new: true }, (error, user) => {
+            if (error) return res.json({ success: false, error });
+            updatedUsers[user._id] = user;
+          });
+        });
+      });
+    });
+  });
 }

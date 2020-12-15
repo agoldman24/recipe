@@ -20,7 +20,6 @@ exports.createRecipe = (req, res) => {
     authorName, authorId, likedByIds: []
   });
   recipe.save(error => {
-    console.log("recipe: ", recipe);
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, recipe: getRecipeSummary(recipe) });
   });
@@ -44,7 +43,7 @@ exports.deleteRecipe = (req, res) => {
       User.findByIdAndUpdate(authorId, { createdRecipeIds }, {}, error => {
         if (error) return res.json({ success: false, error });
       });
-    })
+    });
     likedByIds.forEach(userId => {
       User.findById(userId).then(user => {
         const likedRecipeIds = user.likedRecipeIds.filter(({ id }) => id !== req.body.id);
@@ -57,7 +56,7 @@ exports.deleteRecipe = (req, res) => {
       if (error) return res.json({ success: false, error });
       return res.json({ success: true, likedByIds });
     });
-  })
+  });
 }
 
 exports.getSamples = (req, res) => {

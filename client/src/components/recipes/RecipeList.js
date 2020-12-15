@@ -213,7 +213,6 @@ class RecipeList extends React.Component {
                   ? this.props.createdRecipeIds.includes(recipe.id)
                     ? <IconButton style={{padding:'20px 10px'}} onClick={event => {
                         event.stopPropagation();
-                        console.log("index:", index);
                         this.setState({ pickedIndex: index, anchorEl: event.currentTarget })
                       }}>
                         <MoreVertIcon/>

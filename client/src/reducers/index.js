@@ -8,6 +8,8 @@ import {
   SIGN_IN_REQUESTED,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
+  DELETE_USER_REQUESTED,
+  DELETE_USER_SUCCEEDED,
   GET_USER_DETAIL_REQUESTED,
   GET_USER_DETAIL_SUCCEEDED,
   POPULATE_USERS,
@@ -69,12 +71,14 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case CREATE_RECIPE_REQUESTED:
     case UPDATE_RECIPE_REQUESTED:
     case DELETE_RECIPE_REQUESTED:
+    case DELETE_USER_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
+    case DELETE_USER_SUCCEEDED:
     case UPDATE_DETAIL_RECIPE:
     case DELETE_RECIPE:
     case NETWORK_FAILED:
@@ -171,13 +175,17 @@ const users = (state = StateTree.users, action) => {
       return {
         ...state,
         [action.user.id]: action.user
-      };
+      }
     case UPDATE_USERS:
       return {
         ...state,
         [action.user.id]: action.user,
         [action.user2.id]: action.user2
-      };
+      }
+    case DELETE_USER_SUCCEEDED:
+      const newState = { ...state, ...action.updatedUsers };
+      delete newState[action.deletedUserId];
+      return newState;
     case DELETE_RECIPE:
       const usersUpdate = action.likedByIds.reduce((accum, userId) => {
         accum[userId] = {

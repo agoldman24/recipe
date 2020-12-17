@@ -10,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import PromptModal from '../popups/PromptModal';
-import { UPDATE_PROFILE_EDITOR } from '../../actions';
+import { UPDATE_PROFILE_EDITOR, DELETE_USER_REQUESTED } from '../../actions';
 import { formTheme, deleteButtonStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
@@ -34,9 +34,9 @@ const ProfileEditor = props => {
       input: classes.inputText
     }
   }
-  const [firstName, setFirstName] = useState(props.activeUser.firstName);
-  const [lastName, setLastName] = useState(props.activeUser.lastName);
-  const [username, setUsername] = useState(props.activeUser.username);
+  const [firstName, setFirstName] = useState(!props.activeUser ? "" : props.activeUser.firstName);
+  const [lastName, setLastName] = useState(!props.activeUser ? "" : props.activeUser.lastName);
+  const [username, setUsername] = useState(!props.activeUser ? "" : props.activeUser.username);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   return (
@@ -105,6 +105,8 @@ const ProfileEditor = props => {
         closeModal={() => setIsDeleteModalVisible(false)}
         onConfirm={() => {
           setIsDeleteModalVisible(false);
+          props.closeProfileEditor();
+          props.deleteUser();
         }}
         message={"Are you sure want to delete your account?"}
       />
@@ -120,6 +122,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    deleteUser: () => dispatch({ type: DELETE_USER_REQUESTED }),
     updateFirstName: firstName => dispatch({ type: UPDATE_PROFILE_EDITOR, firstName }),
     updateLastName: lastName => dispatch({ type: UPDATE_PROFILE_EDITOR, lastName }),
     updateUsername: username => dispatch({ type: UPDATE_PROFILE_EDITOR, username })

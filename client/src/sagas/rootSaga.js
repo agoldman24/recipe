@@ -5,6 +5,7 @@ import updateRecipeSaga from './updateRecipeSaga';
 import signUpSaga from './signUpSaga';
 import signInSaga from './signInSaga';
 import updateUserSaga from './updateUserSaga';
+import deleteUserSaga from './deleteUserSaga';
 import hydrationSaga from './hydrationSaga';
 import getUserDetailSaga from './getUserDetailSaga';
 
@@ -16,6 +17,7 @@ export default function* rootSaga() {
     signInSaga(),
     signUpSaga(),
     updateUserSaga(),
+    deleteUserSaga(),
     hydrationSaga(),
     getUserDetailSaga()
   ])

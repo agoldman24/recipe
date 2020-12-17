@@ -114,7 +114,7 @@ exports.updateCreatedRecipeIds = (req, res) => {
   const { id, recipeId, keep } = req.body;
   User.findById(id).then(user => {
     const createdRecipeIds = keep
-      ? [ ...user.createdRecipeIds, { id: recipeId, timestamp: Date.now() } ]
+      ? [...user.createdRecipeIds, { id: recipeId, timestamp: Date.now() }]
       : user.createdRecipeIds.filter(obj => obj.id !== recipeId);
     User.findByIdAndUpdate(id, { createdRecipeIds }, { new: true }, (error, user) => {
       if (error) return res.json({ success: false, error });
@@ -128,14 +128,14 @@ exports.updateLikedRecipeIds = (req, res) => {
   User.findById(id).then(user => {
     Recipe.findById(recipeId).then(recipe => {
       const likedByIds = keep
-        ? [ ...recipe.likedByIds, id ]
+        ? [...recipe.likedByIds, id]
         : recipe.likedByIds.filter(i => i !== id);
       Recipe.findByIdAndUpdate(recipeId, { likedByIds }, {}, error => {
         if (error) return res.json({ success: false, error });
       });
     });
     const likedRecipeIds = keep
-      ? [ ...user.likedRecipeIds, { id: recipeId, timestamp: Date.now() } ]
+      ? [...user.likedRecipeIds, { id: recipeId, timestamp: Date.now() }]
       : user.likedRecipeIds.filter(obj => obj.id !== recipeId);
     User.findByIdAndUpdate(id, { likedRecipeIds }, { new: true }, (error, user) => {
       if (error) return res.json({ success: false, error });
@@ -160,10 +160,9 @@ exports.updateFollowingIds = (req, res) => {
   })
 }
 
-exports.deleteUserById = (req, res) => {
+exports.deleteUser = (req, res) => {
   const { id, profileImageId, followingIds, followerIds, likedRecipeIds, createdRecipeIds } = req.body.user;
   const updatedUsers = {};
-  const updatedRecipes = {};
   Image.findByIdAndRemove(profileImageId, error => {
     if (error) return res.json({ success: false, error });
   });
@@ -172,7 +171,7 @@ exports.deleteUserById = (req, res) => {
       const followerIds = user.followerIds.filter(i => i !== id);
       User.findByIdAndUpdate(followingId, { followerIds }, { new: true }, (error, user) => {
         if (error) return res.json({ success: false, error });
-        updatedUsers[user._id] = user;
+        updatedUsers[user._id] = getUserFields(user);;
       });
     });
   });
@@ -181,30 +180,33 @@ exports.deleteUserById = (req, res) => {
       const followingIds = user.followingIds.filter(i => i !== id);
       User.findByIdAndUpdate(followerId, { followingIds }, { new: true }, (error, user) => {
         if (error) return res.json({ success: false, error });
-        updatedUsers[user._id] = user;
+        updatedUsers[user._id] = getUserFields(user);;
       });
     });
   });
   likedRecipeIds.forEach(likedRecipeId => {
-    Recipe.findById(likedRecipeId).then(recipe => {
+    Recipe.findById(likedRecipeId.id).then(recipe => {
       const likedByIds = recipe.likedByIds.filter(i => i !== id);
-      Recipe.findByIdAndUpdate(likedRecipeId, { likedByIds }, { new: true }, (error, recipe) => {
+      Recipe.findByIdAndUpdate(likedRecipeId.id, { likedByIds }, { new: true }, error => {
         if (error) return res.json({ success: false, error });
-        updatedRecipes[recipe._id] = recipe;
       });
     });
   });
   createdRecipeIds.forEach(createdRecipeId => {
-    Recipe.findById(createdRecipeId).then(recipe => {
+    Recipe.findById(createdRecipeId.id).then(recipe => {
       recipe.likedByIds.forEach(userId => {
         User.findById(userId).then(user => {
-          const likedRecipeIds = user.likedRecipeIds.filter(i => i !== id);
+          const likedRecipeIds = user.likedRecipeIds.filter(obj => obj.id !== id);
           User.findByIdAndUpdate(userId, { likedRecipeIds }, { new: true }, (error, user) => {
             if (error) return res.json({ success: false, error });
-            updatedUsers[user._id] = user;
+            updatedUsers[user._id] = getUserFields(user);
           });
         });
       });
     });
   });
+  User.findByIdAndRemove(id, error => {
+    if (error) return res.json({ success: false, error });
+  });
+  return res.json({ success: true, updatedUsers });
 }

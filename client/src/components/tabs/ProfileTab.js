@@ -81,7 +81,7 @@ const ProfileTab = props => {
     }, 1);
   };
 
-  const handleClickClose = () => {
+  const closeProfileEditor = () => {
     setOpen(!open);
     props.toggleProfileEditor();
   }
@@ -97,7 +97,7 @@ const ProfileTab = props => {
   }
 
   const handleSave = () => {
-    handleClickClose();
+    closeProfileEditor();
     if (updateOccurred) {
       const imageData = props.profileEditor.profileImage !== props.displayUserDetail.profileImage
         ? props.profileEditor.profileImage
@@ -232,7 +232,7 @@ const ProfileTab = props => {
                 <Typography className={classes.title}>Edit Profile</Typography>
                 <IconButton
                   edge="start"
-                  onClick={handleClickClose}
+                  onClick={closeProfileEditor}
                   style={{color:'white'}}
                 >
                   <CloseIcon/>
@@ -250,7 +250,7 @@ const ProfileTab = props => {
             >
               <Grid item style={{margin:'50px auto'}}>
                 <ProfileAvatar/>
-                <ProfileEditor/>
+                <ProfileEditor closeProfileEditor={closeProfileEditor}/>
               </Grid>
             </Grid>
           </Card>

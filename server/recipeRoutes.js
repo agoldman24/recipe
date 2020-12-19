@@ -74,6 +74,12 @@ exports.getRecipesByTime = (req, res) => {
 
 exports.getRecipesByIds = (req, res) => {
   const ids = req.query.ids.split(',');
+  if (ids.length === 1 && !ids[0].length) {
+    return res.json({
+      success: true,
+      recipes: {}
+    });
+  }
   const timestamps = req.query.timestamps.split(',')
     .map((timestamp, index) => {
       return {

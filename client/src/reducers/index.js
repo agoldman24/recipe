@@ -15,6 +15,7 @@ import {
   POPULATE_USERS,
   ADD_USER,
   UPDATE_USERS,
+  UPDATE_TWO_USERS,
   SET_ACTIVE_USER,
   SET_DISPLAY_USER,
   SET_DISPLAY_USER_DETAIL,
@@ -48,6 +49,7 @@ import {
   TOGGLE_IS_POSTING
 } from '../actions';
 import {
+  RECIPE_TAB,
   PROFILE_TAB,
   CREATED_RECIPE_IDS,
   CREATED_RECIPES,
@@ -72,13 +74,19 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case UPDATE_RECIPE_REQUESTED:
     case DELETE_RECIPE_REQUESTED:
     case DELETE_USER_REQUESTED:
+    case SET_RECIPE_CATEGORY:
       return true;
+    case SET_ACTIVE_TAB:
+      return action.newTab.name === RECIPE_TAB
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
     case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case DELETE_USER_SUCCEEDED:
+    case APPEND_ALL_RECIPES:
+    case APPEND_FRIEND_RECIPES:
+    case APPEND_CREATED_RECIPES:
     case UPDATE_DETAIL_RECIPE:
     case DELETE_RECIPE:
     case NETWORK_FAILED:
@@ -167,6 +175,7 @@ const tabHistory = (state = StateTree.tabHistory, action) => {
 const users = (state = StateTree.users, action) => {
   switch (action.type) {
     case POPULATE_USERS:
+    case UPDATE_USERS:
       return action.users;
     case ADD_USER:
     case SET_ACTIVE_USER:
@@ -176,7 +185,7 @@ const users = (state = StateTree.users, action) => {
         ...state,
         [action.user.id]: action.user
       }
-    case UPDATE_USERS:
+    case UPDATE_TWO_USERS:
       return {
         ...state,
         [action.user.id]: action.user,
@@ -477,6 +486,7 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
 }
 
 const allRecipes = (state = StateTree.allRecipes, action) => {
+  let newState;
   switch (action.type) {
     case APPEND_ALL_RECIPES:
       return {
@@ -486,8 +496,14 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
           return accum;
         }, {})
       }
+    case UPDATE_DETAIL_RECIPE:
+      newState = { ...state };
+      if (!!state[action.recipe.id]) {
+        newState[action.recipe.id] = action.recipe
+      }
+      return newState;
     case DELETE_RECIPE:
-      const newState = { ...state };
+      newState = { ...state };
       delete newState[action.id];
       return newState;
     case SIGN_OUT:
@@ -503,8 +519,25 @@ const oldestFetchedTimestamp = (state = StateTree.oldestFetchedTimestamp, action
       return !!action.recipes.length
         ? action.recipes[action.recipes.length - 1].timestamp
         : state;
+    case SET_RECIPE_CATEGORY:
+    case SET_ACTIVE_TAB:
     case SIGN_OUT:
       return Date.now();
+    default:
+      return state;
+  }
+}
+
+const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
+  switch (action.type) {
+    case APPEND_ALL_RECIPES:
+    case APPEND_FRIEND_RECIPES:
+    case APPEND_CREATED_RECIPES:
+      return false;
+    case SET_RECIPE_CATEGORY:
+      return true;
+    case SET_ACTIVE_TAB:
+      return action.newTab.name === RECIPE_TAB
     default:
       return state;
   }
@@ -671,6 +704,7 @@ export default combineReducers({
   detailRecipe,
   allRecipes,
   oldestFetchedTimestamp,
+  refreshNeeded,
   friendRecipes,
   createdRecipes,
   isLiking,

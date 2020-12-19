@@ -4,7 +4,7 @@ import {
   NETWORK_FAILED,
   UPDATE_USER_REQUESTED,
   UPDATE_USER_SUCCEEDED,
-  UPDATE_USERS,
+  UPDATE_TWO_USERS,
   UPDATE_DISPLAY_USER_DETAIL,
   SET_ACTIVE_USER,
   SET_ACTIVE_TAB,
@@ -29,6 +29,8 @@ const getDisplayUser = state => state.displayUser;
 const getDisplayUserDetail = state => state.displayUserDetail;
 const getCreatedRecipes = state => state.createdRecipes;
 const getDetailRecipe = state => state.detailRecipe;
+const getActiveTab = state => state.activeTab;
+const getRecipeCategory = state => state.recipeCategory;
 
 function* updateUser(action) {
   try {
@@ -37,6 +39,8 @@ function* updateUser(action) {
     const displayUserDetail = yield select(getDisplayUserDetail);
     const createdRecipes = yield select(getCreatedRecipes);
     const detailRecipe = yield select(getDetailRecipe);
+    const activeTab = yield select(getActiveTab);
+    const recipeCategory = yield select(getRecipeCategory);
     let res, res2, user, user2, profileImageId = activeUser.profileImageId;
     switch (action.updateType) {
       case PROFILE:
@@ -83,8 +87,12 @@ function* updateUser(action) {
           });
           yield put({ type: SET_ACTIVE_DETAIL, detail: CREATED_RECIPES });
         } else {
-          yield put({ type: SET_ACTIVE_TAB, newTab: { name: RECIPE_TAB }});
-          yield put({ type: SET_RECIPE_CATEGORY, category: "By Me" });
+          if (activeTab.name !== RECIPE_TAB)
+            yield put({ type: SET_ACTIVE_TAB, newTab: { name: RECIPE_TAB }});
+          yield put({
+            type: SET_RECIPE_CATEGORY,
+            category: recipeCategory === "By Me ?" ? "By Me" : "All"
+          });
         }
         yield put({ type: SHOW_SNACKBAR, message: "Recipe posted successfully" });
         break;
@@ -132,7 +140,7 @@ function* updateUser(action) {
           keep: action.keep,
           user, user2
         });
-        yield put({ type: UPDATE_USERS, user, user2 });
+        yield put({ type: UPDATE_TWO_USERS, user, user2 });
         break;
       default:
         break;

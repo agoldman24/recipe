@@ -30,6 +30,12 @@ exports.getUserById = (req, res) => {
 
 exports.getUsersByIds = (req, res) => {
   const idArray = req.query.ids.split(',');
+  if (idArray.length === 1 && !idArray[0].length) {
+    return res.json({
+      success: true,
+      users: []
+    });
+  }
   db.collection("users").find(
     { _id: { $in: idArray.map(id => ObjectID(id)) } }
   ).toArray().then(users => {
@@ -39,8 +45,8 @@ exports.getUsersByIds = (req, res) => {
         accum[user._id] = getUserFields(user);
         return accum;
       }, {})
-    })
-  })
+    });
+  });
 }
 
 exports.getUser = (req, res) => {

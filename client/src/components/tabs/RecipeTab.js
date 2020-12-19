@@ -13,14 +13,16 @@ class RecipeTab extends React.Component {
     this.fetchRecipes();
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.category !== this.props.category) {
+    if ((this.props.refreshNeeded && !prevProps.refreshNeeded)
+      || (this.props.category !== prevProps.category && !Object.keys(this.props.recipes).length)
+    ) {
       const id = isMobileOnly ? 'root' : 'container';
       document.getElementById(id).scrollTo(0, 0);
       this.fetchRecipes();
     }
   }
   fetchRecipes = () => {
-    if (!Object.keys(this.props.recipes).length) {
+    // if (!Object.keys(this.props.recipes).length) {
       this.props.getRecipes(
         this.props.requestType,
         this.props.users,
@@ -28,7 +30,7 @@ class RecipeTab extends React.Component {
         this.props.friendRecipes,
         this.props.createdRecipes
       );
-    }
+    // }
   }
   render() {
     return (
@@ -70,6 +72,7 @@ const mapStateToProps = state => {
       : state.recipeCategory === "By Friends"
         ? FRIEND_RECIPES
         : CREATED_RECIPES,
+    refreshNeeded: state.refreshNeeded,
     users: state.users,
     activeUser: state.activeUser
   };
@@ -79,21 +82,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setCategory: category => dispatch({ type: SET_RECIPE_CATEGORY, category }),
     getRecipes: (requestType, users, activeUser, friendRecipes, createdRecipes) => dispatch({
-      type: GET_RECIPES_REQUESTED,
-      requestType,
-      ids: requestType === ALL_RECIPES
-        ? null
-        : requestType === FRIEND_RECIPES
-          ? activeUser.followingIds.reduce((accum, friendId) => {
-            users[friendId].createdRecipeIds.filter(obj =>
-              !Object.keys(friendRecipes).includes(obj.id)
-            ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-              .forEach(r => accum.push(r));
-            return accum;
-          }, [])
-          : activeUser.createdRecipeIds.filter(obj =>
-              !Object.keys(createdRecipes).includes(obj.id)
-            ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+      type: GET_RECIPES_REQUESTED, requestType
     })
   };
 };

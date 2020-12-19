@@ -245,7 +245,7 @@ class RecipeDetail extends React.Component {
               this.setState({ isDeleteModalVisible: false });
               this.props.deleteRecipe();
             }}
-            message={"Are you sure want to delete recipe '" + name + "'?"}
+            message={"Are you sure want to delete '" + name + "'?"}
           />
         </Card>
   }

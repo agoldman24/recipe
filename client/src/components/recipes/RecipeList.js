@@ -25,7 +25,7 @@ import {
   TOGGLE_RECIPE_EDIT_MODE, DELETE_RECIPE_REQUESTED
 } from '../../actions';
 import {
-  SAMPLE_RECIPES, FRIEND_RECIPES, CREATED_RECIPES, LIKED_RECIPES,
+  ALL_RECIPES, FRIEND_RECIPES, CREATED_RECIPES, LIKED_RECIPES,
   LIKED_RECIPE_IDS, RECIPE_TAB, PROFILE_TAB, PUSH
 } from "../../variables/Constants";
 import { centeredTextStyle, defaultTheme } from "../../styles";
@@ -255,7 +255,7 @@ class RecipeList extends React.Component {
             }</h4>
           </div>
         }
-        {!this.props.allRecipesFetched &&
+        {!this.props.recipesFetched &&
           <div style={centeredTextStyle}>
             {this.props.isFetchingRecipes
               ? <h4>Loading...</h4>
@@ -316,7 +316,7 @@ class RecipeList extends React.Component {
             this.props.deleteRecipe(this.props.recipes[this.state.pickedIndex].id);
           }}
           message={this.state.isDeleteModalVisible
-            ? "Are you sure want to delete recipe '"
+            ? "Are you sure want to delete '"
               + this.props.recipes[this.state.pickedIndex].name + "'?"
             : ""}
         />
@@ -348,20 +348,20 @@ const mapStateToProps = state => {
     isLiking: state.isLiking,
     isSpinnerVisible: state.isSpinnerVisible,
     isFetchingRecipes: state.isFetchingRecipes,
-    allRecipesFetched:
+    recipesFetched:
       (state.activeTab.name === RECIPE_TAB && (
-        (state.recipeCategory === "Anonymous" && state.allRecipesFetched.samples) ||
-        (state.recipeCategory === "By Friends" && state.allRecipesFetched.friends) ||
-        (state.recipeCategory === "By Me" && state.allRecipesFetched.created)
+        (state.recipeCategory === "All" && state.recipesFetched.all) ||
+        (state.recipeCategory === "By Friends" && state.recipesFetched.friends) ||
+        (state.recipeCategory === "By Me" && state.recipesFetched.created)
       )) ||
       (!!state.displayUserDetail && (
         (state.displayUserDetail.activeDetail === CREATED_RECIPES
           && (!!state.activeUser && !!state.displayUser && state.activeUser.id === state.displayUser.id
-            ? state.allRecipesFetched.created
-            : state.allRecipesFetched.displayUserCreated)
+            ? state.recipesFetched.created
+            : state.recipesFetched.displayUserCreated)
         ) ||
         (state.displayUserDetail.activeDetail === LIKED_RECIPES
-          && state.allRecipesFetched.liked)
+          && state.recipesFetched.liked)
       )
     )
   };
@@ -388,8 +388,8 @@ const mapDispatchToProps = dispatch => {
       displayUserDetail
     ) => {
       const requestType = activeTab.name === RECIPE_TAB
-        ? recipeCategory === "Anonymous"
-          ? SAMPLE_RECIPES
+        ? recipeCategory === "All"
+          ? ALL_RECIPES
           : recipeCategory === "By Friends"
             ? FRIEND_RECIPES
             : CREATED_RECIPES

@@ -260,8 +260,8 @@ export const iconButtonStyle = {
 export const detailStyle = {
   borderRadius: '0',
   border: isMobileOnly ? 'none' : '1px solid grey',
-  width: isMobileOnly ? '100vw' : '600px',
-  left: isMobileOnly ? '0' : 'calc(50vw - 300px)',
+  width: isMobileOnly ? '100vw' : '500px',
+  left: isMobileOnly ? '0' : 'calc(50vw - 250px)',
   height: '100vh',
   position: 'fixed',
   overflowY: 'hidden',

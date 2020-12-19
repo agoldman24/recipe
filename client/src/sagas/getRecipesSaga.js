@@ -2,14 +2,14 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import {
   GET_RECIPES_REQUESTED,
-  APPEND_SAMPLE_RECIPES,
+  APPEND_ALL_RECIPES,
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   NETWORK_FAILED
 } from '../actions';
 import {
-  SAMPLE_RECIPES,
+  ALL_RECIPES,
   FRIEND_RECIPES,
   CREATED_RECIPES,
   LIKED_RECIPES,
@@ -17,7 +17,7 @@ import {
   RECIPE_TAB
 } from '../variables/Constants';
 
-const getSampleRecipes = state => state.sampleRecipes;
+const getOldestFetchedTimestamp = state => state.oldestFetchedTimestamp;
 const getActiveTab = state => state.activeTab.name;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
@@ -26,13 +26,11 @@ function* getRecipes(action) {
   try {
     let res;
     switch (action.requestType) {
-      case SAMPLE_RECIPES:
-        const sampleRecipes = yield select(getSampleRecipes);
-        res = !!Object.keys(sampleRecipes).length
-          ? yield call(Api.get, '/getSamples?ids=' + Object.keys(sampleRecipes))
-          : yield call(Api.get, '/getSamples');
+      case ALL_RECIPES:
+        const oldestFetchedTimestamp = yield select(getOldestFetchedTimestamp);
+        res = yield call(Api.get, '/getRecipesByTime?timestamp=' + oldestFetchedTimestamp)
         yield put({
-          type: APPEND_SAMPLE_RECIPES,
+          type: APPEND_ALL_RECIPES,
           recipes: res.data.recipes
         });
         break;

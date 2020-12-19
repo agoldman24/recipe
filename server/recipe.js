@@ -11,9 +11,9 @@ const RecipeSchema = new Schema(
     directions: Schema.Types.Mixed,
     authorName: String,
     authorId: String,
-    likedByIds: Array
-  },
-  { timestamps: true }
+    likedByIds: Array,
+    timestamp: Number
+  }
 );
 
 module.exports = mongoose.model("Recipe", RecipeSchema);

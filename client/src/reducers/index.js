@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { b64toBlob } from '../utilities/imageConverter';
-import StateTree from '../store/stateTree';
+import StateTree from './stateTree';
 import {
   INIT_HYDRATION,
   COMPLETE_HYDRATION,
@@ -27,7 +27,7 @@ import {
   UPDATE_DETAIL_RECIPE,
   DELETE_RECIPE,
   ADD_CREATED_RECIPE,
-  APPEND_SAMPLE_RECIPES,
+  APPEND_ALL_RECIPES,
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
@@ -183,7 +183,6 @@ const users = (state = StateTree.users, action) => {
         [action.user2.id]: action.user2
       }
     case DELETE_USER_SUCCEEDED:
-      const newState = { ...state, ...action.updatedUsers };
       delete newState[action.deletedUserId];
       return newState;
     case DELETE_RECIPE:
@@ -476,15 +475,35 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
   }
 }
 
-const sampleRecipes = (state = StateTree.sampleRecipes, action) => {
+const allRecipes = (state = StateTree.allRecipes, action) => {
   switch (action.type) {
-    case APPEND_SAMPLE_RECIPES:
+    case APPEND_ALL_RECIPES:
       return {
         ...state,
-        ...action.recipes
+        ...action.recipes.reduce((accum, recipe) => {
+          accum[recipe.id] = recipe;
+          return accum;
+        }, {})
       }
+    case DELETE_RECIPE:
+      const newState = { ...state };
+      delete newState[action.id];
+      return newState;
     case SIGN_OUT:
       return {};
+    default:
+      return state;
+  }
+}
+
+const oldestFetchedTimestamp = (state = StateTree.oldestFetchedTimestamp, action) => {
+  switch (action.type) {
+    case APPEND_ALL_RECIPES:
+      return !!action.recipes.length
+        ? action.recipes[action.recipes.length - 1].timestamp
+        : state;
+    case SIGN_OUT:
+      return Date.now();
     default:
       return state;
   }
@@ -578,19 +597,19 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
     case APPEND_CREATED_RECIPES:
     case APPEND_FRIEND_RECIPES:
     case APPEND_LIKED_RECIPES:
-    case APPEND_SAMPLE_RECIPES:
+    case APPEND_ALL_RECIPES:
       return false;
     default:
       return state;
   }
 }
 
-const allRecipesFetched = (state = StateTree.allRecipesFetched, action) => {
+const recipesFetched = (state = StateTree.recipesFetched, action) => {
   switch (action.type) {
-    case APPEND_SAMPLE_RECIPES:
+    case APPEND_ALL_RECIPES:
       return {
         ...state,
-        samples: Object.keys(action.recipes).length < 20
+        all: action.recipes.length < 20
       }
     case APPEND_FRIEND_RECIPES:
       return {
@@ -649,12 +668,13 @@ export default combineReducers({
   recipeCategory,
   recipeEditMode,
   detailRecipe,
-  sampleRecipes,
+  allRecipes,
+  oldestFetchedTimestamp,
   friendRecipes,
   createdRecipes,
   isLiking,
   isPosting,
   isUpdatingFollowers,
   isFetchingRecipes,
-  allRecipesFetched
+  recipesFetched
 });

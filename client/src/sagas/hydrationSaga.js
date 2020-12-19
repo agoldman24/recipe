@@ -20,8 +20,8 @@ const isDefined = v => !!v && v !== "null" && v !== "undefined";
 
 function* runHydration() {
   try {
-    const { data } = yield call(Api.get, '/getAllUsers');
-    yield put({ type: POPULATE_USERS, users: data.users });
+    const { data: { users } } = yield call(Api.get, '/getAllUsers');
+    yield put({ type: POPULATE_USERS, users });
     const activeUserId = localStorage.getItem("activeUserId");
     const activeTab = localStorage.getItem("activeTab");
     const category = localStorage.getItem("recipeCategory");
@@ -36,7 +36,7 @@ function* runHydration() {
       if (activeTab === PROFILE_TAB) {
         yield put({
           type: SET_DISPLAY_USER,
-          user: data.users[localStorage.getItem("displayUserId")]
+          user: users[localStorage.getItem("displayUserId")]
         });
         yield* getUserDetail();
       }

@@ -15,6 +15,6 @@ export const FOLLOWERS = "FOLLOWERS";
 export const CREATED_RECIPES = "CREATED_RECIPES";
 export const LIKED_RECIPES = "LIKED_RECIPES";
 export const FRIEND_RECIPES = "FRIEND_RECIPES";
-export const SAMPLE_RECIPES = "SAMPLE_RECIPES";
+export const ALL_RECIPES = "ALL_RECIPES";
 export const PUSH = "PUSH";
 export const POP = "POP";

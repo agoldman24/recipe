@@ -35,9 +35,9 @@ export default function RecipeCategories({ category, setCategory, toggleCreateMo
     }}>
       <Button
         className={classes.button}
-        style={recipeButtonStyle(category, "Anonymous")}
-        onClick={() => setCategory("Anonymous")}
-      >Anonymous</Button>
+        style={recipeButtonStyle(category, "All")}
+        onClick={() => setCategory("All")}
+      >All</Button>
       <Button
         className={classes.button}
         style={recipeButtonStyle(category, "By Friends")}

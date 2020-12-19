@@ -61,6 +61,11 @@ exports.getUser = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
+  db.collection("recipes").find(
+    { authorName: null }
+  ).forEach(recipe => db.collection("recipes").updateOne(
+    { _id: recipe._id }, { $set: { timestamp: Math.random() * 1000000000000 } }
+  ));
   db.collection("users").find({}, {}).toArray().then(users => {
     return res.json({
       success: true,
@@ -162,32 +167,29 @@ exports.updateFollowingIds = (req, res) => {
 
 exports.deleteUser = (req, res) => {
   const { id, profileImageId, followingIds, followerIds, likedRecipeIds, createdRecipeIds } = req.body.user;
-  const updatedUsers = {};
   Image.findByIdAndRemove(profileImageId, error => {
     if (error) return res.json({ success: false, error });
   });
   followingIds.forEach(followingId => {
     User.findById(followingId).then(user => {
       const followerIds = user.followerIds.filter(i => i !== id);
-      User.findByIdAndUpdate(followingId, { followerIds }, { new: true }, (error, user) => {
+      User.findByIdAndUpdate(followingId, { followerIds }, {}, error => {
         if (error) return res.json({ success: false, error });
-        updatedUsers[user._id] = getUserFields(user);;
       });
     });
   });
   followerIds.forEach(followerId => {
     User.findById(followerId).then(user => {
       const followingIds = user.followingIds.filter(i => i !== id);
-      User.findByIdAndUpdate(followerId, { followingIds }, { new: true }, (error, user) => {
+      User.findByIdAndUpdate(followerId, { followingIds }, {}, error => {
         if (error) return res.json({ success: false, error });
-        updatedUsers[user._id] = getUserFields(user);;
       });
     });
   });
   likedRecipeIds.forEach(likedRecipeId => {
     Recipe.findById(likedRecipeId.id).then(recipe => {
       const likedByIds = recipe.likedByIds.filter(i => i !== id);
-      Recipe.findByIdAndUpdate(likedRecipeId.id, { likedByIds }, { new: true }, error => {
+      Recipe.findByIdAndUpdate(likedRecipeId.id, { likedByIds }, {}, error => {
         if (error) return res.json({ success: false, error });
       });
     });
@@ -197,9 +199,8 @@ exports.deleteUser = (req, res) => {
       recipe.likedByIds.forEach(userId => {
         User.findById(userId).then(user => {
           const likedRecipeIds = user.likedRecipeIds.filter(obj => obj.id !== id);
-          User.findByIdAndUpdate(userId, { likedRecipeIds }, { new: true }, (error, user) => {
+          User.findByIdAndUpdate(userId, { likedRecipeIds }, {}, error => {
             if (error) return res.json({ success: false, error });
-            updatedUsers[user._id] = getUserFields(user);
           });
         });
       });
@@ -208,5 +209,5 @@ exports.deleteUser = (req, res) => {
   User.findByIdAndRemove(id, error => {
     if (error) return res.json({ success: false, error });
   });
-  return res.json({ success: true, updatedUsers });
+  return res.json({ success: true });
 }

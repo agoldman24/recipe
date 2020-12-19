@@ -4,8 +4,8 @@ const db = require('./database');
 const ObjectID = require('mongodb').ObjectID;
 
 const getRecipeSummary = recipe => {
-  const { _id, name, image, authorName, authorId } = recipe;
-  return { id: _id, name, image, authorName, authorId }
+  const { _id, name, image, authorName, authorId, timestamp } = recipe;
+  return { id: _id, name, image, authorName, authorId, timestamp }
 }
 
 const getRecipeFields = recipe => {
@@ -16,8 +16,8 @@ const getRecipeFields = recipe => {
 exports.createRecipe = (req, res) => {
   const { name, image, ingredients, directions, authorName, authorId } = req.body;
   const recipe = new Recipe({
-    name, image, ingredients, directions,
-    authorName, authorId, likedByIds: []
+    name, image, ingredients, directions, authorName, authorId,
+    likedByIds: [], timestamp: Date.now()
   });
   recipe.save(error => {
     if (error) return res.json({ success: false, error });
@@ -59,23 +59,16 @@ exports.deleteRecipe = (req, res) => {
   });
 }
 
-exports.getSamples = (req, res) => {
-  const idArray = !!req.query.ids
-    ? req.query.ids.split(',').map(id => ObjectID(id))
-    : [];
-  db.collection("recipes").find(
-    { _id: { $nin: idArray } }
-  ).toArray().then(recipes => {
+exports.getRecipesByTime = (req, res) => {
+  db.collection("recipes").find({
+    timestamp: { $lt: parseInt(req.query.timestamp) }
+  }).sort({ timestamp: -1 })
+  .limit(20)
+  .toArray().then(recipes => {
     return res.json({
       success: true,
-      recipes: recipes.filter(r => !r.authorId)
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 20)
-        .reduce((accum, recipe) => {
-          accum[recipe._id] = getRecipeSummary(recipe);
-          return accum;
-        }, {})
-    })
+      recipes: recipes.map(recipe => getRecipeSummary(recipe))
+    });
   })
 }
 

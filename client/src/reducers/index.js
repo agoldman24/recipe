@@ -183,6 +183,7 @@ const users = (state = StateTree.users, action) => {
         [action.user2.id]: action.user2
       }
     case DELETE_USER_SUCCEEDED:
+      const newState = { ...state };
       delete newState[action.deletedUserId];
       return newState;
     case DELETE_RECIPE:

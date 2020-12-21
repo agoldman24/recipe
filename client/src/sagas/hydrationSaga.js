@@ -20,6 +20,7 @@ const isDefined = v => !!v && v !== "null" && v !== "undefined";
 
 function* runHydration() {
   try {
+    yield call(Api.post, '/randomizeAnonymousRecipes');
     const { data: { users } } = yield call(Api.get, '/getAllUsers');
     yield put({ type: POPULATE_USERS, users });
     const activeUserId = localStorage.getItem("activeUserId");

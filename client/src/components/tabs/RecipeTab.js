@@ -21,17 +21,7 @@ class RecipeTab extends React.Component {
       this.fetchRecipes();
     }
   }
-  fetchRecipes = () => {
-    // if (!Object.keys(this.props.recipes).length) {
-      this.props.getRecipes(
-        this.props.requestType,
-        this.props.users,
-        this.props.activeUser,
-        this.props.friendRecipes,
-        this.props.createdRecipes
-      );
-    // }
-  }
+  fetchRecipes = () => this.props.getRecipes(this.props.requestType);
   render() {
     return (
       <div>
@@ -60,8 +50,6 @@ const mapStateToProps = state => {
     isLoggedIn: !!state.activeUser,
     networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
-    friendRecipes: state.friendRecipes,
-    createdRecipes: state.createdRecipes,
     recipes: state.recipeCategory === "All"
       ? state.allRecipes
       : state.recipeCategory === "By Friends"
@@ -73,15 +61,13 @@ const mapStateToProps = state => {
         ? FRIEND_RECIPES
         : CREATED_RECIPES,
     refreshNeeded: state.refreshNeeded,
-    users: state.users,
-    activeUser: state.activeUser
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setCategory: category => dispatch({ type: SET_RECIPE_CATEGORY, category }),
-    getRecipes: (requestType, users, activeUser, friendRecipes, createdRecipes) => dispatch({
+    getRecipes: requestType => dispatch({
       type: GET_RECIPES_REQUESTED, requestType
     })
   };

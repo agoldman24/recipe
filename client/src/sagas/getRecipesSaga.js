@@ -18,7 +18,7 @@ import {
   RECIPE_TAB
 } from '../variables/Constants';
 
-const getOldestFetchedTimestamp = state => state.oldestFetchedTimestamp;
+const getOldestFetchedRecipeTimestamp = state => state.oldestFetchedRecipeTimestamp;
 const getActiveTab = state => state.activeTab.name;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
@@ -28,7 +28,7 @@ const getAllUsers = state => state.users;
 
 function* getRecipes(action) {
   try {
-    const oldestFetchedTimestamp = yield select(getOldestFetchedTimestamp);
+    const oldestFetchedRecipeTimestamp = yield select(getOldestFetchedRecipeTimestamp);
     const activeTab = yield select(getActiveTab);
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
@@ -41,7 +41,7 @@ function* getRecipes(action) {
     let res;
     switch (action.requestType) {
       case ALL_RECIPES:
-        res = yield call(Api.get, '/getRecipesByTime?timestamp=' + oldestFetchedTimestamp)
+        res = yield call(Api.get, '/getRecipesByTime?timestamp=' + oldestFetchedRecipeTimestamp)
         yield put({
           type: APPEND_ALL_RECIPES,
           recipes: res.data.recipes
@@ -49,10 +49,7 @@ function* getRecipes(action) {
         break;
       case FRIEND_RECIPES:
         const { data: { users } } = yield call(Api.get, '/getUsersByIds?ids=' + activeUser.followingIds);
-        const updatedUsers = {
-          ...allUsers,
-          ...users
-        }
+        const updatedUsers = { ...allUsers, ...users };
         yield put({ type: UPDATE_USERS, users: updatedUsers });
         activeUser.followingIds.forEach(friendId => {
           updatedUsers[friendId].createdRecipeIds

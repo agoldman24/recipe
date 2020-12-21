@@ -8,11 +8,11 @@ const saltRounds = 10;
 
 const getUserFields = user => {
   const {
-    _id, username, firstName, lastName, profileImageId,
+    _id, username, firstName, lastName, profileImageId, timestamp,
     followerIds, followingIds, createdRecipeIds, likedRecipeIds
   } = user;
   return {
-    id: _id, username, firstName, lastName, profileImageId,
+    id: _id, username, firstName, lastName, profileImageId, timestamp,
     followerIds, followingIds, createdRecipeIds, likedRecipeIds
   }
 }
@@ -67,12 +67,9 @@ exports.getUser = (req, res) => {
 }
 
 exports.getAllUsers = (req, res) => {
-  db.collection("recipes").find(
-    { authorName: null }
-  ).forEach(recipe => db.collection("recipes").updateOne(
-    { _id: recipe._id }, { $set: { timestamp: Math.random() * 1000000000000 } }
-  ));
-  db.collection("users").find({}, {}).toArray().then(users => {
+  db.collection("users").find({}, {})
+  .sort({ timestamp: -1 })
+  .toArray().then(users => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
@@ -93,7 +90,8 @@ exports.createUser = (req, res) => {
         const user = new User({
           firstName, lastName, username,
           password: hash,
-          profileImageId: null
+          profileImageId: null,
+          timestamp: Date.now()
         });
         user.save(error => {
           if (error) return res.json({ success: false, error });
@@ -210,6 +208,9 @@ exports.deleteUser = (req, res) => {
           });
         });
       });
+    });
+    Recipe.findByIdAndRemove(createdRecipeId.id, error => {
+      if (error) return res.json({ success: false, error });
     });
   });
   User.findByIdAndRemove(id, error => {

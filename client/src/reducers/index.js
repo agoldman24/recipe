@@ -46,11 +46,14 @@ import {
   TOGGLE_PROFILE_EDITOR,
   UPDATE_PROFILE_EDITOR,
   TOGGLE_RECIPE_EDIT_MODE,
-  TOGGLE_IS_POSTING
+  TOGGLE_IS_POSTING,
+  REFRESH_COMPLETE
 } from '../actions';
 import {
   RECIPE_TAB,
+  USERS_TAB,
   PROFILE_TAB,
+  FOLLOWING_IDS,
   CREATED_RECIPE_IDS,
   CREATED_RECIPES,
   LIKED_RECIPE_IDS,
@@ -58,8 +61,7 @@ import {
   DISPLAY_USER,
   FOLLOWERS,
   PROFILE,
-  PUSH,
-  FOLLOWING_IDS
+  PUSH
 } from '../variables/Constants';
 
 const isDefined = v => !!v && v !== "null" && v !== "undefined";
@@ -77,7 +79,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SET_RECIPE_CATEGORY:
       return true;
     case SET_ACTIVE_TAB:
-      return action.newTab.name === RECIPE_TAB
+      return action.newTab.name === RECIPE_TAB || action.newTab.name === USERS_TAB
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
@@ -93,6 +95,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case SIGN_IN_FAILED:
     case USERNAME_EXISTS:
     case SHOW_SNACKBAR:
+    case REFRESH_COMPLETE:
       return false;
     default:
       return state;
@@ -496,6 +499,11 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
           return accum;
         }, {})
       }
+    case ADD_CREATED_RECIPE:
+      return {
+        ...state,
+        [action.recipe.id]: action.recipe
+      }
     case UPDATE_DETAIL_RECIPE:
       newState = { ...state };
       if (!!state[action.recipe.id]) {
@@ -513,7 +521,7 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
   }
 }
 
-const oldestFetchedTimestamp = (state = StateTree.oldestFetchedTimestamp, action) => {
+const oldestFetchedRecipeTimestamp = (state = StateTree.oldestFetchedRecipeTimestamp, action) => {
   switch (action.type) {
     case APPEND_ALL_RECIPES:
       return !!action.recipes.length
@@ -533,11 +541,12 @@ const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
     case APPEND_ALL_RECIPES:
     case APPEND_FRIEND_RECIPES:
     case APPEND_CREATED_RECIPES:
+    case REFRESH_COMPLETE:
       return false;
     case SET_RECIPE_CATEGORY:
       return true;
     case SET_ACTIVE_TAB:
-      return action.newTab.name === RECIPE_TAB
+      return action.newTab.name === RECIPE_TAB || action.newTab.name === USERS_TAB
     default:
       return state;
   }
@@ -562,10 +571,7 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
     case ADD_CREATED_RECIPE:
       return {
         ...state,
-        [action.recipe.id]: {
-          ...action.recipe,
-          timestamp: Date.now()
-        }
+        [action.recipe.id]: action.recipe
       }
     case UPDATE_DETAIL_RECIPE:
       return {
@@ -703,7 +709,7 @@ export default combineReducers({
   recipeEditMode,
   detailRecipe,
   allRecipes,
-  oldestFetchedTimestamp,
+  oldestFetchedRecipeTimestamp,
   refreshNeeded,
   friendRecipes,
   createdRecipes,

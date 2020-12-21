@@ -59,6 +59,16 @@ exports.deleteRecipe = (req, res) => {
   });
 }
 
+exports.randomizeAnonymousRecipes = (req, res) => {
+  db.collection("recipes").find(
+    { authorName: null }
+  ).forEach(recipe => db.collection("recipes").updateOne(
+    { _id: recipe._id },
+    { $set: { timestamp: Math.random() * 1000000000000 } }
+  ));
+  return res.json({ success: true });
+}
+
 exports.getRecipesByTime = (req, res) => {
   db.collection("recipes").find({
     timestamp: { $lt: parseInt(req.query.timestamp) }

@@ -11,7 +11,8 @@ const UserSchema = new Schema(
     followerIds: Array,
     followingIds: Array,
     createdRecipeIds: Array,
-    likedRecipeIds: Array
+    likedRecipeIds: Array,
+    timestamp: Number
   }
 );
 

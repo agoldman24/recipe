@@ -42,6 +42,7 @@ router.get("/getRecipeDetail", recipeRoutes.getRecipeDetail);
 router.post("/createRecipe", recipeRoutes.createRecipe);
 router.post("/updateRecipe", recipeRoutes.updateRecipe);
 router.post("/deleteRecipe", recipeRoutes.deleteRecipe);
+router.post("/randomizeAnonymousRecipes", recipeRoutes.randomizeAnonymousRecipes);
 
 router.get("/getImageById", imageRoutes.getImageById);
 router.post("/createImage", imageRoutes.createImage);

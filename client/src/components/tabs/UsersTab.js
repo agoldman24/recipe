@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import UsersTable from '../tables/UsersTable';
-import { connect } from 'react-redux';
+import Api from '../../api/siteUrl';
+import { UPDATE_USERS, REFRESH_COMPLETE } from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   search: {
@@ -35,9 +37,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTab = props => {
+const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) => {
   const classes = useStyles();
   const [searchVal, setSearchVal] = useState("");
+  useEffect(() => {
+    if (refreshNeeded) {
+      Api.get('/getAllUsers').then(res => {
+        updateUsers(res.data.users);
+        refreshComplete();
+      });
+    }
+  }, [refreshNeeded, updateUsers, refreshComplete])
   return (
     <div>
       <div className={classes.search}>
@@ -56,7 +66,7 @@ const UsersTab = props => {
       <div style={{height: isMobileOnly ? '55px' : '70px'}}/>
       <UsersTable
         users={
-          props.usersArray.filter(user =>
+          usersArray.filter(user =>
             user.username.toLowerCase().includes(searchVal) ||
             user.firstName.toLowerCase().includes(searchVal) ||
             user.lastName.toLowerCase().includes(searchVal)
@@ -69,13 +79,17 @@ const UsersTab = props => {
 
 const mapStateToProps = state => {
   return {
-    usersArray: Object.values(state.users)
+    usersArray: Object.values(state.users),
+    refreshNeeded: state.refreshNeeded
   };
 }
 
 const mapDispatchToProps = dispatch => {
-  return {};
-};
+  return {
+    updateUsers: users => dispatch({ type: UPDATE_USERS, users }),
+    refreshComplete: () => dispatch({ type: REFRESH_COMPLETE })
+  };
+}
 
 export default connect(
   mapStateToProps,

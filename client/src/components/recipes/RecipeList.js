@@ -413,13 +413,13 @@ const mapDispatchToProps = dispatch => {
             recipeIds = activeUser.createdRecipeIds;
           } else {
             recipes = displayUserDetail.createdRecipes;
-            recipeIds = displayUser.createdRecipeIds;
+            recipeIds = displayUserDetail.createdRecipeIds;
           }
           ids = recipeIds.filter(obj => !Object.keys(recipes).includes(obj.id))
             .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
           break;
         case LIKED_RECIPES:
-          ids = displayUser.likedRecipeIds.filter(obj =>
+          ids = displayUserDetail.likedRecipeIds.filter(obj =>
             !Object.keys(displayUserDetail.likedRecipes).includes(obj.id)
           ).sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
           break;

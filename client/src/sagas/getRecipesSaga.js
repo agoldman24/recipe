@@ -37,7 +37,7 @@ function* getRecipes(action) {
     const allUsers = yield select(getAllUsers);
     const activeUserIsDisplayUser = !!activeUser && !!displayUser && activeUser.id === displayUser.id;
     const appendTo = activeTab === RECIPE_TAB || activeUserIsDisplayUser ? CREATED_RECIPES : DISPLAY_USER
-    const ids = [], timestamps = [];
+    let ids = [], timestamps = [];
     let res;
     switch (action.requestType) {
       case ALL_RECIPES:
@@ -70,13 +70,18 @@ function* getRecipes(action) {
         });
         break;
       case CREATED_RECIPES:
-        activeUser.createdRecipeIds
-          .filter(obj => !Object.keys(createdRecipes).includes(obj.id))
-          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-          .forEach(obj => {
-            ids.push(obj.id);
-            timestamps.push(obj.timestamp);
-          });
+        if (!!action.ids) {
+          ids = action.ids.map(obj => obj.id);
+          timestamps = action.ids.map(obj => obj.timestamp);
+        } else {
+          activeUser.createdRecipeIds
+            .filter(obj => !Object.keys(createdRecipes).includes(obj.id))
+            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+            .forEach(obj => {
+              ids.push(obj.id);
+              timestamps.push(obj.timestamp);
+            });
+        }
         res = yield call(Api.get, '/getRecipesByIds?'
           + 'ids=' + ids
           + '&timestamps=' + timestamps

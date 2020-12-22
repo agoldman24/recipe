@@ -23,7 +23,6 @@ import {
   FOLLOWERS
 } from '../variables/Constants';
 
-const getUsers = state => state.users;
 const getActiveUser = state => state.activeUser;
 const getDisplayUser = state => state.displayUser;
 const getDisplayUserDetail = state => state.displayUserDetail;
@@ -91,7 +90,7 @@ function* updateUser(action) {
             yield put({ type: SET_ACTIVE_TAB, newTab: { name: RECIPE_TAB }});
           yield put({
             type: SET_RECIPE_CATEGORY,
-            category: recipeCategory === "By Me ?" ? "By Me" : "All"
+            category: recipeCategory === "By Me" ? "By Me" : "All"
           });
         }
         yield put({ type: SHOW_SNACKBAR, message: "Recipe posted successfully" });
@@ -117,8 +116,8 @@ function* updateUser(action) {
         }
         break;
       case FOLLOWING_IDS:
-        const users = yield select(getUsers);
-        const friend = users[action.friendId];
+        const friendRes = yield call(Api.get, '/getUserById?id=' + action.friendId);
+        const friend = friendRes.data.user;
         res = yield call(Api.post, '/updateFollowingIds', {
           id: action.id,
           followingIds: action.keep

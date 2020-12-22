@@ -6,6 +6,11 @@ const ObjectID = require('mongodb').ObjectID;
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const getUserSummary = user => {
+  const { _id, username, firstName, lastName, timestamp } = user;
+  return { id: _id, username, firstName, lastName, timestamp };
+}
+
 const getUserFields = user => {
   const {
     _id, username, firstName, lastName, profileImageId, timestamp,
@@ -14,7 +19,7 @@ const getUserFields = user => {
   return {
     id: _id, username, firstName, lastName, profileImageId, timestamp,
     followerIds, followingIds, createdRecipeIds, likedRecipeIds
-  }
+  };
 }
 
 exports.getUserById = (req, res) => {
@@ -73,7 +78,7 @@ exports.getAllUsers = (req, res) => {
     return res.json({
       success: true,
       users: users.reduce((accum, user) => {
-        accum[user._id] = getUserFields(user);
+        accum[user._id] = getUserSummary(user);
         return accum;
       }, {})
     });

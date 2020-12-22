@@ -101,7 +101,7 @@ export default function RecipeNameField({
           required
           fullWidth
           variant="outlined"
-          label="Name"
+          label="Title"
           type="name"
           value={value}
           onClick={e => {
@@ -118,7 +118,7 @@ export default function RecipeNameField({
             paddingLeft:'3px',
           }}
         >
-          Please enter a name
+          Please enter a title
         </Grid>
       }
     </Grid>

@@ -267,21 +267,6 @@ const displayUser = (state = null, action) => {
       return action.user;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
-        case CREATED_RECIPE_IDS:
-          return {
-            ...state,
-            createdRecipeIds: action.user.createdRecipeIds
-          }
-        case LIKED_RECIPES:
-          return {
-            ...state,
-            likedRecipeIds: action.user.likedRecipeIds
-          }
-        case FOLLOWERS:
-          return {
-            ...state,
-            followerIds: action.user2.followerIds
-          }
         case PROFILE:
           return {
             ...state,
@@ -293,15 +278,6 @@ const displayUser = (state = null, action) => {
         default:
           return state;
       }
-    case DELETE_RECIPE:
-      if (!!state) {
-        return {
-          ...state,
-          createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id),
-          likedRecipeIds: state.likedRecipeIds.filter(({ id }) => id !== action.id)
-        }
-      }
-      return state;
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {
         return null;
@@ -318,7 +294,10 @@ const displayUserDetail = (state = null, action) => {
     case SET_DISPLAY_USER:
       return null;
     case SET_DISPLAY_USER_DETAIL:
-      const { profileImage, followers, following, createdRecipes, likedRecipes } = action;
+      const {
+        profileImage, followers, following, createdRecipes,
+        likedRecipes, likedRecipeIds, createdRecipeIds
+      } = action;
       const cachedActiveDetail = localStorage.getItem("activeDetail");
       const activeDetail = action.activeUserIsDisplayUser
         ? isDefined(cachedActiveDetail)
@@ -327,7 +306,8 @@ const displayUserDetail = (state = null, action) => {
         : FOLLOWERS;
       localStorage.setItem("activeDetail", activeDetail);
       return {
-        profileImage, followers, following, createdRecipes, likedRecipes, activeDetail
+        profileImage, followers, following, createdRecipes, likedRecipes,
+        likedRecipeIds, createdRecipeIds, activeDetail
       };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
@@ -377,17 +357,14 @@ const displayUserDetail = (state = null, action) => {
           return {
             ...state,
             followers: action.keep
-              ? { ...state.followers, [action.user.id]: action.user }
+              ? { [action.user.id]: action.user, ...state.followers }
               : Object.keys(state.followers).filter(id => id !== action.user.id)
                 .reduce((accum, id) => {
                   accum[id] = state.followers[id];
                   return accum;
                 }, {}),
             following: Object.keys(state.following).includes(action.user2.id)
-              ? {
-                  ...state.following,
-                  [action.user.id]: action.user
-                }
+              ? { [action.user.id]: action.user, ...state.following }
               : state.following
           }
         case PROFILE:

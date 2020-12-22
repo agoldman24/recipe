@@ -25,25 +25,27 @@ export function* getUserDetail() {
     const appendTo = activeTab === RECIPE_TAB || activeUserIsDisplayUser
       ? CREATED_RECIPES
       : DISPLAY_USER;
-    const res0 = !!displayUser.profileImageId
-      ? yield call(Api.get, '/getImageById?id=' + displayUser.profileImageId)
+    const { data: { user } } = yield call(Api.get, '/getUserById?id=' + displayUser.id);
+    const { profileImageId, followerIds, followingIds, createdRecipeIds, likedRecipeIds } = user;
+    const res0 = !!profileImageId
+      ? yield call(Api.get, '/getImageById?id=' + profileImageId)
       : null;
-    const res1 = !!displayUser.followerIds.length
-      ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followerIds)
+    const res1 = !!followerIds.length
+      ? yield call(Api.get, '/getUsersByIds?ids=' + followerIds)
       : { data: { users: {} } };
-    const res2 = !!displayUser.followingIds.length
-      ? yield call(Api.get, '/getUsersByIds?ids=' + displayUser.followingIds)
+    const res2 = !!followingIds.length
+      ? yield call(Api.get, '/getUsersByIds?ids=' + followingIds)
       : { data: { users: {} } };
-    const res3 = !!displayUser.createdRecipeIds.length
+    const res3 = !!createdRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?'
-          + 'ids=' + displayUser.createdRecipeIds.map(obj => obj.id)
-          + '&timestamps=' + displayUser.createdRecipeIds.map(obj => obj.timestamp)
+          + 'ids=' + createdRecipeIds.map(obj => obj.id)
+          + '&timestamps=' + createdRecipeIds.map(obj => obj.timestamp)
         )
       : { data: { recipes: {} } };
-    const res4 = !!displayUser.likedRecipeIds.length
+    const res4 = !!likedRecipeIds.length
       ? yield call(Api.get, '/getRecipesByIds?'
-          + 'ids=' + displayUser.likedRecipeIds.map(obj => obj.id)
-          + '&timestamps=' + displayUser.likedRecipeIds.map(obj => obj.timestamp)
+          + 'ids=' + likedRecipeIds.map(obj => obj.id)
+          + '&timestamps=' + likedRecipeIds.map(obj => obj.timestamp)
         )
       : { data: { recipes: {} } };
     if (!!displayUserDetail && !!displayUserDetail.profileImage) {
@@ -56,13 +58,15 @@ export function* getUserDetail() {
     });
     yield put({
       type: SET_DISPLAY_USER_DETAIL,
-      profileImage: !!displayUser.profileImageId
+      profileImage: !!profileImageId
         ? URL.createObjectURL(b64toBlob(res0.data.image.data))
         : null,
       followers: res1.data.users,
       following: res2.data.users,
       createdRecipes: res3.data.recipes,
       likedRecipes: res4.data.recipes,
+      likedRecipeIds,
+      createdRecipeIds,
       activeUserIsDisplayUser
     });
     yield put({ type: GET_USER_DETAIL_SUCCEEDED })

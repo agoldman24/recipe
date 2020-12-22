@@ -33,19 +33,16 @@ export default Object.assign({},
     id: "",
     username: "",
     firstName: "",
-    lastName: "",
-    profileImage: null,
-    followerIds: [],
-    followingIds: [],
-    createdRecipeIds: [],
-    likedRecipeIds: []
+    lastName: ""
   },
   displayUserDetail: {
     profileImage: null,
     followers: {},
     following: {},
     createdRecipes: {},
+    createdRecipeIds: {},
     likedRecipes: {},
+    likedRecipeIds: {},
     activeDetail: ""
   },
   profileEditor: null,

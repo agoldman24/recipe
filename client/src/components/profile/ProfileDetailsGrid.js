@@ -16,18 +16,18 @@ import {
 } from "../../styles";
 
 export default function ProfileDetailsGrid({
-  displayUser: {
-    id,
-    followerIds,
-    followingIds,
-    createdRecipeIds,
-    likedRecipeIds
-  },
+  displayUser: { id },
   displayUserDetail,
   setActiveDetail,
   activeUser,
   createdRecipes
 }) {
+  const {
+    followers, following, likedRecipes, likedRecipeIds, createdRecipeIds, activeDetail
+  } = displayUserDetail;
+  const createdRecipesArray = !!activeUser && activeUser.id === id
+    ? Object.values(createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
+    : Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
   return (
     <div style={{paddingBottom:'30px'}}>
       <Grid
@@ -37,53 +37,50 @@ export default function ProfileDetailsGrid({
       >
         <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWERS)}>
           <ProfileDetail
-            isSelected={displayUserDetail.activeDetail === FOLLOWERS}
-            number={followerIds.length}
+            isSelected={activeDetail === FOLLOWERS}
+            number={Object.keys(followers).length}
             text="Followers"
           />
         </Grid>
         <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWING)}>
           <ProfileDetail
-            isSelected={displayUserDetail.activeDetail === FOLLOWING}
-            number={followingIds.length}
+            isSelected={activeDetail === FOLLOWING}
+            number={Object.keys(following).length}
             text="Following"
           />
         </Grid>
         <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(CREATED_RECIPES)}>
           <ProfileDetail
-            isSelected={displayUserDetail.activeDetail === CREATED_RECIPES}
+            isSelected={activeDetail === CREATED_RECIPES}
             number={createdRecipeIds.length}
             text="Created Recipes"
           />
         </Grid>
         <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(LIKED_RECIPES)}>
           <ProfileDetail
-            isSelected={displayUserDetail.activeDetail === LIKED_RECIPES}
+            isSelected={activeDetail === LIKED_RECIPES}
             number={likedRecipeIds.length}
             text="Liked Recipes"
           />
         </Grid>
       </Grid>
-      {displayUserDetail.activeDetail === FOLLOWERS &&
+      {activeDetail === FOLLOWERS &&
         <div style={tableStyle}>
-          <UsersTable users={Object.values(displayUserDetail.followers)}/>
+          <UsersTable users={Object.values(followers)}/>
         </div>
       }
-      {displayUserDetail.activeDetail === FOLLOWING &&
+      {activeDetail === FOLLOWING &&
         <div style={tableStyle}>
-          <UsersTable users={Object.values(displayUserDetail.following)}/>
+          <UsersTable users={Object.values(following)}/>
         </div>
       }
-      {displayUserDetail.activeDetail === CREATED_RECIPES &&
-        <RecipeList recipes={!!activeUser && activeUser.id === id
-          ? Object.values(createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
-          : Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
-        }/>
+      {activeDetail === CREATED_RECIPES &&
+        <RecipeList recipes={createdRecipesArray}/>
       }
-      {displayUserDetail.activeDetail === LIKED_RECIPES &&
+      {activeDetail === LIKED_RECIPES &&
         <RecipeList recipes={likedRecipeIds
           .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-          .map(({ id }) => displayUserDetail.likedRecipes[id])}
+          .map(({ id }) => likedRecipes[id])}
         />
       }
     </div>

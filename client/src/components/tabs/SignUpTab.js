@@ -15,6 +15,7 @@ import { SIGN_UP_REQUESTED, SET_ACTIVE_TAB, EMPTY_FIELDS, CLEAR_ERROR_MESSAGES }
 import { defaultTheme, formTheme, errorStyle } from '../../styles';
 
 const useStyles = makeStyles(formTheme);
+const errStyle = { ...errorStyle, paddingTop:'0', paddingBottom:'20px' };
  
 const SignUpTab = props => {
   const classes = useStyles();
@@ -44,11 +45,11 @@ const SignUpTab = props => {
         </Typography>
         <form className={classes.form}>
           {props.emptyFields &&
-            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>One or more fields is empty</div>}
+            <div style={errStyle}>One or more fields is empty</div>}
           {props.usernameExists &&
-            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>That username already exists, choose a different one</div>}
+            <div style={errStyle}>That username already exists, choose a different one</div>}
           {props.networkFailed &&
-            <div style={{...errorStyle, paddingTop:'0', paddingBottom:'15px'}}>Network error</div>}
+            <div style={errStyle}>Network error</div>}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField

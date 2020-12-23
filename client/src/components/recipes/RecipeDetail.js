@@ -51,7 +51,8 @@ class RecipeDetail extends React.Component {
     directions: null,
     likedId: null,
     isFetching: true,
-    isDeleteModalVisible: false
+    isDeleteModalVisible: false,
+    headerHeight: 0
   }
   componentDidMount() {
     Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
@@ -63,6 +64,11 @@ class RecipeDetail extends React.Component {
     });
   }
   componentDidUpdate(prevProps) {
+    if (!!document.getElementById("recipeHeader") &&
+      document.getElementById("recipeHeader").offsetHeight !== this.state.headerHeight
+    ) {
+      this.setState({ headerHeight: document.getElementById("recipeHeader").offsetHeight  });
+    }
     if (!this.props.isSpinnerVisible && prevProps.isSpinnerVisible && !!this.state.ingredients) {
       this.setState({ isFetching: true });
       Api.get('/getRecipeDetail?id=' + this.props.id).then(res => {
@@ -79,9 +85,6 @@ class RecipeDetail extends React.Component {
   render() {
     const { id, name, image, authorName, authorId, date } = this.props;
     const { ingredients, directions, isFetching } = this.state;
-    const headerHeight = !!document.getElementById("recipeHeader")
-      ? document.getElementById("recipeHeader").offsetHeight
-      : 0;
     return this.props.editMode && !isFetching
       ? <RecipeDetailEdit
           name={name}
@@ -159,7 +162,8 @@ class RecipeDetail extends React.Component {
               </div>
             }
           </AppBar>
-          <div style={{overflowY:'scroll', background:'#303030', height:'calc(100% - ' + headerHeight + 'px)'}}>
+          <div style={{overflowY:'scroll', background:'#303030',
+            height:'calc(100% - ' + this.state.headerHeight + 'px)'}}>
             <CardMedia id="recipeImage" component="img" image={image}/>
             <CardContent id="recipeTables" style={{background:'linear-gradient(45deg, #101010, transparent)',
               padding:'0', paddingBottom: isMobileOnly ? '50%' : '30%'}}>

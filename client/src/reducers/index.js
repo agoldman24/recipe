@@ -182,6 +182,10 @@ const users = (state = StateTree.users, action) => {
     case UPDATE_USERS:
       return action.users;
     case ADD_USER:
+      return {
+        [action.user.id]: action.user,
+        ...state
+      }
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:

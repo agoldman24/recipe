@@ -17,6 +17,12 @@ const useStyles = makeStyles({
     width: isMobileOnly ? '100%' : '84%',
     margin: isMobileOnly ? '0' : '0 8%',
     borderTop: '1px solid rgba(81, 81, 81, 1)'
+  },
+  tableContainer: {
+    paddingBottom: '30px'
+  },
+  tableCell: {
+    padding: '12px 16px'
   }
 });
 
@@ -28,7 +34,7 @@ const textStyle = {
 const UsersTable = props => {
   const classes = useStyles();
   return (
-    <TableContainer>
+    <TableContainer className={classes.tableContainer}>
       <Table className={classes.table}>
         <TableBody>
           {props.users.map(user => (
@@ -36,7 +42,7 @@ const UsersTable = props => {
               key={user.id}
               className="clickable"
               onClick={() => props.visitUserProfile(user, props.activeTab, props.displayUser)}>
-              <TableCell>
+              <TableCell className={classes.tableCell}>
                 <Typography style={textStyle}>{user.firstName + " " + user.lastName}</Typography>
                 <Typography style={{...textStyle, color:'grey', paddingLeft:'10px'}}>{user.username}</Typography>
               </TableCell>

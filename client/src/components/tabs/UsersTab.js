@@ -12,9 +12,10 @@ const useStyles = makeStyles(theme => ({
   search: {
     position: 'fixed',
     left: 0,
-    padding: isMobileOnly ? '15px 5%' : '22px 10%',
+    padding: isMobileOnly ? '15px 5%' : '18px 10%',
     width: '100%',
-    background: '#202020'
+    background: 'linear-gradient(to bottom, #202020, transparent)'
+    // borderBottom: '1px solid grey'
   },
   searchIcon: {
     position: 'absolute',
@@ -63,7 +64,7 @@ const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) =
           onChange={e => setSearchVal(e.target.value.toLowerCase())}
         />
       </div>
-      <div style={{height: isMobileOnly ? '55px' : '70px'}}/>
+      <div style={{height: isMobileOnly ? '60px' : '70px'}}/>
       <UsersTable
         users={
           usersArray.filter(user =>

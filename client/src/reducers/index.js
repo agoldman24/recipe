@@ -176,6 +176,7 @@ const tabHistory = (state = StateTree.tabHistory, action) => {
 }
 
 const users = (state = StateTree.users, action) => {
+  let newState;
   switch (action.type) {
     case POPULATE_USERS:
     case UPDATE_USERS:
@@ -184,18 +185,16 @@ const users = (state = StateTree.users, action) => {
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:
-      return {
-        ...state,
-        [action.user.id]: action.user
-      }
+      newState = { ...state };
+      newState[action.user.id] = action.user;
+      return newState;
     case UPDATE_TWO_USERS:
-      return {
-        ...state,
-        [action.user.id]: action.user,
-        [action.user2.id]: action.user2
-      }
+      newState = { ...state };
+      newState[action.user.id] = action.user;
+      newState[action.user2.id] = action.user2;
+      return newState;
     case DELETE_USER_SUCCEEDED:
-      const newState = { ...state };
+      newState = { ...state };
       delete newState[action.deletedUserId];
       return newState;
     case DELETE_RECIPE:

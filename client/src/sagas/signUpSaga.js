@@ -32,7 +32,9 @@ function* signUp(action) {
         followers: {},
         following: {},
         createdRecipes: {},
-        likedRecipes: {}
+        likedRecipes: {},
+        likedRecipeIds: [],
+        createdRecipeIds: []
       })
       yield put({
         type: SET_ACTIVE_TAB,

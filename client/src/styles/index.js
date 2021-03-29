@@ -86,6 +86,59 @@ export const errorMessageStyle = {
   color: errorStyle.color
 }
 
+export const inputStyle = {
+  inputText: {
+    fontSize: '16px',
+    lineHeight: '1.5',
+    padding: '15px 10px'
+  },
+  whiteRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white'
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: 'white',
+      marginTop: '-4px'
+    }
+  },
+  redRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: errorStyle.color,
+      },
+      '&:hover fieldset': {
+        borderColor: errorStyle.color,
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: 'white',
+      marginTop: '-4px'
+    }
+  },
+  yellowRoot: {
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: defaultTheme.palette.primary.main,
+      },
+      '&:hover fieldset': {
+        borderColor: defaultTheme.palette.primary.main,
+      },
+    },
+    '& .MuiInputLabel-root': {
+      fontSize: '16px',
+      color: defaultTheme.palette.primary.main,
+      marginTop: '-4px'
+    }
+  }
+}
+
 export const textStyle = {
   fontWeight: 'bold',
   fontFamily: 'Signika',

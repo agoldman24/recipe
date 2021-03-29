@@ -28,7 +28,7 @@ export default function RecipeParagraphField({
         },
         onBlur: () => {
           setDirectionsParagraph(value);
-          setGlobalDiff(undefined, undefined, undefined, undefined, value, undefined);
+          setGlobalDiff({ newDirectionsParagraph: value });
         }
       }}
       style={{width:'95%', margin:'0 2.5% 10px 2.5%'}}

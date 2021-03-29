@@ -2,60 +2,9 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import { errorStyle, errorMessageStyle, defaultTheme } from '../../styles';
+import { inputStyle, errorMessageStyle } from '../../styles';
 
-const useStyles = makeStyles(() => ({
-  inputText: {
-    fontSize: '16px',
-    lineHeight: '1.5',
-    padding: '15px 10px'
-  },
-  whiteRoot: {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white'
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-    },
-    '& .MuiInputLabel-root': {
-      fontSize: '16px',
-      color: 'white',
-      marginTop: '-4px'
-    }
-  },
-  redRoot: {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: errorStyle.color,
-      },
-      '&:hover fieldset': {
-        borderColor: errorStyle.color,
-      },
-    },
-    '& .MuiInputLabel-root': {
-      fontSize: '16px',
-      color: 'white',
-      marginTop: '-4px'
-    }
-  },
-  yellowRoot: {
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: defaultTheme.palette.primary.main,
-      },
-      '&:hover fieldset': {
-        borderColor: defaultTheme.palette.primary.main,
-      },
-    },
-    '& .MuiInputLabel-root': {
-      fontSize: '16px',
-      color: defaultTheme.palette.primary.main,
-      marginTop: '-4px'
-    }
-  }
-}));
+const useStyles = makeStyles(() => inputStyle);
 
 export default function RecipeNameField({
   focusedContainer,
@@ -69,9 +18,7 @@ export default function RecipeNameField({
   const classes = useStyles();
   const [value, setValue] = useState(originalName);
   return (
-    <Grid container direction="row"
-      style={{display:'flex', padding:'15px 10px 5px 10px', width:'initial'}}
-    >
+    <Grid container direction="row">
       <Grid item style={{
         width: focusedContainer !== "name" && isNameEmpty && isErrored ? '65%' : '100%',
         paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '7px' : '0'
@@ -83,7 +30,7 @@ export default function RecipeNameField({
             },
             onBlur: () => {
               setName(value);
-              setGlobalDiff(value);
+              setGlobalDiff({ newName: value });
               setFocus(null);
             }
           }}
@@ -102,7 +49,6 @@ export default function RecipeNameField({
           fullWidth
           variant="outlined"
           label="Title"
-          type="name"
           value={value}
           onClick={e => {
             e.stopPropagation();

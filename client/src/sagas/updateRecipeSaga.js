@@ -15,10 +15,10 @@ const getActiveUser = state => state.activeUser;
 function* updateRecipe(action) {
   try {
     const detailRecipe = yield select(getDetailRecipe);
-    const { name, image, ingredients, directions } = action;
+    const { name, serves, image, ingredients, directions } = action;
     yield call(Api.post, '/updateRecipe', {
       id: detailRecipe.id,
-      name, image, ingredients, directions
+      name, serves, image, ingredients, directions
     });
     yield put({
       type: UPDATE_DETAIL_RECIPE,

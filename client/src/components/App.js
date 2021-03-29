@@ -86,7 +86,7 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
         <SuccessSnackbar/>
-        <Spinner isVisible={this.props.isSpinnerVisible}/>
+        <Spinner isVisible={this.props.isSpinnerVisible || this.props.isFetchingRecipes}/>
         <ScrollButton isVisible={this.state.showScrollButton} isLoggedIn={this.props.isLoggedIn}/>
         <NavigationMenu toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>
         <Dialog
@@ -99,6 +99,7 @@ class App extends React.Component {
             image=""
             ingredients={[]}
             directions={[]}
+            serves={null}
             isCreateMode={true}
             onClose={() => this.setState({ recipeCreateMode: false })}
           />
@@ -130,6 +131,7 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
+    isFetchingRecipes: state.isFetchingRecipes,
     recipeCreateMode: state.recipeCreateMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,

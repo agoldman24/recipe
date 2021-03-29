@@ -14,9 +14,9 @@ const getRecipeFields = recipe => {
 }
 
 exports.createRecipe = (req, res) => {
-  const { name, image, ingredients, directions, authorName, authorId } = req.body;
+  const { name, serves, image, ingredients, directions, authorName, authorId } = req.body;
   const recipe = new Recipe({
-    name, image, ingredients, directions, authorName, authorId,
+    name, serves, image, ingredients, directions, authorName, authorId,
     likedByIds: [], timestamp: Date.now()
   });
   recipe.save(error => {
@@ -26,9 +26,9 @@ exports.createRecipe = (req, res) => {
 }
 
 exports.updateRecipe = (req, res) => {
-  const { id, name, image, ingredients, directions } = req.body;
+  const { id, name, serves, image, ingredients, directions } = req.body;
   Recipe.findByIdAndUpdate(id, {
-    name, image, ingredients, directions
+    name, serves, image, ingredients, directions
   }, { new: true }, (error, recipe) => {
     if (error) return res.json({ success: false, error });
     return res.json({ success: true, recipe: getRecipeFields(recipe) });
@@ -125,7 +125,8 @@ exports.getRecipeDetail = (req, res) => {
     return res.json({
       success: true,
       ingredients: recipe.ingredients,
-      directions: recipe.directions
+      directions: recipe.directions,
+      serves: recipe.serves
     })
   })
 }

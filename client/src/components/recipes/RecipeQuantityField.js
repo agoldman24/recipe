@@ -35,7 +35,7 @@ export default function RecipeQuantityField({
             return accum;
           }, []);
           setIngredients(newIngredients);
-          setGlobalDiff(undefined, undefined, newIngredients);
+          setGlobalDiff({ newIngredients });
         }
       }}
       id={"quantity_" + index}

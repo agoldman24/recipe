@@ -97,9 +97,9 @@ export default function RecipeDirections({
                         ) {
                           handleStepDelete(directionSteps.length - 1);
                         }
-                        const newType = e.target.value === "paragraph" ? "string" : "object";
-                        setDirectionsType(newType);
-                        setGlobalDiff(undefined, undefined, undefined, newType, undefined, undefined);
+                        const newDirectionsType = e.target.value === "paragraph" ? "string" : "object";
+                        setDirectionsType(newDirectionsType);
+                        setGlobalDiff({ newDirectionsType });
                       }}
                     >
                       <FormControlLabel

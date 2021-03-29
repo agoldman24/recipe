@@ -49,6 +49,7 @@ class RecipeDetail extends React.Component {
     anchorEl: null,
     ingredients: null,
     directions: null,
+    serves: null,
     likedId: null,
     isFetching: true,
     isDeleteModalVisible: false,
@@ -59,6 +60,7 @@ class RecipeDetail extends React.Component {
       this.setState({
         ingredients: res.data.ingredients,
         directions: res.data.directions,
+        serves: res.data.serves,
         isFetching: false
       });
     });
@@ -75,6 +77,7 @@ class RecipeDetail extends React.Component {
         this.setState({
           ingredients: res.data.ingredients,
           directions: res.data.directions,
+          serves: res.data.serves,
           isFetching: false
         })
       });
@@ -84,13 +87,14 @@ class RecipeDetail extends React.Component {
   }
   render() {
     const { id, name, image, authorName, authorId, date } = this.props;
-    const { ingredients, directions, isFetching } = this.state;
+    const { ingredients, directions, serves, isFetching } = this.state;
     return this.props.editMode && !isFetching
       ? <RecipeDetailEdit
           name={name}
           image={image}
           ingredients={ingredients}
           directions={directions}
+          serves={serves}
           isCreateMode={false}
         />
       : <Card style={detailStyle}>
@@ -171,7 +175,11 @@ class RecipeDetail extends React.Component {
               ? <div style={loadingTextStyle}>Loading...</div>
               : <div>
                   <div style={{width:'100%', display:'flex'}}>
-                    <Typography style={titleStyle} variant="h5">Ingredients</Typography>
+                    <Typography style={titleStyle} variant="h5">
+                      {!!serves
+                        ? "Ingredients (serves " + serves + ")"
+                        : "Ingredients"}
+                    </Typography>
                   </div>
                   <IngredientsTable ingredients={ingredients}/>
                   <Typography style={titleStyle} variant="h5">Directions</Typography>

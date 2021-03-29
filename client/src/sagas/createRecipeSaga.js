@@ -23,9 +23,10 @@ function* createRecipe(action) {
       const createdRecipes = yield select(getCreatedRecipes);
       const authorName = activeUser.firstName + " " + activeUser.lastName;
       const authorId = activeUser.id;
-      const { name, image, ingredients, directions } = action;
+      const { name, serves, image, ingredients, directions } = action;
       const response = yield call(Api.post, '/createRecipe', {
-        name, image, ingredients, directions, authorName, authorId
+        name, serves, image, ingredients,
+        directions, authorName, authorId
       });
       if (activeUser.createdRecipeIds.length && !Object.keys(createdRecipes).length) {
         const res = yield call(Api.get, '/getRecipesByIds?'

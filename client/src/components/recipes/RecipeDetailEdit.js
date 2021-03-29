@@ -50,6 +50,7 @@ const RecipeDetailEdit = props => {
   const [name, setName] = useState(props.name);
   const [image, setImage] = useState(props.image);
   const [ingredients, setIngredients] = useState(props.ingredients);
+  const [serves, setServes] = useState(!!props.serves ? props.serves : "");
   const [directionsType, setDirectionsType] = useState(typeof props.directions);
   const [directionsParagraph, setDirectionsParagraph] = useState(
     directionsType === "string" ? props.directions : "");
@@ -76,9 +77,21 @@ const RecipeDetailEdit = props => {
           reader.onloadend = function() {
             const directions = directionsType === "string" ? directionsParagraph : directionSteps;
             if (props.isEditMode) {
-              props.updateRecipe(name, reader.result, ingredients, directions);
+              props.updateRecipe({
+                name,
+                serves: !!serves ? serves : null,
+                image: reader.result,
+                ingredients,
+                directions
+              });
             } else {
-              props.createRecipe(name, reader.result, ingredients, directions);
+              props.createRecipe({
+                name,
+                serves: !!serves ? serves : null,
+                image: reader.result,
+                ingredients,
+                directions
+              });
             }
           }
         }
@@ -126,6 +139,7 @@ const RecipeDetailEdit = props => {
         originalName={props.name}
         originalImage={props.image}
         originalIngredients={props.ingredients}
+        originalServes={!!props.serves ? props.serves : ""}
         originalDirections={props.directions}
         isEditMode={props.isEditMode}
         setIsSaveEnabled={setIsSaveEnabled}
@@ -141,12 +155,14 @@ const RecipeDetailEdit = props => {
         name={name}
         image={image}
         ingredients={ingredients}
+        serves={serves}
         directionsType={directionsType}
         directionsParagraph={directionsParagraph}
         directionSteps={directionSteps}
         setName={setName}
         setImage={setImage}
         setIngredients={setIngredients}
+        setServes={setServes}
         setDirectionsType={setDirectionsType}
         setDirectionsParagraph={setDirectionsParagraph}
         setDirectionSteps={setDirectionSteps}
@@ -164,13 +180,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-  createRecipe: (name, image, ingredients, directions) => dispatch({
+  createRecipe: ({ name, serves, image, ingredients, directions }) => dispatch({
     type: CREATE_RECIPE_REQUESTED,
-    name, image, ingredients, directions
+    name, serves, image, ingredients, directions
   }),
-  updateRecipe: (name, image, ingredients, directions) => dispatch({
+  updateRecipe: ({ name, serves, image, ingredients, directions }) => dispatch({
     type: UPDATE_RECIPE_REQUESTED,
-    name, image, ingredients, directions
+    name, serves, image, ingredients, directions
   })
 });
 

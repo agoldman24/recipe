@@ -48,7 +48,7 @@ export default function RecipeItemField({
             }, []);
           }
           setIngredients(newIngredients);
-          setGlobalDiff(undefined, undefined, newIngredients);
+          setGlobalDiff({ newIngredients });
           setAddIngredientMode(false);
           setAddEnabled(true);
         }

@@ -7,6 +7,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import PromptModal from '../popups/PromptModal';
 import IconsModal from '../popups/IconsModal';
 import RecipeNameField from './RecipeNameField';
+import RecipeServesField from './RecipeServesField';
 import RecipeImage from './RecipeImage';
 import RecipeIngredients from './RecipeIngredients';
 import RecipeDirections from './RecipeDirections';
@@ -43,6 +44,7 @@ const RecipeForms = ({
   originalName,
   originalImage,
   originalIngredients,
+  originalServes,
   originalDirections,
   isEditMode,
   setIsSaveEnabled,
@@ -54,6 +56,7 @@ const RecipeForms = ({
   name, setName,
   image, setImage,
   ingredients, setIngredients,
+  serves, setServes,
   directionsType, setDirectionsType,
   directionsParagraph, setDirectionsParagraph,
   directionSteps, setDirectionSteps
@@ -99,14 +102,15 @@ const RecipeForms = ({
     }
   }
 
-  const setGlobalDiff = (
+  const setGlobalDiff = ({
     newName = name,
     newImage = image,
+    newServes = serves,
     newIngredients = ingredients,
     newDirectionsType = directionsType,
     newDirectionsParagraph = directionsParagraph,
     newDirectionSteps = directionSteps
-  ) => {
+  }) => {
     const ingredientsDiff = ingredientsAreDifferent(
       newIngredients,
       originalIngredients,
@@ -122,6 +126,7 @@ const RecipeForms = ({
     setIsSaveEnabled(
       newName !== originalName ||
       newImage !== originalImage ||
+      newServes !== originalServes ||
       ingredientsDiff || directionsDiff
     );
     setIsNameEmpty(!newName.length);
@@ -144,23 +149,23 @@ const RecipeForms = ({
         const data = await imageCompression.getDataUrlFromFile(compressedFile);
         const newImage = URL.createObjectURL(b64toBlob(data));
         setImage(newImage);
-        setGlobalDiff(undefined, newImage);
+        setGlobalDiff({ newImage });
       }, 1);
     }
   }
 
   const handleIngredientDelete = index => {
-    let currentIngredients = [...ingredients];
-    currentIngredients.splice(index, 1);
-    setIngredients(currentIngredients);
-    setGlobalDiff(undefined, undefined, currentIngredients);
+    let newIngredients = [...ingredients];
+    newIngredients.splice(index, 1);
+    setIngredients(newIngredients);
+    setGlobalDiff({ newIngredients });
   }
 
   const handleStepDelete = index => {
-    let currentSteps = [...directionSteps];
-    currentSteps.splice(index, 1);
-    setDirectionSteps(currentSteps);
-    setGlobalDiff(undefined, undefined, undefined, undefined, undefined, currentSteps);
+    let newDirectionSteps = [...directionSteps];
+    newDirectionSteps.splice(index, 1);
+    setDirectionSteps(newDirectionSteps);
+    setGlobalDiff({ newDirectionSteps });
   }
 
   const headerHeight = !!document.getElementById("editRecipeHeader")
@@ -185,7 +190,7 @@ const RecipeForms = ({
         closeModal={() => setTimeout(() => setIconsModalVisible(false), 1)}
         onConfirm={icon => {
           setImage(icon);
-          setGlobalDiff(undefined, icon);
+          setGlobalDiff({ newImage: icon });
           setTimeout(() => setAnchorEl(null), 1);
         }}
       />
@@ -195,15 +200,30 @@ const RecipeForms = ({
         closeModal={() => setTimeout(() => setFileTypeModalVisible(false), 1)}
         message={"Invalid file type. Please choose a PNG or JPEG file."}
       />
-      <RecipeNameField
-        focusedContainer={focusedContainer}
-        originalName={originalName}
-        isNameEmpty={isNameEmpty}
-        isErrored={isErrored}
-        setName={setName}
-        setFocus={setFocus}
-        setGlobalDiff={setGlobalDiff}
-      />
+      <Grid container direction="row"
+        style={{display:'flex', padding:'15px 10px 5px 10px', width:'initial'}}
+      >
+        <Grid item style={{width:'75%'}}>
+          <RecipeNameField
+            focusedContainer={focusedContainer}
+            originalName={originalName}
+            isNameEmpty={isNameEmpty}
+            isErrored={isErrored}
+            setName={setName}
+            setFocus={setFocus}
+            setGlobalDiff={setGlobalDiff}
+          />
+        </Grid>
+        <Grid item style={{width:'25%', paddingLeft:'10px'}}>
+          <RecipeServesField
+            focusedContainer={focusedContainer}
+            originalServes={originalServes}
+            setServes={setServes}
+            setFocus={setFocus}
+            setGlobalDiff={setGlobalDiff}
+          />
+        </Grid>
+      </Grid>
       <RecipeImage
         focusedContainer={focusedContainer}
         originalImage={originalImage}

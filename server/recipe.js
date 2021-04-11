@@ -9,7 +9,7 @@ const RecipeSchema = new Schema(
     },
     ingredients: Array,
     directions: Schema.Types.Mixed,
-    serves: Number,
+    serves: String,
     authorName: String,
     authorId: String,
     likedByIds: Array,

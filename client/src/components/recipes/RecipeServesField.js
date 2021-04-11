@@ -37,7 +37,6 @@ export default function RecipeServesField({
       }}
       fullWidth
       variant="outlined"
-      type="number"
       label="Serves"
       value={value}
       onClick={e => {

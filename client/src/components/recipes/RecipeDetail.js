@@ -38,12 +38,6 @@ const styles = () => ({
   }
 });
 
-const loadingTextStyle = {
-  textAlign: 'center',
-  fontSize: '16px',
-  paddingTop: '20px',
-}
-
 class RecipeDetail extends React.Component {
   state = {
     anchorEl: null,
@@ -166,13 +160,18 @@ class RecipeDetail extends React.Component {
               </div>
             }
           </AppBar>
-          <div style={{overflowY:'scroll', background:'#303030',
-            height:'calc(100% - ' + this.state.headerHeight + 'px)'}}>
+          <div style={{
+            overflowY:'scroll', background:'linear-gradient(45deg, #101010, transparent)',
+            height:'calc(100% - ' + this.state.headerHeight + 'px)'
+          }}>
             <CardMedia id="recipeImage" component="img" image={image}/>
-            <CardContent id="recipeTables" style={{background:'linear-gradient(45deg, #101010, transparent)',
-              padding:'0', paddingBottom: isMobileOnly ? '50%' : '30%'}}>
+            <CardContent id="recipeTables"
+              style={{padding: isMobileOnly ? '0 0 50% 0' : '0 0 30% 0'}}
+            >
               {isFetching
-              ? <div style={loadingTextStyle}>Loading...</div>
+              ? <div style={{textAlign:'center', paddingTop:'20px'}}>
+                  <CircularProgress size={30} style={{color:'white'}}/>
+                </div>
               : <div>
                   <div style={{width:'100%', display:'flex'}}>
                     <Typography style={titleStyle} variant="h5">

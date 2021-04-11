@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Link from '@material-ui/core/Link';
-import Slide from '@material-ui/core/Slide';
+import Zoom from '@material-ui/core/Zoom';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
@@ -51,7 +51,8 @@ const styles = () => ({
     fontSize: '20px'
   },
   tile: {
-    paddingTop: '60px'
+    paddingTop: '60px',
+    borderRadius: '20px'
   },
   paper: {
     borderRadius: '0 4px 4px 4px',
@@ -69,7 +70,7 @@ const getDate = timestamp => {
 }
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+  return <Zoom ref={ref} {...props} mountOnEnter unmountOnExit/>;
 });
 
 const Image = ({ src, alt }) => {
@@ -78,17 +79,16 @@ const Image = ({ src, alt }) => {
     <Fragment>
       <CircularProgress style={{
         display: isLoading ? 'block' : 'none',
-        margin: '40%',
+        margin: '40px 40%',
         width: '20%',
         height: 'auto'
       }}/>
       <img src={src} alt={alt} onLoad={() => setIsLoading(false)}
         style={{
-          left: '50%',
+          top: '50%',
           width: '100%',
-          height: '350px',
           position: 'relative',
-          transform: 'translateX(-50%)',
+          transform: 'translateY(-50%)',
           objectFit: 'cover',
           display: isLoading ? 'none' : 'block',
         }}
@@ -172,12 +172,14 @@ class RecipeList extends React.Component {
           {this.props.recipes.map((recipe, index) => !recipe ? null : (
             <GridListTile key={recipe.id} className="cardMedia"
               style={{
-                height: 'fit-content',
-                width: isMobileOnly ? '100%' : '25%',
+                height: '200px',
+                width: isMobileOnly ? 'calc(100% - 10px)' : 'calc(25% - 10px)',
+                margin: '5px 5px 0 5px',
                 padding: '0',
                 background: '#303030',
                 borderRight: isMobileOnly ? 'none' : '2px solid #202020',
-                borderBottom: '2px solid #202020'
+                borderBottom: '2px solid #202020',
+                borderRadius: '20px'
               }}
               classes={{
                 tile: this.props.classes.tile
@@ -258,7 +260,7 @@ class RecipeList extends React.Component {
         {!this.props.recipesFetched &&
           <div style={centeredTextStyle}>
             {this.props.isFetchingRecipes
-              ? <h4>Loading...</h4>
+              ? <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
               : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
                   onClick={() => this.fetchRecipes()}>Load more recipes</Link>
             }

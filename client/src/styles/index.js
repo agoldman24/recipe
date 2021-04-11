@@ -68,11 +68,6 @@ export const formTheme = theme => ({
   }
 });
 
-export const gridStyle = {
-  alignItems: 'center',
-  padding: '0 10px'
-}
-
 export const errorStyle = {
   textAlign: 'center',
   color: '#ff4621',
@@ -314,9 +309,9 @@ export const detailStyle = {
   margin: '10px',
   borderRadius: '20px',
   border: isMobileOnly ? 'none' : '2px solid grey',
-  width: isMobileOnly ? 'calc(100vw - 20px)' : '500px',
+  width: isMobileOnly ? '100vw' : '500px',
   left: isMobileOnly ? '0' : 'calc(50vw - 260px)',
-  height: 'calc(100vh - 20px)',
+  height: isMobileOnly ? '100vh' : 'calc(100vh - 20px)',
   position: 'fixed',
   overflowY: 'hidden',
   zIndex: '5',

@@ -5,7 +5,7 @@ import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
+import Zoom from '@material-ui/core/Zoom';
 import Spinner from './popups/Spinner';
 import NavigationMenu from './menus/NavigationMenu';
 import SignInTab from './tabs/SignInTab';
@@ -35,7 +35,7 @@ import {
 import { defaultTheme } from '../styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
+  return <Zoom ref={ref} {...props} mountOnEnter unmountOnExit/>;
 });
 
 class App extends React.Component {
@@ -58,31 +58,6 @@ class App extends React.Component {
   }
   render() {
     const activeTab = this.props.activeTab.name;
-    const mobileStyle = {	
-      padding: this.props.isLoggedIn	
-        ? activeTab === RECIPE_TAB ? '50px 0 80px' : '50px 0 10px'	
-        : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
-          ? '0 0 10px'
-          : activeTab === ABOUT_TAB ? '20px 0 5px' : '50px 0 10px',	
-      overflowY: 'auto',
-      overflowX: 'hidden'	
-    };	
-    const desktopStyle = {
-      position: 'relative',
-      top: this.props.isLoggedIn
-        ? '50px'
-        : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
-          ? '0' : '50px',
-      height: !this.props.isLoggedIn
-        ? activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB
-          ? '100vh'
-          : 'calc(100vh - 50px)'
-        : this.props.activeTab.name === RECIPE_TAB
-          ? 'calc(100vh - 110px)'
-          : 'calc(100vh - 50px)',
-      overflowY: 'auto',
-      overflowX: 'hidden'
-    };
     return (
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
         <SuccessSnackbar/>
@@ -108,7 +83,16 @@ class App extends React.Component {
           id="container"
           component="main"
           maxWidth={false}
-          style={isMobileOnly ? mobileStyle : desktopStyle}
+          style={{
+            height: '100vh',
+            overflow: 'hidden auto',
+            background: 'linear-gradient(45deg, rgb(67 0 128 / 50%), rgb(255 165 0 / 50%)',
+            padding: this.props.isLoggedIn	
+              ? activeTab === RECIPE_TAB ? '50px 0 80px' : '50px 0 10px'	
+              : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
+                ? '0 0 10px'
+                : activeTab === ABOUT_TAB ? '20px 0 5px' : '50px 0 10px'
+          }}
         >
           <CssBaseline />
           {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}

@@ -174,7 +174,7 @@ class RecipeList extends React.Component {
               style={{
                 height: '200px',
                 width: isMobileOnly ? 'calc(100% - 10px)' : 'calc(25% - 10px)',
-                margin: '5px 5px 0 5px',
+                margin: '5px',
                 padding: '0',
                 background: '#303030',
                 borderRight: isMobileOnly ? 'none' : '2px solid #202020',
@@ -260,7 +260,9 @@ class RecipeList extends React.Component {
         {!this.props.recipesFetched &&
           <div style={centeredTextStyle}>
             {this.props.isFetchingRecipes
-              ? <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
+              ? this.props.isSpinnerVisible
+                ? null
+                : <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
               : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
                   onClick={() => this.fetchRecipes()}>Load more recipes</Link>
             }

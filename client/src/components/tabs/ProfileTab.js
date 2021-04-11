@@ -31,7 +31,6 @@ import {
 import {
   defaultTheme,
   detailStyle,
-  gridStyle,
   errorStyle,
   usernameStyle,
   nameStyle,
@@ -149,7 +148,7 @@ const ProfileTab = props => {
         <Grid
           container
           direction="column"
-          style={gridStyle}
+          style={{alignItems:'center'}}
         >
           {!!props.tabHistory.length &&
             <Fab
@@ -166,7 +165,12 @@ const ProfileTab = props => {
               <ArrowBackIosIcon/>
             </Fab>
           }
-          <Grid item style={{paddingTop: !!props.activeUser ? '0' : '15px'}}>
+          <Grid item style={{
+            width: '100%',
+            textAlign: 'center',
+            paddingTop: !!props.activeUser ? '0' : '15px',
+            background: 'linear-gradient(to bottom, #202020, transparent)'
+          }}>
             <Typography variant="h5" style={usernameStyle}>{username}</Typography>
           </Grid>
           <Grid item style={{display:'inline-flex', paddingBottom: !!props.activeUser ? '20px' : '0'}}>

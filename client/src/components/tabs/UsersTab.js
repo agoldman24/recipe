@@ -29,7 +29,6 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     border: '1px solid white',
     borderRadius: '50px',
-    background: '#202020',
     fontSize: '16px'
   },
   inputInput: {

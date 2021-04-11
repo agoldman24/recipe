@@ -31,11 +31,9 @@ const tabStyle = {
 
 const NavigationMenu = props => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [navBarZindex, setNavBarZindex] = useState('initial');
   const navBarStyle = {
-    width: '100%', height: '50px', left: '0', position: 'fixed',
-    backgroundImage: props.isLoggedIn ? 'linear-gradient(black, #202020)' : 'none',
-    zIndex: isMobileOnly ? '4' : navBarZindex
+    width: '100%', height: '50px', left: '0', position: 'fixed', zIndex: '4',
+    backgroundImage: props.isLoggedIn ? 'linear-gradient(black, #202020)' : 'none'
   };
 
   return (
@@ -59,14 +57,7 @@ const NavigationMenu = props => {
           <Tab style={tabStyle} label="Recipes" value={RECIPE_TAB}/>
           <DrawerMenu
             open={isDrawerOpen}
-            toggleDrawer={() => {
-              setIsDrawerOpen(!isDrawerOpen);
-              if (isDrawerOpen) {
-                setTimeout(() => setNavBarZindex('initial'), 500);
-              } else {
-                setNavBarZindex('4');
-              }
-            }}
+            toggleDrawer={() => setIsDrawerOpen(!isDrawerOpen)}
             toggleCreateMode={props.toggleCreateMode}
           />
         </Tabs>

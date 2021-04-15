@@ -48,8 +48,6 @@ const SignUpTab = props => {
             <div style={errStyle}>One or more fields is empty</div>}
           {props.usernameExists &&
             <div style={errStyle}>That username already exists, choose a different one</div>}
-          {props.networkFailed &&
-            <div style={errStyle}>Network error</div>}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -141,8 +139,7 @@ const SignUpTab = props => {
 const mapStateToProps = state => {
   return {
     emptyFields: state.errorMessages.emptyFields,
-    usernameExists: state.errorMessages.usernameExists,
-    networkFailed: state.errorMessages.networkFailed
+    usernameExists: state.errorMessages.usernameExists
   };
 };
 

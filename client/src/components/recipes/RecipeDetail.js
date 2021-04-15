@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 import { withStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -172,7 +172,7 @@ class RecipeDetail extends React.Component {
               ? <div style={{textAlign:'center', paddingTop:'20px'}}>
                   <CircularProgress size={30} style={{color:'white'}}/>
                 </div>
-              : <div>
+              : <Fragment>
                   <div style={{width:'100%', display:'flex'}}>
                     <Typography style={titleStyle} variant="h5">
                       {!!serves
@@ -203,7 +203,7 @@ class RecipeDetail extends React.Component {
                       ))}
                     </Grid>
                     }
-                </div>
+                </Fragment>
               }
             </CardContent>
           </div>

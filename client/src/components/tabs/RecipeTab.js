@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { SET_RECIPE_CATEGORY, GET_RECIPES_REQUESTED } from '../../actions';
 import { ALL_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Constants';
-import { errorStyle } from '../../styles';
 
 class RecipeTab extends React.Component {
   componentDidMount() {
@@ -24,23 +23,16 @@ class RecipeTab extends React.Component {
   fetchRecipes = () => this.props.getRecipes(this.props.requestType);
   render() {
     return (
-      <div>
-        {this.props.networkFailed
-        ? <div style={errorStyle}>Network error</div>
-        : <div>
-            <RecipeList recipes={Object.values(this.props.recipes)
-              .sort((r1, r2) => r2.timestamp - r1.timestamp)}
-            />
-              {this.props.isLoggedIn &&
-                <RecipeCategories
-                  category={this.props.category}
-                  setCategory={this.props.setCategory}
-                  toggleCreateMode={this.props.toggleCreateMode}
-                />
-              }
-          </div>
-        }
-      </div>
+      <RecipeList recipes={Object.values(this.props.recipes)
+        .sort((r1, r2) => r2.timestamp - r1.timestamp)}
+      />
+        /* {this.props.isLoggedIn &&
+          <RecipeCategories
+            category={this.props.category}
+            setCategory={this.props.setCategory}
+            toggleCreateMode={this.props.toggleCreateMode}
+          />
+        } */
     );
   }
 }
@@ -48,7 +40,6 @@ class RecipeTab extends React.Component {
 const mapStateToProps = state => {
   return {
     isLoggedIn: !!state.activeUser,
-    networkFailed: state.errorMessages.networkFailed,
     category: state.recipeCategory,
     recipes: state.recipeCategory === "All"
       ? state.allRecipes

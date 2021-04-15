@@ -1,6 +1,7 @@
 #root {
   height: 100%;
   overflow-y: auto;
+  background: linear-gradient(45deg, rgb(67 0 128 / 50%), rgb(255 165 0 / 50%));
 }
 
 body {

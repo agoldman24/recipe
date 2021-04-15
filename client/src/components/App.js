@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isMobileOnly } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
-import Zoom from '@material-ui/core/Zoom';
+import Slide from '@material-ui/core/Slide';
 import Spinner from './popups/Spinner';
 import NavigationMenu from './menus/NavigationMenu';
 import SignInTab from './tabs/SignInTab';
@@ -32,10 +32,10 @@ import {
   ABOUT_TAB,
   PROFILE_TAB
 } from '../variables/Constants';
-import { defaultTheme } from '../styles';
+import { defaultTheme, errorStyle } from '../styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Zoom ref={ref} {...props} mountOnEnter unmountOnExit/>;
+  return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
 });
 
 class App extends React.Component {
@@ -44,26 +44,65 @@ class App extends React.Component {
     recipeCreateMode: false,
   }
   componentDidMount() {
-    document.getElementById('root').scrollTo(0, 0);
-    const id = isMobileOnly ? 'root' : 'container';
-    document.getElementById(id).addEventListener('scroll', this.handleScroll);
+    const container = document.getElementById('container');
+    container.addEventListener('scroll', this.handleScroll);
     this.props.initHydration();
   }
   handleScroll = () => {
-    const id = isMobileOnly ? 'root' : 'container';
-    const isScrollButtonVisible = !!document.getElementById(id).scrollTop;
+    const container = document.getElementById('container');
+    const isScrollButtonVisible = !!container.scrollTop;
     if (isScrollButtonVisible !== this.state.showScrollButton) {
       this.setState({ showScrollButton: isScrollButtonVisible });
     }
   }
+  renderActiveTab = () => {
+    if (this.props.networkFailed) {
+      return <div style={errorStyle}>No internet connection</div>;
+    }
+    switch(this.props.activeTab.name) {
+      case SIGN_IN_TAB:
+        return <SignInTab/>;
+      case SIGN_UP_TAB:
+        return <SignUpTab/>;
+      case USERS_TAB:
+        return <UsersTab/>;
+      case PROFILE_TAB:
+        return <ProfileTab/>;
+      case WELCOME_TAB:
+        return <WelcomeTab/>;
+      case ABOUT_TAB:
+        return <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>;
+      case RECIPE_TAB:
+        return <RecipeTab toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>;
+      default:
+        throw new Error('Unrecognized tab name');
+    }
+  }
   render() {
-    const activeTab = this.props.activeTab.name;
     return (
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
+        <Container style={{padding:'0'}}>
+          <CssBaseline />
+          <Grid container direction="column">
+            <Grid item style={{width:'100%'}}>
+              <NavigationMenu
+                toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
+              />
+            </Grid>
+            <Grid item id="container" style={{
+              position: 'fixed',
+              overflow: 'auto',
+              top: '50px',
+              height: 'calc(100% - 50px)',
+              width: '100%'
+            }}>
+              {this.renderActiveTab()}
+            </Grid>
+          </Grid>
+        </Container>
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
         <ScrollButton isVisible={this.state.showScrollButton} isLoggedIn={this.props.isLoggedIn}/>
-        <NavigationMenu toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>
         <Dialog
           disableBackdropClick
           open={this.state.recipeCreateMode}
@@ -79,32 +118,6 @@ class App extends React.Component {
             onClose={() => this.setState({ recipeCreateMode: false })}
           />
         </Dialog>
-        <Container
-          id="container"
-          component="main"
-          maxWidth={false}
-          style={{
-            height: '100vh',
-            overflow: 'hidden auto',
-            background: 'linear-gradient(45deg, rgb(67 0 128 / 50%), rgb(255 165 0 / 50%)',
-            padding: this.props.isLoggedIn	
-              ? activeTab === RECIPE_TAB ? '50px 0 80px' : '50px 0 10px'	
-              : activeTab === USERS_TAB || activeTab === RECIPE_TAB || activeTab === PROFILE_TAB	
-                ? '0 0 10px'
-                : activeTab === ABOUT_TAB ? '20px 0 5px' : '50px 0 10px'
-          }}
-        >
-          <CssBaseline />
-          {this.props.activeTab.name === SIGN_IN_TAB && <SignInTab/>}
-          {this.props.activeTab.name === SIGN_UP_TAB && <SignUpTab/>}
-          {this.props.activeTab.name === USERS_TAB && <UsersTab/>}
-          {this.props.activeTab.name === PROFILE_TAB && <ProfileTab/>}
-          {this.props.activeTab.name === WELCOME_TAB && <WelcomeTab/>}
-          {this.props.activeTab.name === ABOUT_TAB &&
-            <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>}
-          {this.props.activeTab.name === RECIPE_TAB &&
-            <RecipeTab toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>}
-        </Container>
       </ThemeProvider>
     );
   }
@@ -119,7 +132,8 @@ const mapStateToProps = state => {
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
     users: state.users,
-    displayUser: state.displayUser
+    displayUser: state.displayUser,
+    networkFailed: state.errorMessages.networkFailed
   };
 }
 

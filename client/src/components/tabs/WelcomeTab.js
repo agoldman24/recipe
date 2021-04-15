@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { SET_ACTIVE_TAB } from '../../actions';
 import { SIGN_IN_TAB, SIGN_UP_TAB, USERS_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
-import { gradientTextStyle, errorStyle } from "../../styles";
+import { gradientTextStyle } from "../../styles";
 
 const buttonStyle = {
   marginTop: '10px',
@@ -46,9 +46,7 @@ const WelcomeTab = props => {
         </Typography>
       </Grid>
       {!props.isSpinnerVisible &&
-      (props.networkFailed
-      ? <div style={{...errorStyle, paddingTop:'0'}}>Network error</div>
-      : <div>
+        <Fragment>
           <Grid item>
             <Button
               fullWidth
@@ -119,8 +117,8 @@ const WelcomeTab = props => {
               Recipes
             </Button>
           </Grid>
-        </div>
-      )}
+        </Fragment>
+      }
     </Grid>
   );
 }
@@ -128,7 +126,6 @@ const WelcomeTab = props => {
 const mapStateToProps = state => {
   return {
     isSpinnerVisible: state.isSpinnerVisible,
-    networkFailed: state.errorMessages.networkFailed
   };
 }
 

@@ -12,10 +12,10 @@ export default function ScrollButton({ isVisible, isLoggedIn }) {
   return (
     <div style={{
       position: 'fixed',
+      zIndex: '2',
       display: isVisible ? 'initial' : 'none',
-      right: isMobileOnly ? '2%' : '28px',
-      top: isLoggedIn ? '60px' : isMobileOnly ? '10px' : '80px',
-      zIndex: isLoggedIn ? '2' : '3'
+      right: isMobileOnly ? '2%' : '20px',
+      top: isMobileOnly ? '10px' : '60px'
     }}>
       <Fab
         style={buttonStyle}

@@ -29,60 +29,60 @@ export default function ProfileDetailsGrid({
     ? Object.values(createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
     : Object.values(displayUserDetail.createdRecipes).sort((r1, r2) => r2.timestamp - r1.timestamp)
   return (
-    <div style={{paddingBottom:'30px'}}>
-      <Grid
-        container
-        direction="row"
-        style={rowStyle}
-      >
-        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWERS)}>
-          <ProfileDetail
-            isSelected={activeDetail === FOLLOWERS}
-            number={Object.keys(followers).length}
-            text="Followers"
-          />
-        </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWING)}>
-          <ProfileDetail
-            isSelected={activeDetail === FOLLOWING}
-            number={Object.keys(following).length}
-            text="Following"
-          />
-        </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(CREATED_RECIPES)}>
-          <ProfileDetail
-            isSelected={activeDetail === CREATED_RECIPES}
-            number={createdRecipeIds.length}
-            text="Created Recipes"
-          />
-        </Grid>
-        <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(LIKED_RECIPES)}>
-          <ProfileDetail
-            isSelected={activeDetail === LIKED_RECIPES}
-            number={likedRecipeIds.length}
-            text="Liked Recipes"
-          />
+    <Grid container direction="column">
+      <Grid item>
+        <Grid container direction="row" style={rowStyle}>
+          <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWERS)}>
+            <ProfileDetail
+              isSelected={activeDetail === FOLLOWERS}
+              number={Object.keys(followers).length}
+              text="Followers"
+            />
+          </Grid>
+          <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(FOLLOWING)}>
+            <ProfileDetail
+              isSelected={activeDetail === FOLLOWING}
+              number={Object.keys(following).length}
+              text="Following"
+            />
+          </Grid>
+          <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(CREATED_RECIPES)}>
+            <ProfileDetail
+              isSelected={activeDetail === CREATED_RECIPES}
+              number={createdRecipeIds.length}
+              text="Created Recipes"
+            />
+          </Grid>
+          <Grid item className="clickable" style={columnStyle} onClick={() => setActiveDetail(LIKED_RECIPES)}>
+            <ProfileDetail
+              isSelected={activeDetail === LIKED_RECIPES}
+              number={likedRecipeIds.length}
+              text="Liked Recipes"
+            />
+          </Grid>
         </Grid>
       </Grid>
-      {activeDetail === FOLLOWERS &&
-        <div style={tableStyle}>
-          <UsersTable users={Object.values(followers)}/>
-        </div>
-      }
-      {activeDetail === FOLLOWING &&
-        <div style={tableStyle}>
-          <UsersTable users={Object.values(following)}/>
-        </div>
-      }
-      {activeDetail === CREATED_RECIPES &&
-        <RecipeList recipes={createdRecipesArray}/>
-      }
-      {activeDetail === LIKED_RECIPES &&
-        <RecipeList recipes={likedRecipeIds
-          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-          .map(({ id }) => likedRecipes[id])}
-        />
-      }
-    </div>
+      <Grid item>
+        {activeDetail === FOLLOWERS &&
+          <div style={tableStyle}>
+            <UsersTable users={Object.values(followers)}/>
+          </div>
+        }
+        {activeDetail === FOLLOWING &&
+          <div style={tableStyle}>
+            <UsersTable users={Object.values(following)}/>
+          </div>
+        }
+        {activeDetail === CREATED_RECIPES &&
+          <RecipeList recipes={createdRecipesArray}/>
+        }
+        {activeDetail === LIKED_RECIPES &&
+          <RecipeList recipes={likedRecipeIds
+            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+            .map(({ id }) => likedRecipes[id])}
+          />
+        }
+      </Grid>
+    </Grid>
   );
 }

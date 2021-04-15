@@ -142,6 +142,7 @@ export const textStyle = {
 
 export const centeredTextStyle = {
   width: '100%',
+  height: 'initial',
   textAlign: 'center',
   margin: '20px 0 40px'
 }
@@ -209,12 +210,11 @@ export const unhighlightedTextStyle = {
   fontWeight: 'normal'
 };
 
-export const buttonStyle = {
+export const roundedButtonStyle = {
   border: '1px solid white',
   borderRadius: '50px',
   fontSize: '14px',
-  padding: '2px',
-  width: isMobileOnly ? '90%' : '30%'
+  padding: '2px'
 };
 
 export const backButtonStyle = {
@@ -227,7 +227,7 @@ export const backButtonStyle = {
 };
 
 export const unfollowButtonStyle = {
-  ...buttonStyle,
+  ...roundedButtonStyle,
   float: 'right',
   margin: '0 5%',
   width: '60%'
@@ -250,12 +250,11 @@ export const cancelButtonStyle = {
 }
 
 export const addButtonStyle = {
-  ...buttonStyle,
+  ...roundedButtonStyle,
   width: '60%',
   margin: '10px auto 15px',
   color: '#45bbff',
-  border: '2px solid #45bbff',
-  borderRadius: '50px'
+  border: '2px solid #45bbff'
 }
 
 export const rightSideActionStyle = {
@@ -306,8 +305,8 @@ export const iconButtonStyle = {
 }
 
 export const detailStyle = {
-  margin: '10px',
-  borderRadius: '20px',
+  margin: isMobileOnly ? '0' : '10px',
+  borderRadius: isMobileOnly ? '0' : '20px',
   border: isMobileOnly ? 'none' : '2px solid grey',
   width: isMobileOnly ? '100vw' : '500px',
   left: isMobileOnly ? '0' : 'calc(50vw - 260px)',

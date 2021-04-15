@@ -34,8 +34,8 @@ import "../../index.css";
 const styles = () => ({
   gridList: {
     transform: 'translateZ(0)',
-    paddingLeft: isMobileOnly ? '0' : '2px',
-    paddingTop: '3px'
+    width: '100%',
+    padding: '0 5px'
   },
   titleBar: {
     background: 'black',
@@ -132,39 +132,7 @@ class RecipeList extends React.Component {
   }
   render() {
     return (
-      <div>
-        <Dialog
-          disableBackdropClick
-          open={this.state.isDetailOpen}
-          TransitionComponent={Transition}
-        >
-          {this.state.detailRecipe &&
-            <RecipeDetail
-              id={this.state.detailRecipe.id}
-              name={this.state.detailRecipe.name}
-              image={this.state.detailRecipe.image}
-              authorName={this.state.detailRecipe.authorName}
-              authorId={this.state.detailRecipe.authorId}
-              date={getDate(this.state.detailRecipe.timestamp)}
-              onClose={() => this.setState({ isDetailOpen: false })}
-              visitUserProfile={this.props.visitUserProfile}
-              toggleEditMode={this.props.toggleEditMode}
-              deleteRecipe={this.props.deleteRecipe}
-              updateLikedRecipes={this.props.updateLikedRecipes}
-              activeUser={this.props.activeUser}
-              isLoggedIn={this.props.isLoggedIn}
-              displayUser={this.props.displayUser}
-              users={this.props.users}
-              activeTab={this.props.activeTab}
-              likedRecipeIds={this.props.likedRecipeIds}
-              isLiking={this.props.isLiking}
-              isSpinnerVisible={this.props.isSpinnerVisible}
-              editMode={this.props.editMode}
-              isEditable={!this.props.createdRecipeIds ? null :
-                this.props.createdRecipeIds.includes(this.state.detailRecipe.id)}
-            />
-          }
-        </Dialog>
+      <Fragment>
         <GridList cellHeight={250}
           className={this.props.classes.gridList}
           cols={isMobileOnly ? 1 : 4}
@@ -248,6 +216,17 @@ class RecipeList extends React.Component {
                 }/>
             </GridListTile>
           ))}
+          {!this.props.recipesFetched &&
+            <div style={centeredTextStyle}>
+              {this.props.isFetchingRecipes
+                ? this.props.isSpinnerVisible
+                  ? null
+                  : <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
+                : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
+                    onClick={() => this.fetchRecipes()}>Load more recipes</Link>
+              }
+            </div>
+          }
         </GridList>
         {!this.props.isFetchingRecipes && !this.props.recipes.length &&
           <div style={centeredTextStyle}>
@@ -257,17 +236,38 @@ class RecipeList extends React.Component {
             }</h4>
           </div>
         }
-        {!this.props.recipesFetched &&
-          <div style={centeredTextStyle}>
-            {this.props.isFetchingRecipes
-              ? this.props.isSpinnerVisible
-                ? null
-                : <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
-              : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
-                  onClick={() => this.fetchRecipes()}>Load more recipes</Link>
-            }
-          </div>
-        }
+        <Dialog
+          disableBackdropClick
+          open={this.state.isDetailOpen}
+          TransitionComponent={Transition}
+        >
+          {this.state.detailRecipe &&
+            <RecipeDetail
+              id={this.state.detailRecipe.id}
+              name={this.state.detailRecipe.name}
+              image={this.state.detailRecipe.image}
+              authorName={this.state.detailRecipe.authorName}
+              authorId={this.state.detailRecipe.authorId}
+              date={getDate(this.state.detailRecipe.timestamp)}
+              onClose={() => this.setState({ isDetailOpen: false })}
+              visitUserProfile={this.props.visitUserProfile}
+              toggleEditMode={this.props.toggleEditMode}
+              deleteRecipe={this.props.deleteRecipe}
+              updateLikedRecipes={this.props.updateLikedRecipes}
+              activeUser={this.props.activeUser}
+              isLoggedIn={this.props.isLoggedIn}
+              displayUser={this.props.displayUser}
+              users={this.props.users}
+              activeTab={this.props.activeTab}
+              likedRecipeIds={this.props.likedRecipeIds}
+              isLiking={this.props.isLiking}
+              isSpinnerVisible={this.props.isSpinnerVisible}
+              editMode={this.props.editMode}
+              isEditable={!this.props.createdRecipeIds ? null :
+                this.props.createdRecipeIds.includes(this.state.detailRecipe.id)}
+            />
+          }
+        </Dialog>
         <Popover
           open={!!this.state.anchorEl}
           anchorEl={this.state.anchorEl}
@@ -324,14 +324,13 @@ class RecipeList extends React.Component {
               + this.props.recipes[this.state.pickedIndex].name + "'?"
             : ""}
         />
-      </div>
+      </Fragment>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    networkFailed: state.errorMessages.networkFailed,
     editMode: state.recipeEditMode,
     activeTab: state.activeTab,
     recipeCategory: state.recipeCategory,

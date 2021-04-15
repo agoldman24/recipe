@@ -45,8 +45,6 @@ const SignInTab = props => {
             <div style={{...errorStyle, paddingTop:'0'}}>One or more fields is empty</div>}
           {props.loginFailed &&
             <div style={{...errorStyle, paddingTop:'0'}}>Invalid username or password</div>}
-          {props.networkFailed &&
-            <div style={{...errorStyle, paddingTop:'0'}}>Network error</div>}
           <TextField
             InputProps={{
               classes: {
@@ -105,8 +103,7 @@ const SignInTab = props => {
 const mapStateToProps = state => {
   return {
     emptyFields: state.errorMessages.emptyFields,
-    loginFailed: state.errorMessages.loginFailed,
-    networkFailed: state.errorMessages.networkFailed
+    loginFailed: state.errorMessages.loginFailed
   };
 };
 

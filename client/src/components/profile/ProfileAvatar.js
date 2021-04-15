@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { Fragment, useState} from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
@@ -75,7 +75,7 @@ const ProfileAvatar = props => {
   }
   
   return (
-    <div>
+    <Fragment>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
@@ -156,7 +156,7 @@ const ProfileAvatar = props => {
           </Grid>
         </Grid>
       </Popover>
-    </div>
+    </Fragment>
   );
 }
 

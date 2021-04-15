@@ -34,7 +34,10 @@ const textStyle = {
 const UsersTable = props => {
   const classes = useStyles();
   return (
-    <TableContainer className={classes.tableContainer}>
+    <TableContainer
+      className={classes.tableContainer}
+      style={{ height: !!props.height ? props.height : 'initial' }}
+    >
       <Table className={classes.table}>
         <TableBody>
           {props.users.map(user => (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,22 +19,25 @@ import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from '../profile/ProfileAvatar';
 import ProfileEditor from '../profile/ProfileEditor';
 import ProfileDetailsGrid from '../profile/ProfileDetailsGrid';
-import { FOLLOWING_IDS, PROFILE_TAB, PROFILE, POP } from '../../variables/Constants';
+import {
+  FOLLOWING_IDS, WELCOME_TAB, PROFILE_TAB, PROFILE, POP
+} from '../../variables/Constants';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
   SET_ACTIVE_DETAIL,
   SET_ACTIVE_TAB,
   SET_DISPLAY_USER,
-  TOGGLE_PROFILE_EDITOR
+  TOGGLE_PROFILE_EDITOR,
+  SIGN_OUT,
+  SHOW_SNACKBAR
 } from '../../actions';
 import {
   defaultTheme,
   detailStyle,
-  errorStyle,
   usernameStyle,
   nameStyle,
-  buttonStyle,
+  roundedButtonStyle,
   backButtonStyle,
   unfollowButtonStyle,
   followingButtonStyle,
@@ -60,6 +63,10 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+const buttonStyle = {
+  ...roundedButtonStyle
+}
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -68,7 +75,7 @@ const ProfileTab = props => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
+  const openProfileEditor = () => {
     setOpen(!open);
     setTimeout(() => {
       props.toggleProfileEditor(
@@ -134,134 +141,135 @@ const ProfileTab = props => {
     displayUser: { id, username, firstName, lastName },
     displayUserDetail,
     activeUser,
-    networkFailed,
     updateFollowingIds
   } = props;
   
   const updateOccurred = !statesEqual();
 
   return (
-    <div>
-    {networkFailed
-    ? <div style={errorStyle}>Network error</div>
-    : <div>
-        <Grid
-          container
-          direction="column"
-          style={{alignItems:'center'}}
-        >
-          {!!props.tabHistory.length &&
-            <Fab
-              style={{...backButtonStyle, top: !!props.activeUser ? '42px' : '7px'}}
-              onClick={() => {
-                const tabHistory = props.tabHistory;
-                const { displayUserId } = tabHistory[tabHistory.length - 1];
-                if (!!displayUserId) {
-                  props.setDisplayUser(props.users[displayUserId]);
-                }
-                props.setActiveTab(tabHistory[tabHistory.length - 1]);
-              }}
-            >
-              <ArrowBackIosIcon/>
-            </Fab>
-          }
-          <Grid item style={{
-            width: '100%',
-            textAlign: 'center',
-            paddingTop: !!props.activeUser ? '0' : '15px',
-            background: 'linear-gradient(to bottom, #202020, transparent)'
-          }}>
-            <Typography variant="h5" style={usernameStyle}>{username}</Typography>
-          </Grid>
-          <Grid item style={{display:'inline-flex', paddingBottom: !!props.activeUser ? '20px' : '0'}}>
-            <ProfileAvatar />
-            <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
-          </Grid>
-          {!!activeUser
-            ? activeUser.id === id
-              ? <Button
-                  style={buttonStyle}
-                  onClick={handleClickOpen}
+    <Fragment>
+      <Grid
+        container
+        direction="column"
+        style={{alignItems:'center'}}
+      >
+        {!!props.tabHistory.length &&
+          <Fab
+            style={{...backButtonStyle, top: !!props.activeUser ? '42px' : '7px'}}
+            onClick={() => {
+              const tabHistory = props.tabHistory;
+              const { displayUserId } = tabHistory[tabHistory.length - 1];
+              if (!!displayUserId) {
+                props.setDisplayUser(props.users[displayUserId]);
+              }
+              props.setActiveTab(tabHistory[tabHistory.length - 1]);
+            }}
+          >
+            <ArrowBackIosIcon/>
+          </Fab>
+        }
+        <Grid item style={{
+          width: '100%',
+          textAlign: 'center',
+          paddingTop: !!props.activeUser ? '0' : '15px'
+        }}>
+          <Typography variant="h5" style={usernameStyle}>{username}</Typography>
+        </Grid>
+        <Grid item style={{display:'inline-flex', paddingBottom: !!props.activeUser ? '20px' : '0'}}>
+          <ProfileAvatar />
+          <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
+        </Grid>
+        {!!activeUser
+          ? activeUser.id === id
+            ? <div style={{width: isMobileOnly ? '90%' : '40%'}}>
+                <Button
+                  style={{...roundedButtonStyle, width: '55%', marginRight: '10px'}}
+                  onClick={openProfileEditor}
                 >
                   Edit Profile
                 </Button>
-              : activeUser.followingIds.includes(id)
-                ? <div style={{width: isMobileOnly ? '100%' : '50%'}}>
-                    <Button
-                      onClick={() => updateFollowingIds(activeUser.id, id, false)}
-                      style={unfollowButtonStyle}
-                    >
-                      {props.isUpdatingFollowers
-                        ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
-                        : "Unfollow"
-                      }
-                    </Button>
-                    <Typography style={followingButtonStyle}>
-                      Following
-                      <CheckIcon style={checkIconStyle}/>
-                    </Typography>
-                  </div>
-                : <Button
-                    onClick={() => updateFollowingIds(activeUser.id, id, true)}
-                    style={buttonStyle}
+                <Button
+                  style={{...roundedButtonStyle, width: 'calc(45% - 10px)'}}
+                  onClick={props.signOut}
+                >
+                  Sign Out
+                </Button>
+              </div>
+            : activeUser.followingIds.includes(id)
+              ? <div style={{width: isMobileOnly ? '100%' : '50%'}}>
+                  <Button
+                    onClick={() => updateFollowingIds(activeUser.id, id, false)}
+                    style={unfollowButtonStyle}
                   >
                     {props.isUpdatingFollowers
                       ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
-                      : "Follow"
+                      : "Unfollow"
                     }
                   </Button>
-            : null
-          }
-        </Grid>
-        {!!displayUserDetail &&
-          <ProfileDetailsGrid
-            displayUser={props.displayUser}
-            displayUserDetail={props.displayUserDetail}
-            setActiveDetail={props.setActiveDetail}
-            activeUser={props.activeUser}
-            createdRecipes={props.createdRecipes}
-          />
-        }
-        <Dialog disableBackdropClick open={open} TransitionComponent={Transition}>
-          <Card style={detailStyle}>
-            <AppBar className={classes.appBar}>
-              <Toolbar style={{minHeight:'0', padding:'5px 0'}}>
-                <Button
-                  onClick={handleSave}
-                  disabled={!updateOccurred}
-                  className={classes.button}
+                  <Typography style={followingButtonStyle}>
+                    Following
+                    <CheckIcon style={checkIconStyle}/>
+                  </Typography>
+                </div>
+              : <Button
+                  onClick={() => updateFollowingIds(activeUser.id, id, true)}
+                  style={buttonStyle}
                 >
-                  Save
+                  {props.isUpdatingFollowers
+                    ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
+                    : "Follow"
+                  }
                 </Button>
-                <Typography className={classes.title}>Edit Profile</Typography>
-                <IconButton
-                  edge="start"
-                  onClick={closeProfileEditor}
-                  style={{color:'white'}}
-                >
-                  <CloseIcon/>
-                </IconButton>
-              </Toolbar>
-            </AppBar>
-            <Grid
-              container
-              direction="column"
-              style={{
-                width: '100%',
-                height: '100%',
-                background: defaultTheme.palette.background.default
-              }}
-            >
-              <Grid item style={{margin:'50px auto'}}>
-                <ProfileAvatar/>
-                <ProfileEditor closeProfileEditor={closeProfileEditor}/>
-              </Grid>
+          : null
+        }
+      </Grid>
+      {!!displayUserDetail &&
+        <ProfileDetailsGrid
+          displayUser={props.displayUser}
+          displayUserDetail={props.displayUserDetail}
+          setActiveDetail={props.setActiveDetail}
+          activeUser={props.activeUser}
+          createdRecipes={props.createdRecipes}
+        />
+      }
+      <Dialog disableBackdropClick open={open} TransitionComponent={Transition}>
+        <Card style={detailStyle}>
+          <AppBar className={classes.appBar}>
+            <Toolbar style={{minHeight:'0', padding:'5px 0'}}>
+              <Button
+                onClick={handleSave}
+                disabled={!updateOccurred}
+                className={classes.button}
+              >
+                Save
+              </Button>
+              <Typography className={classes.title}>Edit Profile</Typography>
+              <IconButton
+                edge="start"
+                onClick={closeProfileEditor}
+                style={{color:'white'}}
+              >
+                <CloseIcon/>
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Grid
+            container
+            direction="column"
+            style={{
+              width: '100%',
+              height: '100%',
+              background: defaultTheme.palette.background.default
+            }}
+          >
+            <Grid item style={{margin:'50px auto'}}>
+              <ProfileAvatar/>
+              <ProfileEditor closeProfileEditor={closeProfileEditor}/>
             </Grid>
-          </Card>
-        </Dialog>
-      </div>
-    }
-    </div>
+          </Grid>
+        </Card>
+      </Dialog>
+    </Fragment>
   );
 }
 
@@ -275,7 +283,6 @@ const mapStateToProps = state => {
     activeUser: state.activeUser,
     profileEditor: state.profileEditor,
     isUpdatingFollowers: state.isUpdatingFollowers,
-    networkFailed: state.errorMessages.networkFailed
   };
 }
 
@@ -315,6 +322,15 @@ const mapDispatchToProps = dispatch => {
         updateType: PROFILE,
         imageData, firstName, lastName, username
       })
+    },
+    signOut: () => {
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: WELCOME_TAB }
+      });
+      dispatch({ type: SIGN_OUT });
+      dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
     }
   };
 };

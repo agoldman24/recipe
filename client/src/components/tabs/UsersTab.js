@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,12 +10,9 @@ import { UPDATE_USERS, REFRESH_COMPLETE } from '../../actions';
 
 const useStyles = makeStyles(theme => ({
   search: {
-    position: 'fixed',
-    left: 0,
-    padding: isMobileOnly ? '15px 5%' : '18px 10%',
     width: '100%',
-    background: 'linear-gradient(to bottom, #202020, transparent)'
-    // borderBottom: '1px solid grey'
+    height: '70px',
+    padding: isMobileOnly ? '16px 5%' : '16px 10%'
   },
   searchIcon: {
     position: 'absolute',
@@ -49,7 +46,7 @@ const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) =
     }
   }, [refreshNeeded, updateUsers, refreshComplete])
   return (
-    <div>
+    <Fragment>
       <div className={classes.search}>
         <div className={classes.searchIcon}>
           <SearchIcon />
@@ -63,8 +60,8 @@ const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) =
           onChange={e => setSearchVal(e.target.value.toLowerCase())}
         />
       </div>
-      <div style={{height: isMobileOnly ? '60px' : '70px'}}/>
       <UsersTable
+        height={'calc(100% - 70px)'}
         users={
           usersArray.filter(user =>
             user.username.toLowerCase().includes(searchVal) ||
@@ -73,7 +70,7 @@ const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) =
           )
         }
       />
-    </div>
+    </Fragment>
   );
 }
 

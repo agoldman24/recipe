@@ -159,12 +159,6 @@ export const gradientTextStyle2 = {
 	WebkitTextFillColor: 'transparent'
 }
 
-export const usernameStyle = {
-  ...textStyle,
-  fontFamily: 'Raleway',
-  padding: '10px 0 20px 0'
-}
-
 export const nameStyle = {
   ...textStyle,
   fontSize: '24px',
@@ -280,7 +274,7 @@ export const checkIconStyle = {
 }
 
 export const tableStyle = {
-  width: isMobileOnly ? '100%' : '60%',
+  width: isMobileOnly ? '100%' : '50%',
   margin: 'auto'
 }
 
@@ -370,8 +364,10 @@ export const sectionTitleStyle = (focusedContainer, container) => ({
 });
 
 export const recipeButtonStyle = (value, currentVal) => ({
-  borderTop: value === currentVal
-    ? '3px solid ' + defaultTheme.palette.primary.main
-    : 'none',
-  color: value === currentVal ? defaultTheme.palette.primary.main : 'white'
+  border: value === currentVal
+    ? '1px solid ' + defaultTheme.palette.primary.main
+    : '1px solid white',
+  color: value === currentVal ? defaultTheme.palette.primary.main : 'white',
+  padding: '3px 10px',
+  margin: '7px 0 5px 5px'
 })

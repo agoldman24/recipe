@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
@@ -8,34 +7,54 @@ import UsersTable from '../tables/UsersTable';
 import Api from '../../api/siteUrl';
 import { UPDATE_USERS, REFRESH_COMPLETE } from '../../actions';
 
+const searchIcon = {
+  position: 'absolute',
+  zIndex: 2,
+  pointerEvents: 'none',
+  margin: '5px 10px',
+  alignItems: 'center',
+  justifyContent: 'center'
+}
+
+const inputRoot = {
+  borderRadius: '50px',
+  fontSize: '16px',
+  fontFamily: 'Signika',
+  position: 'fixed',
+  top: '5px',
+  maxWidth: '40%'
+}
+
 const useStyles = makeStyles(theme => ({
   search: {
-    width: '100%',
-    height: '70px',
-    padding: isMobileOnly ? '16px 5%' : '16px 10%'
+    position: 'fixed',
+    top: '5px',
+    marginLeft: '5px'
   },
   searchIcon: {
-    position: 'absolute',
-    zIndex: 2,
-    pointerEvents: 'none',
-    margin: '8px 13px',
-    alignItems: 'center',
-    justifyContent: 'center'
+    ...searchIcon,
+    color: 'grey'
+  },
+  focusedSearchIcon: {
+    ...searchIcon,
+    color: 'white'
   },
   inputRoot: {
-    width: '100%',
-    border: '1px solid white',
-    borderRadius: '50px',
-    fontSize: '16px'
+    ...inputRoot,
+    border: '1px solid grey'
+  },
+  focusedInputRoot: {
+    ...inputRoot,
+    border: '1px solid white'
   },
   inputInput: {
-    padding: theme.spacing(1, 1, 1, 6),
-    width: '100%'
+    padding: '5px 35px'
   }
 }));
 
 const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) => {
   const classes = useStyles();
+  const [isFocused, setIsFocused] = useState(false);
   const [searchVal, setSearchVal] = useState("");
   useEffect(() => {
     if (refreshNeeded) {
@@ -48,20 +67,21 @@ const UsersTab = ({ usersArray, updateUsers, refreshNeeded, refreshComplete }) =
   return (
     <Fragment>
       <div className={classes.search}>
-        <div className={classes.searchIcon}>
+        <div className={isFocused ? classes.focusedSearchIcon : classes.searchIcon}>
           <SearchIcon />
         </div>
         <InputBase
           placeholder="Search users..."
           classes={{
-            root: classes.inputRoot,
+            root: isFocused ? classes.focusedInputRoot : classes.inputRoot,
             input: classes.inputInput,
           }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           onChange={e => setSearchVal(e.target.value.toLowerCase())}
         />
       </div>
       <UsersTable
-        height={'calc(100% - 70px)'}
         users={
           usersArray.filter(user =>
             user.username.toLowerCase().includes(searchVal) ||

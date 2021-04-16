@@ -4,6 +4,7 @@ import { isMobileOnly } from 'react-device-detect';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -19,23 +20,18 @@ import Slide from '@material-ui/core/Slide';
 import ProfileAvatar from '../profile/ProfileAvatar';
 import ProfileEditor from '../profile/ProfileEditor';
 import ProfileDetailsGrid from '../profile/ProfileDetailsGrid';
-import {
-  FOLLOWING_IDS, WELCOME_TAB, PROFILE_TAB, PROFILE, POP
-} from '../../variables/Constants';
+import { FOLLOWING_IDS, PROFILE_TAB, PROFILE, POP } from '../../variables/Constants';
 import {
   UPDATE_USER_REQUESTED,
   GET_USER_DETAIL_REQUESTED,
   SET_ACTIVE_DETAIL,
   SET_ACTIVE_TAB,
   SET_DISPLAY_USER,
-  TOGGLE_PROFILE_EDITOR,
-  SIGN_OUT,
-  SHOW_SNACKBAR
+  TOGGLE_PROFILE_EDITOR
 } from '../../actions';
 import {
   defaultTheme,
   detailStyle,
-  usernameStyle,
   nameStyle,
   roundedButtonStyle,
   backButtonStyle,
@@ -148,53 +144,56 @@ const ProfileTab = props => {
 
   return (
     <Fragment>
+      <Box
+        component="div"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        style={{
+          position: 'fixed',
+          top: '5px',
+          left: '10px',
+          maxWidth: '40%',
+          fontFamily: 'Open Sans Condensed',
+          fontSize: '20px'
+        }}
+      >
+        {username}
+      </Box>
+      {!!props.tabHistory.length &&
+        <Fab
+          style={{...backButtonStyle, top: '30px'}}
+          onClick={() => {
+            const tabHistory = props.tabHistory;
+            const { displayUserId } = tabHistory[tabHistory.length - 1];
+            if (!!displayUserId) {
+              props.setDisplayUser(props.users[displayUserId]);
+            }
+            props.setActiveTab(tabHistory[tabHistory.length - 1]);
+          }}
+        >
+          <ArrowBackIosIcon/>
+        </Fab>
+      }
       <Grid
         container
         direction="column"
-        style={{alignItems:'center'}}
+        style={{alignItems:'center', paddingTop:'10px'}}
       >
-        {!!props.tabHistory.length &&
-          <Fab
-            style={{...backButtonStyle, top: !!props.activeUser ? '42px' : '7px'}}
-            onClick={() => {
-              const tabHistory = props.tabHistory;
-              const { displayUserId } = tabHistory[tabHistory.length - 1];
-              if (!!displayUserId) {
-                props.setDisplayUser(props.users[displayUserId]);
-              }
-              props.setActiveTab(tabHistory[tabHistory.length - 1]);
-            }}
-          >
-            <ArrowBackIosIcon/>
-          </Fab>
-        }
         <Grid item style={{
-          width: '100%',
-          textAlign: 'center',
-          paddingTop: !!props.activeUser ? '0' : '15px'
+          display:'inline-flex',
+          paddingBottom: !!props.activeUser ? '20px' : '0'
         }}>
-          <Typography variant="h5" style={usernameStyle}>{username}</Typography>
-        </Grid>
-        <Grid item style={{display:'inline-flex', paddingBottom: !!props.activeUser ? '20px' : '0'}}>
           <ProfileAvatar />
           <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
         </Grid>
         {!!activeUser
           ? activeUser.id === id
-            ? <div style={{width: isMobileOnly ? '90%' : '40%'}}>
-                <Button
-                  style={{...roundedButtonStyle, width: '55%', marginRight: '10px'}}
-                  onClick={openProfileEditor}
-                >
-                  Edit Profile
-                </Button>
-                <Button
-                  style={{...roundedButtonStyle, width: 'calc(45% - 10px)'}}
-                  onClick={props.signOut}
-                >
-                  Sign Out
-                </Button>
-              </div>
+            ? <Button
+                style={{...roundedButtonStyle, width: isMobileOnly ? '90%' : '30%'}}
+                onClick={openProfileEditor}
+              >
+                Edit Profile
+              </Button>
             : activeUser.followingIds.includes(id)
               ? <div style={{width: isMobileOnly ? '100%' : '50%'}}>
                   <Button
@@ -213,7 +212,7 @@ const ProfileTab = props => {
                 </div>
               : <Button
                   onClick={() => updateFollowingIds(activeUser.id, id, true)}
-                  style={buttonStyle}
+                  style={{...roundedButtonStyle, width: isMobileOnly ? '90%' : '30%'}}
                 >
                   {props.isUpdatingFollowers
                     ? <CircularProgress size={20} style={{color:'white', margin:'2px'}}/>
@@ -322,15 +321,6 @@ const mapDispatchToProps = dispatch => {
         updateType: PROFILE,
         imageData, firstName, lastName, username
       })
-    },
-    signOut: () => {
-      dispatch({
-        type: SET_ACTIVE_TAB,
-        currentTab: null,
-        newTab: { name: WELCOME_TAB }
-      });
-      dispatch({ type: SIGN_OUT });
-      dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
     }
   };
 };

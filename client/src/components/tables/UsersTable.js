@@ -13,14 +13,6 @@ import { PROFILE_TAB, PUSH } from '../../variables/Constants';
 import '../../index.css';
 
 const useStyles = makeStyles({
-  table: {
-    width: isMobileOnly ? '100%' : '84%',
-    margin: isMobileOnly ? '0' : '0 8%',
-    borderTop: '1px solid rgba(81, 81, 81, 1)'
-  },
-  tableContainer: {
-    paddingBottom: '30px'
-  },
   tableCell: {
     padding: '12px 16px'
   }
@@ -28,16 +20,14 @@ const useStyles = makeStyles({
 
 const textStyle = {
   fontSize: '16px',
+  fontFamily: 'Signika',
   float: 'left'
 }
 
 const UsersTable = props => {
   const classes = useStyles();
   return (
-    <TableContainer
-      className={classes.tableContainer}
-      style={{ height: !!props.height ? props.height : 'initial' }}
-    >
+    <TableContainer>
       <Table className={classes.table}>
         <TableBody>
           {props.users.map(user => (

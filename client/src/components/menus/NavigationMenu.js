@@ -7,9 +7,10 @@ import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
 import MenuBookSharpIcon from '@material-ui/icons/MenuBookSharp';
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import {
-  SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES,
+  SET_ACTIVE_TAB, CLEAR_ERROR_MESSAGES, SIGN_OUT, SHOW_SNACKBAR,
   SET_DISPLAY_USER, GET_USER_DETAIL_REQUESTED
 } from '../../actions';
 import {
@@ -17,24 +18,31 @@ import {
 } from '../../variables/Constants';
 import { defaultTheme } from '../../styles';
 
-const tabStyle = (tab, activeTab) => ({
-  minWidth: '50px',
-  marginLeft: tab === CREATE_RECIPE || tab === WELCOME_TAB
-    ? 'auto'
-    : 'initial',
-  color: tab === activeTab
-    ? defaultTheme.palette.primary.main
-    : 'white'
-})
-
 const NavigationMenu = props => {
+
+  const tabStyle = tab => ({
+    minWidth: '40px',
+    minHeight: '40px',
+    marginLeft: tab === CREATE_RECIPE || tab === WELCOME_TAB
+      ? 'auto'
+      : 'initial',
+    color: tab === props.activeTab.name && props.highlightedTab
+      ? defaultTheme.palette.primary.main
+      : 'white'
+  });
 
   const onChangeTab = (event, newValue) => {
     props.clearErrorMessages();
-    if (newValue === CREATE_RECIPE) {
-      props.toggleCreateMode();
-    } else {
-      props.setActiveTab(newValue, props.activeUser);
+    switch (newValue) {
+      case CREATE_RECIPE:
+        props.toggleCreateMode();
+        break;
+      case SIGN_OUT:
+        props.signOut();
+        break;
+      default:
+        props.setActiveTab(newValue, props.activeUser);
+        break;
     }
   }
 
@@ -46,6 +54,7 @@ const NavigationMenu = props => {
             indicatorColor="primary"
             textColor="primary"
             onChange={onChangeTab}
+            style={{ minHeight: '40px' }}
           >
             <Tab
               icon={<AddBoxOutlinedIcon/>}
@@ -67,12 +76,18 @@ const NavigationMenu = props => {
               value={PROFILE_TAB}
               style={tabStyle(PROFILE_TAB, props.activeTab.name)}
             />
+            <Tab
+              icon={<ExitToAppIcon/>}
+              value={SIGN_OUT}
+              style={tabStyle(SIGN_OUT, props.activeTab.name)}
+            />
           </Tabs>
         : <Tabs
             value={props.highlightedTab ? props.activeTab.name : false}
             indicatorColor="primary"
             textColor="primary"
             onChange={onChangeTab}
+            style={{ minHeight: '40px' }}
           >
             <Tab
               icon={<HomeIcon/>}
@@ -90,7 +105,9 @@ const mapStateToProps = state => {
     activeTab: state.activeTab,
     highlightedTab: state.activeTab.name === USERS_TAB
       || state.activeTab.name === RECIPE_TAB
-      || state.activeTab.name === PROFILE_TAB,
+      || state.activeTab.name === WELCOME_TAB
+      || (state.activeTab.name === PROFILE_TAB &&
+        state.activeUser.id === state.displayUser.id),
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser
   };
@@ -98,6 +115,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
     setActiveTab: (name, user) => {
       dispatch({
         type: SET_ACTIVE_TAB,
@@ -109,7 +127,15 @@ const mapDispatchToProps = dispatch => {
         dispatch({ type: GET_USER_DETAIL_REQUESTED });
       }
     },
-    clearErrorMessages: () => dispatch({ type: CLEAR_ERROR_MESSAGES }),
+    signOut: () => {
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: WELCOME_TAB }
+      });
+      dispatch({ type: SIGN_OUT });
+      dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
+    }
   }
 };
 

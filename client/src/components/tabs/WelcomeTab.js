@@ -38,9 +38,7 @@ const WelcomeTab = props => {
         </Typography>
         <Typography
           variant="h1"
-          style={{
-            float:'left', fontFamily:'Open Sans Condensed'
-          }}
+          style={{float:'left', fontFamily:'Open Sans Condensed'}}
         >
           Book
         </Typography>

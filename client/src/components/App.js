@@ -73,7 +73,7 @@ class App extends React.Component {
       case ABOUT_TAB:
         return <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>;
       case RECIPE_TAB:
-        return <RecipeTab toggleCreateMode={() => this.setState({ recipeCreateMode: true })}/>;
+        return <RecipeTab/>;
       default:
         throw new Error('Unrecognized tab name');
     }
@@ -84,7 +84,7 @@ class App extends React.Component {
         <Container style={{padding:'0'}}>
           <CssBaseline />
           <Grid container direction="column">
-            <Grid item style={{width:'100%'}}>
+            <Grid item style={{width: '100%'}}>
               <NavigationMenu
                 toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
               />
@@ -92,9 +92,12 @@ class App extends React.Component {
             <Grid item id="container" style={{
               position: 'fixed',
               overflow: 'auto',
-              top: '50px',
-              height: 'calc(100% - 50px)',
-              width: '100%'
+              top: '40px',
+              height: 'calc(100% - 40px)',
+              width: '100%',
+              borderTop: this.state.showScrollButton
+                ? '1px solid black'
+                : 'none'
             }}>
               {this.renderActiveTab()}
             </Grid>
@@ -102,7 +105,10 @@ class App extends React.Component {
         </Container>
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
-        <ScrollButton isVisible={this.state.showScrollButton} isLoggedIn={this.props.isLoggedIn}/>
+        <ScrollButton
+          isVisible={this.state.showScrollButton}
+          isLoggedIn={this.props.isLoggedIn}
+        />
         <Dialog
           disableBackdropClick
           open={this.state.recipeCreateMode}

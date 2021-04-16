@@ -21,8 +21,7 @@ export default function ScrollButton({ isVisible, isLoggedIn }) {
         style={buttonStyle}
         size="small"
         onClick={() => {
-          const id = isMobileOnly ? 'root' : 'container';
-          document.getElementById(id).scroll({ top: 0, left: 0, behavior: 'smooth' });
+          document.getElementById('container').scroll({ top: 0, left: 0, behavior: 'smooth' });
         }}
       >
         <KeyboardArrowUpIcon style={{ height:'25', width:'25' }}/>

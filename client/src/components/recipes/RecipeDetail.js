@@ -91,24 +91,32 @@ class RecipeDetail extends React.Component {
           serves={serves}
           isCreateMode={false}
         />
-      : <Card style={detailStyle}>
+      : <Card style={detailStyle} onClick={this.props.onClose}>
           <AppBar className={this.props.classes.appBar} id="recipeHeader">
             <Toolbar style={{minHeight:'0', padding:'5px 0'}}>
               <Grid container direction="row">
                 <Grid item style={{width: this.props.isLoggedIn ? '10%' : '0'}}>
                   {this.props.isLoggedIn
                   ? this.props.isEditable
-                    ? <IconButton onClick={e => this.setState({ anchorEl: e.currentTarget })}
+                    ? <IconButton
+                        style={{color:'white'}}
                         disabled={!ingredients}
-                        style={{color:'white'}}>
+                        onClick={e => {
+                          e.stopPropagation();
+                          this.setState({ anchorEl: e.currentTarget });
+                        }}
+                      >
                         <MoreHorizIcon/>
                       </IconButton>
                     : this.props.isLiking && this.state.likedId === id
-                      ? <CircularProgress size={21} style={{margin:'12px 12px 8px 12px', color:'white'}}/>
+                      ? <CircularProgress size={21}
+                          style={{margin:'12px 12px 8px 12px', color:'white'}}
+                        />
                       : this.props.likedRecipeIds.includes(id)
                         ? <IconButton
                             style={{padding:'12px'}}
-                            onClick={() => {
+                            onClick={e => {
+                              e.stopPropagation();
                               this.setState({ likedId: id });
                               this.props.updateLikedRecipes(
                                 this.props.activeUser.id, id, false
@@ -118,7 +126,8 @@ class RecipeDetail extends React.Component {
                           </IconButton>
                         : <IconButton
                             style={{padding:'12px'}}
-                            onClick={() => {
+                            onClick={e => {
+                              e.stopPropagation();
                               this.setState({ likedId: id });
                               this.props.updateLikedRecipes(
                                 this.props.activeUser.id, id, true
@@ -148,12 +157,19 @@ class RecipeDetail extends React.Component {
               <div style={{display:'flex', background:'linear-gradient(45deg, black, #303030)', padding:'10px'}}>
                 <div style={{margin:'auto'}}>
                   <div style={{color:'white'}}>
-                    Posted by <Link href="#" onClick={() => this.props.visitUserProfile(
-                      this.props.users[authorId],
-                      this.props.activeTab,
-                      this.props.displayUser
-                    )} style={{color:'#45bbff'}}>
-                      {authorName}
+                    Posted by
+                    <Link href="#"
+                      style={{color:'#45bbff'}}
+                      onClick={e => {
+                        e.stopPropagation();
+                        this.props.visitUserProfile(
+                          this.props.users[authorId],
+                          this.props.activeTab,
+                          this.props.displayUser
+                        );
+                      }}
+                    >
+                      {" " + authorName}
                     </Link> on {date}
                   </div>
                 </div>
@@ -182,26 +198,32 @@ class RecipeDetail extends React.Component {
                   </div>
                   <IngredientsTable ingredients={ingredients}/>
                   <Typography style={titleStyle} variant="h5">Directions</Typography>
-                  {typeof directions === "string"
-                  ? <Typography style={sectionStyle}>{directions}</Typography>
-                  : <Grid container direction="column" style={{...sectionStyle, margin:'5px 0 0', padding:'0'}}>
-                      {directions.map((step, index) => (
-                        <Grid container direction="row" key={index} style={{paddingBottom:'10px'}}>
-                          <Grid item style={{width:'30px'}}>
-                            <Typography style={{
-                              float: 'right',
-                              paddingRight: '5px',
-                              fontSize: '12.5px'
-                            }}>
-                              {index + 1 + "."}
-                            </Typography>
+                    {typeof directions === "string"
+                    ? <Typography style={sectionStyle}>
+                        {directions}
+                      </Typography>
+                    : <Grid container direction="column"
+                        style={{...sectionStyle, margin:'5px 0 0', padding:'0'}}
+                      >
+                        {directions.map((step, index) => (
+                          <Grid container direction="row" key={index}
+                            style={{paddingBottom:'10px'}}
+                          >
+                            <Grid item style={{width:'30px'}}>
+                              <Typography style={{
+                                float: 'right',
+                                paddingRight: '5px',
+                                fontSize: '12.5px'
+                              }}>
+                                {index + 1 + "."}
+                              </Typography>
+                            </Grid>
+                            <Grid item style={{width:'91%', paddingLeft:'5px'}}>
+                              <Typography style={{fontSize:'12.5px'}}>{step}</Typography>
+                            </Grid>
                           </Grid>
-                          <Grid item style={{width:'91%', paddingLeft:'5px'}}>
-                            <Typography style={{fontSize:'12.5px'}}>{step}</Typography>
-                          </Grid>
-                        </Grid>
-                      ))}
-                    </Grid>
+                        ))}
+                      </Grid>
                     }
                 </Fragment>
               }
@@ -210,7 +232,10 @@ class RecipeDetail extends React.Component {
           <Popover
             open={!!this.state.anchorEl}
             anchorEl={this.state.anchorEl}
-            onClose={() => this.setState({ anchorEl: null })}
+            onClose={e => {
+              e.stopPropagation();
+              this.setState({ anchorEl: null });
+            }}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'center',
@@ -229,7 +254,8 @@ class RecipeDetail extends React.Component {
                   startIcon={<CreateIcon/>}
                   className={this.props.classes.button}
                   style={{fontSize:'16px', fontFamily:'Signika'}}
-                  onClick={() => {
+                  onClick={e => {
+                    e.stopPropagation();
                     this.setState({ anchorEl: null });
                     this.props.toggleEditMode();
                   }}
@@ -241,7 +267,10 @@ class RecipeDetail extends React.Component {
                 <Button
                   className={this.props.classes.button}
                   style={{fontSize:'16px', width:'100%', fontFamily:'Signika'}}
-                  onClick={() => this.setState({ anchorEl: null, isDeleteModalVisible: true })}
+                  onClick={e => {
+                    e.stopPropagation();
+                    this.setState({ anchorEl: null, isDeleteModalVisible: true })
+                  }}
                 >
                   Delete
                 </Button>
@@ -252,7 +281,8 @@ class RecipeDetail extends React.Component {
             modalType="delete"
             isVisible={this.state.isDeleteModalVisible}
             closeModal={() => this.setState({ isDeleteModalVisible: false })}
-            onConfirm={() => {
+            onConfirm={e => {
+              e.stopPropagation();
               this.setState({ isDeleteModalVisible: false });
               this.props.deleteRecipe();
             }}

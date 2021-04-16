@@ -369,5 +369,5 @@ export const recipeButtonStyle = (value, currentVal) => ({
     : '1px solid white',
   color: value === currentVal ? defaultTheme.palette.primary.main : 'white',
   padding: '3px 10px',
-  margin: '7px 0 5px 5px'
+  marginLeft: '5px'
 })

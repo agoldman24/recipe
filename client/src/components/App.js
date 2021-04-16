@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,13 +16,16 @@ import AboutTab from './tabs/AboutTab';
 import RecipeTab from './tabs/RecipeTab';
 import UsersTab from './tabs/UsersTab';
 import ProfileTab from './tabs/ProfileTab';
+import RecipeCategories from './recipes/RecipeCategories';
 import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
+import { defaultTheme, errorStyle } from '../styles';
 import {
   INIT_HYDRATION,
   COMPLETE_HYDRATION,
-  SET_ACTIVE_TAB
+  SET_ACTIVE_TAB,
+  SET_RECIPE_CATEGORY
 } from '../actions';
 import {
   USERS_TAB,
@@ -32,7 +36,6 @@ import {
   ABOUT_TAB,
   PROFILE_TAB
 } from '../variables/Constants';
-import { defaultTheme, errorStyle } from '../styles';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
@@ -42,6 +45,7 @@ class App extends React.Component {
   state = {
     showScrollButton: false,
     recipeCreateMode: false,
+    searchVal: ""
   }
   componentDidMount() {
     const container = document.getElementById('container');
@@ -59,19 +63,19 @@ class App extends React.Component {
     if (this.props.networkFailed) {
       return <div style={errorStyle}>No internet connection</div>;
     }
-    switch(this.props.activeTab.name) {
+    switch (this.props.activeTab.name) {
       case SIGN_IN_TAB:
         return <SignInTab/>;
       case SIGN_UP_TAB:
         return <SignUpTab/>;
       case USERS_TAB:
-        return <UsersTab/>;
+        return <UsersTab searchVal={this.state.searchVal}/>;
       case PROFILE_TAB:
         return <ProfileTab/>;
       case WELCOME_TAB:
         return <WelcomeTab/>;
       case ABOUT_TAB:
-        return <AboutTab visitSignup={() => this.props.setActiveTab(SIGN_UP_TAB)}/>;
+        return <AboutTab/>;
       case RECIPE_TAB:
         return <RecipeTab/>;
       default:
@@ -79,21 +83,30 @@ class App extends React.Component {
     }
   }
   render() {
+    const showRecipeCategories =
+      this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
     return (
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
-        <Container style={{padding:'0'}}>
-          <CssBaseline />
+        <Container component="main" maxWidth={false} style={{padding:'0'}}>
+          <CssBaseline/>
           <Grid container direction="column">
             <Grid item style={{width: '100%'}}>
               <NavigationMenu
                 toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
+                setSearchVal={newVal => this.setState({ searchVal: newVal })}
               />
+              {showRecipeCategories &&
+                <RecipeCategories
+                  category={this.props.recipeCategory}
+                  setCategory={this.props.setRecipeCategory}
+                />
+              }
             </Grid>
             <Grid item id="container" style={{
               position: 'fixed',
-              overflow: 'auto',
-              top: '40px',
-              height: 'calc(100% - 40px)',
+              overflowY: isMobileOnly ? 'scroll' : 'auto',
+              top: showRecipeCategories ? '75px' : '40px',
+              height: showRecipeCategories ? 'calc(100% - 75px)' : 'calc(100% - 40px)',
               width: '100%',
               borderTop: this.state.showScrollButton
                 ? '1px solid black'
@@ -139,7 +152,8 @@ const mapStateToProps = state => {
     isHydrated: state.isHydrated,
     users: state.users,
     displayUser: state.displayUser,
-    networkFailed: state.errorMessages.networkFailed
+    networkFailed: state.errorMessages.networkFailed,
+    recipeCategory: state.recipeCategory
   };
 }
 
@@ -147,6 +161,7 @@ const mapDispatchToProps = dispatch => {
   return {
     initHydration: () => dispatch({ type: INIT_HYDRATION }),
     completeHydration: () => dispatch({ type: COMPLETE_HYDRATION }),
+    setRecipeCategory: category => dispatch({ type: SET_RECIPE_CATEGORY, category }),
     setActiveTab: name => dispatch({
       type: SET_ACTIVE_TAB, 
       currentTab: null,

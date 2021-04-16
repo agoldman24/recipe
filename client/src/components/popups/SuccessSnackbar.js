@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Portal from "@material-ui/core/Portal";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import Zoom from '@material-ui/core/Zoom';
@@ -11,7 +12,7 @@ function SlideTransition(props) {
 
 const SuccessSnackbar = props => {
   return (
-    <div style={{width:'100%'}}>
+    <Portal>
       <Snackbar
         open={props.snackbar.isVisible}
         autoHideDuration={1000}
@@ -21,7 +22,7 @@ const SuccessSnackbar = props => {
       >
         <MuiAlert>{props.snackbar.message}</MuiAlert>
       </Snackbar>
-    </div>
+    </Portal>
   );
 }
 

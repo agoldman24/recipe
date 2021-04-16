@@ -153,7 +153,6 @@ export const snackbar = (state = StateTree.snackbar, action) => {
 const activeTab = (state = StateTree.activeTab, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
-      document.getElementById('root').scrollTo(0, 0);
       document.getElementById('container').scrollTo(0, 0);
       localStorage.setItem("activeTab", action.newTab.name);
       return action.newTab;

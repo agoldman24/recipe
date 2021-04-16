@@ -59,10 +59,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const buttonStyle = {
-  ...roundedButtonStyle
-}
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });

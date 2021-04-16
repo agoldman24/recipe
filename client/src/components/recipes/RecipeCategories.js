@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
-import Fab from '@material-ui/core/Fab';
 import { recipeButtonStyle } from '../../styles';
 
 const useStyles = makeStyles(() => ({
@@ -16,11 +15,7 @@ const useStyles = makeStyles(() => ({
 export default function RecipeCategories({ category, setCategory }) {
   const classes = useStyles();
   return (
-    <div style={{
-      position:'fixed',
-      top:'0',
-      zIndex:'2'
-    }}>
+    <div style={{width:'100%', display:'inline-block'}}>
       <Button
         className={classes.button}
         style={recipeButtonStyle(category, "All")}

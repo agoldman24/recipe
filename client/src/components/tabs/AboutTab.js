@@ -1,11 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { isMobileOnly } from 'react-device-detect';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { gradientTextStyle, defaultTheme } from '../../styles';
+import { SET_ACTIVE_TAB } from '../../actions';
+import { SIGN_UP_TAB } from '../../variables/Constants';
 
-export default function AboutTab(props) {
+const AboutTab = props => {
   return (
     <Grid
       container
@@ -32,3 +35,21 @@ export default function AboutTab(props) {
     </Grid>
   );
 }
+const mapStateToProps = state => {
+  return {};
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    visitSignup: () => dispatch({
+      type: SET_ACTIVE_TAB,
+      currentTab: null,
+      newTab: { name: SIGN_UP_TAB }
+    })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AboutTab);

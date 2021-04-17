@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/styles';
-import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import Dialog from '@material-ui/core/Dialog';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
@@ -49,6 +49,18 @@ const styles = () => ({
   },
   inputInput: {
     padding: '3px 10px'
+  },
+  dialogContainer: {
+    position: 'fixed',
+    height: '20px'
+  },
+  dialogPaper: {
+    marginLeft: '40px',
+    overflowY: 'initial'
+  },
+  backdropRoot: {
+    background: 'none',
+    height: '40px'
   }
 });
 
@@ -86,110 +98,126 @@ const NavigationMenu = props => {
   }
 
   return (
-    <ThemeProvider theme={createMuiTheme(defaultTheme)}>
-      {props.isLoggedIn && props.activeTab.name !== WELCOME_TAB
-        ? <div style={{width:'100%'}}>
-            {props.activeTab.name === USERS_TAB &&
-              <Fragment>
-                <IconButton
-                  style={{
-                    ...tabStyle(),
-                    opacity: '100%',
-                    color: isSearchVisible
-                      ? defaultTheme.palette.primary.main
-                      : 'white'
-                  }}
-                  onClick={() => {
-                    document.getElementById('searchBar').focus();
-                    setIsSearchVisible(true);
-                    setIsSearchFocused(true);
-                  }}
-                >
-                  <SearchIcon/>
-                </IconButton>
-                <InputBase
-                  id="searchBar"
-                  placeholder="Search users..."
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setIsSearchFocused(false)}
-                  onChange={e => props.setSearchVal(e.target.value.toLowerCase())}
-                  classes={{
-                    root: isSearchFocused
-                      ? props.classes.focusedInputRoot
-                      : props.classes.inputRoot,
-                    input: props.classes.inputInput,
-                  }}
-                  style={{
-                    width: 'calc(100% - 85px)',
-                    opacity: isSearchVisible ? '100%' : '0',
-                    transitionProperty: 'opacity',
-                    transitionDuration: '0.5s'
-                  }}
-                />
-                <IconButton
-                  style={{
-                    position: 'fixed',
-                    right: '0',
-                    zIndex: '3',
-                    color: 'white',
-                    opacity: isSearchVisible ? '100%' : '0',
-                    transitionProperty: 'opacity',
-                    transitionDuration: '0.5s'
-                  }}
-                  onClick={() => setIsSearchVisible(false)}
-                >
-                  <CloseIcon/>
-                </IconButton>
-              </Fragment>
-            }
-            <Tabs
-              value={props.highlightedTab ? props.activeTab.name : false}
-              indicatorColor="primary"
-              textColor="primary"
-              onChange={onChangeTab}
-              style={{float:'right', minHeight:'40px'}}
+    <Fragment>
+      {props.activeTab.name === USERS_TAB &&
+        <Fragment>
+          <IconButton
+            style={{
+              ...tabStyle(),
+              zIndex: '3',
+              opacity: '100%',
+              color: isSearchVisible
+                ? defaultTheme.palette.primary.main
+                : 'white'
+            }}
+            onClick={() => {
+              setIsSearchVisible(true);
+              setIsSearchFocused(true);
+            }}
+          >
+            <SearchIcon/>
+          </IconButton>
+          <Dialog
+            open={isSearchVisible}
+            classes={{
+              container: props.classes.dialogContainer,
+              paper: props.classes.dialogPaper
+            }}
+            BackdropProps={{
+              classes: {
+                root: props.classes.backdropRoot
+              }
+            }}
+          >
+            <InputBase
+              placeholder="Search users..."
+              autoFocus
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+              onChange={e => props.setSearchVal(e.target.value.toLowerCase())}
               classes={{
-                indicator: isSearchVisible
-                  ? props.classes.transparent
-                  : props.classes.opaque
+                root: isSearchFocused
+                  ? props.classes.focusedInputRoot
+                  : props.classes.inputRoot,
+                input: props.classes.inputInput,
+              }}
+              style={{
+                width: 'calc(100% - 85px)',
+                opacity: isSearchVisible ? '100%' : '0',
+                transitionProperty: 'opacity',
+                transitionDuration: '0.5s'
+              }}
+            />
+            <IconButton
+              style={{
+                position: 'fixed',
+                right: '5px',
+                height: '20px',
+                color: 'white',
+                opacity: isSearchVisible ? '100%' : '0',
+                transitionProperty: 'opacity',
+                transitionDuration: '0.5s'
+              }}
+              onClick={() => {
+                props.setSearchVal("");
+                setIsSearchVisible(false)
               }}
             >
-              <Tab
-                icon={<AddBoxOutlinedIcon/>}
-                value={CREATE_RECIPE}
-                style={tabStyle(CREATE_RECIPE)}
-              />
-              <Tab
-                icon={<MenuBookSharpIcon/>}
-                value={RECIPE_TAB}
-                style={tabStyle(RECIPE_TAB)}
-              />
-              <Tab
-                icon={<PeopleAltIcon/>}
-                value={USERS_TAB}
-                style={tabStyle(USERS_TAB)}
-              />
-              <Tab
-                icon={<AccountCircleIcon/>}
-                value={PROFILE_TAB}
-                style={tabStyle(PROFILE_TAB)}
-              />
-              <Tab
-                icon={<ExitToAppIcon/>}
-                value={SIGN_OUT}
-                style={tabStyle(SIGN_OUT)}
-              />
-            </Tabs>
-          </div>
-        : <IconButton
-            style={{...tabStyle(WELCOME_TAB), float: 'right'}}
-            onClick={() => props.setActiveTab(WELCOME_TAB)}
-          >
-            <HomeIcon/>
-          </IconButton>
+              <CloseIcon/>
+            </IconButton>
+          </Dialog>
+        </Fragment>
       }
-    </ThemeProvider>
-  );
+      {props.isLoggedIn && props.activeTab.name !== WELCOME_TAB
+      ? <div style={{width:'100%', height:'40px', position:'fixed', top:'0'}}>
+          <Tabs
+            value={props.highlightedTab ? props.activeTab.name : false}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={onChangeTab}
+            style={{float:'right', minHeight:'40px'}}
+            classes={{
+              indicator: isSearchVisible
+                ? props.classes.transparent
+                : props.classes.opaque
+            }}
+          >
+            <Tab
+              icon={<AddBoxOutlinedIcon/>}
+              value={CREATE_RECIPE}
+              style={tabStyle(CREATE_RECIPE)}
+            />
+            <Tab
+              icon={<MenuBookSharpIcon/>}
+              value={RECIPE_TAB}
+              style={tabStyle(RECIPE_TAB)}
+            />
+            <Tab
+              icon={<PeopleAltIcon/>}
+              value={USERS_TAB}
+              style={tabStyle(USERS_TAB)}
+            />
+            <Tab
+              icon={<AccountCircleIcon/>}
+              value={PROFILE_TAB}
+              style={tabStyle(PROFILE_TAB)}
+            />
+            <Tab
+              icon={<ExitToAppIcon/>}
+              value={SIGN_OUT}
+              style={tabStyle(SIGN_OUT)}
+            />
+          </Tabs>
+        </div>
+      : <IconButton
+          style={{...tabStyle(WELCOME_TAB), float: 'right'}}
+          onClick={() => props.setActiveTab(WELCOME_TAB)}
+        >
+          <HomeIcon/>
+        </IconButton>
+    }
+    </Fragment>
+  )
 }
 
 const mapStateToProps = state => {
@@ -199,7 +227,7 @@ const mapStateToProps = state => {
       || state.activeTab.name === RECIPE_TAB
       || state.activeTab.name === WELCOME_TAB
       || (state.activeTab.name === PROFILE_TAB &&
-        state.activeUser.id === state.displayUser.id),
+        !!state.activeUser && state.activeUser.id === state.displayUser.id),
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser
   };

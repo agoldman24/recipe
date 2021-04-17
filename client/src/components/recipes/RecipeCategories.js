@@ -15,7 +15,14 @@ const useStyles = makeStyles(() => ({
 export default function RecipeCategories({ category, setCategory }) {
   const classes = useStyles();
   return (
-    <div style={{width:'100%', display:'inline-block'}}>
+    <div style={{
+      width:'100%',
+      height: '35px',
+      position: 'fixed',
+      top: '40px',
+      paddingTop: '3px',
+      background: 'linear-gradient(to right, black, transparent)'
+    }}>
       <Button
         className={classes.button}
         style={recipeButtonStyle(category, "All")}

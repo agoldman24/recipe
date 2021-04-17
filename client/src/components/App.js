@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isMobileOnly } from 'react-device-detect';
+import { withStyles } from '@material-ui/styles';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
@@ -18,7 +19,6 @@ import UsersTab from './tabs/UsersTab';
 import ProfileTab from './tabs/ProfileTab';
 import RecipeCategories from './recipes/RecipeCategories';
 import RecipeDetailEdit from './recipes/RecipeDetailEdit';
-import ScrollButton from './popups/ScrollButton';
 import SuccessSnackbar from './popups/SuccessSnackbar';
 import { defaultTheme, errorStyle } from '../styles';
 import {
@@ -41,23 +41,30 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} mountOnEnter unmountOnExit/>;
 });
 
+const styles = () => ({
+  root1: {
+    marginTop: '40px'
+  },
+  root2: {
+    marginTop: '75px'
+  },
+  backdropRoot1: {
+    top: '40px',
+    background: 'none'
+  },
+  backdropRoot2: {
+    top: '75px',
+    background: 'none'
+  }
+});
+
 class App extends React.Component {
   state = {
-    showScrollButton: false,
     recipeCreateMode: false,
     searchVal: ""
   }
   componentDidMount() {
-    const container = document.getElementById('container');
-    container.addEventListener('scroll', this.handleScroll);
     this.props.initHydration();
-  }
-  handleScroll = () => {
-    const container = document.getElementById('container');
-    const isScrollButtonVisible = !!container.scrollTop;
-    if (isScrollButtonVisible !== this.state.showScrollButton) {
-      this.setState({ showScrollButton: isScrollButtonVisible });
-    }
   }
   renderActiveTab = () => {
     if (this.props.networkFailed) {
@@ -83,45 +90,72 @@ class App extends React.Component {
     }
   }
   render() {
-    const showRecipeCategories =
-      this.props.isLoggedIn && this.props.activeTab.name === RECIPE_TAB;
+    const activeTab = this.props.activeTab.name;
+    const showRecipeCategories = this.props.isLoggedIn && activeTab === RECIPE_TAB;
     return (
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
         <Container component="main" maxWidth={false} style={{padding:'0'}}>
           <CssBaseline/>
           <Grid container direction="column">
             <Grid item style={{width: '100%'}}>
-              <NavigationMenu
-                toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
-                setSearchVal={newVal => this.setState({ searchVal: newVal })}
-              />
-              {showRecipeCategories &&
-                <RecipeCategories
-                  category={this.props.recipeCategory}
-                  setCategory={this.props.setRecipeCategory}
+              <Paper elevation={5} style={{
+                height: activeTab === USERS_TAB
+                  || activeTab === RECIPE_TAB
+                  || activeTab === PROFILE_TAB
+                    ? '40px' : '100%',
+                borderRadius: '0',
+                background: 'none'
+              }}>
+                <NavigationMenu
+                  toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
+                  setSearchVal={newVal => this.setState({ searchVal: newVal })}
                 />
-              }
+                {showRecipeCategories &&
+                  <RecipeCategories
+                    category={this.props.recipeCategory}
+                    setCategory={this.props.setRecipeCategory}
+                  />
+                }
+              </Paper>
             </Grid>
-            <Grid item id="container" style={{
-              position: 'fixed',
-              overflowY: isMobileOnly ? 'scroll' : 'auto',
-              top: showRecipeCategories ? '75px' : '40px',
-              height: showRecipeCategories ? 'calc(100% - 75px)' : 'calc(100% - 40px)',
-              width: '100%',
-              borderTop: this.state.showScrollButton
-                ? '1px solid black'
-                : 'none'
-            }}>
-              {this.renderActiveTab()}
+            <Grid item>
+              <Dialog
+                open={true}
+                classes={{
+                  root: showRecipeCategories
+                    ? this.props.classes.root2
+                    : this.props.classes.root1
+                }}
+                BackdropProps={{
+                  classes: {
+                    root: showRecipeCategories
+                      ? this.props.classes.backdropRoot2
+                      : this.props.classes.backdropRoot1
+                  }
+                }}
+              >
+                <div style={{
+                  margin: '0',
+                  left: '0',
+                  top: showRecipeCategories ? '75px' : '40px',
+                  height: showRecipeCategories
+                    ? 'calc(100% - 75px)'
+                    : 'calc(100% - 40px)',
+                  width: '100%',
+                  position: 'fixed',
+                  overflowY: 'hidden',
+                  background: 'none'
+                }}>
+                  <div id="container" style={{height:'100%', overflowY:'auto'}}>
+                    {this.renderActiveTab()}
+                  </div>
+                </div>
+              </Dialog>
             </Grid>
           </Grid>
         </Container>
         <SuccessSnackbar/>
         <Spinner isVisible={this.props.isSpinnerVisible}/>
-        <ScrollButton
-          isVisible={this.state.showScrollButton}
-          isLoggedIn={this.props.isLoggedIn}
-        />
         <Dialog
           disableBackdropClick
           open={this.state.recipeCreateMode}
@@ -173,4 +207,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App);
+)(withStyles(styles)(App));

@@ -19,6 +19,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import RecipeDetailEdit from './RecipeDetailEdit';
+import RecipeList from './RecipeList';
 import IngredientsTable from '../tables/IngredientsTable';
 import PromptModal from '../popups/PromptModal';
 import Api from '../../api/siteUrl';

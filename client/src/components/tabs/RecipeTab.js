@@ -6,7 +6,7 @@ import { ALL_RECIPES, FRIEND_RECIPES, CREATED_RECIPES } from '../../variables/Co
 
 class RecipeTab extends React.Component {
   componentDidMount() {
-    window.scrollTo(0, 0);
+    document.getElementById('container').scrollTo(0, 0);
     this.fetchRecipes();
   }
   componentDidUpdate(prevProps) {
@@ -22,7 +22,7 @@ class RecipeTab extends React.Component {
   render() {
     return (
       <RecipeList recipes={Object.values(this.props.recipes)
-          .sort((r1, r2) => r2.timestamp - r1.timestamp)}/>
+        .sort((r1, r2) => r2.timestamp - r1.timestamp)}/>
     );
   }
 }

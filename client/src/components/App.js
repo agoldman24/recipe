@@ -109,6 +109,7 @@ class App extends React.Component {
                 <NavigationMenu
                   toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
                   setSearchVal={newVal => this.setState({ searchVal: newVal })}
+                  searchVal={this.state.searchVal}
                 />
                 {showRecipeCategories &&
                   <RecipeCategories

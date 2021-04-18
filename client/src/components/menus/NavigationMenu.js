@@ -51,6 +51,9 @@ const styles = () => ({
   inputInput: {
     padding: '3px 10px'
   },
+  dialogRoot: {
+    height: '40px'
+  },
   dialogContainer: {
     position: 'fixed',
     height: '20px'
@@ -122,6 +125,7 @@ const NavigationMenu = props => {
           <Dialog
             open={isSearchVisible}
             classes={{
+              root: props.classes.dialogRoot,
               container: props.classes.dialogContainer,
               paper: props.classes.dialogPaper
             }}
@@ -136,6 +140,7 @@ const NavigationMenu = props => {
               autoFocus
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
+              value={props.searchVal}
               onChange={e => props.setSearchVal(e.target.value.toLowerCase())}
               classes={{
                 root: isSearchFocused

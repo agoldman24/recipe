@@ -30,7 +30,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onConfirmParam }) => {
+const PromptModal = ({
+  modalType,
+  isVisible,
+  closeModal,
+  message,
+  actionText,
+  onConfirm,
+  onConfirmParam
+}) => {
   const classes = useStyles();
   return (
     <Modal
@@ -50,18 +58,8 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
           <Grid item>
             <h3 id="transition-modal-title">{message}</h3>
           </Grid>
-          {modalType === "delete"
+          {modalType === "action"
           ? <Grid item>
-              <Button
-                className={classes.button}
-                style={deleteButtonStyle}
-                onClick={e => {
-                  e.stopPropagation();
-                  onConfirm(onConfirmParam)
-                }}
-              >
-                Delete
-              </Button>
               <Button
                 className={classes.button}
                 style={cancelButtonStyle}
@@ -71,6 +69,16 @@ const PromptModal = ({ modalType, isVisible, closeModal, message, onConfirm, onC
                 }}
               >
                 Cancel
+              </Button>
+              <Button
+                className={classes.button}
+                style={deleteButtonStyle}
+                onClick={e => {
+                  e.stopPropagation();
+                  onConfirm(onConfirmParam)
+                }}
+              >
+                {actionText}
               </Button>
             </Grid>
           : <Grid item>

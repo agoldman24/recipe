@@ -14,6 +14,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import HomeIcon from '@material-ui/icons/Home';
 import IconButton from '@material-ui/core/IconButton';
+import PromptModal from '../popups/PromptModal';
 import { defaultTheme } from '../../styles';
 import "../../index.css";
 import {
@@ -25,7 +26,7 @@ import {
 } from '../../variables/Constants';
 
 const inputRoot = {
-  fontSize: '14px',
+  fontSize: '16px',
   fontFamily: 'Signika',
   borderRadius: '50px',
   position: 'fixed',
@@ -67,6 +68,7 @@ const styles = () => ({
 const NavigationMenu = props => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isSignOutModalVisible, setIsSignOutModalVisible] = useState(false);
 
   const tabStyle = tab => ({
     minWidth: '40px',
@@ -89,7 +91,7 @@ const NavigationMenu = props => {
         props.toggleCreateMode();
         break;
       case SIGN_OUT:
-        props.signOut();
+        setIsSignOutModalVisible(true);
         break;
       default:
         props.setActiveTab(newValue, props.activeUser);
@@ -169,53 +171,64 @@ const NavigationMenu = props => {
         </Fragment>
       }
       {props.isLoggedIn && props.activeTab.name !== WELCOME_TAB
-      ? <div style={{width:'100%', height:'40px', position:'fixed', top:'0'}}>
-          <Tabs
-            value={props.highlightedTab ? props.activeTab.name : false}
-            indicatorColor="primary"
-            textColor="primary"
-            onChange={onChangeTab}
-            style={{float:'right', minHeight:'40px'}}
-            classes={{
-              indicator: isSearchVisible
-                ? props.classes.transparent
-                : props.classes.opaque
-            }}
+        ? <div style={{width:'100%', height:'40px', position:'fixed', top:'0'}}>
+            <Tabs
+              value={props.highlightedTab ? props.activeTab.name : false}
+              indicatorColor="primary"
+              textColor="primary"
+              onChange={onChangeTab}
+              style={{float:'right', minHeight:'40px'}}
+              classes={{
+                indicator: isSearchVisible
+                  ? props.classes.transparent
+                  : props.classes.opaque
+              }}
+            >
+              <Tab
+                icon={<AddBoxOutlinedIcon/>}
+                value={CREATE_RECIPE}
+                style={tabStyle(CREATE_RECIPE)}
+              />
+              <Tab
+                icon={<MenuBookSharpIcon/>}
+                value={RECIPE_TAB}
+                style={tabStyle(RECIPE_TAB)}
+              />
+              <Tab
+                icon={<PeopleAltIcon/>}
+                value={USERS_TAB}
+                style={tabStyle(USERS_TAB)}
+              />
+              <Tab
+                icon={<AccountCircleIcon/>}
+                value={PROFILE_TAB}
+                style={tabStyle(PROFILE_TAB)}
+              />
+              <Tab
+                icon={<ExitToAppIcon/>}
+                value={SIGN_OUT}
+                style={tabStyle(SIGN_OUT)}
+              />
+            </Tabs>
+          </div>
+        : <IconButton
+            style={{...tabStyle(WELCOME_TAB), float: 'right'}}
+            onClick={() => props.setActiveTab(WELCOME_TAB)}
           >
-            <Tab
-              icon={<AddBoxOutlinedIcon/>}
-              value={CREATE_RECIPE}
-              style={tabStyle(CREATE_RECIPE)}
-            />
-            <Tab
-              icon={<MenuBookSharpIcon/>}
-              value={RECIPE_TAB}
-              style={tabStyle(RECIPE_TAB)}
-            />
-            <Tab
-              icon={<PeopleAltIcon/>}
-              value={USERS_TAB}
-              style={tabStyle(USERS_TAB)}
-            />
-            <Tab
-              icon={<AccountCircleIcon/>}
-              value={PROFILE_TAB}
-              style={tabStyle(PROFILE_TAB)}
-            />
-            <Tab
-              icon={<ExitToAppIcon/>}
-              value={SIGN_OUT}
-              style={tabStyle(SIGN_OUT)}
-            />
-          </Tabs>
-        </div>
-      : <IconButton
-          style={{...tabStyle(WELCOME_TAB), float: 'right'}}
-          onClick={() => props.setActiveTab(WELCOME_TAB)}
-        >
-          <HomeIcon/>
-        </IconButton>
-    }
+            <HomeIcon/>
+          </IconButton>
+      }
+      <PromptModal
+        modalType="action"
+        actionText="Sign Out"
+        isVisible={isSignOutModalVisible}
+        closeModal={() => setIsSignOutModalVisible(false)}
+        onConfirm={() => {
+          setIsSignOutModalVisible(false);
+          props.signOut();
+        }}
+        message={"Are you sure you want to sign out?"}
+      />
     </Fragment>
   )
 }

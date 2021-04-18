@@ -40,18 +40,18 @@ const styles = () => ({
   titleBar: {
     background: 'black',
     alignItems: 'normal',
-    height: '60px'
+    height: '50px'
   },
   titleWrapActionPosRight: {
     marginLeft: '10px'
   },
   title: {
-    padding: '10px 0 5px 0',
+    padding: '5px 0 3px 0',
     fontFamily: 'Shadows Into Light',
-    fontSize: '20px'
+    fontSize: '18px'
   },
   tile: {
-    paddingTop: '60px',
+    paddingTop: '50px',
     borderRadius: '20px'
   },
   paper: {
@@ -133,15 +133,15 @@ class RecipeList extends React.Component {
   render() {
     return (
       <Fragment>
-        <GridList cellHeight={250}
+        <GridList cellHeight={240}
           className={this.props.classes.gridList}
           cols={isMobileOnly ? 1 : 4}
         >
           {this.props.recipes.map((recipe, index) => !recipe ? null : (
             <GridListTile key={recipe.id} className="cardMedia"
               style={{
-                height: '200px',
-                width: isMobileOnly ? 'calc(100% - 10px)' : 'calc(25% - 10px)',
+                height: '190px',
+                width: isMobileOnly ? 'calc(50% - 10px)' : 'calc(25% - 10px)',
                 margin: '5px',
                 padding: '0',
                 background: '#303030',
@@ -181,17 +181,17 @@ class RecipeList extends React.Component {
                 actionPosition="left"
                 actionIcon={this.props.isLoggedIn
                   ? this.props.createdRecipeIds.includes(recipe.id)
-                    ? <IconButton style={{padding:'20px 10px'}} onClick={event => {
+                    ? <IconButton style={{padding:'15px 5px'}} onClick={event => {
                         event.stopPropagation();
                         this.setState({ pickedIndex: index, anchorEl: event.currentTarget })
                       }}>
                         <MoreVertIcon/>
                       </IconButton>
                     : this.props.isLiking && this.state.likedId === recipe.id
-                      ? <CircularProgress size={21} style={{margin:'20px 10px', color:'white'}}/>
+                      ? <CircularProgress size={21} style={{margin:'15px 8px', color:'white'}}/>
                       : this.props.likedRecipeIds.includes(recipe.id)
                         ? <IconButton
-                            style={{padding:'20px 10px'}}
+                            style={{padding:'15px 8px'}}
                             onClick={event => {
                               event.stopPropagation();
                               this.setState({ likedId: recipe.id });
@@ -202,7 +202,7 @@ class RecipeList extends React.Component {
                             <FavoriteIcon/>
                           </IconButton>
                         : <IconButton
-                            style={{padding:'20px 10px'}}
+                            style={{padding:'15px 8px'}}
                             onClick={event => {
                               event.stopPropagation();
                               this.setState({ likedId: recipe.id });
@@ -312,7 +312,8 @@ class RecipeList extends React.Component {
           </Grid>
         </Popover>
         <PromptModal
-          modalType="delete"
+          modalType="action"
+          actionText="Delete"
           isVisible={this.state.isDeleteModalVisible}
           closeModal={() => this.setState({ isDeleteModalVisible: false })}
           onConfirm={() => {

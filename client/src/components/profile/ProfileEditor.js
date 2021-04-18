@@ -100,7 +100,8 @@ const ProfileEditor = props => {
         Delete Account
       </Button>
       <PromptModal
-        modalType="delete"
+        modalType="action"
+        actionText="Delete"
         isVisible={isDeleteModalVisible}
         closeModal={() => setIsDeleteModalVisible(false)}
         onConfirm={() => {

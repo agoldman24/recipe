@@ -279,7 +279,8 @@ class RecipeDetail extends React.Component {
             </Grid>
           </Popover>
           <PromptModal
-            modalType="delete"
+            modalType="action"
+            actionText="Delete"
             isVisible={this.state.isDeleteModalVisible}
             closeModal={() => this.setState({ isDeleteModalVisible: false })}
             onConfirm={e => {

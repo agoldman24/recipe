@@ -132,6 +132,7 @@ const ProfileTab = props => {
   const {
     displayUser: { id, username, firstName, lastName },
     displayUserDetail,
+    isFetchingUserDetail,
     activeUser,
     updateFollowingIds
   } = props;
@@ -173,14 +174,21 @@ const ProfileTab = props => {
       <Grid
         container
         direction="column"
-        style={{alignItems:'center', paddingTop:'10px'}}
+        style={{alignItems:'center', paddingTop:'20px'}}
       >
         <Grid item style={{
-          display:'inline-flex',
+          display: 'inline-flex',
+          width: isMobileOnly ? '100%' : '30%',
           paddingBottom: !!props.activeUser ? '20px' : '0'
         }}>
-          <ProfileAvatar />
-          <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
+          <div style={{width:'40%'}}>
+            <div style={{float:'right'}}>
+              <ProfileAvatar />
+            </div>
+          </div>
+          <div style={{width:'60%', margin:'auto'}}>
+            <Typography style={nameStyle}>{firstName + " " + lastName}</Typography>
+          </div>
         </Grid>
         {!!activeUser
           ? activeUser.id === id
@@ -218,6 +226,11 @@ const ProfileTab = props => {
           : null
         }
       </Grid>
+      {isFetchingUserDetail &&
+        <div style={{width:'100%', textAlign:'center', padding:'20px'}}>
+          <CircularProgress size={30} style={{color:'white'}}/>
+        </div>
+      }
       {!!displayUserDetail &&
         <ProfileDetailsGrid
           displayUser={props.displayUser}
@@ -278,6 +291,7 @@ const mapStateToProps = state => {
     activeUser: state.activeUser,
     profileEditor: state.profileEditor,
     isUpdatingFollowers: state.isUpdatingFollowers,
+    isFetchingUserDetail: state.isFetchingUserDetail
   };
 }
 

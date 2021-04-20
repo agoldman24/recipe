@@ -57,6 +57,7 @@ export default Object.assign({},
   isLiking: false,
   isPosting: false,
   isUpdatingFollowers: false,
+  isFetchingUserDetail: false,
   isFetchingRecipes: false,
   recipesFetched: {
     all: false,

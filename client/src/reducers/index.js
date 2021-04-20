@@ -71,24 +71,16 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case INIT_HYDRATION:
     case SIGN_UP_REQUESTED:
     case SIGN_IN_REQUESTED:
-    case GET_USER_DETAIL_REQUESTED:
     case CREATE_RECIPE_REQUESTED:
     case UPDATE_RECIPE_REQUESTED:
     case DELETE_RECIPE_REQUESTED:
     case DELETE_USER_REQUESTED:
-    case SET_RECIPE_CATEGORY:
       return true;
-    case SET_ACTIVE_TAB:
-      return action.newTab.name === RECIPE_TAB || action.newTab.name === USERS_TAB
     case UPDATE_USER_REQUESTED:
       return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
     case COMPLETE_HYDRATION:
-    case GET_USER_DETAIL_SUCCEEDED:
     case UPDATE_USER_SUCCEEDED:
     case DELETE_USER_SUCCEEDED:
-    case APPEND_ALL_RECIPES:
-    case APPEND_FRIEND_RECIPES:
-    case APPEND_CREATED_RECIPES:
     case UPDATE_DETAIL_RECIPE:
     case DELETE_RECIPE:
     case NETWORK_FAILED:
@@ -609,6 +601,17 @@ const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
   }
 }
 
+const isFetchingUserDetail = (state = StateTree.isFetchingUserDetail, action) => {
+  switch (action.type) {
+    case GET_USER_DETAIL_REQUESTED:
+      return true;
+    case GET_USER_DETAIL_SUCCEEDED:
+      return false;
+    default:
+      return state;
+  }
+}
+
 const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
   switch (action.type) {
     case GET_RECIPES_REQUESTED:
@@ -695,6 +698,7 @@ export default combineReducers({
   isLiking,
   isPosting,
   isUpdatingFollowers,
+  isFetchingUserDetail,
   isFetchingRecipes,
   recipesFetched
 });

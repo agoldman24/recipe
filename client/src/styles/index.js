@@ -162,7 +162,6 @@ export const gradientTextStyle2 = {
 export const nameStyle = {
   ...textStyle,
   fontSize: '24px',
-  margin: 'auto',
   marginLeft: '20px'
 }
 
@@ -322,7 +321,7 @@ export const headerStyle = {
 export const titleStyle = {
   padding: '10px 0 5px 10px',
   fontFamily: 'Shadows Into Light',
-  width: '50%'
+  width: '100%'
 }
 
 export const sectionStyle = {

@@ -141,7 +141,7 @@ class RecipeList extends React.Component {
             <GridListTile key={recipe.id} className="cardMedia"
               style={{
                 height: '190px',
-                width: isMobileOnly ? 'calc(50% - 10px)' : 'calc(25% - 10px)',
+                width: isMobileOnly ? 'calc(50% - 10px)' : 'calc(20% - 10px)',
                 margin: '5px',
                 padding: '0',
                 background: '#303030',
@@ -219,9 +219,7 @@ class RecipeList extends React.Component {
           {!this.props.recipesFetched &&
             <div style={centeredTextStyle}>
               {this.props.isFetchingRecipes
-                ? this.props.isSpinnerVisible
-                  ? null
-                  : <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
+                ? <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
                 : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
                     onClick={() => this.fetchRecipes()}>Load more recipes</Link>
               }

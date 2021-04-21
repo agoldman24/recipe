@@ -220,8 +220,14 @@ class RecipeList extends React.Component {
             <div style={centeredTextStyle}>
               {this.props.isFetchingRecipes
                 ? <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
-                : <Link style={{fontSize:'14px', color: defaultTheme.palette.primary.main}} href="#"
-                    onClick={() => this.fetchRecipes()}>Load more recipes</Link>
+                : this.props.networkFailed
+                    ? null
+                    : <Link href="#" onClick={() => this.fetchRecipes()} style={{
+                        fontSize:'14px',
+                        color: defaultTheme.palette.primary.main
+                      }}>
+                        Load more recipes
+                      </Link>
               }
             </div>
           }

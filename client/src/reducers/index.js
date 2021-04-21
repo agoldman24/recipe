@@ -97,6 +97,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
 const isHydrated = (state = StateTree.isHydrated, action) => {
   switch (action.type) {
     case COMPLETE_HYDRATION:
+    case NETWORK_FAILED:
       return true;
     default:
       return state;
@@ -513,6 +514,7 @@ const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
     case APPEND_FRIEND_RECIPES:
     case APPEND_CREATED_RECIPES:
     case REFRESH_COMPLETE:
+    case NETWORK_FAILED:
       return false;
     case SET_RECIPE_CATEGORY:
       return true;
@@ -575,6 +577,7 @@ const isLiking = (state = StateTree.isLiking, action) => {
     case UPDATE_USER_REQUESTED:
       return action.updateType === LIKED_RECIPE_IDS;
     case UPDATE_USER_SUCCEEDED:
+    case NETWORK_FAILED:
       return false;
     default:
       return state;
@@ -595,6 +598,7 @@ const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
     case UPDATE_USER_REQUESTED:
       return action.updateType === FOLLOWING_IDS;
     case UPDATE_USER_SUCCEEDED:
+    case NETWORK_FAILED:
       return false;
     default:
       return state;
@@ -606,6 +610,7 @@ const isFetchingUserDetail = (state = StateTree.isFetchingUserDetail, action) =>
     case GET_USER_DETAIL_REQUESTED:
       return true;
     case GET_USER_DETAIL_SUCCEEDED:
+    case NETWORK_FAILED:
       return false;
     default:
       return state;
@@ -620,6 +625,7 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
     case APPEND_FRIEND_RECIPES:
     case APPEND_LIKED_RECIPES:
     case APPEND_ALL_RECIPES:
+    case NETWORK_FAILED:
       return false;
     default:
       return state;

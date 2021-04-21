@@ -36,7 +36,7 @@ function* getRecipes(action) {
     const friendRecipes = yield select(getFriendRecipes);
     const allUsers = yield select(getAllUsers);
     const activeUserIsDisplayUser = !!activeUser && !!displayUser && activeUser.id === displayUser.id;
-    const appendTo = activeTab === RECIPE_TAB || activeUserIsDisplayUser ? CREATED_RECIPES : DISPLAY_USER
+    const appendTo = activeTab === RECIPE_TAB || activeUserIsDisplayUser ? CREATED_RECIPES : DISPLAY_USER;
     let ids = [], timestamps = [];
     let res;
     switch (action.requestType) {

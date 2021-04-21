@@ -20,7 +20,7 @@ import ProfileTab from './tabs/ProfileTab';
 import RecipeCategories from './recipes/RecipeCategories';
 import RecipeDetailEdit from './recipes/RecipeDetailEdit';
 import SuccessSnackbar from './popups/SuccessSnackbar';
-import { defaultTheme, errorStyle } from '../styles';
+import { defaultTheme } from '../styles';
 import {
   INIT_HYDRATION,
   COMPLETE_HYDRATION,
@@ -67,9 +67,6 @@ class App extends React.Component {
     this.props.initHydration();
   }
   renderActiveTab = () => {
-    if (this.props.networkFailed) {
-      return <div style={errorStyle}>No internet connection</div>;
-    }
     switch (this.props.activeTab.name) {
       case SIGN_IN_TAB:
         return <SignInTab/>;
@@ -106,17 +103,17 @@ class App extends React.Component {
                 borderRadius: '0',
                 background: 'none'
               }}>
-                <NavigationMenu
-                  toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
-                  setSearchVal={newVal => this.setState({ searchVal: newVal })}
-                  searchVal={this.state.searchVal}
-                />
-                {showRecipeCategories &&
-                  <RecipeCategories
-                    category={this.props.recipeCategory}
-                    setCategory={this.props.setRecipeCategory}
+                  <NavigationMenu
+                    toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
+                    setSearchVal={newVal => this.setState({ searchVal: newVal })}
+                    searchVal={this.state.searchVal}
                   />
-                }
+                  {showRecipeCategories &&
+                    <RecipeCategories
+                      category={this.props.recipeCategory}
+                      setCategory={this.props.setRecipeCategory}
+                    />
+                  }
               </Paper>
             </Grid>
             <Grid item>
@@ -187,7 +184,6 @@ const mapStateToProps = state => {
     isHydrated: state.isHydrated,
     users: state.users,
     displayUser: state.displayUser,
-    networkFailed: state.errorMessages.networkFailed,
     recipeCategory: state.recipeCategory
   };
 }

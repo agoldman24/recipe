@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { select, call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../api/siteUrl';
 import { getUserDetail } from './getUserDetailSaga';
 import {
@@ -16,11 +16,15 @@ import {
   WELCOME_TAB
 } from '../variables/Constants';
 
+const getAllRecipes = state => state.allRecipes;
 const isDefined = v => !!v && v !== "null" && v !== "undefined";
 
 function* runHydration() {
   try {
-    yield call(Api.post, '/randomizeAnonymousRecipes');
+    const allRecipes = yield select(getAllRecipes);
+    if (!Object.keys(allRecipes).length) {
+      yield call(Api.post, '/randomizeAnonymousRecipes');
+    }
     const { data: { users } } = yield call(Api.get, '/getAllUsers');
     yield put({ type: POPULATE_USERS, users });
     const activeUserId = localStorage.getItem("activeUserId");

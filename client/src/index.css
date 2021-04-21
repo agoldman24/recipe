@@ -35,7 +35,8 @@ body {
 .clickable:hover,
 .cardMedia:hover,
 .cardHeader:hover,
-.fileContainer:hover {
+.fileContainer:hover,
+.refresh:hover {
   cursor: pointer;
 }
 

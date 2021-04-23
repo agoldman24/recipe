@@ -7,8 +7,8 @@ import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 import TemporarySpinner from './TemporarySpinner';
 import Api from '../../api/siteUrl';
 import axios from 'axios';
@@ -24,15 +24,8 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
-    padding: theme.spacing(2),
     width: isMobileOnly ? '300px' : '400px',
-    height: isMobileOnly ? '368px' : '490px'
-  },
-  button: {
-    float: 'right',
-    height: '35px',
-    background: 'black',
-    border: '1px solid grey'
+    height: isMobileOnly ? '355px' : '480px'
   },
   searchIcon: {
     position: 'absolute',
@@ -68,7 +61,7 @@ const IconsModal = props => {
 
   useEffect(() => {
     setIsSpinnerVisible(true);
-    if (searchVal.length > 0) {
+    if (!!searchVal.length) {
       setIsFetching(true);
       if (cancel !== undefined) {
         cancel();
@@ -96,9 +89,6 @@ const IconsModal = props => {
         .catch(() => {
           setIcons([]);
         });
-    } else {
-      setIcons([]);
-      setIsFetching(false);
     }
   }, [searchVal]);
 
@@ -109,15 +99,29 @@ const IconsModal = props => {
       onClose={e => {
         e.stopPropagation();
         closeModal();
+        setSearchVal("");
       }}
       closeAfterTransition
       BackdropComponent={Backdrop}
     >
       <Fade in={isVisible}>
-        <Grid container direction="column" className={classes.paper}
-          style={{paddingBottom:'5px', paddingRight:'5px'}}
-        >
-          <Grid item style={{height:'50px', width:'97%'}}>
+        <Grid container direction="column" className={classes.paper}>
+          <div style={{textAlign:'right'}}>
+            <IconButton onClick={() => {
+              closeModal();
+              setSearchVal("")
+            }} style={{
+              marginLeft:'-36px',
+              padding: '8px',
+              position: 'absolute'
+            }}>
+              <CloseIcon/>
+            </IconButton>
+          </div>
+          <Grid item style={{
+            width: '100%',
+            padding: '15px 40px 0 15px'  
+          }}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
@@ -143,35 +147,34 @@ const IconsModal = props => {
             </div>
           </Grid>
           <Grid item style={{
-            height: isMobileOnly ? '258px' : '380px'
+            height: isMobileOnly ? '290px' : '420px',
+            padding: '10px 0 0 15px'
           }}>
-            {!isSpinnerVisible && !icons.length &&
+            {!isSpinnerVisible && !icons.length && !!searchVal.length &&
               <div style={{
-                width: '97%',
+                width: '100%',
                 textAlign: 'center',
                 fontSize: '14px'
               }}>No icons found</div>
             }
-            {[0,1,2,3,4].map(row =>
+            {!!searchVal.length && [0,1,2,3,4].map(row =>
               <Grid container direction="column" key={"row_" + row}>
                 <Grid container direction="row">
                   {[0,1,2,3].map(column => !!icons[4*row + column] &&
                     <Grid item className="iconContainer"
                       key={"row_" + row + "_column_" + column}
                       style={{
-                        width: isMobileOnly ? '68px' : '90px',
-                        padding: isMobileOnly ? '1px 0 1px 2px' : '5px 0 5px 10px',
+                        width: isMobileOnly ? '70px' : '93px',
+                        padding: isMobileOnly ? '1px 1px 4px 1px' : '5px',
                         borderRadius: '10px'
                       }}
                       onClick={e => {
                         e.stopPropagation();
                         onConfirm(icons[4*row + column].url);
                         closeModal();
+                        setSearchVal("")
                       }}
                     >
-                      <CircularProgress size={isMobileOnly ? 45 : 65} style={{
-                        display: icons[4*row + column].isLoading ? 'block' : 'none'
-                      }}/>
                       <img alt="icon" src={icons[4*row + column].url}
                         onLoad={() => {
                           let currentIcons = [...icons];
@@ -179,23 +182,15 @@ const IconsModal = props => {
                           setIcons(currentIcons);
                           setIsFetching(false);
                         }}
-                        height={isMobileOnly ? "46px" : "65px"} style={{
+                        height={isMobileOnly ? "50px" : "68px"} style={{
                           display: icons[4*row + column].isLoading ? 'none' : 'block',
-                          maxWidth: isMobileOnly ? '65px' : '85px'
+                          maxWidth: isMobileOnly ? '67px' : '88px'
                       }}/>
                     </Grid>
                     )}
                   </Grid>
                 </Grid>
             )}
-          </Grid>
-          <Grid item style={{width:'100%'}}>
-            <Button style={{float:'right'}}
-              onClick={e => {
-                e.stopPropagation();
-                closeModal();
-              }}
-            >Close</Button>
           </Grid>
         </Grid>
       </Fade>

@@ -216,23 +216,23 @@ class RecipeList extends React.Component {
                 }/>
             </GridListTile>
           ))}
-          {!this.props.recipesFetched &&
+          {!this.props.recipesFetched && !this.props.networkFailed &&
             <div style={centeredTextStyle}>
               {this.props.isFetchingRecipes
                 ? <CircularProgress size={30} style={{color: defaultTheme.palette.primary.main}}/>
-                : this.props.networkFailed
-                    ? null
-                    : <Link href="#" onClick={() => this.fetchRecipes()} style={{
-                        fontSize:'14px',
-                        color: defaultTheme.palette.primary.main
-                      }}>
-                        Load more recipes
-                      </Link>
+                : !this.props.isSpinnerVisible &&
+                    <Link href="#" onClick={() => this.fetchRecipes()} style={{
+                      fontSize:'14px',
+                      color: defaultTheme.palette.primary.main
+                    }}>
+                      Load more recipes
+                    </Link>
               }
             </div>
           }
         </GridList>
-        {!this.props.isFetchingRecipes && !this.props.recipes.length &&
+        {!this.props.isFetchingRecipes && !this.props.isSpinnerVisible &&
+          !this.props.recipes.length &&
           <div style={centeredTextStyle}>
             <h4>{!!this.props.displayUserDetail && this.props.displayUserDetail.activeDetail === LIKED_RECIPES
               ? "No Liked Posts Yet"
@@ -338,6 +338,7 @@ const mapStateToProps = state => {
   return {
     editMode: state.recipeEditMode,
     activeTab: state.activeTab,
+    networkFailed: state.errorMessages.networkFailed,
     recipeCategory: state.recipeCategory,
     friendRecipes: state.friendRecipes,
     createdRecipes: state.createdRecipes,

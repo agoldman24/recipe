@@ -330,20 +330,28 @@ const displayUserDetail = (state = null, action) => {
       : state;
     case DELETE_RECIPE:
       if (!!state) {
-        const newState = { ...state };
+        const newState = {
+          ...state,
+          createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id)
+        };
         delete newState.likedRecipes[action.id];
         return newState;
       }
       return state;
     case UPDATE_DISPLAY_USER_DETAIL:
       switch (action.updateType) {
+        case CREATED_RECIPE_IDS:
+          return {
+            ...state,
+            createdRecipeIds: action.user.createdRecipeIds
+          }
         case LIKED_RECIPES:
           return {
             ...state,
+            likedRecipeIds: action.user.likedRecipeIds,
             likedRecipes: action.keep
               ? { ...state.likedRecipes, [action.recipe.id]: action.recipe }
-              : Object.keys(state.likedRecipes).filter(id => id !== action.recipe.id)
-                .reduce((accum, id) => {
+              : action.user.likedRecipeIds.reduce((accum, { id }) => {
                   accum[id] = state.likedRecipes[id];
                   return accum;
                 }, {})

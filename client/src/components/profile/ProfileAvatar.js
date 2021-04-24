@@ -1,43 +1,43 @@
-import React, { Fragment, useState} from 'react';
-import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/styles';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
-import Spinner from '../popups/Spinner';
-import IconsModal from '../popups/IconsModal';
-import PromptModal from '../popups/PromptModal';
-import imageCompression from 'browser-image-compression';
-import { b64toBlob } from '../../utilities/imageConverter';
-import { TOGGLE_PROFILE_EDITOR, UPDATE_PROFILE_EDITOR } from '../../actions';
-import { highlightedNumberStyle } from '../../styles';
+import React, { Fragment, useState } from "react";
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/styles";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Popover from "@material-ui/core/Popover";
+import Typography from "@material-ui/core/Typography";
+import Spinner from "../popups/Spinner";
+import IconsModal from "../popups/IconsModal";
+import PromptModal from "../popups/PromptModal";
+import imageCompression from "browser-image-compression";
+import { b64toBlob } from "../../utilities/imageConverter";
+import { TOGGLE_PROFILE_EDITOR, UPDATE_PROFILE_EDITOR } from "../../actions";
+import { highlightedNumberStyle } from "../../styles";
 import "../../index.css";
 
 const useStyles = makeStyles(() => ({
   button: {
-    textTransform: 'none'
+    textTransform: "none",
   },
   paper: {
-    borderRadius: '4px',
-    border: '1px solid white',
-    marginTop: '5px'
-  }
+    borderRadius: "4px",
+    border: "1px solid white",
+    marginTop: "5px",
+  },
 }));
 
 const editPhotoButtonStyle = {
-  top: '5px',
-  color: 'white',
-  fontSize: '16px'
+  top: "5px",
+  color: "white",
+  fontSize: "16px",
 };
 
-const ProfileAvatar = props => {
+const ProfileAvatar = (props) => {
   const {
     isSpinnerVisible,
     displayUserDetail,
     displayUser: { firstName, lastName },
-    profileEditor
+    profileEditor,
   } = props;
 
   const profileImageLoaded = !!profileEditor
@@ -50,16 +50,16 @@ const ProfileAvatar = props => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const imageStyle = {
-    width: '120px',
-    height: '120px',
-    margin: 'auto',
-    border: '1.5px solid white',
+    width: "120px",
+    height: "120px",
+    margin: "auto",
+    border: "1.5px solid white",
     background: profileImageLoaded
-      ? '#333333'
-      : 'radial-gradient(black, black, black, black, #222222, #333333, #333333, grey, grey)'
-  }
+      ? "#333333"
+      : "radial-gradient(black, black, black, black, #222222, #333333, #333333, grey, grey)",
+  };
 
-  const onImageChange = event => {
+  const onImageChange = (event) => {
     const file = event.target.files[0];
     if (!(file.type === "image/jpeg" || file.type === "image/png")) {
       setFileTypeModalVisible(true);
@@ -72,14 +72,14 @@ const ProfileAvatar = props => {
         props.updateProfileEditor(newImage);
       }, 1);
     }
-  }
-  
+  };
+
   return (
     <Fragment>
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
-        onConfirm={icon => props.updateProfileEditor(icon)}
+        onConfirm={(icon) => props.updateProfileEditor(icon)}
       />
       <PromptModal
         modalType="okay"
@@ -87,65 +87,82 @@ const ProfileAvatar = props => {
         closeModal={() => setFileTypeModalVisible(false)}
         message={"Invalid file type. Please choose a PNG or JPEG file."}
       />
-      <Spinner isVisible={isSpinnerVisible}/>
-      <div style={{height:'120px', textAlign:'center'}}>
-        {profileImageLoaded
-        ? <Avatar
+      <Spinner isVisible={isSpinnerVisible} />
+      <div style={{ height: "120px", textAlign: "center" }}>
+        {profileImageLoaded ? (
+          <Avatar
             alt="Profile"
-            src={!!profileEditor
-              ? profileEditor.profileImage
-              : displayUserDetail.profileImage
+            src={
+              !!profileEditor
+                ? profileEditor.profileImage
+                : displayUserDetail.profileImage
             }
             style={imageStyle}
             imgProps={{
               style: {
-                height: 'initial'
-              }
+                height: "initial",
+              },
             }}
           />
-        : <Avatar alt="Profile" style={imageStyle}>
-            <div style={{textAlign:'center'}}>
+        ) : (
+          <Avatar alt="Profile" style={imageStyle}>
+            <div style={{ textAlign: "center" }}>
               <Typography style={highlightedNumberStyle}>
-                {firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()}
+                {firstName.charAt(0).toUpperCase() +
+                  lastName.charAt(0).toUpperCase()}
               </Typography>
             </div>
           </Avatar>
-        }
-        {!!profileEditor &&
-          <label style={editPhotoButtonStyle} className="fileContainer"
-            onClick={e => setAnchorEl(e.currentTarget)}
+        )}
+        {!!profileEditor && (
+          <label
+            style={editPhotoButtonStyle}
+            className="fileContainer"
+            onClick={(e) => setAnchorEl(e.currentTarget)}
           >
             Change Profile Photo
           </label>
-        }
+        )}
       </div>
       <Popover
         open={!!anchorEl}
         anchorEl={anchorEl}
         onClose={() => setAnchorEl(null)}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
+          vertical: "bottom",
+          horizontal: "center",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
+          vertical: "top",
+          horizontal: "center",
         }}
         classes={{
-          paper: classes.paper
+          paper: classes.paper,
         }}
       >
         <Grid container direction="column">
-          <Grid item style={{background:'black', borderBottom: '1px solid white', padding:'10px'}}>
-            <label className="fileContainer" style={{fontSize:'16px'}}>
+          <Grid
+            item
+            style={{
+              background: "black",
+              borderBottom: "1px solid white",
+              padding: "10px",
+            }}
+          >
+            <label className="fileContainer" style={{ fontSize: "16px" }}>
               Upload Photo
-              <input type="file" accept="image/*" onChange={onImageChange} style={{display:'none'}}/>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onImageChange}
+                style={{ display: "none" }}
+              />
             </label>
           </Grid>
-          <Grid item style={{background:'black'}}>
+          <Grid item style={{ background: "black" }}>
             <Button
               className={classes.button}
-              style={{fontSize: '16px', width:'100%', fontFamily: 'Signika'}}
+              style={{ fontSize: "16px", width: "100%", fontFamily: "Signika" }}
               onClick={() => {
                 setIconsModalVisible(true);
                 setAnchorEl(null);
@@ -158,35 +175,34 @@ const ProfileAvatar = props => {
       </Popover>
     </Fragment>
   );
-}
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     displayUser: state.displayUser,
     displayUserDetail: state.displayUserDetail,
     profileEditor: state.profileEditor,
-    isSpinnerVisible: state.isSpinnerVisible
+    isSpinnerVisible: state.isSpinnerVisible,
   };
-}
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     toggleProfileEditor: (firstName, lastName, profileImage) => {
       dispatch({
         type: TOGGLE_PROFILE_EDITOR,
-        firstName, lastName, profileImage
+        firstName,
+        lastName,
+        profileImage,
       });
     },
-    updateProfileEditor: imageUrl => {
+    updateProfileEditor: (imageUrl) => {
       dispatch({
         type: UPDATE_PROFILE_EDITOR,
-        imageUrl
+        imageUrl,
       });
-    }
+    },
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileAvatar);
+export default connect(mapStateToProps, mapDispatchToProps)(ProfileAvatar);

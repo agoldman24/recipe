@@ -1,28 +1,30 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
-import { recipeButtonStyle } from '../../styles';
+import React from "react";
+import { makeStyles } from "@material-ui/styles";
+import Button from "@material-ui/core/Button";
+import { recipeButtonStyle } from "../../styles";
 
 const useStyles = makeStyles(() => ({
   button: {
-    textTransform: 'none',
-    fontSize: '12px',
-    fontFamily: 'Signika',
-    borderRadius: '50px'
-  }
+    textTransform: "none",
+    fontSize: "12px",
+    fontFamily: "Signika",
+    borderRadius: "50px",
+  },
 }));
 
 export default function RecipeCategories({ category, setCategory }) {
   const classes = useStyles();
   return (
-    <div style={{
-      width:'100%',
-      height: '35px',
-      position: 'fixed',
-      top: '40px',
-      paddingTop: '3px',
-      background: 'linear-gradient(to right, black, transparent)'
-    }}>
+    <div
+      style={{
+        width: "100%",
+        height: "35px",
+        position: "fixed",
+        top: "40px",
+        paddingTop: "3px",
+        background: "linear-gradient(to right, black, transparent)",
+      }}
+    >
       <Button
         className={classes.button}
         style={recipeButtonStyle(category, "All")}

@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 import Portal from "@material-ui/core/Portal";
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-import Zoom from '@material-ui/core/Zoom';
-import { HIDE_SNACKBAR } from '../../actions';
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+import Zoom from "@material-ui/core/Zoom";
+import { HIDE_SNACKBAR } from "../../actions";
 
 function SlideTransition(props) {
-  return <Zoom {...props} />
+  return <Zoom {...props} />;
 }
 
-const SuccessSnackbar = props => {
+const SuccessSnackbar = (props) => {
   return (
     <Portal>
       <Snackbar
@@ -18,27 +18,24 @@ const SuccessSnackbar = props => {
         autoHideDuration={1000}
         TransitionComponent={SlideTransition}
         onClose={props.hideSnackbar}
-        style={{top:'0'}}
+        style={{ top: "0" }}
       >
         <MuiAlert>{props.snackbar.message}</MuiAlert>
       </Snackbar>
     </Portal>
   );
-}
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    snackbar: state.snackbar
+    snackbar: state.snackbar,
   };
-}
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    hideSnackbar: () => dispatch({ type: HIDE_SNACKBAR })
+    hideSnackbar: () => dispatch({ type: HIDE_SNACKBAR }),
   };
-}
+};
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SuccessSnackbar);
+export default connect(mapStateToProps, mapDispatchToProps)(SuccessSnackbar);

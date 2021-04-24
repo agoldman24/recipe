@@ -1,33 +1,33 @@
-import React from 'react';
-import { isMobileOnly } from 'react-device-detect';
-import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { deleteButtonStyle, cancelButtonStyle } from '../../styles';
+import React from "react";
+import { isMobileOnly } from "react-device-detect";
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import { deleteButtonStyle, cancelButtonStyle } from "../../styles";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   paper: {
-    background: '#303030',
-    border: '2px solid #000',
+    background: "#303030",
+    border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2),
-    width: isMobileOnly ? '300px' : '400px'
+    width: isMobileOnly ? "300px" : "400px",
   },
   button: {
-    float: 'right',
-    height: '30px',
-    margin: '10px 0 0 10px',
-    padding: '5px 10px',
-    fontWeight: 'bold'
-  }
+    float: "right",
+    height: "30px",
+    margin: "10px 0 0 10px",
+    padding: "5px 10px",
+    fontWeight: "bold",
+  },
 }));
 
 const PromptModal = ({
@@ -37,7 +37,7 @@ const PromptModal = ({
   message,
   actionText,
   onConfirm,
-  onConfirmParam
+  onConfirmParam,
 }) => {
   const classes = useStyles();
   return (
@@ -46,7 +46,7 @@ const PromptModal = ({
       aria-describedby="transition-modal-description"
       className={classes.modal}
       open={isVisible}
-      onClose={e => {
+      onClose={(e) => {
         e.stopPropagation();
         closeModal();
       }}
@@ -58,12 +58,12 @@ const PromptModal = ({
           <Grid item>
             <h3 id="transition-modal-title">{message}</h3>
           </Grid>
-          {modalType === "action"
-          ? <Grid item>
+          {modalType === "action" ? (
+            <Grid item>
               <Button
                 className={classes.button}
                 style={cancelButtonStyle}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   closeModal();
                 }}
@@ -73,19 +73,20 @@ const PromptModal = ({
               <Button
                 className={classes.button}
                 style={deleteButtonStyle}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
-                  onConfirm(onConfirmParam)
+                  onConfirm(onConfirmParam);
                 }}
               >
                 {actionText}
               </Button>
             </Grid>
-          : <Grid item>
+          ) : (
+            <Grid item>
               <Button
                 className={classes.button}
                 style={cancelButtonStyle}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   closeModal();
                 }}
@@ -93,11 +94,11 @@ const PromptModal = ({
                 Okay
               </Button>
             </Grid>
-          }
+          )}
         </Grid>
       </Fade>
     </Modal>
   );
-}
+};
 
 export default PromptModal;

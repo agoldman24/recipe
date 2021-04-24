@@ -1,5 +1,5 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
-import Api from '../api/siteUrl';
+import { call, put, takeLatest } from "redux-saga/effects";
+import Api from "../api/siteUrl";
 import {
   SIGN_UP_REQUESTED,
   ADD_USER,
@@ -9,15 +9,18 @@ import {
   SET_ACTIVE_TAB,
   USERNAME_EXISTS,
   NETWORK_FAILED,
-  SHOW_SNACKBAR
-} from '../actions';
-import { PROFILE_TAB } from '../variables/Constants';
+  SHOW_SNACKBAR,
+} from "../actions";
+import { PROFILE_TAB } from "../variables/Constants";
 
 function* signUp(action) {
   try {
     const { firstName, lastName, username, password } = action;
-    const { data } = yield call(Api.post, '/createUser', {
-      firstName, lastName, username, password
+    const { data } = yield call(Api.post, "/createUser", {
+      firstName,
+      lastName,
+      username,
+      password,
     });
     if (!data.success) {
       yield put({ type: USERNAME_EXISTS });
@@ -34,12 +37,12 @@ function* signUp(action) {
         createdRecipes: {},
         likedRecipes: {},
         likedRecipeIds: [],
-        createdRecipeIds: []
-      })
+        createdRecipeIds: [],
+      });
       yield put({
         type: SET_ACTIVE_TAB,
         currentTab: null,
-        newTab: { name: PROFILE_TAB }
+        newTab: { name: PROFILE_TAB },
       });
       yield put({ type: SHOW_SNACKBAR, message: "Sign up successful" });
     }

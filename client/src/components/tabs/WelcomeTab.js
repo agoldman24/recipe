@@ -1,49 +1,51 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { SET_ACTIVE_TAB } from '../../actions';
-import { SIGN_IN_TAB, SIGN_UP_TAB, USERS_TAB, RECIPE_TAB, ABOUT_TAB } from '../../variables/Constants';
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 import { gradientTextStyle } from "../../styles";
+import { SET_ACTIVE_TAB } from "../../actions";
+import {
+  SIGN_IN_TAB,
+  SIGN_UP_TAB,
+  USERS_TAB,
+  RECIPE_TAB,
+  ABOUT_TAB,
+} from "../../variables/Constants";
 
 const buttonStyle = {
-  marginTop: '10px',
-  width: '350px',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  borderWidth: '3px',
-  borderStyle: 'solid',
-  fontFamily: 'Raleway'
-}
+  marginTop: "10px",
+  width: "350px",
+  fontSize: "20px",
+  fontWeight: "bold",
+  borderWidth: "3px",
+  borderStyle: "solid",
+  fontFamily: "Raleway",
+};
 
-const WelcomeTab = props => {
+const WelcomeTab = (props) => {
   return (
-    <Grid
-      container
-      direction="column"
-      style={{alignItems:'center'}}
-    >
-      <Grid item style={{marginBottom:'20px'}}>
+    <Grid container direction="column" style={{ alignItems: "center" }}>
+      <Grid item style={{ marginBottom: "20px" }}>
         <Typography
           variant="h1"
           style={{
-            float:'left',
-            fontWeight:'bold',
-            fontFamily:'Shadows Into Light',
-            ...gradientTextStyle
+            float: "left",
+            fontWeight: "bold",
+            fontFamily: "Shadows Into Light",
+            ...gradientTextStyle,
           }}
         >
           Recipe
         </Typography>
         <Typography
           variant="h1"
-          style={{float:'left', fontFamily:'Open Sans Condensed'}}
+          style={{ float: "left", fontFamily: "Open Sans Condensed" }}
         >
           Book
         </Typography>
       </Grid>
-      {!props.isSpinnerVisible &&
+      {!props.isSpinnerVisible && (
         <Fragment>
           <Grid item>
             <Button
@@ -51,8 +53,8 @@ const WelcomeTab = props => {
               variant="outlined"
               style={{
                 ...buttonStyle,
-                borderColor: 'yellow',
-                color: 'yellow'
+                borderColor: "yellow",
+                color: "yellow",
               }}
               onClick={() => props.setActiveTab(SIGN_IN_TAB)}
             >
@@ -65,8 +67,8 @@ const WelcomeTab = props => {
               variant="outlined"
               style={{
                 ...buttonStyle,
-                borderColor: '#ffb700',
-                color: '#ffb700'
+                borderColor: "#ffb700",
+                color: "#ffb700",
               }}
               onClick={() => props.setActiveTab(SIGN_UP_TAB)}
             >
@@ -79,8 +81,8 @@ const WelcomeTab = props => {
               variant="outlined"
               style={{
                 ...buttonStyle,
-                borderColor: '#ff7b00',
-                color: '#ff7b00'
+                borderColor: "#ff7b00",
+                color: "#ff7b00",
               }}
               onClick={() => props.setActiveTab(ABOUT_TAB)}
             >
@@ -93,8 +95,8 @@ const WelcomeTab = props => {
               variant="outlined"
               style={{
                 ...buttonStyle,
-                borderColor: '#ff441f',
-                color: '#ff441f'
+                borderColor: "#ff441f",
+                color: "#ff441f",
               }}
               onClick={() => props.setActiveTab(USERS_TAB)}
             >
@@ -107,8 +109,8 @@ const WelcomeTab = props => {
               variant="outlined"
               style={{
                 ...buttonStyle,
-                borderColor: '#ff2e70',
-                color: '#ff2e70'
+                borderColor: "#ff2e70",
+                color: "#ff2e70",
               }}
               onClick={() => props.setActiveTab(RECIPE_TAB)}
             >
@@ -116,28 +118,26 @@ const WelcomeTab = props => {
             </Button>
           </Grid>
         </Fragment>
-      }
+      )}
     </Grid>
   );
-}
+};
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isSpinnerVisible: state.isSpinnerVisible,
   };
-}
+};
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    setActiveTab: name => dispatch({
-      type: SET_ACTIVE_TAB,
-      currentTab: null,
-      newTab: { name }
-    })
+    setActiveTab: (name) =>
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name },
+      }),
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(WelcomeTab);
+export default connect(mapStateToProps, mapDispatchToProps)(WelcomeTab);

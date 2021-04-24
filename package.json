@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "concurrently \"node index.js\" \"cd client && npm start\"",
     "start": "npm i -S mongoose express body-parser morgan cors && node index.js",
-    "heroku-postbuild": "cd client && npm install --save redux react-redux redux-saga axios && npm run build"
+    "heroku-postbuild": "cd client && npm install --save redux react-redux redux-saga axios && npm run build",
+    "pretty": "prettier --write \"./**/*.{js,json,css}\""
   },
   "dependencies": {
     "axios": "^0.21.1",
@@ -15,6 +16,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^5.10.18",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "prettier": "^2.2.1"
   }
 }

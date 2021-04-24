@@ -1,6 +1,6 @@
-import { select, call, put, takeLatest } from 'redux-saga/effects';
-import Api from '../api/siteUrl';
-import { getUserDetail } from './getUserDetailSaga';
+import { select, call, put, takeLatest } from "redux-saga/effects";
+import Api from "../api/siteUrl";
+import { getUserDetail } from "./getUserDetailSaga";
 import {
   NETWORK_FAILED,
   INIT_HYDRATION,
@@ -9,29 +9,28 @@ import {
   SET_ACTIVE_TAB,
   SET_DISPLAY_USER,
   SET_RECIPE_CATEGORY,
-  COMPLETE_HYDRATION
-} from '../actions';
-import {
-  PROFILE_TAB,
-  WELCOME_TAB
-} from '../variables/Constants';
+  COMPLETE_HYDRATION,
+} from "../actions";
+import { PROFILE_TAB, WELCOME_TAB } from "../variables/Constants";
 
-const getAllRecipes = state => state.allRecipes;
-const isDefined = v => !!v && v !== "null" && v !== "undefined";
+const getAllRecipes = (state) => state.allRecipes;
+const isDefined = (v) => !!v && v !== "null" && v !== "undefined";
 
 function* runHydration() {
   try {
     const allRecipes = yield select(getAllRecipes);
     if (!Object.keys(allRecipes).length) {
-      yield call(Api.post, '/randomizeAnonymousRecipes');
+      yield call(Api.post, "/randomizeAnonymousRecipes");
     }
-    const { data: { users } } = yield call(Api.get, '/getAllUsers');
+    const {
+      data: { users },
+    } = yield call(Api.get, "/getAllUsers");
     yield put({ type: POPULATE_USERS, users });
     const activeUserId = localStorage.getItem("activeUserId");
     const activeTab = localStorage.getItem("activeTab");
     const category = localStorage.getItem("recipeCategory");
     if (isDefined(activeUserId)) {
-      const res = yield call(Api.get, '/getUserById?id=' + activeUserId);
+      const res = yield call(Api.get, "/getUserById?id=" + activeUserId);
       yield put({ type: SET_ACTIVE_USER, user: res.data.user });
     }
     if (isDefined(category)) {
@@ -41,23 +40,23 @@ function* runHydration() {
       if (activeTab === PROFILE_TAB) {
         yield put({
           type: SET_DISPLAY_USER,
-          user: users[localStorage.getItem("displayUserId")]
+          user: users[localStorage.getItem("displayUserId")],
         });
         yield* getUserDetail();
       }
       yield put({
-        type: SET_ACTIVE_TAB, 
+        type: SET_ACTIVE_TAB,
         currentTab: null,
-        newTab: { name: activeTab }
+        newTab: { name: activeTab },
       });
     } else {
       yield put({
-        type: SET_ACTIVE_TAB, 
+        type: SET_ACTIVE_TAB,
         currentTab: null,
-        newTab: { name: WELCOME_TAB }
+        newTab: { name: WELCOME_TAB },
       });
     }
-    yield put({ type: COMPLETE_HYDRATION })
+    yield put({ type: COMPLETE_HYDRATION });
   } catch (error) {
     yield put({ type: NETWORK_FAILED });
     console.log(error);

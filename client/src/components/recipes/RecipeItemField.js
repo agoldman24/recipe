@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
-import { fullWidth } from '../../styles';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/styles";
+import TextField from "@material-ui/core/TextField";
+import { fullWidth } from "../../styles";
 
 const useStyles = makeStyles(() => ({
   inputTextReducedPadding: {
-    fontSize: '16px',
-    padding: '10px'
-  }
+    fontSize: "16px",
+    padding: "10px",
+  },
 }));
 
 export default function RecipeItemField({
@@ -18,7 +18,7 @@ export default function RecipeItemField({
   setGlobalDiff,
   addIngredientMode,
   setAddIngredientMode,
-  setAddEnabled
+  setAddEnabled,
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalValue);
@@ -27,7 +27,7 @@ export default function RecipeItemField({
     <TextField
       InputProps={{
         classes: {
-          input: classes.inputTextReducedPadding
+          input: classes.inputTextReducedPadding,
         },
         onBlur: () => {
           let newIngredients;
@@ -39,19 +39,21 @@ export default function RecipeItemField({
               return accum;
             }, []);
           } else {
-            newIngredients = ingredients.reduce((accum, { item, quantity }, i) => {
-              accum.push(i === index
-                ? { item: value, quantity }
-                : { item, quantity }
-              );
-              return accum;
-            }, []);
+            newIngredients = ingredients.reduce(
+              (accum, { item, quantity }, i) => {
+                accum.push(
+                  i === index ? { item: value, quantity } : { item, quantity }
+                );
+                return accum;
+              },
+              []
+            );
           }
           setIngredients(newIngredients);
           setGlobalDiff({ newIngredients });
           setAddIngredientMode(false);
           setAddEnabled(true);
-        }
+        },
       }}
       id={"item_" + index}
       variant="outlined"
@@ -60,11 +62,11 @@ export default function RecipeItemField({
       style={fullWidth}
       autoFocus={addIngredientMode}
       value={value}
-      onChange={e => {
+      onChange={(e) => {
         const val = e.target.value;
         setValue(val);
         setAddEnabled(!!val.length);
       }}
     />
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
-import { b64toBlob } from '../utilities/imageConverter';
-import StateTree from './stateTree';
+import { combineReducers } from "redux";
+import { b64toBlob } from "../utilities/imageConverter";
+import StateTree from "./stateTree";
 import {
   INIT_HYDRATION,
   COMPLETE_HYDRATION,
@@ -47,8 +47,8 @@ import {
   UPDATE_PROFILE_EDITOR,
   TOGGLE_RECIPE_EDIT_MODE,
   TOGGLE_IS_POSTING,
-  REFRESH_COMPLETE
-} from '../actions';
+  REFRESH_COMPLETE,
+} from "../actions";
 import {
   RECIPE_TAB,
   USERS_TAB,
@@ -61,10 +61,10 @@ import {
   DISPLAY_USER,
   FOLLOWERS,
   PROFILE,
-  PUSH
-} from '../variables/Constants';
+  PUSH,
+} from "../variables/Constants";
 
-const isDefined = v => !!v && v !== "null" && v !== "undefined";
+const isDefined = (v) => !!v && v !== "null" && v !== "undefined";
 
 const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
   switch (action.type) {
@@ -77,7 +77,10 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     case DELETE_USER_REQUESTED:
       return true;
     case UPDATE_USER_REQUESTED:
-      return action.updateType === PROFILE || action.updateType === CREATED_RECIPE_IDS
+      return (
+        action.updateType === PROFILE ||
+        action.updateType === CREATED_RECIPE_IDS
+      );
     case COMPLETE_HYDRATION:
     case UPDATE_USER_SUCCEEDED:
     case DELETE_USER_SUCCEEDED:
@@ -92,7 +95,7 @@ const isSpinnerVisible = (state = StateTree.isSpinnerVisible, action) => {
     default:
       return state;
   }
-}
+};
 
 const isHydrated = (state = StateTree.isHydrated, action) => {
   switch (action.type) {
@@ -102,70 +105,70 @@ const isHydrated = (state = StateTree.isHydrated, action) => {
     default:
       return state;
   }
-}
+};
 
 const errorMessages = (state = StateTree.errorMessages, action) => {
   switch (action.type) {
     case SIGN_IN_FAILED:
-      return { ...state, loginFailed: true }
+      return { ...state, loginFailed: true };
     case NETWORK_FAILED:
-      return { ...state, networkFailed: true }
+      return { ...state, networkFailed: true };
     case USERNAME_EXISTS:
-      return { ...state, usernameExists: true }
+      return { ...state, usernameExists: true };
     case EMPTY_FIELDS:
-      return { ...state, emptyFields: true }
+      return { ...state, emptyFields: true };
     case CLEAR_ERROR_MESSAGES:
       return {
         loginFailed: false,
         networkFailed: false,
         usernameExists: false,
-        emptyFields: false
-      }
+        emptyFields: false,
+      };
     default:
-      return state
+      return state;
   }
-}
+};
 
 export const snackbar = (state = StateTree.snackbar, action) => {
   switch (action.type) {
     case SHOW_SNACKBAR:
       return {
         isVisible: true,
-        message: action.message
+        message: action.message,
       };
     case HIDE_SNACKBAR:
       return {
         ...state,
-        isVisible: false
+        isVisible: false,
       };
     default:
       return state;
   }
-}
+};
 
 const activeTab = (state = StateTree.activeTab, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
-      document.getElementById('container').scrollTo(0, 0);
+      document.getElementById("container").scrollTo(0, 0);
       localStorage.setItem("activeTab", action.newTab.name);
       return action.newTab;
     default:
       return state;
   }
-}
+};
 
 const tabHistory = (state = StateTree.tabHistory, action) => {
   switch (action.type) {
     case SET_ACTIVE_TAB:
       return !!action.currentTab
         ? action.operation === PUSH
-          ? [ ...state, action.currentTab ]
+          ? [...state, action.currentTab]
           : state.filter((tab, index) => index < state.length - 1)
-        : []
+        : [];
     default:
       return state;
   }
-}
+};
 
 const users = (state = StateTree.users, action) => {
   let newState;
@@ -176,8 +179,8 @@ const users = (state = StateTree.users, action) => {
     case ADD_USER:
       return {
         [action.user.id]: action.user,
-        ...state
-      }
+        ...state,
+      };
     case SET_ACTIVE_USER:
     case SET_DISPLAY_USER:
     case UPDATE_DISPLAY_USER_DETAIL:
@@ -197,8 +200,10 @@ const users = (state = StateTree.users, action) => {
       const usersUpdate = action.likedByIds.reduce((accum, userId) => {
         accum[userId] = {
           ...state[userId],
-          likedRecipeIds: state[userId].likedRecipeIds.filter(({ id }) => id !== action.id)
-        }
+          likedRecipeIds: state[userId].likedRecipeIds.filter(
+            ({ id }) => id !== action.id
+          ),
+        };
         return accum;
       }, {});
       return {
@@ -206,13 +211,15 @@ const users = (state = StateTree.users, action) => {
         ...usersUpdate,
         [action.authorId]: {
           ...state[action.authorId],
-          createdRecipeIds: state[action.authorId].createdRecipeIds.filter(({ id }) => id !== action.id)
-        }
-      }
+          createdRecipeIds: state[action.authorId].createdRecipeIds.filter(
+            ({ id }) => id !== action.id
+          ),
+        },
+      };
     default:
       return state;
   }
-}
+};
 
 const usersFetched = (state = StateTree.usersFetched, action) => {
   switch (action.type) {
@@ -221,7 +228,7 @@ const usersFetched = (state = StateTree.usersFetched, action) => {
     default:
       return state;
   }
-}
+};
 
 const activeUser = (state = null, action) => {
   switch (action.type) {
@@ -236,24 +243,28 @@ const activeUser = (state = null, action) => {
             profileImageId: action.user.profileImageId,
             firstName: action.user.firstName,
             lastName: action.user.lastName,
-            username: action.user.username
-          }
+            username: action.user.username,
+          };
         default:
           return state;
       }
     case DELETE_RECIPE:
       return {
         ...state,
-        createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id),
-        likedRecipeIds: state.likedRecipeIds.filter(({ id }) => id !== action.id)
-      }
+        createdRecipeIds: state.createdRecipeIds.filter(
+          ({ id }) => id !== action.id
+        ),
+        likedRecipeIds: state.likedRecipeIds.filter(
+          ({ id }) => id !== action.id
+        ),
+      };
     case SIGN_OUT:
       localStorage.clear();
       return null;
     default:
       return state;
   }
-}
+};
 
 const displayUser = (state = null, action) => {
   switch (action.type) {
@@ -268,8 +279,8 @@ const displayUser = (state = null, action) => {
             profileImageId: action.user.profileImageId,
             firstName: action.user.firstName,
             lastName: action.user.lastName,
-            username: action.user.username
-          }
+            username: action.user.username,
+          };
         default:
           return state;
       }
@@ -282,7 +293,7 @@ const displayUser = (state = null, action) => {
     default:
       return state;
   }
-}
+};
 
 const displayUserDetail = (state = null, action) => {
   switch (action.type) {
@@ -290,8 +301,13 @@ const displayUserDetail = (state = null, action) => {
       return null;
     case SET_DISPLAY_USER_DETAIL:
       const {
-        profileImage, followers, following, createdRecipes,
-        likedRecipes, likedRecipeIds, createdRecipeIds
+        profileImage,
+        followers,
+        following,
+        createdRecipes,
+        likedRecipes,
+        likedRecipeIds,
+        createdRecipeIds,
       } = action;
       const cachedActiveDetail = localStorage.getItem("activeDetail");
       const activeDetail = action.activeUserIsDisplayUser
@@ -301,38 +317,48 @@ const displayUserDetail = (state = null, action) => {
         : FOLLOWERS;
       localStorage.setItem("activeDetail", activeDetail);
       return {
-        profileImage, followers, following, createdRecipes, likedRecipes,
-        likedRecipeIds, createdRecipeIds, activeDetail
+        profileImage,
+        followers,
+        following,
+        createdRecipes,
+        likedRecipes,
+        likedRecipeIds,
+        createdRecipeIds,
+        activeDetail,
       };
     case SET_ACTIVE_DETAIL:
       localStorage.setItem("activeDetail", action.detail);
       return {
         ...state,
-        activeDetail: action.detail
+        activeDetail: action.detail,
       };
     case APPEND_LIKED_RECIPES:
-      return !state ? state : {
-        ...state,
-        likedRecipes: {
-          ...state.likedRecipes,
-          ...action.recipes
-        }
-      }
+      return !state
+        ? state
+        : {
+            ...state,
+            likedRecipes: {
+              ...state.likedRecipes,
+              ...action.recipes,
+            },
+          };
     case APPEND_CREATED_RECIPES:
       return !!state && action.appendTo === DISPLAY_USER
-      ? {
-          ...state,
-          createdRecipes: {
-            ...state.createdRecipes,
-            ...action.recipes
+        ? {
+            ...state,
+            createdRecipes: {
+              ...state.createdRecipes,
+              ...action.recipes,
+            },
           }
-        }
-      : state;
+        : state;
     case DELETE_RECIPE:
       if (!!state) {
         const newState = {
           ...state,
-          createdRecipeIds: state.createdRecipeIds.filter(({ id }) => id !== action.id)
+          createdRecipeIds: state.createdRecipeIds.filter(
+            ({ id }) => id !== action.id
+          ),
         };
         delete newState.likedRecipes[action.id];
         return newState;
@@ -343,8 +369,8 @@ const displayUserDetail = (state = null, action) => {
         case CREATED_RECIPE_IDS:
           return {
             ...state,
-            createdRecipeIds: action.user.createdRecipeIds
-          }
+            createdRecipeIds: action.user.createdRecipeIds,
+          };
         case LIKED_RECIPES:
           return {
             ...state,
@@ -354,29 +380,30 @@ const displayUserDetail = (state = null, action) => {
               : action.user.likedRecipeIds.reduce((accum, { id }) => {
                   accum[id] = state.likedRecipes[id];
                   return accum;
-                }, {})
-          }
+                }, {}),
+          };
         case FOLLOWERS:
           return {
             ...state,
             followers: action.keep
               ? { [action.user.id]: action.user, ...state.followers }
-              : Object.keys(state.followers).filter(id => id !== action.user.id)
-                .reduce((accum, id) => {
-                  accum[id] = state.followers[id];
-                  return accum;
-                }, {}),
+              : Object.keys(state.followers)
+                  .filter((id) => id !== action.user.id)
+                  .reduce((accum, id) => {
+                    accum[id] = state.followers[id];
+                    return accum;
+                  }, {}),
             following: Object.keys(state.following).includes(action.user2.id)
               ? { [action.user.id]: action.user, ...state.following }
-              : state.following
-          }
+              : state.following,
+          };
         case PROFILE:
           return {
             ...state,
             profileImage: !!action.imageData
               ? URL.createObjectURL(b64toBlob(action.imageData))
-              : state.profileImage
-          }
+              : state.profileImage,
+          };
         default:
           return state;
       }
@@ -391,7 +418,7 @@ const displayUserDetail = (state = null, action) => {
     default:
       return state;
   }
-}
+};
 
 const profileEditor = (state = StateTree.profileEditor, action) => {
   switch (action.type) {
@@ -401,39 +428,36 @@ const profileEditor = (state = StateTree.profileEditor, action) => {
             firstName: action.firstName,
             lastName: action.lastName,
             username: action.username,
-            profileImage: action.profileImage
+            profileImage: action.profileImage,
           }
         : null;
     case UPDATE_PROFILE_EDITOR:
       if (!!action.imageUrl) {
         return {
           ...state,
-          profileImage: action.imageUrl
-        }
-      }
-      else if (!!action.firstName) {
+          profileImage: action.imageUrl,
+        };
+      } else if (!!action.firstName) {
         return {
           ...state,
-          firstName: action.firstName
-        }
-      }
-      else if (!!action.lastName) {
+          firstName: action.firstName,
+        };
+      } else if (!!action.lastName) {
         return {
           ...state,
-          lastName: action.lastName
-        }
-      }
-      else if (!!action.username) {
+          lastName: action.lastName,
+        };
+      } else if (!!action.username) {
         return {
           ...state,
-          username: action.username
-        }
+          username: action.username,
+        };
       }
       return state;
     default:
       return state;
   }
-}
+};
 
 const recipeCategory = (state = StateTree.recipeCategory, action) => {
   switch (action.type) {
@@ -445,7 +469,7 @@ const recipeCategory = (state = StateTree.recipeCategory, action) => {
     default:
       return state;
   }
-}
+};
 
 const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
   switch (action.type) {
@@ -454,7 +478,7 @@ const recipeEditMode = (state = StateTree.recipeEditMode, action) => {
     default:
       return state;
   }
-}
+};
 
 const detailRecipe = (state = StateTree.detailRecipe, action) => {
   switch (action.type) {
@@ -462,11 +486,11 @@ const detailRecipe = (state = StateTree.detailRecipe, action) => {
     case UPDATE_DETAIL_RECIPE:
       return action.recipe;
     case DELETE_RECIPE:
-      return null
+      return null;
     default:
       return state;
   }
-}
+};
 
 const allRecipes = (state = StateTree.allRecipes, action) => {
   let newState;
@@ -477,17 +501,17 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
         ...action.recipes.reduce((accum, recipe) => {
           accum[recipe.id] = recipe;
           return accum;
-        }, {})
-      }
+        }, {}),
+      };
     case ADD_CREATED_RECIPE:
       return {
         ...state,
-        [action.recipe.id]: action.recipe
-      }
+        [action.recipe.id]: action.recipe,
+      };
     case UPDATE_DETAIL_RECIPE:
       newState = { ...state };
       if (!!state[action.recipe.id]) {
-        newState[action.recipe.id] = action.recipe
+        newState[action.recipe.id] = action.recipe;
       }
       return newState;
     case DELETE_RECIPE:
@@ -499,9 +523,12 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
     default:
       return state;
   }
-}
+};
 
-const oldestFetchedRecipeTimestamp = (state = StateTree.oldestFetchedRecipeTimestamp, action) => {
+const oldestFetchedRecipeTimestamp = (
+  state = StateTree.oldestFetchedRecipeTimestamp,
+  action
+) => {
   switch (action.type) {
     case APPEND_ALL_RECIPES:
       return !!action.recipes.length
@@ -514,7 +541,7 @@ const oldestFetchedRecipeTimestamp = (state = StateTree.oldestFetchedRecipeTimes
     default:
       return state;
   }
-}
+};
 
 const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
   switch (action.type) {
@@ -527,48 +554,50 @@ const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
     case SET_RECIPE_CATEGORY:
       return true;
     case SET_ACTIVE_TAB:
-      return action.newTab.name === RECIPE_TAB || action.newTab.name === USERS_TAB
+      return (
+        action.newTab.name === RECIPE_TAB || action.newTab.name === USERS_TAB
+      );
     default:
       return state;
   }
-}
+};
 
 const friendRecipes = (state = StateTree.friendRecipes, action) => {
   switch (action.type) {
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
-        ...action.recipes
-      }
+        ...action.recipes,
+      };
     case SIGN_OUT:
       return {};
     default:
       return state;
   }
-}
+};
 
 const createdRecipes = (state = StateTree.createdRecipes, action) => {
   switch (action.type) {
     case ADD_CREATED_RECIPE:
       return {
         ...state,
-        [action.recipe.id]: action.recipe
-      }
+        [action.recipe.id]: action.recipe,
+      };
     case UPDATE_DETAIL_RECIPE:
       return {
         ...state,
         [action.recipe.id]: {
           ...state[action.recipe.id],
-          ...action.recipe
-        }
-      }
+          ...action.recipe,
+        },
+      };
     case APPEND_CREATED_RECIPES:
       return action.appendTo === CREATED_RECIPES
-      ? {
-          ...state,
-          ...action.recipes
-        }
-      : state;
+        ? {
+            ...state,
+            ...action.recipes,
+          }
+        : state;
     case DELETE_RECIPE:
       const newState = { ...state };
       delete newState[action.id];
@@ -578,7 +607,7 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
     default:
       return state;
   }
-}
+};
 
 const isLiking = (state = StateTree.isLiking, action) => {
   switch (action.type) {
@@ -590,7 +619,7 @@ const isLiking = (state = StateTree.isLiking, action) => {
     default:
       return state;
   }
-}
+};
 
 const isPosting = (state = StateTree.isPosting, action) => {
   switch (action.type) {
@@ -599,7 +628,7 @@ const isPosting = (state = StateTree.isPosting, action) => {
     default:
       return state;
   }
-}
+};
 
 const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
   switch (action.type) {
@@ -611,9 +640,12 @@ const isUpdatingFollowers = (state = StateTree.isUpdatingFollowers, action) => {
     default:
       return state;
   }
-}
+};
 
-const isFetchingUserDetail = (state = StateTree.isFetchingUserDetail, action) => {
+const isFetchingUserDetail = (
+  state = StateTree.isFetchingUserDetail,
+  action
+) => {
   switch (action.type) {
     case GET_USER_DETAIL_REQUESTED:
       return true;
@@ -623,7 +655,7 @@ const isFetchingUserDetail = (state = StateTree.isFetchingUserDetail, action) =>
     default:
       return state;
   }
-}
+};
 
 const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
   switch (action.type) {
@@ -638,55 +670,55 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
     default:
       return state;
   }
-}
+};
 
 const recipesFetched = (state = StateTree.recipesFetched, action) => {
   switch (action.type) {
     case APPEND_ALL_RECIPES:
       return {
         ...state,
-        all: action.recipes.length < 20
-      }
+        all: action.recipes.length < 20,
+      };
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
-        friends: Object.keys(action.recipes).length < 20
-      }
+        friends: Object.keys(action.recipes).length < 20,
+      };
     case APPEND_CREATED_RECIPES:
       return action.appendTo === CREATED_RECIPES
-      ? {
-          ...state,
-          created: Object.keys(action.recipes).length < 20
-        }
-      : {
-          ...state,
-          displayUserCreated: Object.keys(action.recipes).length < 20
-        }
+        ? {
+            ...state,
+            created: Object.keys(action.recipes).length < 20,
+          }
+        : {
+            ...state,
+            displayUserCreated: Object.keys(action.recipes).length < 20,
+          };
     case APPEND_LIKED_RECIPES:
       return {
         ...state,
-        liked: Object.keys(action.recipes).length < 20
-      }
+        liked: Object.keys(action.recipes).length < 20,
+      };
     case SET_DISPLAY_USER_DETAIL:
       return {
         ...state,
         created: !action.activeUserIsDisplayUser
           ? Object.keys(action.createdRecipes).length < 20
           : state.created,
-        liked: Object.keys(action.likedRecipes).length < 20
-      }
+        liked: Object.keys(action.likedRecipes).length < 20,
+      };
     case SET_ACTIVE_TAB:
       if (action.newTab.name !== PROFILE_TAB) {
         return {
           ...state,
-          liked: false
-        }
+          liked: false,
+        };
       }
       return state;
     default:
       return state;
   }
-}
+};
 
 export default combineReducers({
   activeTab,
@@ -714,5 +746,5 @@ export default combineReducers({
   isUpdatingFollowers,
   isFetchingUserDetail,
   isFetchingRecipes,
-  recipesFetched
+  recipesFetched,
 });

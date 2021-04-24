@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import { inputStyle, errorMessageStyle } from '../../styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/styles";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import { inputStyle, errorMessageStyle } from "../../styles";
 
 const useStyles = makeStyles(() => inputStyle);
 
@@ -13,60 +13,73 @@ export default function RecipeNameField({
   isErrored,
   setName,
   setFocus,
-  setGlobalDiff
+  setGlobalDiff,
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalName);
   return (
     <Grid container direction="row">
-      <Grid item style={{
-        width: focusedContainer !== "name" && isNameEmpty && isErrored ? '65%' : '100%',
-        paddingRight: focusedContainer !== "name" && isNameEmpty && isErrored ? '7px' : '0'
-      }}>
+      <Grid
+        item
+        style={{
+          width:
+            focusedContainer !== "name" && isNameEmpty && isErrored
+              ? "65%"
+              : "100%",
+          paddingRight:
+            focusedContainer !== "name" && isNameEmpty && isErrored
+              ? "7px"
+              : "0",
+        }}
+      >
         <TextField
           InputProps={{
             classes: {
-              input: classes.inputText
+              input: classes.inputText,
             },
             onBlur: () => {
               setName(value);
               setGlobalDiff({ newName: value });
               setFocus(null);
-            }
+            },
           }}
           classes={{
-            root: focusedContainer === "name"
-              ? classes.yellowRoot
-              : isNameEmpty && isErrored
+            root:
+              focusedContainer === "name"
+                ? classes.yellowRoot
+                : isNameEmpty && isErrored
                 ? classes.redRoot
-                : classes.whiteRoot
+                : classes.whiteRoot,
           }}
           style={{
-            fontStyle: value === originalName || focusedContainer === "name" 
-              ? 'normal' : 'italic'
+            fontStyle:
+              value === originalName || focusedContainer === "name"
+                ? "normal"
+                : "italic",
           }}
           required
           fullWidth
           variant="outlined"
           label="Title"
           value={value}
-          onClick={e => {
+          onClick={(e) => {
             e.stopPropagation();
             setFocus("name");
           }}
-          onChange={e => setValue(e.target.value)}
+          onChange={(e) => setValue(e.target.value)}
         />
       </Grid>
-      {focusedContainer !== "name" && isNameEmpty && isErrored &&
-        <Grid item
+      {focusedContainer !== "name" && isNameEmpty && isErrored && (
+        <Grid
+          item
           style={{
             ...errorMessageStyle,
-            paddingLeft:'3px',
+            paddingLeft: "3px",
           }}
         >
           Please enter a title
         </Grid>
-      }
+      )}
     </Grid>
-  )
+  );
 }

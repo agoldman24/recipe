@@ -7,12 +7,15 @@ export const directionsAreDifferent = (
 ) => {
   if (isEditMode && newDirectionsType !== typeof originalDirections) {
     return true;
-  };
+  }
   if (newDirectionsType === "string") {
     if (!isEditMode) {
-      return !!newDirectionsParagraph.length
+      return !!newDirectionsParagraph.length;
     }
-    return newDirectionsParagraph.replace(/\s+/g, '') !== originalDirections.replace(/\s+/g, '');
+    return (
+      newDirectionsParagraph.replace(/\s+/g, "") !==
+      originalDirections.replace(/\s+/g, "")
+    );
   } else {
     if (newDirectionSteps.length !== originalDirections.length) {
       return true;
@@ -24,7 +27,7 @@ export const directionsAreDifferent = (
     }
   }
   return false;
-}
+};
 
 export const ingredientsAreDifferent = (
   ingredients,
@@ -32,18 +35,20 @@ export const ingredientsAreDifferent = (
   isEditMode
 ) => {
   if (!isEditMode) {
-    return !!ingredients.length
+    return !!ingredients.length;
   } else {
     if (ingredients.length !== originalIngredients.length) {
       return true;
     }
     for (let i = 0; i < ingredients.length; i++) {
       const { item, quantity } = ingredients[i];
-      if (item !== originalIngredients[i].item ||
-        quantity !== originalIngredients[i].quantity) {
+      if (
+        item !== originalIngredients[i].item ||
+        quantity !== originalIngredients[i].quantity
+      ) {
         return true;
       }
     }
   }
   return false;
-}
+};

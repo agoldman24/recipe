@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
-import { fullWidth } from '../../styles';
+import React, { useState, useEffect } from "react";
+import { makeStyles } from "@material-ui/styles";
+import TextField from "@material-ui/core/TextField";
+import { fullWidth } from "../../styles";
 
 const useStyles = makeStyles(() => ({
   inputTextReducedPadding: {
-    fontSize: '16px',
-    padding: '10px'
-  }
+    fontSize: "16px",
+    padding: "10px",
+  },
 }));
 
 export default function RecipeStepField({
@@ -18,7 +18,7 @@ export default function RecipeStepField({
   setGlobalDiff,
   addStepMode,
   setAddStepMode,
-  setAddEnabled
+  setAddEnabled,
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalValue);
@@ -27,7 +27,7 @@ export default function RecipeStepField({
     <TextField
       InputProps={{
         classes: {
-          input: classes.inputTextReducedPadding
+          input: classes.inputTextReducedPadding,
         },
         onBlur: () => {
           let newDirectionSteps;
@@ -48,7 +48,7 @@ export default function RecipeStepField({
           setGlobalDiff({ newDirectionSteps });
           setAddStepMode(false);
           setAddEnabled(true);
-        }
+        },
       }}
       id={"step_" + index}
       variant="outlined"
@@ -56,11 +56,11 @@ export default function RecipeStepField({
       style={fullWidth}
       autoFocus={addStepMode}
       value={value}
-      onChange={e => {
+      onChange={(e) => {
         const val = e.target.value;
         setValue(val);
         setAddEnabled(!!val.length);
       }}
     />
-  )
+  );
 }

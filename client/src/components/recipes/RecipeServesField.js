@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
-import { inputStyle } from '../../styles';
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/styles";
+import TextField from "@material-ui/core/TextField";
+import { inputStyle } from "../../styles";
 
 const useStyles = makeStyles(() => inputStyle);
 
@@ -10,7 +10,7 @@ export default function RecipeServesField({
   originalServes,
   setServes,
   setFocus,
-  setGlobalDiff
+  setGlobalDiff,
 }) {
   const classes = useStyles();
   const [value, setValue] = useState(originalServes);
@@ -18,32 +18,35 @@ export default function RecipeServesField({
     <TextField
       InputProps={{
         classes: {
-          input: classes.inputText
+          input: classes.inputText,
         },
         onBlur: () => {
           setServes(value);
           setGlobalDiff({ newServes: value });
           setFocus(null);
-        }
+        },
       }}
       classes={{
-        root: focusedContainer === "serves"
-          ? classes.yellowRoot
-          : classes.whiteRoot
+        root:
+          focusedContainer === "serves"
+            ? classes.yellowRoot
+            : classes.whiteRoot,
       }}
       style={{
-        fontStyle: value === originalServes || focusedContainer === "serves" 
-          ? 'normal' : 'italic'
+        fontStyle:
+          value === originalServes || focusedContainer === "serves"
+            ? "normal"
+            : "italic",
       }}
       fullWidth
       variant="outlined"
       label="Serves"
       value={value}
-      onClick={e => {
+      onClick={(e) => {
         e.stopPropagation();
         setFocus("serves");
       }}
-      onChange={e => setValue(e.target.value)}
+      onChange={(e) => setValue(e.target.value)}
     />
-  )
+  );
 }

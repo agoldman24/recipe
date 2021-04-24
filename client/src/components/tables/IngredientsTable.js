@@ -1,25 +1,28 @@
-import React from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import React from "react";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Paper from "@material-ui/core/Paper";
 
 const textStyle = {
-  fontSize: '12.5px'
-}
+  fontSize: "12.5px",
+};
 const greyTextStyle = {
   ...textStyle,
-  color: '#999999'
-}
+  color: "#999999",
+};
 
 const IngredientsTable = ({ ingredients }) => {
   return (
-    <TableContainer component={Paper} style={{boxShadow:'none', background:'none', paddingBottom:'10px'}}>
+    <TableContainer
+      component={Paper}
+      style={{ boxShadow: "none", background: "none", paddingBottom: "10px" }}
+    >
       <Table size="small">
-        <TableHead >
+        <TableHead>
           <TableRow>
             <TableCell style={greyTextStyle}>Item</TableCell>
             <TableCell style={greyTextStyle}>Quantity</TableCell>
@@ -36,6 +39,6 @@ const IngredientsTable = ({ ingredients }) => {
       </Table>
     </TableContainer>
   );
-}
+};
 
 export default IngredientsTable;

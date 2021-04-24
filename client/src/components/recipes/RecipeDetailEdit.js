@@ -1,62 +1,69 @@
-import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import RecipeForms from './RecipeForms';
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import RecipeForms from "./RecipeForms";
 import {
   TOGGLE_RECIPE_EDIT_MODE,
   CREATE_RECIPE_REQUESTED,
-  UPDATE_RECIPE_REQUESTED
-} from '../../actions';
-import { detailStyle } from '../../styles';
+  UPDATE_RECIPE_REQUESTED,
+} from "../../actions";
+import { detailStyle } from "../../styles";
 
 const useStyles = makeStyles(() => ({
   appBar: {
-    position: 'relative',
-    background: 'black'
+    position: "relative",
+    background: "black",
   },
   title: {
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: 'bold',
-    fontFamily: 'Raleway',
-    fontSize: '20px',
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontFamily: "Raleway",
+    fontSize: "20px",
     flex: 1,
   },
   button: {
-    color: '#45bbff'
-  }
+    color: "#45bbff",
+  },
 }));
 
 const buttonStyle = {
-  paddingLeft: '0',
-  paddingRight: '0',
-  minWidth: '0'
-}
+  paddingLeft: "0",
+  paddingRight: "0",
+  minWidth: "0",
+};
 
-const RecipeDetailEdit = props => {
+const RecipeDetailEdit = (props) => {
   const classes = useStyles();
   const [isSaveEnabled, setIsSaveEnabled] = useState(false);
   const [isErrored, setIsErrored] = useState(false);
   const [isNameEmpty, setIsNameEmpty] = useState(props.isCreateMode);
   const [isImageEmpty, setIsImageEmpty] = useState(props.isCreateMode);
-  const [isIngredientsEmpty, setIsIngredientsEmpty] = useState(props.isCreateMode);
-  const [isDirectionsEmpty, setIsDirectionsEmpty] = useState(props.isCreateMode);
+  const [isIngredientsEmpty, setIsIngredientsEmpty] = useState(
+    props.isCreateMode
+  );
+  const [isDirectionsEmpty, setIsDirectionsEmpty] = useState(
+    props.isCreateMode
+  );
   const [name, setName] = useState(props.name);
   const [image, setImage] = useState(props.image);
   const [ingredients, setIngredients] = useState(props.ingredients);
   const [serves, setServes] = useState(!!props.serves ? props.serves : "");
   const [directionsType, setDirectionsType] = useState(typeof props.directions);
   const [directionsParagraph, setDirectionsParagraph] = useState(
-    directionsType === "string" ? props.directions : "");
+    directionsType === "string" ? props.directions : ""
+  );
   const [directionSteps, setDirectionSteps] = useState(
-    directionsType === "string" ? [] : props.directions);
-  const emptyField = isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
+    directionsType === "string" ? [] : props.directions
+  );
+  const emptyField =
+    isNameEmpty || isImageEmpty || isIngredientsEmpty || isDirectionsEmpty;
 
   const handleSubmitSave = () => {
     if (emptyField) {
@@ -68,21 +75,24 @@ const RecipeDetailEdit = props => {
         props.onClose();
       }
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', image, true);
-      xhr.responseType = 'blob';
-      xhr.onload = function() {
+      xhr.open("GET", image, true);
+      xhr.responseType = "blob";
+      xhr.onload = function () {
         if (this.status === 200) {
           const reader = new FileReader();
-          reader.readAsDataURL(this.response); 
-          reader.onloadend = function() {
-            const directions = directionsType === "string" ? directionsParagraph : directionSteps;
+          reader.readAsDataURL(this.response);
+          reader.onloadend = function () {
+            const directions =
+              directionsType === "string"
+                ? directionsParagraph
+                : directionSteps;
             if (props.isEditMode) {
               props.updateRecipe({
                 name,
                 serves: !!serves ? serves : null,
                 image: reader.result,
                 ingredients,
-                directions
+                directions,
               });
             } else {
               props.createRecipe({
@@ -90,45 +100,56 @@ const RecipeDetailEdit = props => {
                 serves: !!serves ? serves : null,
                 image: reader.result,
                 ingredients,
-                directions
+                directions,
               });
             }
-          }
+          };
         }
       };
       xhr.send();
     }
-  }
+  };
   return (
     <Card style={detailStyle}>
       <AppBar className={classes.appBar} id="editRecipeHeader">
-        <Toolbar style={{minHeight:'0', padding:'10px 0'}}>
-          <Grid container direction="row" style={{padding:'0 15px'}}>
-            <Grid item style={{width:'25%'}}>
-              {props.isEditMode
-              ? <Button style={buttonStyle} className={classes.button}
-                  disabled={!isSaveEnabled} onClick={handleSubmitSave}>
+        <Toolbar style={{ minHeight: "0", padding: "10px 0" }}>
+          <Grid container direction="row" style={{ padding: "0 15px" }}>
+            <Grid item style={{ width: "25%" }}>
+              {props.isEditMode ? (
+                <Button
+                  style={buttonStyle}
+                  className={classes.button}
+                  disabled={!isSaveEnabled}
+                  onClick={handleSubmitSave}
+                >
                   Save
                 </Button>
-              : <Button style={buttonStyle} className={classes.button}
-                  onClick={handleSubmitSave}>
+              ) : (
+                <Button
+                  style={buttonStyle}
+                  className={classes.button}
+                  onClick={handleSubmitSave}
+                >
                   Submit
                 </Button>
-              }
+              )}
             </Grid>
-            <Grid item style={{margin:'auto', width:'50%'}}>
+            <Grid item style={{ margin: "auto", width: "50%" }}>
               <Typography className={classes.title}>
                 {props.isEditMode ? "Edit Recipe" : "Create Recipe"}
               </Typography>
             </Grid>
-            <Grid item style={{width:'25%'}}>
-              <Button style={{...buttonStyle, float:'right'}} onClick={() => {
-                if (props.isEditMode) {
-                  props.toggleEditMode();
-                } else {
-                  props.onClose();
-                }
-              }}>
+            <Grid item style={{ width: "25%" }}>
+              <Button
+                style={{ ...buttonStyle, float: "right" }}
+                onClick={() => {
+                  if (props.isEditMode) {
+                    props.toggleEditMode();
+                  } else {
+                    props.onClose();
+                  }
+                }}
+              >
                 Cancel
               </Button>
             </Grid>
@@ -171,26 +192,33 @@ const RecipeDetailEdit = props => {
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     isEditMode: state.recipeEditMode,
-    isSpinnerVisible: state.isSpinnerVisible
+    isSpinnerVisible: state.isSpinnerVisible,
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   toggleEditMode: () => dispatch({ type: TOGGLE_RECIPE_EDIT_MODE }),
-  createRecipe: ({ name, serves, image, ingredients, directions }) => dispatch({
-    type: CREATE_RECIPE_REQUESTED,
-    name, serves, image, ingredients, directions
-  }),
-  updateRecipe: ({ name, serves, image, ingredients, directions }) => dispatch({
-    type: UPDATE_RECIPE_REQUESTED,
-    name, serves, image, ingredients, directions
-  })
+  createRecipe: ({ name, serves, image, ingredients, directions }) =>
+    dispatch({
+      type: CREATE_RECIPE_REQUESTED,
+      name,
+      serves,
+      image,
+      ingredients,
+      directions,
+    }),
+  updateRecipe: ({ name, serves, image, ingredients, directions }) =>
+    dispatch({
+      type: UPDATE_RECIPE_REQUESTED,
+      name,
+      serves,
+      image,
+      ingredients,
+      directions,
+    }),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RecipeDetailEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(RecipeDetailEdit);

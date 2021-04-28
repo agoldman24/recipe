@@ -1,5 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { isMobileOnly } from "react-device-detect";
 import { withStyles } from "@material-ui/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -80,9 +81,14 @@ const styles = () => ({
 });
 
 const NavigationMenu = (props) => {
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const { isSearchVisible, setIsSearchVisible } = props;
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSignOutModalVisible, setIsSignOutModalVisible] = useState(false);
+
+  useEffect(() => {
+    setIsSearchVisible(false);
+    setIsSearchFocused(false);
+  }, [props.recipeCategory]);
 
   const tabStyle = (tab) => ({
     minWidth: "40px",
@@ -138,7 +144,9 @@ const NavigationMenu = (props) => {
     </div>
   ) : (
     <Fragment>
-      {props.activeTab.name === USERS_TAB && (
+      {(props.activeTab.name === USERS_TAB ||
+        (props.activeTab.name === RECIPE_TAB &&
+          props.recipeCategory === "All")) && (
         <Fragment>
           <IconButton
             style={{
@@ -170,12 +178,16 @@ const NavigationMenu = (props) => {
             }}
           >
             <InputBase
-              placeholder="Search users..."
+              placeholder={
+                props.activeTab.name === USERS_TAB
+                  ? "Search users..."
+                  : "Search recipes..."
+              }
               autoFocus
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
-              value={props.searchVal}
-              onChange={(e) => props.setSearchVal(e.target.value.toLowerCase())}
+              value={props.keyword}
+              onChange={(e) => props.setKeyword(e.target.value.toLowerCase())}
               classes={{
                 root: isSearchFocused
                   ? props.classes.focusedInputRoot
@@ -183,7 +195,7 @@ const NavigationMenu = (props) => {
                 input: props.classes.inputInput,
               }}
               style={{
-                width: "calc(100% - 85px)",
+                width: isMobileOnly ? "calc(100% - 80px)" : "calc(50% - 80px)",
                 opacity: isSearchVisible ? "100%" : "0",
                 transitionProperty: "opacity",
                 transitionDuration: "0.5s",
@@ -192,15 +204,16 @@ const NavigationMenu = (props) => {
             <IconButton
               style={{
                 position: "fixed",
-                right: "5px",
+                left: isMobileOnly ? "calc(100% - 40px)" : "calc(50% - 40px)",
                 height: "20px",
+                width: "35px",
                 color: "white",
                 opacity: isSearchVisible ? "100%" : "0",
                 transitionProperty: "opacity",
                 transitionDuration: "0.5s",
               }}
               onClick={() => {
-                props.setSearchVal("");
+                props.setKeyword("");
                 setIsSearchVisible(false);
               }}
             >
@@ -278,6 +291,7 @@ const NavigationMenu = (props) => {
 const mapStateToProps = (state) => {
   return {
     activeTab: state.activeTab,
+    recipeCategory: state.recipeCategory,
     highlightedTab:
       state.activeTab.name === USERS_TAB ||
       state.activeTab.name === RECIPE_TAB ||

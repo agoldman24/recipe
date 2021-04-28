@@ -117,6 +117,22 @@ exports.getRecipesByTime = (req, res) => {
     });
 };
 
+exports.getRecipesByKeyword = (req, res) => {
+  db.collection("recipes")
+    .find({
+      name: { $regex: req.query.keyword, $options: "ix" },
+      timestamp: { $lt: parseInt(req.query.timestamp) },
+    })
+    .limit(20)
+    .toArray()
+    .then((recipes) => {
+      return res.json({
+        success: true,
+        recipes: recipes.map((recipe) => getRecipeSummary(recipe)),
+      });
+    });
+};
+
 exports.getRecipesByIds = (req, res) => {
   const ids = req.query.ids.split(",");
   if (ids.length === 1 && !ids[0].length) {

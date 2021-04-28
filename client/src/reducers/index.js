@@ -32,6 +32,7 @@ import {
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
+  REPLACE_ALL_RECIPES,
   SET_RECIPE_CATEGORY,
   SET_DETAIL_RECIPE,
   SET_ACTIVE_TAB,
@@ -503,6 +504,11 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
           return accum;
         }, {}),
       };
+    case REPLACE_ALL_RECIPES:
+      return action.recipes.reduce((accum, recipe) => {
+        accum[recipe.id] = recipe;
+        return accum;
+      }, {});
     case ADD_CREATED_RECIPE:
       return {
         ...state,
@@ -530,6 +536,7 @@ const oldestFetchedRecipeTimestamp = (
   action
 ) => {
   switch (action.type) {
+    case REPLACE_ALL_RECIPES:
     case APPEND_ALL_RECIPES:
       return !!action.recipes.length
         ? action.recipes[action.recipes.length - 1].timestamp
@@ -545,6 +552,7 @@ const oldestFetchedRecipeTimestamp = (
 
 const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
   switch (action.type) {
+    case REPLACE_ALL_RECIPES:
     case APPEND_ALL_RECIPES:
     case APPEND_FRIEND_RECIPES:
     case APPEND_CREATED_RECIPES:
@@ -665,6 +673,7 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
     case APPEND_FRIEND_RECIPES:
     case APPEND_LIKED_RECIPES:
     case APPEND_ALL_RECIPES:
+    case REPLACE_ALL_RECIPES:
     case NETWORK_FAILED:
       return false;
     default:
@@ -674,6 +683,7 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
 
 const recipesFetched = (state = StateTree.recipesFetched, action) => {
   switch (action.type) {
+    case REPLACE_ALL_RECIPES:
     case APPEND_ALL_RECIPES:
       return {
         ...state,

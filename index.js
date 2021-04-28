@@ -36,6 +36,7 @@ router.post("/updateFollowingIds", userRoutes.updateFollowingIds);
 router.post("/deleteUser", userRoutes.deleteUser);
 
 router.get("/getRecipesByTime", recipeRoutes.getRecipesByTime);
+router.get("/getRecipesByKeyword", recipeRoutes.getRecipesByKeyword);
 router.get("/getRecipesByIds", recipeRoutes.getRecipesByIds);
 router.get("/getRecipeDetail", recipeRoutes.getRecipeDetail);
 router.post("/createRecipe", recipeRoutes.createRecipe);

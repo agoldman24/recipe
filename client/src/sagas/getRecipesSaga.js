@@ -6,11 +6,13 @@ import {
   APPEND_FRIEND_RECIPES,
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
+  REPLACE_ALL_RECIPES,
   NETWORK_FAILED,
   UPDATE_USERS,
 } from "../actions";
 import {
   ALL_RECIPES,
+  KEYWORD_RECIPES,
   FRIEND_RECIPES,
   CREATED_RECIPES,
   LIKED_RECIPES,
@@ -20,6 +22,7 @@ import {
 
 const getOldestFetchedRecipeTimestamp = (state) =>
   state.oldestFetchedRecipeTimestamp;
+const getRefreshNeeded = (state) => state.refreshNeeded;
 const getActiveTab = (state) => state.activeTab.name;
 const getActiveUser = (state) => state.activeUser;
 const getDisplayUser = (state) => state.displayUser;
@@ -32,6 +35,7 @@ function* getRecipes(action) {
     const oldestFetchedRecipeTimestamp = yield select(
       getOldestFetchedRecipeTimestamp
     );
+    const refreshNeeded = yield select(getRefreshNeeded);
     const activeTab = yield select(getActiveTab);
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
@@ -54,7 +58,23 @@ function* getRecipes(action) {
           "/getRecipesByTime?timestamp=" + oldestFetchedRecipeTimestamp
         );
         yield put({
-          type: APPEND_ALL_RECIPES,
+          type: refreshNeeded ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
+          recipes: res.data.recipes,
+        });
+        break;
+      case KEYWORD_RECIPES:
+        const timestamp = !!action.timestamp
+          ? action.timestamp
+          : oldestFetchedRecipeTimestamp;
+        res = yield call(
+          Api.get,
+          "/getRecipesByKeyword?keyword=" +
+            action.keyword +
+            "&timestamp=" +
+            timestamp
+        );
+        yield put({
+          type: !!action.timestamp ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
           recipes: res.data.recipes,
         });
         break;
@@ -78,7 +98,7 @@ function* getRecipes(action) {
         });
         res = yield call(
           Api.get,
-          "/getRecipesByIds?" + "ids=" + ids + "&timestamps=" + timestamps
+          "/getRecipesByIds?ids=" + ids + "&timestamps=" + timestamps
         );
         yield put({
           type: APPEND_FRIEND_RECIPES,
@@ -100,7 +120,7 @@ function* getRecipes(action) {
         }
         res = yield call(
           Api.get,
-          "/getRecipesByIds?" + "ids=" + ids + "&timestamps=" + timestamps
+          "/getRecipesByIds?ids=" + ids + "&timestamps=" + timestamps
         );
         yield put({
           type: APPEND_CREATED_RECIPES,

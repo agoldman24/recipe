@@ -26,6 +26,7 @@ import {
   COMPLETE_HYDRATION,
   SET_ACTIVE_TAB,
   SET_RECIPE_CATEGORY,
+  GET_RECIPES_REQUESTED,
 } from "../actions";
 import {
   USERS_TAB,
@@ -35,6 +36,8 @@ import {
   WELCOME_TAB,
   ABOUT_TAB,
   PROFILE_TAB,
+  ALL_RECIPES,
+  KEYWORD_RECIPES,
 } from "../variables/Constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -63,10 +66,25 @@ const styles = () => ({
 class App extends React.Component {
   state = {
     recipeCreateMode: false,
-    searchVal: "",
+    isSearchVisible: false,
+    keyword: "",
   };
   componentDidMount() {
     this.props.initHydration();
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      this.props.activeTab.name !== prevProps.activeTab.name ||
+      this.props.recipeCategory !== prevProps.recipeCategory
+    ) {
+      this.setState({ keyword: "" });
+    } else if (
+      this.state.keyword !== prevState.keyword &&
+      this.props.activeTab.name === RECIPE_TAB &&
+      this.props.recipeCategory === "All"
+    ) {
+      this.props.getRecipes(this.state.keyword);
+    }
   }
   renderActiveTab = () => {
     switch (this.props.activeTab.name) {
@@ -75,7 +93,7 @@ class App extends React.Component {
       case SIGN_UP_TAB:
         return <SignUpTab />;
       case USERS_TAB:
-        return <UsersTab searchVal={this.state.searchVal} />;
+        return <UsersTab keyword={this.state.keyword} />;
       case PROFILE_TAB:
         return <ProfileTab />;
       case WELCOME_TAB:
@@ -83,7 +101,12 @@ class App extends React.Component {
       case ABOUT_TAB:
         return <AboutTab />;
       case RECIPE_TAB:
-        return <RecipeTab />;
+        return (
+          <RecipeTab
+            isSearchVisible={this.state.isSearchVisible}
+            keyword={this.state.keyword}
+          />
+        );
       default:
         throw new Error("Unrecognized tab name");
     }
@@ -115,10 +138,12 @@ class App extends React.Component {
                   toggleCreateMode={() =>
                     this.setState({ recipeCreateMode: true })
                   }
-                  setSearchVal={(newVal) =>
-                    this.setState({ searchVal: newVal })
+                  isSearchVisible={this.state.isSearchVisible}
+                  setIsSearchVisible={(newVal) =>
+                    this.setState({ isSearchVisible: newVal })
                   }
-                  searchVal={this.state.searchVal}
+                  keyword={this.state.keyword}
+                  setKeyword={(newVal) => this.setState({ keyword: newVal })}
                 />
                 {showRecipeCategories && (
                   <RecipeCategories
@@ -216,6 +241,13 @@ const mapDispatchToProps = (dispatch) => {
         type: SET_ACTIVE_TAB,
         currentTab: null,
         newTab: { name },
+      }),
+    getRecipes: (keyword) =>
+      dispatch({
+        type: GET_RECIPES_REQUESTED,
+        requestType: !keyword.length ? ALL_RECIPES : KEYWORD_RECIPES,
+        keyword,
+        timestamp: Date.now(),
       }),
   };
 };

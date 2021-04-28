@@ -31,6 +31,7 @@ import {
 } from "../../actions";
 import {
   ALL_RECIPES,
+  KEYWORD_RECIPES,
   FRIEND_RECIPES,
   CREATED_RECIPES,
   LIKED_RECIPES,
@@ -137,6 +138,7 @@ class RecipeList extends React.Component {
   fetchRecipes() {
     this.props.getRecipes(
       this.props.activeTab,
+      this.props.keyword,
       this.props.recipeCategory,
       this.props.friendRecipes,
       this.props.createdRecipes,
@@ -270,29 +272,28 @@ class RecipeList extends React.Component {
               </GridListTile>
             )
           )}
-          {!this.props.recipesFetched && !this.props.networkFailed && (
-            <div style={centeredTextStyle}>
-              {this.props.isFetchingRecipes ? (
-                <CircularProgress
-                  size={30}
-                  style={{ color: defaultTheme.palette.primary.main }}
-                />
-              ) : (
-                !this.props.isSpinnerVisible && (
-                  <Link
-                    href="#"
-                    onClick={() => this.fetchRecipes()}
-                    style={{
-                      fontSize: "14px",
-                      color: defaultTheme.palette.primary.main,
-                    }}
-                  >
-                    Load more recipes
-                  </Link>
-                )
-              )}
-            </div>
-          )}
+          <div style={centeredTextStyle}>
+            {this.props.isFetchingRecipes ? (
+              <CircularProgress
+                size={30}
+                style={{ color: defaultTheme.palette.primary.main }}
+              />
+            ) : (
+              !this.props.isSpinnerVisible &&
+              !this.props.recipesFetched && (
+                <Link
+                  href="#"
+                  onClick={() => this.fetchRecipes()}
+                  style={{
+                    fontSize: "14px",
+                    color: defaultTheme.palette.primary.main,
+                  }}
+                >
+                  Load more recipes
+                </Link>
+              )
+            )}
+          </div>
         </GridList>
         {!this.props.isFetchingRecipes &&
           !this.props.isSpinnerVisible &&
@@ -302,7 +303,7 @@ class RecipeList extends React.Component {
                 {!!this.props.displayUserDetail &&
                 this.props.displayUserDetail.activeDetail === LIKED_RECIPES
                   ? "No Liked Posts Yet"
-                  : "No Posts Yet"}
+                  : "No Posts to Display"}
               </h4>
             </div>
           )}
@@ -429,7 +430,6 @@ const mapStateToProps = (state) => {
   return {
     editMode: state.recipeEditMode,
     activeTab: state.activeTab,
-    networkFailed: state.errorMessages.networkFailed,
     recipeCategory: state.recipeCategory,
     friendRecipes: state.friendRecipes,
     createdRecipes: state.createdRecipes,
@@ -482,6 +482,7 @@ const mapDispatchToProps = (dispatch) => {
       }),
     getRecipes: (
       activeTab,
+      keyword,
       recipeCategory,
       friendRecipes,
       createdRecipes,
@@ -492,7 +493,9 @@ const mapDispatchToProps = (dispatch) => {
     ) => {
       const requestType =
         activeTab.name === RECIPE_TAB
-          ? recipeCategory === "All"
+          ? !!keyword && !!keyword.length
+            ? KEYWORD_RECIPES
+            : recipeCategory === "All"
             ? ALL_RECIPES
             : recipeCategory === "By Friends"
             ? FRIEND_RECIPES
@@ -535,7 +538,12 @@ const mapDispatchToProps = (dispatch) => {
         default:
           break;
       }
-      dispatch({ type: GET_RECIPES_REQUESTED, requestType, ids });
+      dispatch({
+        type: GET_RECIPES_REQUESTED,
+        requestType,
+        ids,
+        keyword,
+      });
     },
     visitUserProfile: (user, currentTab, displayUser) => {
       dispatch({ type: SET_DISPLAY_USER, user });

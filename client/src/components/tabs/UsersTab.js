@@ -9,7 +9,7 @@ const UsersTab = ({
   updateUsers,
   refreshNeeded,
   refreshComplete,
-  searchVal,
+  keyword,
 }) => {
   useEffect(() => {
     if (refreshNeeded) {
@@ -24,9 +24,9 @@ const UsersTab = ({
     <UsersTable
       users={usersArray.filter(
         (user) =>
-          user.username.toLowerCase().includes(searchVal) ||
-          user.firstName.toLowerCase().includes(searchVal) ||
-          user.lastName.toLowerCase().includes(searchVal)
+          user.username.toLowerCase().includes(keyword) ||
+          user.firstName.toLowerCase().includes(keyword) ||
+          user.lastName.toLowerCase().includes(keyword)
       )}
     />
   );

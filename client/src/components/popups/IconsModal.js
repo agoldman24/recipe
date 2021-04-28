@@ -54,19 +54,19 @@ let cancel;
 const IconsModal = (props) => {
   const classes = useStyles();
   const { isVisible, closeModal, onConfirm } = props;
-  const [searchVal, setSearchVal] = useState("");
+  const [keyword, setKeyword] = useState("");
   const [icons, setIcons] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [isSpinnerVisible, setIsSpinnerVisible] = useState(true);
 
   useEffect(() => {
     setIsSpinnerVisible(true);
-    if (!!searchVal.length) {
+    if (!!keyword.length) {
       setIsFetching(true);
       if (cancel !== undefined) {
         cancel();
       }
-      const wordArray = searchVal.split(" ");
+      const wordArray = keyword.split(" ");
       const queryString = wordArray.reduce((accum, current, index) => {
         accum += current;
         if (index < wordArray.length - 1) {
@@ -92,7 +92,7 @@ const IconsModal = (props) => {
           setIcons([]);
         });
     }
-  }, [searchVal]);
+  }, [keyword]);
 
   return (
     <Modal
@@ -101,7 +101,7 @@ const IconsModal = (props) => {
       onClose={(e) => {
         e.stopPropagation();
         closeModal();
-        setSearchVal("");
+        setKeyword("");
       }}
       closeAfterTransition
       BackdropComponent={Backdrop}
@@ -112,7 +112,7 @@ const IconsModal = (props) => {
             <IconButton
               onClick={() => {
                 closeModal();
-                setSearchVal("");
+                setKeyword("");
               }}
               style={{
                 marginLeft: "-36px",
@@ -141,7 +141,7 @@ const IconsModal = (props) => {
               }}
               autoFocus
               onClick={(e) => e.stopPropagation()}
-              onChange={(e) => setSearchVal(e.target.value.toLowerCase())}
+              onChange={(e) => setKeyword(e.target.value.toLowerCase())}
             />
             <div
               style={{
@@ -165,7 +165,7 @@ const IconsModal = (props) => {
               padding: "10px 0 0 15px",
             }}
           >
-            {!isSpinnerVisible && !icons.length && !!searchVal.length && (
+            {!isSpinnerVisible && !icons.length && !!keyword.length && (
               <div
                 style={{
                   width: "100%",
@@ -176,7 +176,7 @@ const IconsModal = (props) => {
                 No icons found
               </div>
             )}
-            {!!searchVal.length &&
+            {!!keyword.length &&
               [0, 1, 2, 3, 4].map((row) => (
                 <Grid container direction="column" key={"row_" + row}>
                   <Grid container direction="row">
@@ -196,7 +196,7 @@ const IconsModal = (props) => {
                               e.stopPropagation();
                               onConfirm(icons[4 * row + column].url);
                               closeModal();
-                              setSearchVal("");
+                              setKeyword("");
                             }}
                           >
                             <img

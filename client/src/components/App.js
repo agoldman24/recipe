@@ -66,7 +66,6 @@ const styles = () => ({
 class App extends React.Component {
   state = {
     recipeCreateMode: false,
-    isSearchVisible: false,
     keyword: "",
   };
   componentDidMount() {
@@ -101,12 +100,7 @@ class App extends React.Component {
       case ABOUT_TAB:
         return <AboutTab />;
       case RECIPE_TAB:
-        return (
-          <RecipeTab
-            isSearchVisible={this.state.isSearchVisible}
-            keyword={this.state.keyword}
-          />
-        );
+        return <RecipeTab keyword={this.state.keyword} />;
       default:
         throw new Error("Unrecognized tab name");
     }
@@ -137,10 +131,6 @@ class App extends React.Component {
                 <NavigationMenu
                   toggleCreateMode={() =>
                     this.setState({ recipeCreateMode: true })
-                  }
-                  isSearchVisible={this.state.isSearchVisible}
-                  setIsSearchVisible={(newVal) =>
-                    this.setState({ isSearchVisible: newVal })
                   }
                   keyword={this.state.keyword}
                   setKeyword={(newVal) => this.setState({ keyword: newVal })}

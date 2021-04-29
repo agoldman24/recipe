@@ -6,6 +6,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Dialog from "@material-ui/core/Dialog";
 import InputBase from "@material-ui/core/InputBase";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import AddBoxOutlinedIcon from "@material-ui/icons/AddBoxOutlined";
@@ -81,14 +82,21 @@ const styles = () => ({
 });
 
 const NavigationMenu = (props) => {
-  const { isSearchVisible, setIsSearchVisible } = props;
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [keywordChanged, setKeywordChanged] = useState(false);
   const [isSignOutModalVisible, setIsSignOutModalVisible] = useState(false);
 
   useEffect(() => {
     setIsSearchVisible(false);
     setIsSearchFocused(false);
   }, [props.recipeCategory]);
+
+  useEffect(() => {
+    if (!props.isFetchingRecipes) {
+      setKeywordChanged(false);
+    }
+  }, [props.isFetchingRecipes]);
 
   const tabStyle = (tab) => ({
     minWidth: "40px",
@@ -187,7 +195,10 @@ const NavigationMenu = (props) => {
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               value={props.keyword}
-              onChange={(e) => props.setKeyword(e.target.value.toLowerCase())}
+              onChange={(e) => {
+                props.setKeyword(e.target.value.toLowerCase());
+                setKeywordChanged(true);
+              }}
               classes={{
                 root: isSearchFocused
                   ? props.classes.focusedInputRoot
@@ -201,6 +212,17 @@ const NavigationMenu = (props) => {
                 transitionDuration: "0.5s",
               }}
             />
+            {keywordChanged && props.isFetchingRecipes && (
+              <CircularProgress
+                size={20}
+                style={{
+                  position: "fixed",
+                  marginTop: "2px",
+                  left: isMobileOnly ? "calc(100% - 65px)" : "calc(50% - 65px)",
+                  color: "white",
+                }}
+              />
+            )}
             <IconButton
               style={{
                 position: "fixed",
@@ -291,7 +313,6 @@ const NavigationMenu = (props) => {
 const mapStateToProps = (state) => {
   return {
     activeTab: state.activeTab,
-    recipeCategory: state.recipeCategory,
     highlightedTab:
       state.activeTab.name === USERS_TAB ||
       state.activeTab.name === RECIPE_TAB ||
@@ -299,6 +320,8 @@ const mapStateToProps = (state) => {
       (state.activeTab.name === PROFILE_TAB &&
         !!state.activeUser &&
         state.activeUser.id === state.displayUser.id),
+    recipeCategory: state.recipeCategory,
+    isFetchingRecipes: state.isFetchingRecipes,
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
     networkFailed: state.errorMessages.networkFailed,

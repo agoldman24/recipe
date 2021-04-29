@@ -273,7 +273,7 @@ class RecipeList extends React.Component {
             )
           )}
           <div style={centeredTextStyle}>
-            {this.props.isFetchingRecipes ? (
+            {this.props.isFetchingRecipes && !this.props.keyword.length ? (
               <CircularProgress
                 size={30}
                 style={{ color: defaultTheme.palette.primary.main }}
@@ -493,7 +493,7 @@ const mapDispatchToProps = (dispatch) => {
     ) => {
       const requestType =
         activeTab.name === RECIPE_TAB
-          ? !!keyword && !!keyword.length
+          ? !!keyword.length
             ? KEYWORD_RECIPES
             : recipeCategory === "All"
             ? ALL_RECIPES

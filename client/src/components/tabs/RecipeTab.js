@@ -9,9 +9,6 @@ import {
 } from "../../variables/Constants";
 
 class RecipeTab extends React.Component {
-  state = {
-    keywordChanged: false,
-  };
   componentDidMount() {
     document.getElementById("container").scrollTo(0, 0);
     this.fetchRecipes();
@@ -25,24 +22,14 @@ class RecipeTab extends React.Component {
       document.getElementById("container").scrollTo(0, 0);
       this.fetchRecipes();
     }
-    if (this.props.keyword != prevProps.keyword) {
-      this.setState({ keywordChanged: true });
-    }
-    if (!this.props.isFetchingRecipes && prevProps.isFetchingRecipes) {
-      this.setState({ keywordChanged: false });
-    }
   }
   fetchRecipes = () => this.props.getRecipes(this.props.requestType);
   render() {
     return (
       <RecipeList
-        recipes={
-          this.state.keywordChanged && this.props.isFetchingRecipes
-            ? []
-            : Object.values(this.props.recipes).sort(
-                (r1, r2) => r2.timestamp - r1.timestamp
-              )
-        }
+        recipes={Object.values(this.props.recipes).sort(
+          (r1, r2) => r2.timestamp - r1.timestamp
+        )}
         keyword={this.props.keyword}
       />
     );

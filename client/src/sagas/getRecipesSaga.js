@@ -48,24 +48,21 @@ function* getRecipes(action) {
       activeTab === RECIPE_TAB || activeUserIsDisplayUser
         ? CREATED_RECIPES
         : DISPLAY_USER;
+    const timestamp = !!action.timestamp
+      ? action.timestamp
+      : oldestFetchedRecipeTimestamp;
     let ids = [],
       timestamps = [];
     let res;
     switch (action.requestType) {
       case ALL_RECIPES:
-        res = yield call(
-          Api.get,
-          "/getRecipesByTime?timestamp=" + oldestFetchedRecipeTimestamp
-        );
+        res = yield call(Api.get, "/getRecipesByTime?timestamp=" + timestamp);
         yield put({
           type: refreshNeeded ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
           recipes: res.data.recipes,
         });
         break;
       case KEYWORD_RECIPES:
-        const timestamp = !!action.timestamp
-          ? action.timestamp
-          : oldestFetchedRecipeTimestamp;
         res = yield call(
           Api.get,
           "/getRecipesByKeyword?keyword=" +

@@ -20,7 +20,6 @@ import {
   addButtonStyle,
   rightSideActionStyle,
   iconButtonStyle,
-  fullWidth,
   inputTheme,
 } from "../../styles";
 import "../../index.css";
@@ -83,7 +82,7 @@ export default function RecipeIngredients({
           }}
         >
           <Grid container direction="column">
-            <Grid item style={{ ...fullWidth, padding: "10px" }}>
+            <Grid item style={{ width: "100%", padding: "10px" }}>
               <Typography
                 style={{
                   ...sectionTitleStyle(focusedContainer, "ingredients"),
@@ -118,7 +117,6 @@ export default function RecipeIngredients({
               item
               id="ingredients"
               style={{
-                ...fullWidth,
                 maxHeight: isMobileOnly ? "320px" : "280px",
                 width: "99%",
                 marginLeft: "0.5%",

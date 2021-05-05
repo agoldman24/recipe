@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Fab from "@material-ui/core/Fab";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import CheckIcon from "@material-ui/icons/Check";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import CloseIcon from "@material-ui/icons/Close";
 import Dialog from "@material-ui/core/Dialog";
 import AppBar from "@material-ui/core/AppBar";
@@ -26,6 +26,7 @@ import {
   nameStyle,
   roundedButtonStyle,
   backButtonStyle,
+  rowStyle,
   unfollowButtonStyle,
   followingButtonStyle,
   checkIconStyle,
@@ -71,6 +72,25 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ProfileTab = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+
+  const container = document.getElementById("container");
+  const profileDetailsBar = document.getElementById("profileDetailsBar");
+  const profileDetailsContent = document.getElementById(
+    "profileDetailsContent"
+  );
+  if (!!profileDetailsBar) {
+    container.onscroll = () => {
+      if (container.scrollTop > 154) {
+        profileDetailsBar.style.position = "fixed";
+        profileDetailsBar.style.top = "40px";
+        profileDetailsContent.style.paddingTop = "85px";
+      } else {
+        profileDetailsBar.style.position = "initial";
+        profileDetailsBar.style.top = "initial";
+        profileDetailsContent.style.paddingTop = "initial";
+      }
+    };
+  }
 
   const openProfileEditor = () => {
     setOpen(!open);
@@ -187,14 +207,18 @@ const ProfileTab = (props) => {
       <Grid
         container
         direction="column"
-        style={{ alignItems: "center", paddingTop: "20px" }}
+        style={{
+          alignItems: "center",
+          background:
+            "linear-gradient(to right, transparent, black, transparent)",
+        }}
       >
         <Grid
           item
           style={{
             display: "inline-flex",
-            width: isMobileOnly ? "100%" : "30%",
-            paddingBottom: !!props.activeUser ? "20px" : "0",
+            width: isMobileOnly ? "100%" : "50%",
+            padding: "20px 0 15px",
           }}
         >
           <div style={{ width: "40%" }}>
@@ -202,62 +226,63 @@ const ProfileTab = (props) => {
               <ProfileAvatar />
             </div>
           </div>
-          <div style={{ width: "60%", margin: "auto" }}>
-            <Typography style={nameStyle}>
-              {firstName + " " + lastName}
-            </Typography>
+          <div style={{ width: "60%" }}>
+            <Grid
+              container
+              direction="column"
+              style={{ width: "100%", height: "100%", marginLeft: "20px" }}
+            >
+              <Grid item style={{ padding: "20px 5px" }}>
+                <Typography style={nameStyle}>
+                  {firstName + " " + lastName}
+                </Typography>
+              </Grid>
+              {!!activeUser && (
+                <Grid item>
+                  {activeUser.id === id ? (
+                    <Button
+                      style={{
+                        ...roundedButtonStyle,
+                        width: "150px",
+                      }}
+                      onClick={openProfileEditor}
+                    >
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    <Button
+                      endIcon={
+                        props.isUpdatingFollowers ||
+                        !activeUser.followingIds.includes(id) ? null : (
+                          <ExpandMoreIcon />
+                        )
+                      }
+                      onClick={() =>
+                        updateFollowingIds(
+                          activeUser.id,
+                          id,
+                          !activeUser.followingIds.includes(id)
+                        )
+                      }
+                      style={{ ...roundedButtonStyle, width: "150px" }}
+                    >
+                      {props.isUpdatingFollowers ? (
+                        <CircularProgress
+                          size={20}
+                          style={{ color: "white", margin: "2px" }}
+                        />
+                      ) : activeUser.followingIds.includes(id) ? (
+                        "Following"
+                      ) : (
+                        "Follow"
+                      )}
+                    </Button>
+                  )}
+                </Grid>
+              )}
+            </Grid>
           </div>
         </Grid>
-        {!!activeUser ? (
-          activeUser.id === id ? (
-            <Button
-              style={{
-                ...roundedButtonStyle,
-                width: isMobileOnly ? "90%" : "30%",
-              }}
-              onClick={openProfileEditor}
-            >
-              Edit Profile
-            </Button>
-          ) : activeUser.followingIds.includes(id) ? (
-            <div style={{ width: isMobileOnly ? "100%" : "50%" }}>
-              <Button
-                onClick={() => updateFollowingIds(activeUser.id, id, false)}
-                style={unfollowButtonStyle}
-              >
-                {props.isUpdatingFollowers ? (
-                  <CircularProgress
-                    size={20}
-                    style={{ color: "white", margin: "2px" }}
-                  />
-                ) : (
-                  "Unfollow"
-                )}
-              </Button>
-              <Typography style={followingButtonStyle}>
-                Following
-                <CheckIcon style={checkIconStyle} />
-              </Typography>
-            </div>
-          ) : (
-            <Button
-              onClick={() => updateFollowingIds(activeUser.id, id, true)}
-              style={{
-                ...roundedButtonStyle,
-                width: isMobileOnly ? "90%" : "30%",
-              }}
-            >
-              {props.isUpdatingFollowers ? (
-                <CircularProgress
-                  size={20}
-                  style={{ color: "white", margin: "2px" }}
-                />
-              ) : (
-                "Follow"
-              )}
-            </Button>
-          )
-        ) : null}
       </Grid>
       {isFetchingUserDetail && (
         <div style={{ width: "100%", textAlign: "center", padding: "20px" }}>

@@ -14,7 +14,6 @@ import {
   borderStyle,
   sectionTitleStyle,
   rightSideActionStyle,
-  fullWidth,
   iconButtonStyle,
   errorMessageStyle,
 } from "../../styles";
@@ -75,7 +74,7 @@ export default function RecipeImage({
           }}
         >
           <Grid container direction="column">
-            <Grid item style={{ ...fullWidth, padding: "10px 10px 5px 10px" }}>
+            <Grid item style={{ width: "100%", padding: "10px 10px 5px 10px" }}>
               <Typography
                 style={{
                   ...sectionTitleStyle(focusedContainer, "image"),

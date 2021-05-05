@@ -120,9 +120,12 @@ exports.getRecipesByTime = (req, res) => {
 exports.getRecipesByKeyword = (req, res) => {
   db.collection("recipes")
     .find({
-      name: { $regex: req.query.keyword, $options: "ix" },
-      timestamp: { $lt: parseInt(req.query.timestamp) },
+      $and: [
+        { name: { $regex: req.query.keyword, $options: "ix" } },
+        { timestamp: { $lt: parseInt(req.query.timestamp) } },
+      ],
     })
+    .sort({ timestamp: -1 })
     .limit(20)
     .toArray()
     .then((recipes) => {

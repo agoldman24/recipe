@@ -10,8 +10,10 @@ import {
 
 class RecipeTab extends React.Component {
   componentDidMount() {
-    document.getElementById("container").scrollTo(0, 0);
-    this.fetchRecipes();
+    if (!this.props.keyword.length) {
+      document.getElementById("container").scrollTo(0, 0);
+      this.fetchRecipes();
+    }
   }
   componentDidUpdate(prevProps) {
     if (
@@ -27,10 +29,10 @@ class RecipeTab extends React.Component {
   render() {
     return (
       <RecipeList
+        keyword={this.props.keyword}
         recipes={Object.values(this.props.recipes).sort(
           (r1, r2) => r2.timestamp - r1.timestamp
         )}
-        keyword={this.props.keyword}
       />
     );
   }

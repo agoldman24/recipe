@@ -85,7 +85,7 @@ export default function RecipeDirections({
           }}
         >
           <Grid container direction="column">
-            <Grid item style={{ ...fullWidth, padding: "10px" }}>
+            <Grid item style={{ width: "100%", padding: "10px" }}>
               <Typography
                 style={{
                   ...sectionTitleStyle(focusedContainer, "directions"),

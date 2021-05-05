@@ -162,7 +162,6 @@ export const gradientTextStyle2 = {
 export const nameStyle = {
   ...textStyle,
   fontSize: "24px",
-  marginLeft: "20px",
 };
 
 export const columnStyle = {
@@ -182,24 +181,26 @@ export const selected = {
 export const highlightedNumberStyle = {
   ...gradientTextStyle2,
   ...textStyle,
-  fontSize: "40px",
+  fontSize: "35px",
 };
 
 export const unhighlightedNumberStyle = {
   ...textStyle,
-  fontSize: "40px",
+  fontSize: "35px",
 };
 
 export const highlightedTextStyle = {
   ...textStyle,
-  fontSize: "16px",
-  fontWeight: "normal",
+  fontSize: "18px",
+  fontFamily: "Open Sans Condensed",
+  fontWeight: "bold",
   color: "#ffc800",
 };
 
 export const unhighlightedTextStyle = {
   ...textStyle,
-  fontSize: "16px",
+  fontSize: "18px",
+  fontFamily: "Open Sans Condensed",
   fontWeight: "normal",
 };
 
@@ -223,12 +224,6 @@ export const unfollowButtonStyle = {
   ...roundedButtonStyle,
   float: "right",
   margin: "0 5%",
-  width: "60%",
-};
-
-export const followingButtonStyle = {
-  float: "right",
-  fontSize: "16px",
   color: "#00d412",
 };
 
@@ -278,9 +273,11 @@ export const tableStyle = {
 };
 
 export const rowStyle = {
-  width: isMobileOnly ? "100%" : "50%",
-  margin: "auto",
-  paddingTop: "20px",
+  width: "100%",
+  padding: isMobileOnly ? "0" : "0 25%",
+  paddingTop: "5px",
+  background: "linear-gradient(to right, transparent, black, transparent)",
+  zIndex: "9",
 };
 
 export const fabStyle = {

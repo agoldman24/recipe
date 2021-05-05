@@ -72,10 +72,7 @@ class App extends React.Component {
     this.props.initHydration();
   }
   componentDidUpdate(prevProps, prevState) {
-    if (
-      this.props.activeTab.name !== prevProps.activeTab.name ||
-      this.props.recipeCategory !== prevProps.recipeCategory
-    ) {
+    if (this.props.recipeCategory !== prevProps.recipeCategory) {
       this.setState({ keyword: "" });
     } else if (
       this.state.keyword !== prevState.keyword &&

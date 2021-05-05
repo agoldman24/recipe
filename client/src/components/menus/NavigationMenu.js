@@ -191,7 +191,7 @@ const NavigationMenu = (props) => {
                   ? "Search users..."
                   : "Search recipes..."
               }
-              autoFocus
+              autoFocus={!props.keyword.length}
               onFocus={() => setIsSearchFocused(true)}
               onBlur={() => setIsSearchFocused(false)}
               value={props.keyword}

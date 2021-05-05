@@ -37,7 +37,7 @@ export default function ProfileDetailsGrid({
   return (
     <Grid container direction="column">
       <Grid item>
-        <Grid container direction="row" style={rowStyle}>
+        <Grid container direction="row" id="profileDetailsBar" style={rowStyle}>
           <Grid
             item
             className="clickable"
@@ -88,7 +88,7 @@ export default function ProfileDetailsGrid({
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item id="profileDetailsContent">
         {activeDetail === FOLLOWERS && (
           <div style={tableStyle}>
             <UsersTable users={Object.values(followers)} />
@@ -104,6 +104,7 @@ export default function ProfileDetailsGrid({
         )}
         {activeDetail === LIKED_RECIPES && (
           <RecipeList
+            keyword={""}
             recipes={likedRecipeIds
               .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
               .map(({ id }) => likedRecipes[id])}

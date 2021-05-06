@@ -55,7 +55,7 @@ const ProfileAvatar = (props) => {
     margin: "auto",
     border: "1.5px solid white",
     background: profileImageLoaded
-      ? "#333333"
+      ? "#202020"
       : "radial-gradient(black, black, black, black, #222222, #333333, #333333, grey, grey)",
   };
 

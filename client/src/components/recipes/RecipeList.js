@@ -166,9 +166,9 @@ class RecipeList extends React.Component {
                   width: isMobileOnly ? "calc(50% - 10px)" : "calc(20% - 10px)",
                   margin: "5px",
                   padding: "0",
-                  background: "#303030",
-                  borderRight: isMobileOnly ? "none" : "2px solid #202020",
-                  borderBottom: "2px solid #202020",
+                  background: "#202020",
+                  borderRight: isMobileOnly ? "none" : "2px solid black",
+                  borderBottom: "2px solid black",
                   borderRadius: "20px",
                 }}
                 classes={{

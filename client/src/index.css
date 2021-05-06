@@ -12,7 +12,9 @@ body {
   position: fixed;
   margin: 0;
   overflow-y: auto;
-  background: linear-gradient(45deg, rgb(67 0 128 / 50%), rgb(255 165 0 / 50%));
+  /* background: linear-gradient(45deg, rgb(67 0 128 / 50%), rgb(255 165 0 / 50%)); */
+  /* background: linear-gradient(45deg, rgb(30 1 57), rgb(123 79 0)); */
+  background: linear-gradient(45deg, rgb(30, 1, 57), rgb(123 47 0));
 }
 
 .fileContainer {

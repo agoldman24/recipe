@@ -220,13 +220,6 @@ export const backButtonStyle = {
   zIndex: "5",
 };
 
-export const unfollowButtonStyle = {
-  ...roundedButtonStyle,
-  float: "right",
-  margin: "0 5%",
-  color: "#00d412",
-};
-
 export const deleteButtonStyle = {
   color: "#ff4621",
   border: "2px solid #ff4621",
@@ -259,14 +252,6 @@ export const iconStyle = {
   height: "30",
 };
 
-export const checkIconStyle = {
-  width: "25",
-  height: "25",
-  verticalAlign: "top",
-  marginLeft: "5px",
-  color: "#00d412",
-};
-
 export const tableStyle = {
   width: isMobileOnly ? "100%" : "50%",
   margin: "auto",
@@ -276,8 +261,8 @@ export const rowStyle = {
   width: "100%",
   padding: isMobileOnly ? "0" : "0 25%",
   paddingTop: "5px",
-  background: "linear-gradient(to right, transparent, black, transparent)",
   zIndex: "9",
+  background: "linear-gradient(45deg, rgb(30, 1, 57), rgb(123 24 0))",
 };
 
 export const fabStyle = {

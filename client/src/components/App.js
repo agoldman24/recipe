@@ -36,7 +36,6 @@ import {
   WELCOME_TAB,
   ABOUT_TAB,
   PROFILE_TAB,
-  ALL_RECIPES,
   KEYWORD_RECIPES,
 } from "../variables/Constants";
 
@@ -79,6 +78,7 @@ class App extends React.Component {
       this.props.activeTab.name === RECIPE_TAB &&
       this.props.recipeCategory === "All"
     ) {
+      document.getElementById("container").scrollTo(0, 0);
       this.props.getRecipes(this.state.keyword);
     }
   }
@@ -232,7 +232,7 @@ const mapDispatchToProps = (dispatch) => {
     getRecipes: (keyword) =>
       dispatch({
         type: GET_RECIPES_REQUESTED,
-        requestType: !keyword.length ? ALL_RECIPES : KEYWORD_RECIPES,
+        requestType: KEYWORD_RECIPES,
         keyword,
         timestamp: Date.now(),
       }),

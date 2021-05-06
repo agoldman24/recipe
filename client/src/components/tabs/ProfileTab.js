@@ -5,6 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -26,10 +27,6 @@ import {
   nameStyle,
   roundedButtonStyle,
   backButtonStyle,
-  rowStyle,
-  unfollowButtonStyle,
-  followingButtonStyle,
-  checkIconStyle,
 } from "../../styles";
 import {
   UPDATE_USER_REQUESTED,
@@ -63,6 +60,10 @@ const useStyles = makeStyles(() => ({
   button: {
     color: "#45bbff",
   },
+  paper: {
+    borderRadius: "4px",
+    border: "1px solid white",
+  },
 }));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -72,6 +73,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const ProfileTab = (props) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const container = document.getElementById("container");
   const profileDetailsBar = document.getElementById("profileDetailsBar");
@@ -204,15 +206,7 @@ const ProfileTab = (props) => {
           <ArrowBackIosIcon />
         </Fab>
       )}
-      <Grid
-        container
-        direction="column"
-        style={{
-          alignItems: "center",
-          background:
-            "linear-gradient(to right, transparent, black, transparent)",
-        }}
-      >
+      <Grid container direction="column" style={{ alignItems: "center" }}>
         <Grid
           item
           style={{
@@ -230,7 +224,7 @@ const ProfileTab = (props) => {
             <Grid
               container
               direction="column"
-              style={{ width: "100%", height: "100%", marginLeft: "20px" }}
+              style={{ width: "100%", height: "100%", padding: "0 15px" }}
             >
               <Grid item style={{ padding: "20px 5px" }}>
                 <Typography style={nameStyle}>
@@ -257,13 +251,13 @@ const ProfileTab = (props) => {
                           <ExpandMoreIcon />
                         )
                       }
-                      onClick={() =>
-                        updateFollowingIds(
-                          activeUser.id,
-                          id,
-                          !activeUser.followingIds.includes(id)
-                        )
-                      }
+                      onClick={(e) => {
+                        if (!activeUser.followingIds.includes(id)) {
+                          updateFollowingIds(activeUser.id, id, true);
+                        } else {
+                          setAnchorEl(e.currentTarget);
+                        }
+                      }}
                       style={{ ...roundedButtonStyle, width: "150px" }}
                     >
                       {props.isUpdatingFollowers ? (
@@ -284,6 +278,30 @@ const ProfileTab = (props) => {
           </div>
         </Grid>
       </Grid>
+      <Popover
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        classes={{ paper: classes.paper }}
+      >
+        <Button
+          style={{ fontSize: "14px", background: "black", padding: "2px 20px" }}
+          onClick={() => {
+            setAnchorEl(null);
+            updateFollowingIds(activeUser.id, id, false);
+          }}
+        >
+          Unfollow
+        </Button>
+      </Popover>
       {isFetchingUserDetail && (
         <div style={{ width: "100%", textAlign: "center", padding: "20px" }}>
           <CircularProgress size={30} style={{ color: "white" }} />
@@ -328,7 +346,7 @@ const ProfileTab = (props) => {
               background: defaultTheme.palette.background.default,
             }}
           >
-            <Grid item style={{ margin: "50px auto" }}>
+            <Grid item style={{ margin: "30px auto" }}>
               <ProfileAvatar />
               <ProfileEditor closeProfileEditor={closeProfileEditor} />
             </Grid>

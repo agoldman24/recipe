@@ -280,7 +280,8 @@ class RecipeList extends React.Component {
               />
             ) : (
               !this.props.isSpinnerVisible &&
-              !this.props.recipesFetched && (
+              !this.props.recipesFetched &&
+              !this.props.networkFailed && (
                 <Link
                   href="#"
                   onClick={() => this.fetchRecipes()}
@@ -448,6 +449,7 @@ const mapStateToProps = (state) => {
     isLiking: state.isLiking,
     isSpinnerVisible: state.isSpinnerVisible,
     isFetchingRecipes: state.isFetchingRecipes,
+    networkFailed: state.errorMessages.networkFailed,
     recipesFetched:
       (state.activeTab.name === RECIPE_TAB &&
         ((state.recipeCategory === "All" && state.recipesFetched.all) ||

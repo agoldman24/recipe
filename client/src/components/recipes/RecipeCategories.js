@@ -20,7 +20,7 @@ export default function RecipeCategories({ category, setCategory }) {
         width: "100%",
         height: "35px",
         position: "fixed",
-        top: "40px",
+        top: "45px",
         paddingTop: "3px",
         background: "linear-gradient(to right, black, transparent)",
       }}

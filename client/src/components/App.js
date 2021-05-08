@@ -47,17 +47,17 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const styles = () => ({
   root1: {
-    marginTop: "40px",
+    marginTop: "45px",
   },
   root2: {
-    marginTop: "75px",
+    marginTop: "80px",
   },
   backdropRoot1: {
-    top: "40px",
+    top: "45px",
     background: "none",
   },
   backdropRoot2: {
-    top: "75px",
+    top: "80px",
     background: "none",
   },
 });
@@ -119,7 +119,7 @@ class App extends React.Component {
                     activeTab === USERS_TAB ||
                     activeTab === RECIPE_TAB ||
                     activeTab === PROFILE_TAB
-                      ? "40px"
+                      ? "45px"
                       : "100%",
                   borderRadius: "0",
                   background: "none",
@@ -160,10 +160,10 @@ class App extends React.Component {
                   style={{
                     margin: "0",
                     left: "0",
-                    top: showRecipeCategories ? "75px" : "40px",
+                    top: showRecipeCategories ? "80px" : "45px",
                     height: showRecipeCategories
-                      ? "calc(100% - 75px)"
-                      : "calc(100% - 40px)",
+                      ? "calc(100% - 80px)"
+                      : "calc(100% - 45px)",
                     width: "100%",
                     position: "fixed",
                     overflowY: "hidden",

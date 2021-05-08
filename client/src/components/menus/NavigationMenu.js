@@ -4,6 +4,7 @@ import { isMobileOnly } from "react-device-detect";
 import { withStyles } from "@material-ui/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import Box from "@material-ui/core/Box";
 import Dialog from "@material-ui/core/Dialog";
 import InputBase from "@material-ui/core/InputBase";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -65,19 +66,19 @@ const styles = () => ({
     padding: "3px 10px",
   },
   dialogRoot: {
-    height: "40px",
+    height: "45px",
   },
   dialogContainer: {
     position: "fixed",
     height: "20px",
   },
   dialogPaper: {
-    marginLeft: "40px",
+    marginLeft: "45px",
     overflowY: "initial",
   },
   backdropRoot: {
     background: "none",
-    height: "40px",
+    height: "45px",
   },
 });
 
@@ -100,7 +101,7 @@ const NavigationMenu = (props) => {
 
   const tabStyle = (tab) => ({
     minWidth: "40px",
-    minHeight: "40px",
+    minHeight: "45px",
     opacity: isSearchVisible ? "0%" : "100%",
     transitionProperty: "opacity",
     transitionDuration: "0.5s",
@@ -134,7 +135,7 @@ const NavigationMenu = (props) => {
       onClick={props.refresh}
       style={{
         width: "100%",
-        height: "40px",
+        height: "45px",
         textAlign: "center",
         background: "rgba(255,0,0,0.5)",
       }}
@@ -143,7 +144,7 @@ const NavigationMenu = (props) => {
         style={{
           display: "inline-block",
           height: "100%",
-          padding: "10px 5px",
+          padding: "14px 5px",
         }}
       >
         Connection failed. Click to retry
@@ -152,6 +153,23 @@ const NavigationMenu = (props) => {
     </div>
   ) : (
     <Fragment>
+      {!!props.displayUser && (
+        <Box
+          component="div"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          style={{
+            position: "fixed",
+            top: "5px",
+            left: "10px",
+            maxWidth: "40%",
+            fontFamily: "Open Sans Condensed",
+            fontSize: "20px",
+          }}
+        >
+          {props.displayUser.username}
+        </Box>
+      )}
       {(props.activeTab.name === USERS_TAB ||
         (props.activeTab.name === RECIPE_TAB &&
           props.recipeCategory === "All")) && (
@@ -246,14 +264,14 @@ const NavigationMenu = (props) => {
       )}
       {props.isLoggedIn && props.activeTab.name !== WELCOME_TAB ? (
         <div
-          style={{ width: "100%", height: "40px", position: "fixed", top: "0" }}
+          style={{ width: "100%", height: "45px", position: "fixed", top: "0" }}
         >
           <Tabs
             value={props.highlightedTab ? props.activeTab.name : false}
             indicatorColor="primary"
             textColor="primary"
             onChange={onChangeTab}
-            style={{ float: "right", minHeight: "40px" }}
+            style={{ float: "right", minHeight: "45px" }}
             classes={{
               indicator: isSearchVisible
                 ? props.classes.transparent
@@ -324,6 +342,7 @@ const mapStateToProps = (state) => {
     isFetchingRecipes: state.isFetchingRecipes,
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
+    displayUser: state.displayUser,
     networkFailed: state.errorMessages.networkFailed,
   };
 };

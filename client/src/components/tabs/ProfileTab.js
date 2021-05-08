@@ -4,7 +4,6 @@ import { isMobileOnly } from "react-device-detect";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -84,7 +83,7 @@ const ProfileTab = (props) => {
     container.onscroll = () => {
       if (container.scrollTop > 154) {
         profileDetailsBar.style.position = "fixed";
-        profileDetailsBar.style.top = "40px";
+        profileDetailsBar.style.top = "45px";
         profileDetailsContent.style.paddingTop = "85px";
       } else {
         profileDetailsBar.style.position = "initial";
@@ -176,24 +175,9 @@ const ProfileTab = (props) => {
 
   return (
     <Fragment>
-      <Box
-        component="div"
-        overflow="hidden"
-        textOverflow="ellipsis"
-        style={{
-          position: "fixed",
-          top: "5px",
-          left: "10px",
-          maxWidth: "40%",
-          fontFamily: "Open Sans Condensed",
-          fontSize: "20px",
-        }}
-      >
-        {username}
-      </Box>
       {!!props.tabHistory.length && (
         <Fab
-          style={{ ...backButtonStyle, top: "30px" }}
+          style={{ ...backButtonStyle, top: "40px" }}
           onClick={() => {
             const tabHistory = props.tabHistory;
             const { displayUserId } = tabHistory[tabHistory.length - 1];

@@ -9,7 +9,7 @@ import {
   SIGN_OUT,
   SHOW_SNACKBAR,
 } from "../actions";
-import { WELCOME_TAB } from "../variables/Constants";
+import { RECIPE_TAB } from "../variables/Constants";
 
 const getActiveUser = (state) => state.activeUser;
 
@@ -25,7 +25,7 @@ function* deleteUser() {
     yield put({
       type: SET_ACTIVE_TAB,
       currentTab: null,
-      newTab: { name: WELCOME_TAB },
+      newTab: { name: RECIPE_TAB },
     });
     yield put({ type: SIGN_OUT });
     yield put({ type: SHOW_SNACKBAR, message: "Your account was deleted" });

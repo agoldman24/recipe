@@ -164,7 +164,7 @@ const ProfileTab = (props) => {
   };
 
   const {
-    displayUser: { id, username, firstName, lastName },
+    displayUser: { id, firstName, lastName },
     displayUserDetail,
     isFetchingUserDetail,
     activeUser,

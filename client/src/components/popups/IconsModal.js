@@ -96,6 +96,7 @@ const IconsModal = (props) => {
 
   return (
     <Modal
+      style={{ zIndex: "1303" }}
       className={classes.modal}
       open={isVisible}
       onClose={(e) => {

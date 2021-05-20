@@ -1,7 +1,7 @@
 import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import Button from "@material-ui/core/Button";
-import { recipeButtonStyle } from "../../styles";
+import { recipeButtonStyle, createButtonStyle } from "../../styles";
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -12,7 +12,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function RecipeCategories({ category, setCategory }) {
+export default function RecipeCategories({
+  category,
+  setCategory,
+  toggleCreateMode,
+}) {
   const classes = useStyles();
   return (
     <div
@@ -45,6 +49,13 @@ export default function RecipeCategories({ category, setCategory }) {
         onClick={() => setCategory("By Me")}
       >
         By Me
+      </Button>
+      <Button
+        className={classes.button}
+        style={createButtonStyle}
+        onClick={toggleCreateMode}
+      >
+        Create
       </Button>
     </div>
   );

@@ -316,6 +316,7 @@ const RecipeForms = ({
           classes={{
             paper: classes.paper,
           }}
+          style={{ zIndex: "1303" }}
         >
           <Grid container direction="column">
             <Grid

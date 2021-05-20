@@ -1,6 +1,6 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
+import Dialog from "@material-ui/core/Dialog";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -40,113 +40,127 @@ const SignUpTab = (props) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography
-          component="h1"
-          variant="h4"
-          style={{ fontFamily: "Signika" }}
-        >
-          Sign up
-        </Typography>
-        <form className={classes.form}>
-          {props.emptyFields && (
-            <div style={errStyle}>One or more fields is empty</div>
-          )}
-          {props.usernameExists && (
-            <div style={errStyle}>
-              That username already exists, choose a different one
-            </div>
-          )}
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText,
-                  },
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                label="First Name"
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText,
-                  },
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                label="Last Name"
-                onChange={(e) => setLastName(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputTextLowercase,
-                  },
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                label="Username"
-                onChange={(e) => setUsername(e.target.value.toLowerCase())}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                InputProps={{
-                  classes: {
-                    input: classes.inputText,
-                  },
-                }}
-                variant="outlined"
-                required
-                fullWidth
-                label="Password"
-                type="password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            fullWidth
-            variant="contained"
-            color="secondary"
-            className={classes.submit}
-            type="submit"
-            onClick={onFormSubmit}
+    <Dialog
+      open={true}
+      classes={{
+        root: classes.dialogRoot,
+        paper: classes.dialogPaper,
+        container: classes.dialogContainer,
+      }}
+      BackdropProps={{
+        classes: {
+          root: classes.backdropRoot,
+        },
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography
+            component="h1"
+            variant="h4"
+            style={{ fontFamily: "Signika" }}
           >
-            Sign Up
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link
-                href="#"
-                style={{ color: defaultTheme.palette.primary.main }}
-                onClick={() => {
-                  props.clearErrorMessages();
-                  props.setActiveTab(SIGN_IN_TAB);
-                }}
-              >
-                Already have an account? Sign in
-              </Link>
+            Sign up
+          </Typography>
+          <form className={classes.form}>
+            {props.emptyFields && (
+              <div style={errStyle}>One or more fields is empty</div>
+            )}
+            {props.usernameExists && (
+              <div style={errStyle}>
+                That username already exists, choose a different one
+              </div>
+            )}
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText,
+                    },
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="First Name"
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText,
+                    },
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Last Name"
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputTextLowercase,
+                    },
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Username"
+                  onChange={(e) => setUsername(e.target.value.toLowerCase())}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  InputProps={{
+                    classes: {
+                      input: classes.inputText,
+                    },
+                  }}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              type="submit"
+              onClick={onFormSubmit}
+            >
+              Sign Up
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link
+                  href="#"
+                  style={{ color: defaultTheme.palette.primary.main }}
+                  onClick={() => {
+                    props.clearErrorMessages();
+                    props.setActiveTab(SIGN_IN_TAB);
+                  }}
+                >
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </form>
+        </div>
+      </Container>
+    </Dialog>
   );
 };
 

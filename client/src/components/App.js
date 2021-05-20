@@ -4,15 +4,12 @@ import { withStyles } from "@material-ui/styles";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
 import Slide from "@material-ui/core/Slide";
 import Spinner from "./popups/Spinner";
-import NavigationMenu from "./menus/NavigationMenu";
+import NavigationBar from "./menus/NavigationBar";
 import SignInTab from "./tabs/SignInTab";
 import SignUpTab from "./tabs/SignUpTab";
-import WelcomeTab from "./tabs/WelcomeTab";
 import AboutTab from "./tabs/AboutTab";
 import RecipeTab from "./tabs/RecipeTab";
 import UsersTab from "./tabs/UsersTab";
@@ -33,7 +30,6 @@ import {
   SIGN_UP_TAB,
   RECIPE_TAB,
   SIGN_IN_TAB,
-  WELCOME_TAB,
   ABOUT_TAB,
   PROFILE_TAB,
   KEYWORD_RECIPES,
@@ -92,14 +88,12 @@ class App extends React.Component {
         return <UsersTab keyword={this.state.keyword} />;
       case PROFILE_TAB:
         return <ProfileTab />;
-      case WELCOME_TAB:
-        return <WelcomeTab />;
       case ABOUT_TAB:
         return <AboutTab />;
       case RECIPE_TAB:
         return <RecipeTab keyword={this.state.keyword} />;
       default:
-        throw new Error("Unrecognized tab name");
+        return null;
     }
   };
   render() {
@@ -110,81 +104,57 @@ class App extends React.Component {
       <ThemeProvider theme={createMuiTheme(defaultTheme)}>
         <Container component="main" maxWidth={false} style={{ padding: "0" }}>
           <CssBaseline />
-          <Grid container direction="column">
-            <Grid item style={{ width: "100%" }}>
-              <Paper
-                elevation={5}
-                style={{
-                  height:
-                    activeTab === USERS_TAB ||
-                    activeTab === RECIPE_TAB ||
-                    activeTab === PROFILE_TAB
-                      ? "45px"
-                      : "100%",
-                  borderRadius: "0",
-                  background: "none",
-                }}
-              >
-                <NavigationMenu
-                  toggleCreateMode={() =>
-                    this.setState({ recipeCreateMode: true })
-                  }
-                  keyword={this.state.keyword}
-                  setKeyword={(newVal) => this.setState({ keyword: newVal })}
-                />
-                {showRecipeCategories && (
-                  <RecipeCategories
-                    category={this.props.recipeCategory}
-                    setCategory={this.props.setRecipeCategory}
-                  />
-                )}
-              </Paper>
-            </Grid>
-            <Grid item>
-              <Dialog
-                open={true}
-                classes={{
-                  root: showRecipeCategories
-                    ? this.props.classes.root2
-                    : this.props.classes.root1,
-                }}
-                BackdropProps={{
-                  classes: {
-                    root: showRecipeCategories
-                      ? this.props.classes.backdropRoot2
-                      : this.props.classes.backdropRoot1,
-                  },
-                }}
-              >
-                <div
-                  style={{
-                    margin: "0",
-                    left: "0",
-                    top: showRecipeCategories ? "80px" : "45px",
-                    height: showRecipeCategories
-                      ? "calc(100% - 80px)"
-                      : "calc(100% - 45px)",
-                    width: "100%",
-                    position: "fixed",
-                    overflowY: "hidden",
-                    background: "none",
-                  }}
-                >
-                  <div
-                    id="container"
-                    style={{ height: "100%", overflowY: "auto" }}
-                  >
-                    {this.renderActiveTab()}
-                  </div>
-                </div>
-              </Dialog>
-            </Grid>
-          </Grid>
+          <NavigationBar
+            keyword={this.state.keyword}
+            setKeyword={(newVal) => this.setState({ keyword: newVal })}
+          />
+          {showRecipeCategories && (
+            <RecipeCategories
+              category={this.props.recipeCategory}
+              setCategory={this.props.setRecipeCategory}
+              toggleCreateMode={() => this.setState({ recipeCreateMode: true })}
+            />
+          )}
+          <Dialog
+            open={true}
+            classes={{
+              root: showRecipeCategories
+                ? this.props.classes.root2
+                : this.props.classes.root1,
+            }}
+            BackdropProps={{
+              classes: {
+                root: showRecipeCategories
+                  ? this.props.classes.backdropRoot2
+                  : this.props.classes.backdropRoot1,
+              },
+            }}
+          >
+            <div
+              style={{
+                margin: "0",
+                left: "0",
+                top: showRecipeCategories ? "80px" : "45px",
+                height: showRecipeCategories
+                  ? "calc(100% - 80px)"
+                  : "calc(100% - 45px)",
+                width: "100%",
+                position: "fixed",
+                overflowY: "hidden",
+                background: "none",
+              }}
+            >
+              <div id="container" style={{ height: "100%", overflowY: "auto" }}>
+                {this.renderActiveTab()}
+              </div>
+            </div>
+          </Dialog>
         </Container>
         <SuccessSnackbar />
         <Spinner isVisible={this.props.isSpinnerVisible} />
         <Dialog
           disableBackdropClick
+          style={{ zIndex: "1302" }}
           open={this.state.recipeCreateMode}
           TransitionComponent={Transition}
         >

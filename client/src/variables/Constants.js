@@ -2,7 +2,6 @@ export const RECIPE_TAB = "RECIPE_TAB";
 export const SIGN_IN_TAB = "SIGN_IN_TAB";
 export const SIGN_UP_TAB = "SIGN_UP_TAB";
 export const USERS_TAB = "USERS_TAB";
-export const WELCOME_TAB = "WELCOME_TAB";
 export const ABOUT_TAB = "ABOUT_TAB";
 export const PROFILE_TAB = "PROFILE_TAB";
 export const PROFILE = "PROFILE";

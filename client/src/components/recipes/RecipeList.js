@@ -273,27 +273,22 @@ class RecipeList extends React.Component {
             )
           )}
           <div style={centeredTextStyle}>
-            {this.props.isFetchingRecipes && !this.props.keyword.length ? (
-              <CircularProgress
-                size={30}
-                style={{ color: defaultTheme.palette.primary.main }}
-              />
-            ) : (
-              !this.props.isSpinnerVisible &&
-              !this.props.recipesFetched &&
-              !this.props.networkFailed && (
-                <Link
-                  href="#"
-                  onClick={() => this.fetchRecipes()}
-                  style={{
-                    fontSize: "14px",
-                    color: defaultTheme.palette.primary.main,
-                  }}
-                >
-                  Load more recipes
-                </Link>
-              )
-            )}
+            {this.props.isFetchingRecipes && !this.props.keyword.length
+              ? "Loading Recipes..."
+              : !this.props.isSpinnerVisible &&
+                !this.props.recipesFetched &&
+                !this.props.networkFailed && (
+                  <Link
+                    href="#"
+                    onClick={() => this.fetchRecipes()}
+                    style={{
+                      fontSize: "14px",
+                      color: defaultTheme.palette.primary.main,
+                    }}
+                  >
+                    Load more recipes
+                  </Link>
+                )}
           </div>
         </GridList>
         {!this.props.isFetchingRecipes &&
@@ -310,6 +305,7 @@ class RecipeList extends React.Component {
           )}
         <Dialog
           disableBackdropClick
+          style={{ zIndex: "1302" }}
           open={this.state.isDetailOpen}
           TransitionComponent={Transition}
         >

@@ -33,6 +33,20 @@ export const inputTheme = {
 };
 
 export const formTheme = (theme) => ({
+  dialogRoot: {
+    marginTop: "45px",
+  },
+  dialogPaper: {
+    background: "none",
+    margin: "0",
+    boxShadow: "none",
+  },
+  dialogContainer: {
+    height: "fit-content",
+  },
+  backdropRoot: {
+    display: "none",
+  },
   paper: {
     margin: theme.spacing(2),
     display: "flex",
@@ -145,6 +159,8 @@ export const centeredTextStyle = {
   height: "initial",
   textAlign: "center",
   margin: "20px 0 40px",
+  fontSize: "14px",
+  color: "grey",
 };
 
 export const gradientTextStyle = {
@@ -353,3 +369,12 @@ export const recipeButtonStyle = (value, currentVal) => ({
   padding: "3px 10px",
   marginLeft: "5px",
 });
+
+export const createButtonStyle = {
+  padding: "3px 10px",
+  color: "black",
+  fontWeight: "bold",
+  background: defaultTheme.palette.primary.main,
+  float: "right",
+  marginRight: "5px",
+};

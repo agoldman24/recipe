@@ -11,7 +11,7 @@ import {
   SET_RECIPE_CATEGORY,
   COMPLETE_HYDRATION,
 } from "../actions";
-import { PROFILE_TAB, WELCOME_TAB } from "../variables/Constants";
+import { PROFILE_TAB, RECIPE_TAB } from "../variables/Constants";
 
 const getAllRecipes = (state) => state.allRecipes;
 const isDefined = (v) => !!v && v !== "null" && v !== "undefined";
@@ -53,7 +53,7 @@ function* runHydration() {
       yield put({
         type: SET_ACTIVE_TAB,
         currentTab: null,
-        newTab: { name: WELCOME_TAB },
+        newTab: { name: RECIPE_TAB },
       });
     }
     yield put({ type: COMPLETE_HYDRATION });

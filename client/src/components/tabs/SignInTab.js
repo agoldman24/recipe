@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { connect } from "react-redux";
+import Dialog from "@material-ui/core/Dialog";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -37,82 +38,96 @@ const SignInTab = (props) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography
-          component="h1"
-          variant="h4"
-          style={{ fontFamily: "Signika" }}
-        >
-          Sign in
-        </Typography>
-        <form className={classes.form}>
-          {props.emptyFields && (
-            <div style={{ ...errorStyle, paddingTop: "0" }}>
-              One or more fields is empty
-            </div>
-          )}
-          {props.loginFailed && (
-            <div style={{ ...errorStyle, paddingTop: "0" }}>
-              Invalid username or password
-            </div>
-          )}
-          <TextField
-            InputProps={{
-              classes: {
-                input: classes.inputTextLowercase,
-              },
-            }}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-            onChange={(e) => setUsername(e.target.value.toLowerCase())}
-          />
-          <TextField
-            InputProps={{
-              classes: {
-                input: classes.inputText,
-              },
-            }}
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            className={classes.submit}
-            type="submit"
-            onClick={onFormSubmit}
+    <Dialog
+      open={true}
+      classes={{
+        root: classes.dialogRoot,
+        paper: classes.dialogPaper,
+        container: classes.dialogContainer,
+      }}
+      BackdropProps={{
+        classes: {
+          root: classes.backdropRoot,
+        },
+      }}
+    >
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography
+            component="h1"
+            variant="h4"
+            style={{ fontFamily: "Signika" }}
           >
-            Sign In
-          </Button>
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link
-                href="#"
-                style={{ color: defaultTheme.palette.primary.main }}
-                onClick={() => {
-                  props.clearErrorMessages();
-                  props.setActiveTab(SIGN_UP_TAB);
-                }}
-              >
-                {"Don't have an account? Sign Up"}
-              </Link>
+            Sign in
+          </Typography>
+          <form className={classes.form}>
+            {props.emptyFields && (
+              <div style={{ ...errorStyle, paddingTop: "0" }}>
+                One or more fields is empty
+              </div>
+            )}
+            {props.loginFailed && (
+              <div style={{ ...errorStyle, paddingTop: "0" }}>
+                Invalid username or password
+              </div>
+            )}
+            <TextField
+              InputProps={{
+                classes: {
+                  input: classes.inputTextLowercase,
+                },
+              }}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Username"
+              onChange={(e) => setUsername(e.target.value.toLowerCase())}
+            />
+            <TextField
+              InputProps={{
+                classes: {
+                  input: classes.inputText,
+                },
+              }}
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Password"
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              className={classes.submit}
+              type="submit"
+              onClick={onFormSubmit}
+            >
+              Sign In
+            </Button>
+            <Grid container justify="flex-end">
+              <Grid item>
+                <Link
+                  href="#"
+                  style={{ color: defaultTheme.palette.primary.main }}
+                  onClick={() => {
+                    props.clearErrorMessages();
+                    props.setActiveTab(SIGN_UP_TAB);
+                  }}
+                >
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+          </form>
+        </div>
+      </Container>
+    </Dialog>
   );
 };
 

@@ -300,6 +300,7 @@ class RecipeDetail extends React.Component {
           classes={{
             paper: this.props.classes.paper,
           }}
+          style={{ zIndex: "1303" }}
         >
           <Grid container direction="column">
             <Grid

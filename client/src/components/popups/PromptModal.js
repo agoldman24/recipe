@@ -44,6 +44,7 @@ const PromptModal = ({
     <Modal
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
+      style={{ zIndex: "1302" }}
       className={classes.modal}
       open={isVisible}
       onClose={(e) => {

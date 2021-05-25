@@ -343,8 +343,7 @@ class RecipeDetail extends React.Component {
           actionText="Delete"
           isVisible={this.state.isDeleteModalVisible}
           closeModal={() => this.setState({ isDeleteModalVisible: false })}
-          onConfirm={(e) => {
-            e.stopPropagation();
+          onConfirm={() => {
             this.setState({ isDeleteModalVisible: false });
             this.props.deleteRecipe();
           }}

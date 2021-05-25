@@ -68,13 +68,15 @@ const styles = () => ({
   },
   button: {
     textTransform: "none",
-    fontSize: "12px",
-    fontFamily: "Signika",
+    fontSize: "16px",
+    fontFamily: "Open Sans Condensed",
     fontWeight: "bold",
+    height: "45px",
+    minWidth: "0",
+    padding: "0",
     borderRadius: "50px",
-    marginRight: "5px",
-    color: "black",
-    background: defaultTheme.palette.primary.main,
+    marginRight: "10px",
+    color: defaultTheme.palette.primary.main,
   },
 });
 
@@ -88,17 +90,9 @@ const NavigationBar = (props) => {
     setIsSearchFocused(false);
   }, [props.recipeCategory]);
 
-  useEffect(() => {
-    if (isSearchVisible) {
-      document.getElementById("searchInput").focus();
-    } else {
-      setTimeout(() => props.setKeyword(""), 500);
-    }
-  }, [isSearchVisible]);
-
   return props.networkFailed ? (
     <div
-      className="refresh"
+      className="clickable"
       onClick={props.refresh}
       style={{
         width: "100%",
@@ -132,49 +126,6 @@ const NavigationBar = (props) => {
           },
         }}
       >
-        <Grid container direction="row" style={{ width: "fit-content" }}>
-          <Grid item>
-            <IconButton
-              style={{
-                borderRadius: "0",
-                width: "fit-content",
-                background: isMenuOpen ? "#190023" : "none",
-                transitionProperty: "background",
-                transitionDuration: "0.5s",
-              }}
-              onClick={() => setTimeout(() => setIsMenuOpen(!isMenuOpen), 1)}
-            >
-              {isMenuOpen ? <CloseIcon /> : <MenuRoundedIcon />}
-            </IconButton>
-          </Grid>
-          <Grid
-            item
-            style={{
-              padding: "3px 6px",
-              opacity: isSearchVisible ? "0" : "1",
-              transitionProperty: "opacity",
-              transitionDuration: "0.5s",
-            }}
-          >
-            <Typography
-              variant="h4"
-              style={{
-                float: "left",
-                fontWeight: "bold",
-                fontFamily: "Shadows Into Light",
-                ...gradientTextStyle,
-              }}
-            >
-              Recipe
-            </Typography>
-            <Typography
-              variant="h4"
-              style={{ float: "left", fontFamily: "Open Sans Condensed" }}
-            >
-              Book
-            </Typography>
-          </Grid>
-        </Grid>
         <Dialog
           open={true}
           style={{ height: "fit-content", zIndex: "1302" }}
@@ -193,11 +144,71 @@ const NavigationBar = (props) => {
             style={{
               position: "fixed",
               right: "0",
-              width: "calc(100% - 50px)",
+              width: "100%",
               height: "45px",
+              borderBottom: "1px solid #ff7200",
             }}
           >
-            <Grid item style={{ margin: "auto 0 auto auto" }}>
+            <Grid item style={{ height: "45px" }}>
+              {isMenuOpen ? (
+                <CloseIcon
+                  className="clickable"
+                  style={{ height: "45px", width: "45px", padding: "11px" }}
+                />
+              ) : (
+                <IconButton
+                  style={{
+                    borderRadius: "0",
+                    width: "fit-content",
+                  }}
+                  onClick={() => setIsMenuOpen(true)}
+                >
+                  <MenuRoundedIcon />
+                </IconButton>
+              )}
+            </Grid>
+            <Grid
+              item
+              style={{
+                padding: "3px 6px",
+                position: "fixed",
+                left: "45px",
+                opacity: isSearchVisible ? "0" : "1",
+                transitionProperty: "opacity",
+                transitionDuration: "0.5s",
+              }}
+              className={isSearchVisible ? "unclickable" : "clickable"}
+              onClick={() => {
+                if (!isSearchVisible) {
+                  props.setActiveTab(RECIPE_TAB);
+                }
+              }}
+            >
+              <Typography
+                variant="h4"
+                style={{
+                  float: "left",
+                  fontWeight: "bold",
+                  fontFamily: "Shadows Into Light",
+                  ...gradientTextStyle,
+                }}
+              >
+                Recipe
+              </Typography>
+              <Typography
+                variant="h4"
+                style={{ float: "left", fontFamily: "Open Sans Condensed" }}
+              >
+                Book
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              style={{
+                margin: "auto 0 auto auto",
+                opacity: props.isSearchAvailable ? "1" : "0",
+              }}
+            >
               <InputBase
                 id="searchInput"
                 placeholder={
@@ -205,6 +216,7 @@ const NavigationBar = (props) => {
                     ? "Search users..."
                     : "Search recipes..."
                 }
+                disabled={!props.isSearchAvailable}
                 onFocus={() => setIsSearchFocused(true)}
                 onBlur={() => setIsSearchFocused(false)}
                 value={props.keyword}
@@ -212,7 +224,7 @@ const NavigationBar = (props) => {
                   props.setKeyword(e.target.value.toLowerCase());
                 }}
                 classes={{
-                  root: !isSearchVisible
+                  root: !(props.isSearchAvailable && isSearchVisible)
                     ? props.classes.hiddenInputRoot
                     : isSearchFocused
                     ? props.classes.focusedInputRoot
@@ -221,22 +233,28 @@ const NavigationBar = (props) => {
                 }}
               />
             </Grid>
-            {(props.activeTab.name === USERS_TAB ||
-              (props.activeTab.name === RECIPE_TAB &&
-                props.recipeCategory === "All")) && (
+            {props.isSearchAvailable && (
               <Grid item>
                 <IconButton
                   style={{ width: "fit-content" }}
                   onClick={() => {
-                    setIsSearchVisible(!isSearchVisible);
-                    setIsSearchFocused(!isSearchFocused);
+                    if (isSearchVisible) {
+                      document.getElementById("searchInput").blur();
+                      setTimeout(() => props.setKeyword(""), 500);
+                      setIsSearchVisible(false);
+                      setIsSearchFocused(false);
+                    } else {
+                      document.getElementById("searchInput").focus();
+                      setIsSearchVisible(true);
+                      setIsSearchFocused(true);
+                    }
                   }}
                 >
                   {isSearchVisible ? <CloseIcon /> : <SearchIcon />}
                 </IconButton>
               </Grid>
             )}
-            <Grid item style={{ margin: "auto 0" }}>
+            <Grid item>
               {props.isLoggedIn ? (
                 <IconButton
                   style={{ width: "fit-content" }}
@@ -260,14 +278,18 @@ const NavigationBar = (props) => {
                   >
                     {props.activeTab.name === SIGN_IN_TAB
                       ? "Sign Up"
-                      : "Sign In"}
+                      : "Log In"}
                   </Button>
                 )
               )}
             </Grid>
           </Grid>
+          {props.isFetchingRecipes && (
+            <LinearProgress
+              style={{ position: "fixed", top: "45px", width: "100%" }}
+            />
+          )}
         </Dialog>
-        {props.isFetchingRecipes && <LinearProgress />}
       </Dialog>
       <ListMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
     </Fragment>
@@ -278,6 +300,9 @@ const mapStateToProps = (state) => {
   return {
     activeTab: state.activeTab,
     recipeCategory: state.recipeCategory,
+    isSearchAvailable:
+      state.activeTab.name === USERS_TAB ||
+      (state.activeTab.name === RECIPE_TAB && state.recipeCategory === "All"),
     isFetchingRecipes: state.isFetchingRecipes,
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,

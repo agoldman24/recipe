@@ -543,6 +543,7 @@ const oldestFetchedRecipeTimestamp = (
         : state;
     case SET_RECIPE_CATEGORY:
     case SET_ACTIVE_TAB:
+    case DELETE_RECIPE:
     case SIGN_OUT:
       return Date.now();
     default:
@@ -560,6 +561,7 @@ const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
     case NETWORK_FAILED:
       return false;
     case SET_RECIPE_CATEGORY:
+    case DELETE_RECIPE:
       return true;
     case SET_ACTIVE_TAB:
       return (

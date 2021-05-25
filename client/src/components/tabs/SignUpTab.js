@@ -153,7 +153,7 @@ const SignUpTab = (props) => {
                     props.setActiveTab(SIGN_IN_TAB);
                   }}
                 >
-                  Already have an account? Sign in
+                  Already have an account? Log In
                 </Link>
               </Grid>
             </Grid>

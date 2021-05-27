@@ -194,30 +194,26 @@ export const selected = {
   borderBottom: "2px solid #ffc800",
 };
 
-export const highlightedNumberStyle = {
-  ...gradientTextStyle2,
-  ...textStyle,
-  fontSize: "35px",
-};
-
 export const unhighlightedNumberStyle = {
   ...textStyle,
-  fontSize: "35px",
+  fontSize: "30px",
 };
 
-export const highlightedTextStyle = {
-  ...textStyle,
-  fontSize: "18px",
-  fontFamily: "Open Sans Condensed",
-  fontWeight: "bold",
-  color: "#ffc800",
+export const highlightedNumberStyle = {
+  ...unhighlightedNumberStyle,
+  ...gradientTextStyle2,
 };
 
 export const unhighlightedTextStyle = {
   ...textStyle,
-  fontSize: "18px",
+  fontSize: "16px",
   fontFamily: "Open Sans Condensed",
   fontWeight: "normal",
+};
+
+export const highlightedTextStyle = {
+  ...unhighlightedTextStyle,
+  color: "#ffc800",
 };
 
 export const roundedButtonStyle = {

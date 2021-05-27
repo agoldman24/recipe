@@ -160,7 +160,7 @@ class RecipeList extends React.Component {
             !recipe ? null : (
               <GridListTile
                 key={recipe.id}
-                className="cardMedia"
+                className="clickable"
                 style={{
                   height: "190px",
                   width: isMobileOnly ? "calc(50% - 10px)" : "calc(20% - 10px)",
@@ -333,7 +333,7 @@ class RecipeList extends React.Component {
               editMode={this.props.editMode}
               isEditable={
                 !this.props.createdRecipeIds
-                  ? null
+                  ? false
                   : this.props.createdRecipeIds.includes(
                       this.state.detailRecipe.id
                     )

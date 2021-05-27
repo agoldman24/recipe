@@ -1,8 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/styles";
+import Drawer from "@material-ui/core/Drawer";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Dialog from "@material-ui/core/Dialog";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -23,16 +23,13 @@ import {
 import { RECIPE_TAB, USERS_TAB, PROFILE_TAB } from "../../variables/Constants";
 
 const styles = () => ({
-  backdropRoot: {
-    display: "none",
-  },
   paper: {
-    margin: "0",
-    width: "100%",
-    maxWidth: "none",
-    borderRadius: "0",
-    background: "linear-gradient(to right, #190023, #3b0031);",
-    boxShadow: "0px 10px 20px black",
+    top: "45px",
+    background: "linear-gradient(to right, #190023, #3b0031)",
+    borderRight: "1px solid rebeccapurple",
+  },
+  backdropRoot: {
+    top: "45px",
   },
 });
 
@@ -46,82 +43,86 @@ const ListMenu = ({
   setIsOpen,
   setActiveTab,
   activeUser,
+  isLoggedIn,
   signOut,
 }) => {
   return (
-    <Dialog
-      open={true}
-      style={{
-        top: "45px",
-        height: "fit-content",
-        zIndex: "1301",
-      }}
-      classes={{
-        paper: classes.paper,
-      }}
-      BackdropProps={{
-        classes: {
-          root: classes.backdropRoot,
-        },
-      }}
-    >
-      <ClickAwayListener
-        onClickAway={() => {
-          if (isOpen) {
-            setIsOpen(false);
-          }
+    <ClickAwayListener onClickAway={() => setIsOpen(false)}>
+      <Drawer
+        anchor="left"
+        open={isOpen}
+        onClose={() => setIsOpen(false)}
+        classes={{ paper: classes.paper }}
+        BackdropProps={{
+          classes: {
+            root: classes.backdropRoot,
+          },
         }}
       >
-        <List
-          disablePadding
-          style={{
-            height: isOpen ? "185px" : "0",
-            transitionProperty: "height",
-            transitionDuration: "0.3s",
-          }}
-          onClick={() => setIsOpen(false)}
-        >
-          <ListItem button onClick={() => setActiveTab(RECIPE_TAB)}>
+        <List style={{ width: "200px" }}>
+          <ListItem
+            button
+            onClick={() => {
+              setIsOpen(false);
+              setActiveTab(RECIPE_TAB);
+            }}
+          >
             <ListItemIcon style={iconStyle}>
               <MenuBookSharpIcon />
             </ListItemIcon>
             <ListItemText primary="Recipes" />
           </ListItem>
-          <ListItem button onClick={() => setActiveTab(USERS_TAB)}>
+          <ListItem
+            button
+            onClick={() => {
+              setIsOpen(false);
+              setActiveTab(USERS_TAB);
+            }}
+          >
             <ListItemIcon style={iconStyle}>
               <PeopleAltIcon />
             </ListItemIcon>
             <ListItemText primary="Users" />
           </ListItem>
-          <ListItem
-            button
-            onClick={() => setActiveTab(PROFILE_TAB, activeUser)}
-          >
-            <ListItemIcon style={iconStyle}>
-              <AccountCircleIcon />
-            </ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItem>
-          <ListItem button onClick={signOut}>
-            <ListItemIcon style={iconStyle}>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary="Sign Out" />
-          </ListItem>
+          {isLoggedIn && (
+            <Fragment>
+              <ListItem
+                button
+                onClick={() => {
+                  setIsOpen(false);
+                  setActiveTab(PROFILE_TAB, activeUser);
+                }}
+              >
+                <ListItemIcon style={iconStyle}>
+                  <AccountCircleIcon />
+                </ListItemIcon>
+                <ListItemText primary="Profile" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  setIsOpen(false);
+                  signOut();
+                }}
+              >
+                <ListItemIcon style={iconStyle}>
+                  <ExitToAppIcon />
+                </ListItemIcon>
+                <ListItemText primary="Sign Out" />
+              </ListItem>
+            </Fragment>
+          )}
         </List>
-      </ClickAwayListener>
-    </Dialog>
+      </Drawer>
+    </ClickAwayListener>
   );
 };
 
 const mapStateToProps = (state) => {
   return {
     activeTab: state.activeTab,
-    recipeCategory: state.recipeCategory,
-    isFetchingRecipes: state.isFetchingRecipes,
-    isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,
-    displayUser: state.displayUser,
+    isLoggedIn: !!state.activeUser,
   };
 };
 

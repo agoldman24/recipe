@@ -175,21 +175,25 @@ const ProfileTab = (props) => {
 
   return (
     <Fragment>
-      {!!props.tabHistory.length && (
-        <Fab
-          style={{ ...backButtonStyle, top: "40px" }}
-          onClick={() => {
+      <Fab
+        style={{
+          ...backButtonStyle,
+          top: "40px",
+          opacity: !!props.tabHistory.length ? "1" : "0",
+        }}
+        onClick={() => {
+          if (!!props.tabHistory.length) {
             const tabHistory = props.tabHistory;
             const { displayUserId } = tabHistory[tabHistory.length - 1];
             if (!!displayUserId) {
               props.setDisplayUser(props.users[displayUserId]);
             }
             props.setActiveTab(tabHistory[tabHistory.length - 1]);
-          }}
-        >
-          <ArrowBackIosIcon />
-        </Fab>
-      )}
+          }
+        }}
+      >
+        <ArrowBackIosIcon />
+      </Fab>
       <Grid container direction="column" style={{ alignItems: "center" }}>
         <Grid
           item
@@ -300,7 +304,12 @@ const ProfileTab = (props) => {
           createdRecipes={props.createdRecipes}
         />
       )}
-      <Dialog disableBackdropClick open={open} TransitionComponent={Transition}>
+      <Dialog
+        disableBackdropClick
+        open={open}
+        TransitionComponent={Transition}
+        style={{ zIndex: "1302" }}
+      >
         <Card style={detailStyle}>
           <AppBar className={classes.appBar}>
             <Toolbar style={{ minHeight: "0", padding: "5px 0" }}>

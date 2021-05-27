@@ -61,7 +61,7 @@ const SignInTab = (props) => {
             variant="h4"
             style={{ fontFamily: "Signika" }}
           >
-            Sign in
+            Log In
           </Typography>
           <form className={classes.form}>
             {props.emptyFields && (
@@ -108,7 +108,7 @@ const SignInTab = (props) => {
               type="submit"
               onClick={onFormSubmit}
             >
-              Sign In
+              Log In
             </Button>
             <Grid container justify="flex-end">
               <Grid item>

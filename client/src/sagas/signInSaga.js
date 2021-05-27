@@ -24,7 +24,7 @@ function* signIn(action) {
         currentTab: null,
         newTab: { name: RECIPE_TAB },
       });
-      yield put({ type: SHOW_SNACKBAR, message: "Sign in successful" });
+      yield put({ type: SHOW_SNACKBAR, message: "Login successful" });
     } else {
       yield put({ type: SIGN_IN_FAILED });
     }

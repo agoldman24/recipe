@@ -87,8 +87,19 @@ const NavigationBar = (props) => {
 
   useEffect(() => {
     setIsSearchVisible(false);
-    setIsSearchFocused(false);
   }, [props.recipeCategory]);
+
+  useEffect(() => {
+    if (!props.isSearchAvailable && !props.keyword.length) {
+      setIsSearchVisible(false);
+    }
+  }, [props.isSearchAvailable, props.keyword]);
+
+  useEffect(() => {
+    if (!isSearchVisible) {
+      setIsSearchFocused(false);
+    }
+  }, [isSearchVisible]);
 
   return props.networkFailed ? (
     <div
@@ -173,13 +184,18 @@ const NavigationBar = (props) => {
                 padding: "3px 6px",
                 position: "fixed",
                 left: "45px",
-                opacity: isSearchVisible ? "0" : "1",
+                zIndex: props.isSearchAvailable && isSearchVisible ? "0" : "1",
+                opacity: props.isSearchAvailable && isSearchVisible ? "0" : "1",
                 transitionProperty: "opacity",
                 transitionDuration: "0.5s",
               }}
-              className={isSearchVisible ? "unclickable" : "clickable"}
+              className={
+                props.isSearchAvailable && isSearchVisible
+                  ? "unclickable"
+                  : "clickable"
+              }
               onClick={() => {
-                if (!isSearchVisible) {
+                if (!(props.isSearchAvailable && isSearchVisible)) {
                   props.setActiveTab(RECIPE_TAB);
                 }
               }}
@@ -242,7 +258,6 @@ const NavigationBar = (props) => {
                       document.getElementById("searchInput").blur();
                       setTimeout(() => props.setKeyword(""), 500);
                       setIsSearchVisible(false);
-                      setIsSearchFocused(false);
                     } else {
                       document.getElementById("searchInput").focus();
                       setIsSearchVisible(true);
@@ -258,9 +273,11 @@ const NavigationBar = (props) => {
               {props.isLoggedIn ? (
                 <IconButton
                   style={{ width: "fit-content" }}
-                  onClick={() =>
-                    props.setActiveTab(PROFILE_TAB, props.activeUser)
-                  }
+                  onClick={() => {
+                    setIsSearchVisible(false);
+                    props.setKeyword("");
+                    props.setActiveTab(PROFILE_TAB, props.activeUser);
+                  }}
                 >
                   <AccountCircleIcon />
                 </IconButton>
@@ -269,6 +286,7 @@ const NavigationBar = (props) => {
                   <Button
                     className={props.classes.button}
                     onClick={() => {
+                      setIsSearchVisible(false);
                       props.setActiveTab(
                         props.activeTab.name === SIGN_IN_TAB
                           ? SIGN_UP_TAB
@@ -291,7 +309,12 @@ const NavigationBar = (props) => {
           )}
         </Dialog>
       </Dialog>
-      <ListMenu isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+      <ListMenu
+        isOpen={isMenuOpen}
+        setIsOpen={setIsMenuOpen}
+        setIsSearchVisible={setIsSearchVisible}
+        setKeyword={props.setKeyword}
+      />
     </Fragment>
   );
 };

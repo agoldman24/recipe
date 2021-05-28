@@ -41,6 +41,8 @@ const ListMenu = ({
   classes,
   isOpen,
   setIsOpen,
+  setIsSearchVisible,
+  setKeyword,
   setActiveTab,
   activeUser,
   isLoggedIn,
@@ -64,6 +66,8 @@ const ListMenu = ({
             button
             onClick={() => {
               setIsOpen(false);
+              setIsSearchVisible(false);
+              setKeyword("");
               setActiveTab(RECIPE_TAB);
             }}
           >
@@ -76,6 +80,8 @@ const ListMenu = ({
             button
             onClick={() => {
               setIsOpen(false);
+              setIsSearchVisible(false);
+              setKeyword("");
               setActiveTab(USERS_TAB);
             }}
           >
@@ -102,6 +108,8 @@ const ListMenu = ({
                 button
                 onClick={() => {
                   setIsOpen(false);
+                  setIsSearchVisible(false);
+                  setKeyword("");
                   signOut();
                 }}
               >

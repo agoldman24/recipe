@@ -287,6 +287,7 @@ const NavigationBar = (props) => {
                     className={props.classes.button}
                     onClick={() => {
                       setIsSearchVisible(false);
+                      props.setKeyword("");
                       props.setActiveTab(
                         props.activeTab.name === SIGN_IN_TAB
                           ? SIGN_UP_TAB

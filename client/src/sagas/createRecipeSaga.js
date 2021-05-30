@@ -33,17 +33,15 @@ function* createRecipe(action) {
         authorName,
         authorId,
       });
-      if (
-        activeUser.createdRecipeIds.length &&
-        !Object.keys(createdRecipes).length
-      ) {
+      const { createdRecipeIds } = activeUser;
+      if (createdRecipeIds.length && !Object.keys(createdRecipes).length) {
         const res = yield call(
           Api.get,
-          "/getRecipesByIds?" +
-            "ids=" +
-            activeUser.createdRecipeIds.map((obj) => obj.id) +
-            "&timestamps=" +
-            activeUser.createdRecipeIds.map((obj) => obj.timestamp)
+          "/getRecipesByIds?ids=" +
+            createdRecipeIds
+              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .slice(0, 19)
+              .map(({ id }) => id)
         );
         yield put({
           type: APPEND_CREATED_RECIPES,

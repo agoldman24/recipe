@@ -499,16 +499,10 @@ const allRecipes = (state = StateTree.allRecipes, action) => {
     case APPEND_ALL_RECIPES:
       return {
         ...state,
-        ...action.recipes.reduce((accum, recipe) => {
-          accum[recipe.id] = recipe;
-          return accum;
-        }, {}),
+        ...action.recipes,
       };
     case REPLACE_ALL_RECIPES:
-      return action.recipes.reduce((accum, recipe) => {
-        accum[recipe.id] = recipe;
-        return accum;
-      }, {});
+      return action.recipes;
     case ADD_CREATED_RECIPE:
       return {
         ...state,
@@ -538,8 +532,9 @@ const oldestFetchedRecipeTimestamp = (
   switch (action.type) {
     case REPLACE_ALL_RECIPES:
     case APPEND_ALL_RECIPES:
-      return !!action.recipes.length
-        ? action.recipes[action.recipes.length - 1].timestamp
+      const recipesArray = Object.values(action.recipes);
+      return !!recipesArray.length
+        ? recipesArray[recipesArray.length - 1].timestamp
         : state;
     case SET_RECIPE_CATEGORY:
     case SET_ACTIVE_TAB:

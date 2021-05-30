@@ -136,17 +136,17 @@ class RecipeList extends React.Component {
     }
   }
   fetchRecipes() {
-    this.props.getRecipes(
-      this.props.activeTab,
-      this.props.keyword,
-      this.props.recipeCategory,
-      this.props.friendRecipes,
-      this.props.createdRecipes,
-      this.props.users,
-      this.props.activeUser,
-      this.props.displayUser,
-      this.props.displayUserDetail
-    );
+    const requestType =
+      this.props.activeTab.name === RECIPE_TAB
+        ? !!this.props.keyword.length
+          ? KEYWORD_RECIPES
+          : this.props.recipeCategory === "All"
+          ? ALL_RECIPES
+          : this.props.recipeCategory === "By Friends"
+          ? FRIEND_RECIPES
+          : CREATED_RECIPES
+        : this.props.displayUserDetail.activeDetail;
+    this.props.getRecipes(requestType, this.props.keyword);
   }
   render() {
     return (
@@ -478,68 +478,10 @@ const mapDispatchToProps = (dispatch) => {
         recipeId,
         keep,
       }),
-    getRecipes: (
-      activeTab,
-      keyword,
-      recipeCategory,
-      friendRecipes,
-      createdRecipes,
-      users,
-      activeUser,
-      displayUser,
-      displayUserDetail
-    ) => {
-      const requestType =
-        activeTab.name === RECIPE_TAB
-          ? !!keyword.length
-            ? KEYWORD_RECIPES
-            : recipeCategory === "All"
-            ? ALL_RECIPES
-            : recipeCategory === "By Friends"
-            ? FRIEND_RECIPES
-            : CREATED_RECIPES
-          : displayUserDetail.activeDetail;
-      let ids = null;
-      switch (requestType) {
-        case FRIEND_RECIPES:
-          ids = activeUser.followingIds.reduce((accum, friendId) => {
-            users[friendId].createdRecipeIds
-              .filter((obj) => !Object.keys(friendRecipes).includes(obj.id))
-              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-              .forEach((r) => accum.push(r));
-            return accum;
-          }, []);
-          break;
-        case CREATED_RECIPES:
-          let recipes, recipeIds;
-          const activeUserIsDisplayUser =
-            !!activeUser && !!displayUser && activeUser.id === displayUser.id;
-          if (activeTab.name === RECIPE_TAB || activeUserIsDisplayUser) {
-            recipes = createdRecipes;
-            recipeIds = activeUser.createdRecipeIds;
-          } else {
-            recipes = displayUserDetail.createdRecipes;
-            recipeIds = displayUserDetail.createdRecipeIds;
-          }
-          ids = recipeIds
-            .filter((obj) => !Object.keys(recipes).includes(obj.id))
-            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
-          break;
-        case LIKED_RECIPES:
-          ids = displayUserDetail.likedRecipeIds
-            .filter(
-              (obj) =>
-                !Object.keys(displayUserDetail.likedRecipes).includes(obj.id)
-            )
-            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp);
-          break;
-        default:
-          break;
-      }
+    getRecipes: (requestType, keyword) => {
       dispatch({
         type: GET_RECIPES_REQUESTED,
         requestType,
-        ids,
         keyword,
       });
     },

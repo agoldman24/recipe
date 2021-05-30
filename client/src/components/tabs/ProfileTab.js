@@ -71,7 +71,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const ProfileTab = (props) => {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [isProfileEditorOpen, setIsProfileEditorOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const container = document.getElementById("container");
@@ -94,7 +94,7 @@ const ProfileTab = (props) => {
   }
 
   const openProfileEditor = () => {
-    setOpen(!open);
+    setIsProfileEditorOpen(true);
     setTimeout(() => {
       props.toggleProfileEditor(
         props.displayUser.firstName,
@@ -106,7 +106,7 @@ const ProfileTab = (props) => {
   };
 
   const closeProfileEditor = () => {
-    setOpen(!open);
+    setIsProfileEditorOpen(false);
     props.toggleProfileEditor();
   };
 
@@ -205,7 +205,7 @@ const ProfileTab = (props) => {
         >
           <div style={{ width: "40%" }}>
             <div style={{ float: "right" }}>
-              <ProfileAvatar />
+              <ProfileAvatar isEditable={false} />
             </div>
           </div>
           <div style={{ width: "60%" }}>
@@ -306,7 +306,7 @@ const ProfileTab = (props) => {
       )}
       <Dialog
         disableBackdropClick
-        open={open}
+        open={isProfileEditorOpen}
         TransitionComponent={Transition}
         style={{ zIndex: "1302" }}
       >
@@ -340,7 +340,7 @@ const ProfileTab = (props) => {
             }}
           >
             <Grid item style={{ margin: "30px auto" }}>
-              <ProfileAvatar />
+              <ProfileAvatar isEditable={true} />
               <ProfileEditor closeProfileEditor={closeProfileEditor} />
             </Grid>
           </Grid>

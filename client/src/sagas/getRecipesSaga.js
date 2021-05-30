@@ -26,6 +26,7 @@ const getRefreshNeeded = (state) => state.refreshNeeded;
 const getActiveTab = (state) => state.activeTab.name;
 const getActiveUser = (state) => state.activeUser;
 const getDisplayUser = (state) => state.displayUser;
+const getDisplayUserDetail = (state) => state.displayUserDetail;
 const getCreatedRecipes = (state) => state.createdRecipes;
 const getFriendRecipes = (state) => state.friendRecipes;
 const getAllUsers = (state) => state.users;
@@ -39,6 +40,7 @@ function* getRecipes(action) {
     const activeTab = yield select(getActiveTab);
     const activeUser = yield select(getActiveUser);
     const displayUser = yield select(getDisplayUser);
+    const displayUserDetail = yield select(getDisplayUserDetail);
     const createdRecipes = yield select(getCreatedRecipes);
     const friendRecipes = yield select(getFriendRecipes);
     const allUsers = yield select(getAllUsers);
@@ -51,8 +53,6 @@ function* getRecipes(action) {
     const timestamp = !!action.timestamp
       ? action.timestamp
       : oldestFetchedRecipeTimestamp;
-    let ids = [],
-      timestamps = [];
     let res;
     switch (action.requestType) {
       case ALL_RECIPES:
@@ -84,18 +84,20 @@ function* getRecipes(action) {
         );
         const updatedUsers = { ...allUsers, ...users };
         yield put({ type: UPDATE_USERS, users: updatedUsers });
-        activeUser.followingIds.forEach((friendId) => {
-          updatedUsers[friendId].createdRecipeIds
-            .filter((obj) => !Object.keys(friendRecipes).includes(obj.id))
-            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-            .forEach((obj) => {
-              ids.push(obj.id);
-              timestamps.push(obj.timestamp);
-            });
-        });
         res = yield call(
           Api.get,
-          "/getRecipesByIds?ids=" + ids + "&timestamps=" + timestamps
+          "/getRecipesByIds?ids=" +
+            activeUser.followingIds.reduce(
+              (accum, friendId) => [
+                ...accum,
+                ...updatedUsers[friendId].createdRecipeIds
+                  .filter(({ id }) => !Object.keys(friendRecipes).includes(id))
+                  .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+                  .slice(0, 20)
+                  .map(({ id }) => id),
+              ],
+              []
+            )
         );
         yield put({
           type: APPEND_FRIEND_RECIPES,
@@ -103,21 +105,22 @@ function* getRecipes(action) {
         });
         break;
       case CREATED_RECIPES:
-        if (!!action.ids) {
-          ids = action.ids.map((obj) => obj.id);
-          timestamps = action.ids.map((obj) => obj.timestamp);
+        let recipes, recipeIds;
+        if (appendTo === CREATED_RECIPES) {
+          recipes = createdRecipes;
+          recipeIds = activeUser.createdRecipeIds;
         } else {
-          activeUser.createdRecipeIds
-            .filter((obj) => !Object.keys(createdRecipes).includes(obj.id))
-            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-            .forEach((obj) => {
-              ids.push(obj.id);
-              timestamps.push(obj.timestamp);
-            });
+          recipes = displayUserDetail.createdRecipes;
+          recipeIds = displayUserDetail.createdRecipeIds;
         }
         res = yield call(
           Api.get,
-          "/getRecipesByIds?ids=" + ids + "&timestamps=" + timestamps
+          "/getRecipesByIds?ids=" +
+            recipeIds
+              .filter(({ id }) => !Object.keys(recipes).includes(id))
+              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .slice(0, 20)
+              .map(({ id }) => id)
         );
         yield put({
           type: APPEND_CREATED_RECIPES,
@@ -126,13 +129,15 @@ function* getRecipes(action) {
         });
         break;
       case LIKED_RECIPES:
+        const { likedRecipeIds, likedRecipes } = displayUserDetail;
         res = yield call(
           Api.get,
-          "/getRecipesByIds?" +
-            "ids=" +
-            action.ids.map((obj) => obj.id) +
-            "&timestamps=" +
-            action.ids.map((obj) => obj.timestamp)
+          "/getRecipesByIds?ids=" +
+            likedRecipeIds
+              .filter(({ id }) => !Object.keys(likedRecipes).includes(id))
+              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .slice(0, 20)
+              .map(({ id }) => id)
         );
         yield put({
           type: APPEND_LIKED_RECIPES,

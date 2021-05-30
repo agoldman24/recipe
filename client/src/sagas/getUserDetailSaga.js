@@ -41,6 +41,7 @@ export function* getUserDetail() {
       createdRecipeIds,
       likedRecipeIds,
     } = user;
+
     const res0 = !!profileImageId
       ? yield call(Api.get, "/getImageById?id=" + profileImageId)
       : null;
@@ -50,26 +51,29 @@ export function* getUserDetail() {
     const res2 = !!followingIds.length
       ? yield call(Api.get, "/getUsersByIds?ids=" + followingIds)
       : { data: { users: {} } };
+
     const res3 = !!createdRecipeIds.length
       ? yield call(
           Api.get,
-          "/getRecipesByIds?" +
-            "ids=" +
-            createdRecipeIds.map((obj) => obj.id) +
-            "&timestamps=" +
-            createdRecipeIds.map((obj) => obj.timestamp)
+          "/getRecipesByIds?ids=" +
+            createdRecipeIds
+              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .slice(0, 20)
+              .map(({ id }) => id)
         )
       : { data: { recipes: {} } };
+
     const res4 = !!likedRecipeIds.length
       ? yield call(
           Api.get,
-          "/getRecipesByIds?" +
-            "ids=" +
-            likedRecipeIds.map((obj) => obj.id) +
-            "&timestamps=" +
-            likedRecipeIds.map((obj) => obj.timestamp)
+          "/getRecipesByIds?ids=" +
+            likedRecipeIds
+              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+              .slice(0, 20)
+              .map(({ id }) => id)
         )
       : { data: { recipes: {} } };
+
     if (!!displayUserDetail && !!displayUserDetail.profileImage) {
       URL.revokeObjectURL(displayUserDetail.profileImage);
     }

@@ -112,7 +112,10 @@ exports.getRecipesByTime = (req, res) => {
     .then((recipes) => {
       return res.json({
         success: true,
-        recipes: recipes.map((recipe) => getRecipeSummary(recipe)),
+        recipes: recipes.reduce((accum, recipe) => {
+          accum[recipe._id] = getRecipeSummary(recipe);
+          return accum;
+        }, {}),
       });
     });
 };
@@ -131,7 +134,10 @@ exports.getRecipesByKeyword = (req, res) => {
     .then((recipes) => {
       return res.json({
         success: true,
-        recipes: recipes.map((recipe) => getRecipeSummary(recipe)),
+        recipes: recipes.reduce((accum, recipe) => {
+          accum[recipe._id] = getRecipeSummary(recipe);
+          return accum;
+        }, {}),
       });
     });
 };
@@ -144,30 +150,14 @@ exports.getRecipesByIds = (req, res) => {
       recipes: {},
     });
   }
-  const timestamps = req.query.timestamps.split(",").map((timestamp, index) => {
-    return {
-      timestamp,
-      id: ids[index],
-    };
-  });
-  const sortedArray = timestamps
-    .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-    .slice(0, 20);
-  const idTimeMap = sortedArray.reduce((accum, obj) => {
-    accum[obj.id] = obj.timestamp;
-    return accum;
-  }, {});
   db.collection("recipes")
-    .find({ _id: { $in: Object.keys(idTimeMap).map((id) => ObjectID(id)) } })
+    .find({ _id: { $in: req.query.ids.split(",").map((id) => ObjectID(id)) } })
     .toArray()
     .then((recipes) => {
       return res.json({
         success: true,
         recipes: recipes.reduce((accum, recipe) => {
-          accum[recipe._id] = {
-            ...getRecipeSummary(recipe),
-            timestamp: parseInt(idTimeMap[recipe._id]),
-          };
+          accum[recipe._id] = getRecipeSummary(recipe);
           return accum;
         }, {}),
       });

@@ -32,29 +32,29 @@ const editPhotoButtonStyle = {
   fontSize: "16px",
 };
 
-const ProfileAvatar = (props) => {
-  const {
-    isSpinnerVisible,
-    displayUserDetail,
-    displayUser: { firstName, lastName },
-    profileEditor,
-  } = props;
-
-  const profileImageLoaded = !!profileEditor
-    ? !!profileEditor.profileImage
-    : !!displayUserDetail && !!displayUserDetail.profileImage;
-
+const ProfileAvatar = ({
+  displayUser,
+  displayUserDetail,
+  profileEditor,
+  updateProfileEditor,
+  isEditable,
+  isSpinnerVisible,
+}) => {
   const classes = useStyles();
   const [isIconsModalVisible, setIconsModalVisible] = useState(false);
   const [isFileTypeModalVisible, setFileTypeModalVisible] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const { firstName, lastName } = displayUser;
+  const isProfileImageLoaded = !!profileEditor
+    ? !!profileEditor.profileImage
+    : !!displayUserDetail && !!displayUserDetail.profileImage;
 
   const imageStyle = {
     width: "120px",
     height: "120px",
     margin: "auto",
     border: "1.5px solid white",
-    background: profileImageLoaded
+    background: isProfileImageLoaded
       ? "#202020"
       : "radial-gradient(black, black, black, black, #222222, #333333, #333333, grey)",
   };
@@ -69,7 +69,7 @@ const ProfileAvatar = (props) => {
         const compressedFile = await imageCompression(file, { maxSizeMB: 1 });
         const data = await imageCompression.getDataUrlFromFile(compressedFile);
         const newImage = URL.createObjectURL(b64toBlob(data));
-        props.updateProfileEditor(newImage);
+        updateProfileEditor(newImage);
       }, 1);
     }
   };
@@ -79,7 +79,7 @@ const ProfileAvatar = (props) => {
       <IconsModal
         isVisible={isIconsModalVisible}
         closeModal={() => setIconsModalVisible(false)}
-        onConfirm={(icon) => props.updateProfileEditor(icon)}
+        onConfirm={(icon) => updateProfileEditor(icon)}
       />
       <PromptModal
         modalType="okay"
@@ -89,7 +89,7 @@ const ProfileAvatar = (props) => {
       />
       <Spinner isVisible={isSpinnerVisible} />
       <div style={{ height: "120px", textAlign: "center" }}>
-        {profileImageLoaded ? (
+        {isProfileImageLoaded ? (
           <Avatar
             alt="Profile"
             src={
@@ -114,7 +114,7 @@ const ProfileAvatar = (props) => {
             </div>
           </Avatar>
         )}
-        {!!profileEditor && (
+        {isEditable && (
           <label
             style={editPhotoButtonStyle}
             className="fileContainer"

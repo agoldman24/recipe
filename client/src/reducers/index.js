@@ -33,6 +33,8 @@ import {
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   REPLACE_ALL_RECIPES,
+  REPLACE_FRIEND_RECIPES,
+  REPLACE_CREATED_RECIPES,
   SET_RECIPE_CATEGORY,
   SET_DETAIL_RECIPE,
   SET_ACTIVE_TAB,
@@ -531,7 +533,11 @@ const oldestFetchedRecipeTimestamp = (
 ) => {
   switch (action.type) {
     case REPLACE_ALL_RECIPES:
+    case REPLACE_FRIEND_RECIPES:
+    case REPLACE_CREATED_RECIPES:
     case APPEND_ALL_RECIPES:
+    case APPEND_FRIEND_RECIPES:
+    case APPEND_CREATED_RECIPES:
       const recipesArray = Object.values(action.recipes);
       return !!recipesArray.length
         ? recipesArray[recipesArray.length - 1].timestamp
@@ -549,6 +555,8 @@ const oldestFetchedRecipeTimestamp = (
 const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
   switch (action.type) {
     case REPLACE_ALL_RECIPES:
+    case REPLACE_FRIEND_RECIPES:
+    case REPLACE_CREATED_RECIPES:
     case APPEND_ALL_RECIPES:
     case APPEND_FRIEND_RECIPES:
     case APPEND_CREATED_RECIPES:
@@ -569,6 +577,8 @@ const refreshNeeded = (state = StateTree.refreshNeeded, action) => {
 
 const friendRecipes = (state = StateTree.friendRecipes, action) => {
   switch (action.type) {
+    case REPLACE_FRIEND_RECIPES:
+      return action.recipes;
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
@@ -596,6 +606,8 @@ const createdRecipes = (state = StateTree.createdRecipes, action) => {
           ...action.recipe,
         },
       };
+    case REPLACE_CREATED_RECIPES:
+      return action.recipes;
     case APPEND_CREATED_RECIPES:
       return action.appendTo === CREATED_RECIPES
         ? {
@@ -671,6 +683,8 @@ const isFetchingRecipes = (state = StateTree.isFetchingRecipes, action) => {
     case APPEND_LIKED_RECIPES:
     case APPEND_ALL_RECIPES:
     case REPLACE_ALL_RECIPES:
+    case REPLACE_FRIEND_RECIPES:
+    case REPLACE_CREATED_RECIPES:
     case NETWORK_FAILED:
       return false;
     default:
@@ -684,13 +698,15 @@ const recipesFetched = (state = StateTree.recipesFetched, action) => {
     case APPEND_ALL_RECIPES:
       return {
         ...state,
-        all: action.recipes.length < 20,
+        all: Object.keys(action.recipes).length < 20,
       };
+    case REPLACE_FRIEND_RECIPES:
     case APPEND_FRIEND_RECIPES:
       return {
         ...state,
         friends: Object.keys(action.recipes).length < 20,
       };
+    case REPLACE_CREATED_RECIPES:
     case APPEND_CREATED_RECIPES:
       return action.appendTo === CREATED_RECIPES
         ? {

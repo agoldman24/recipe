@@ -7,12 +7,13 @@ import {
   APPEND_CREATED_RECIPES,
   APPEND_LIKED_RECIPES,
   REPLACE_ALL_RECIPES,
+  REPLACE_FRIEND_RECIPES,
+  REPLACE_CREATED_RECIPES,
   NETWORK_FAILED,
   UPDATE_USERS,
 } from "../actions";
 import {
   ALL_RECIPES,
-  KEYWORD_RECIPES,
   FRIEND_RECIPES,
   CREATED_RECIPES,
   LIKED_RECIPES,
@@ -53,27 +54,28 @@ function* getRecipes(action) {
     const timestamp = !!action.timestamp
       ? action.timestamp
       : oldestFetchedRecipeTimestamp;
-    let res;
+    let ids, res;
     switch (action.requestType) {
       case ALL_RECIPES:
-        res = yield call(Api.get, "/getRecipesByTime?timestamp=" + timestamp);
-        yield put({
-          type: refreshNeeded ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
-          recipes: res.data.recipes,
-        });
-        break;
-      case KEYWORD_RECIPES:
-        res = yield call(
-          Api.get,
-          "/getRecipesByKeyword?keyword=" +
-            action.keyword +
-            "&timestamp=" +
-            timestamp
-        );
-        yield put({
-          type: !!action.timestamp ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
-          recipes: res.data.recipes,
-        });
+        if (!!action.keyword.length) {
+          res = yield call(
+            Api.get,
+            "/getRecipesByKeyword?keyword=" +
+              action.keyword +
+              "&timestamp=" +
+              timestamp
+          );
+          yield put({
+            type: !!action.timestamp ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
+            recipes: res.data.recipes,
+          });
+        } else {
+          res = yield call(Api.get, "/getRecipesByTime?timestamp=" + timestamp);
+          yield put({
+            type: refreshNeeded ? REPLACE_ALL_RECIPES : APPEND_ALL_RECIPES,
+            recipes: res.data.recipes,
+          });
+        }
         break;
       case FRIEND_RECIPES:
         const {
@@ -84,25 +86,61 @@ function* getRecipes(action) {
         );
         const updatedUsers = { ...allUsers, ...users };
         yield put({ type: UPDATE_USERS, users: updatedUsers });
-        res = yield call(
-          Api.get,
-          "/getRecipesByIds?ids=" +
-            activeUser.followingIds.reduce(
+        if (!!action.keyword.length) {
+          ids = activeUser.followingIds
+            .reduce(
               (accum, friendId) => [
                 ...accum,
-                ...updatedUsers[friendId].createdRecipeIds
-                  .filter(({ id }) => !Object.keys(friendRecipes).includes(id))
-                  .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-                  .slice(0, 20)
-                  .map(({ id }) => id),
+                ...updatedUsers[friendId].createdRecipeIds,
               ],
               []
             )
-        );
-        yield put({
-          type: APPEND_FRIEND_RECIPES,
-          recipes: res.data.recipes,
-        });
+            .map(({ id }) => id);
+          if (!!ids.length) {
+            res = yield call(
+              Api.get,
+              "/getRecipesByIdsAndKeyword?ids=" +
+                ids +
+                "&keyword=" +
+                action.keyword
+            );
+            yield put({
+              type: REPLACE_FRIEND_RECIPES,
+              recipes: res.data.recipes,
+            });
+          } else {
+            yield put({
+              type: REPLACE_FRIEND_RECIPES,
+              recipes: {},
+            });
+          }
+        } else {
+          ids = activeUser.followingIds
+            .reduce(
+              (accum, friendId) => [
+                ...accum,
+                ...updatedUsers[friendId].createdRecipeIds.filter(
+                  ({ id }) => !Object.keys(friendRecipes).includes(id)
+                ),
+              ],
+              []
+            )
+            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+            .slice(0, 20)
+            .map(({ id }) => id);
+          if (!!ids.length) {
+            res = yield call(Api.get, "/getRecipesByIds?ids=" + ids);
+            yield put({
+              type: APPEND_FRIEND_RECIPES,
+              recipes: res.data.recipes,
+            });
+          } else {
+            yield put({
+              type: APPEND_FRIEND_RECIPES,
+              recipes: {},
+            });
+          }
+        }
         break;
       case CREATED_RECIPES:
         let recipes, recipeIds;
@@ -113,40 +151,73 @@ function* getRecipes(action) {
           recipes = displayUserDetail.createdRecipes;
           recipeIds = displayUserDetail.createdRecipeIds;
         }
-        res = yield call(
-          Api.get,
-          "/getRecipesByIds?ids=" +
-            recipeIds
-              .filter(({ id }) => !Object.keys(recipes).includes(id))
-              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-              .slice(0, 20)
-              .map(({ id }) => id)
-        );
-        yield put({
-          type: APPEND_CREATED_RECIPES,
-          recipes: res.data.recipes,
-          appendTo,
-        });
+        if (!!action.keyword.length) {
+          if (!!recipeIds.length) {
+            res = yield call(
+              Api.get,
+              "/getRecipesByIdsAndKeyword?ids=" +
+                recipeIds.map(({ id }) => id) +
+                "&keyword=" +
+                action.keyword
+            );
+            yield put({
+              type: REPLACE_CREATED_RECIPES,
+              recipes: res.data.recipes,
+              appendTo,
+            });
+          } else {
+            yield put({
+              type: REPLACE_CREATED_RECIPES,
+              recipes: {},
+              appendTo,
+            });
+          }
+        } else {
+          ids = recipeIds
+            .filter(({ id }) => !Object.keys(recipes).includes(id))
+            .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+            .slice(0, 20)
+            .map(({ id }) => id);
+          if (!!ids.length) {
+            res = yield call(Api.get, "/getRecipesByIds?ids=" + ids);
+            yield put({
+              type: APPEND_CREATED_RECIPES,
+              recipes: res.data.recipes,
+              appendTo,
+            });
+          } else {
+            yield put({
+              type: APPEND_CREATED_RECIPES,
+              recipes: {},
+              appendTo,
+            });
+          }
+        }
         break;
       case LIKED_RECIPES:
         const { likedRecipeIds, likedRecipes } = displayUserDetail;
-        res = yield call(
-          Api.get,
-          "/getRecipesByIds?ids=" +
-            likedRecipeIds
-              .filter(({ id }) => !Object.keys(likedRecipes).includes(id))
-              .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
-              .slice(0, 20)
-              .map(({ id }) => id)
-        );
-        yield put({
-          type: APPEND_LIKED_RECIPES,
-          recipes: res.data.recipes,
-          appendTo,
-        });
+        ids = likedRecipeIds
+          .filter(({ id }) => !Object.keys(likedRecipes).includes(id))
+          .sort((obj1, obj2) => obj2.timestamp - obj1.timestamp)
+          .slice(0, 20)
+          .map(({ id }) => id);
+        if (!!ids.length) {
+          res = yield call(Api.get, "/getRecipesByIds?ids=" + ids);
+          yield put({
+            type: APPEND_LIKED_RECIPES,
+            recipes: res.data.recipes,
+            appendTo,
+          });
+        } else {
+          yield put({
+            type: APPEND_LIKED_RECIPES,
+            recipes: {},
+            appendTo,
+          });
+        }
         break;
       default:
-        throw new Error("Unrecognized request type");
+        throw new Error("Un3recognized request type");
     }
   } catch (error) {
     yield put({ type: NETWORK_FAILED });

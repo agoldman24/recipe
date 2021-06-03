@@ -32,7 +32,9 @@ import {
   SIGN_IN_TAB,
   ABOUT_TAB,
   PROFILE_TAB,
-  KEYWORD_RECIPES,
+  ALL_RECIPES,
+  FRIEND_RECIPES,
+  CREATED_RECIPES,
 } from "../variables/Constants";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -67,15 +69,12 @@ class App extends React.Component {
     this.props.initHydration();
   }
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.recipeCategory !== prevProps.recipeCategory) {
-      this.setState({ keyword: "" });
-    } else if (
+    if (
       this.state.keyword !== prevState.keyword &&
-      this.props.activeTab.name === RECIPE_TAB &&
-      this.props.recipeCategory === "All"
+      this.props.activeTab.name === RECIPE_TAB
     ) {
       document.getElementById("container").scrollTo(0, 0);
-      this.props.getRecipes(this.state.keyword);
+      this.props.getRecipes(this.props.recipeCategory, this.state.keyword);
     }
   }
   renderActiveTab = () => {
@@ -199,10 +198,15 @@ const mapDispatchToProps = (dispatch) => {
         currentTab: null,
         newTab: { name },
       }),
-    getRecipes: (keyword) =>
+    getRecipes: (category, keyword) =>
       dispatch({
         type: GET_RECIPES_REQUESTED,
-        requestType: KEYWORD_RECIPES,
+        requestType:
+          category === "All"
+            ? ALL_RECIPES
+            : category === "By Friends"
+            ? FRIEND_RECIPES
+            : CREATED_RECIPES,
         keyword,
         timestamp: Date.now(),
       }),

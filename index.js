@@ -38,6 +38,10 @@ router.post("/deleteUser", userRoutes.deleteUser);
 router.get("/getRecipesByTime", recipeRoutes.getRecipesByTime);
 router.get("/getRecipesByKeyword", recipeRoutes.getRecipesByKeyword);
 router.get("/getRecipesByIds", recipeRoutes.getRecipesByIds);
+router.get(
+  "/getRecipesByIdsAndKeyword",
+  recipeRoutes.getRecipesByIdsAndKeyword
+);
 router.get("/getRecipeDetail", recipeRoutes.getRecipeDetail);
 router.post("/createRecipe", recipeRoutes.createRecipe);
 router.post("/updateRecipe", recipeRoutes.updateRecipe);

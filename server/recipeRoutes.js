@@ -164,6 +164,29 @@ exports.getRecipesByIds = (req, res) => {
     });
 };
 
+exports.getRecipesByIdsAndKeyword = (req, res) => {
+  console.log("ids:", req.query.ids.split(","));
+  db.collection("recipes")
+    .find({
+      $and: [
+        { name: { $regex: req.query.keyword, $options: "ix" } },
+        { _id: { $in: req.query.ids.split(",").map((id) => ObjectID(id)) } },
+      ],
+    })
+    .sort({ timestamp: -1 })
+    .limit(20)
+    .toArray()
+    .then((recipes) => {
+      return res.json({
+        success: true,
+        recipes: recipes.reduce((accum, recipe) => {
+          accum[recipe._id] = getRecipeSummary(recipe);
+          return accum;
+        }, {}),
+      });
+    });
+};
+
 exports.getRecipeDetail = (req, res) => {
   Recipe.findById(req.query.id).then((recipe) => {
     return res.json({

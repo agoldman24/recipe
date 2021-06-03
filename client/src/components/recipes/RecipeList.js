@@ -31,7 +31,6 @@ import {
 } from "../../actions";
 import {
   ALL_RECIPES,
-  KEYWORD_RECIPES,
   FRIEND_RECIPES,
   CREATED_RECIPES,
   LIKED_RECIPES,
@@ -138,9 +137,7 @@ class RecipeList extends React.Component {
   fetchRecipes() {
     const requestType =
       this.props.activeTab.name === RECIPE_TAB
-        ? !!this.props.keyword.length
-          ? KEYWORD_RECIPES
-          : this.props.recipeCategory === "All"
+        ? this.props.recipeCategory === "All"
           ? ALL_RECIPES
           : this.props.recipeCategory === "By Friends"
           ? FRIEND_RECIPES
@@ -273,7 +270,7 @@ class RecipeList extends React.Component {
             )
           )}
           <div style={centeredTextStyle}>
-            {this.props.isFetchingRecipes && !this.props.keyword.length
+            {this.props.isFetchingRecipes
               ? "Loading Recipes..."
               : !this.props.isSpinnerVisible &&
                 !this.props.recipesFetched &&

@@ -40,6 +40,8 @@ function* updateUser(action) {
     const detailRecipe = yield select(getDetailRecipe);
     const activeTab = yield select(getActiveTab);
     const recipeCategory = yield select(getRecipeCategory);
+    const activeUserIsDisplayUser =
+      !!displayUser && activeUser.id === displayUser.id;
     let res,
       res2,
       user,
@@ -85,7 +87,7 @@ function* updateUser(action) {
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
-        if (!!displayUser && activeUser.id === displayUser.id) {
+        if (activeUserIsDisplayUser) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: CREATED_RECIPE_IDS,
@@ -113,7 +115,7 @@ function* updateUser(action) {
         });
         user = res.data.user;
         yield put({ type: SET_ACTIVE_USER, user });
-        if (!!displayUser && activeUser.id === displayUser.id) {
+        if (activeUserIsDisplayUser) {
           yield put({
             type: UPDATE_DISPLAY_USER_DETAIL,
             updateType: LIKED_RECIPES,

@@ -16,16 +16,14 @@ class RecipeTab extends React.Component {
     }
   }
   componentDidUpdate(prevProps) {
-    if (
-      (this.props.refreshNeeded && !prevProps.refreshNeeded) ||
-      (this.props.recipeCategory !== prevProps.recipeCategory &&
-        !Object.keys(this.props.recipes).length)
-    ) {
+    if (this.props.refreshNeeded && !prevProps.refreshNeeded) {
       document.getElementById("container").scrollTo(0, 0);
       this.fetchRecipes();
     }
   }
-  fetchRecipes = () => this.props.getRecipes(this.props.requestType);
+  fetchRecipes = () =>
+    this.props.getRecipes(this.props.requestType, this.props.keyword);
+
   render() {
     return (
       <RecipeList
@@ -61,8 +59,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRecipes: (requestType) =>
-      dispatch({ type: GET_RECIPES_REQUESTED, requestType }),
+    getRecipes: (requestType, keyword) =>
+      dispatch({
+        type: GET_RECIPES_REQUESTED,
+        requestType,
+        keyword,
+        timestamp: Date.now(),
+      }),
   };
 };
 

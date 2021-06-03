@@ -86,10 +86,6 @@ const NavigationBar = (props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    setIsSearchVisible(false);
-  }, [props.recipeCategory]);
-
-  useEffect(() => {
     if (!props.isSearchAvailable && !props.keyword.length) {
       setIsSearchVisible(false);
     }
@@ -323,10 +319,8 @@ const NavigationBar = (props) => {
 const mapStateToProps = (state) => {
   return {
     activeTab: state.activeTab,
-    recipeCategory: state.recipeCategory,
     isSearchAvailable:
-      state.activeTab.name === USERS_TAB ||
-      (state.activeTab.name === RECIPE_TAB && state.recipeCategory === "All"),
+      state.activeTab.name === USERS_TAB || state.activeTab.name === RECIPE_TAB,
     isFetchingRecipes: state.isFetchingRecipes,
     isLoggedIn: !!state.activeUser,
     activeUser: state.activeUser,

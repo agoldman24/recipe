@@ -165,7 +165,6 @@ exports.getRecipesByIds = (req, res) => {
 };
 
 exports.getRecipesByIdsAndKeyword = (req, res) => {
-  console.log("ids:", req.query.ids.split(","));
   db.collection("recipes")
     .find({
       $and: [

@@ -164,7 +164,7 @@ const ProfileTab = (props) => {
   };
 
   const {
-    displayUser: { id, firstName, lastName },
+    displayUser: { id, username, firstName, lastName },
     displayUserDetail,
     isFetchingUserDetail,
     activeUser,
@@ -208,19 +208,34 @@ const ProfileTab = (props) => {
               <ProfileAvatar isEditable={false} />
             </div>
           </div>
-          <div style={{ width: "60%" }}>
+          <div style={{ width: "60%", position: "relative" }}>
             <Grid
               container
               direction="column"
-              style={{ width: "100%", height: "100%", padding: "0 15px" }}
+              style={{
+                position: "absolute",
+                top: "50%",
+                transform: "translateY(-50%)",
+                paddingLeft: "15px",
+              }}
             >
-              <Grid item style={{ padding: "20px 5px" }}>
+              <Grid
+                item
+                style={{
+                  fontFamily: "Open Sans Condensed",
+                  fontSize: "16px",
+                  color: "#a6a6a6",
+                }}
+              >
+                {username}
+              </Grid>
+              <Grid item style={{ padding: "10px 0" }}>
                 <Typography style={nameStyle}>
                   {firstName + " " + lastName}
                 </Typography>
               </Grid>
               {!!activeUser && (
-                <Grid item>
+                <Grid item style={{ paddingTop: "5px" }}>
                   {activeUser.id === id ? (
                     <Button
                       style={{

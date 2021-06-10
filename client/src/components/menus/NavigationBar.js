@@ -10,7 +10,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import MenuRoundedIcon from "@material-ui/icons/MenuRounded";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import PersonIcon from "@material-ui/icons/Person";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import IconButton from "@material-ui/core/IconButton";
 import ListMenu from "./ListMenu";
@@ -22,6 +22,8 @@ import {
   SET_DISPLAY_USER,
   GET_USER_DETAIL_REQUESTED,
   INIT_HYDRATION,
+  SIGN_OUT,
+  SHOW_SNACKBAR,
 } from "../../actions";
 import {
   RECIPE_TAB,
@@ -75,8 +77,14 @@ const styles = () => ({
     minWidth: "0",
     padding: "0",
     borderRadius: "50px",
-    marginRight: "10px",
+    padding: "0 10px",
     color: defaultTheme.palette.primary.main,
+  },
+  iconLabel: {
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "Open Sans Condensed",
+    fontSize: "14px",
   },
 });
 
@@ -248,7 +256,11 @@ const NavigationBar = (props) => {
             {props.isSearchAvailable && (
               <Grid item>
                 <IconButton
-                  style={{ width: "fit-content" }}
+                  classes={{ label: props.classes.iconLabel }}
+                  style={{
+                    width: "fit-content",
+                    padding: isSearchVisible ? "12px 10px" : "5px 8px",
+                  }}
                   onClick={() => {
                     if (isSearchVisible) {
                       document.getElementById("searchInput").blur();
@@ -262,21 +274,37 @@ const NavigationBar = (props) => {
                   }}
                 >
                   {isSearchVisible ? <CloseIcon /> : <SearchIcon />}
+                  {!isSearchVisible && <div>Search</div>}
                 </IconButton>
               </Grid>
             )}
             <Grid item>
               {props.isLoggedIn ? (
-                <IconButton
-                  style={{ width: "fit-content" }}
-                  onClick={() => {
-                    setIsSearchVisible(false);
-                    props.setKeyword("");
-                    props.setActiveTab(PROFILE_TAB, props.activeUser);
-                  }}
-                >
-                  <AccountCircleIcon />
-                </IconButton>
+                props.activeTab.name === PROFILE_TAB ? (
+                  <Button
+                    className={props.classes.button}
+                    onClick={() => {
+                      setIsSearchVisible(false);
+                      props.setKeyword("");
+                      props.signOut();
+                    }}
+                  >
+                    Log Out
+                  </Button>
+                ) : (
+                  <IconButton
+                    classes={{ label: props.classes.iconLabel }}
+                    style={{ width: "fit-content", padding: "5px 12px" }}
+                    onClick={() => {
+                      setIsSearchVisible(false);
+                      props.setKeyword("");
+                      props.setActiveTab(PROFILE_TAB, props.activeUser);
+                    }}
+                  >
+                    <PersonIcon />
+                    <div>Profile</div>
+                  </IconButton>
+                )
               ) : (
                 !props.isSpinnerVisible && (
                   <Button
@@ -345,6 +373,15 @@ const mapDispatchToProps = (dispatch) => {
         dispatch({ type: SET_DISPLAY_USER, user });
         dispatch({ type: GET_USER_DETAIL_REQUESTED });
       }
+    },
+    signOut: () => {
+      dispatch({
+        type: SET_ACTIVE_TAB,
+        currentTab: null,
+        newTab: { name: RECIPE_TAB },
+      });
+      dispatch({ type: SIGN_OUT });
+      dispatch({ type: SHOW_SNACKBAR, message: "You're signed out" });
     },
   };
 };

@@ -116,7 +116,7 @@ const ListMenu = ({
                 <ListItemIcon style={iconStyle}>
                   <ExitToAppIcon />
                 </ListItemIcon>
-                <ListItemText primary="Sign Out" />
+                <ListItemText primary="Log Out" />
               </ListItem>
             </Fragment>
           )}

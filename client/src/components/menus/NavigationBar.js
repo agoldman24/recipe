@@ -75,7 +75,6 @@ const styles = () => ({
     fontWeight: "bold",
     height: "45px",
     minWidth: "0",
-    padding: "0",
     borderRadius: "50px",
     padding: "0 10px",
     color: defaultTheme.palette.primary.main,

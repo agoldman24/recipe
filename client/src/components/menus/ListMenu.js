@@ -10,6 +10,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import MenuBookSharpIcon from "@material-ui/icons/MenuBookSharp";
 import PeopleAltIcon from "@material-ui/icons/PeopleAlt";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import {
   SET_ACTIVE_TAB,
@@ -20,7 +21,12 @@ import {
   GET_USER_DETAIL_REQUESTED,
   INIT_HYDRATION,
 } from "../../actions";
-import { RECIPE_TAB, USERS_TAB, PROFILE_TAB } from "../../variables/Constants";
+import {
+  RECIPE_TAB,
+  USERS_TAB,
+  PROFILE_TAB,
+  ABOUT_TAB,
+} from "../../variables/Constants";
 
 const styles = () => ({
   paper: {
@@ -89,6 +95,20 @@ const ListMenu = ({
               <PeopleAltIcon />
             </ListItemIcon>
             <ListItemText primary="Users" />
+          </ListItem>
+          <ListItem
+            button
+            onClick={() => {
+              setIsOpen(false);
+              setIsSearchVisible(false);
+              setKeyword("");
+              setActiveTab(ABOUT_TAB);
+            }}
+          >
+            <ListItemIcon style={iconStyle}>
+              <HelpOutlineIcon />
+            </ListItemIcon>
+            <ListItemText primary="About" />
           </ListItem>
           {isLoggedIn && (
             <Fragment>

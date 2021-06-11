@@ -152,7 +152,6 @@ class App extends React.Component {
         <SuccessSnackbar />
         <Spinner isVisible={this.props.isSpinnerVisible} />
         <Dialog
-          disableBackdropClick
           style={{ zIndex: "1302" }}
           open={this.state.recipeCreateMode}
           TransitionComponent={Transition}
@@ -177,7 +176,6 @@ const mapStateToProps = (state) => {
     activeTab: state.activeTab,
     isLoggedIn: !!state.activeUser,
     isSpinnerVisible: state.isSpinnerVisible,
-    recipeCreateMode: state.recipeCreateMode,
     usersFetched: state.usersFetched,
     isHydrated: state.isHydrated,
     users: state.users,

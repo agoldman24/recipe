@@ -129,7 +129,7 @@ class RecipeDetail extends React.Component {
                     />
                   ) : this.props.likedRecipeIds.includes(id) ? (
                     <IconButton
-                      style={{ padding: "12px" }}
+                      style={{ padding: "12px", color: "#ff6060" }}
                       onClick={(e) => {
                         e.stopPropagation();
                         this.setState({ likedId: id });
@@ -175,7 +175,7 @@ class RecipeDetail extends React.Component {
                   onClick={this.props.onClose}
                   style={{
                     color: "white",
-                    paddingLeft: isMobileOnly ? "30%" : "45%",
+                    marginLeft: isMobileOnly ? "10%" : "25%",
                   }}
                 >
                   <CloseIcon />

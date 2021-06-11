@@ -14,7 +14,11 @@ const useStyles = makeStyles({
 export default function Spinner({ isVisible }) {
   const classes = useStyles();
   return (
-    <Dialog open={isVisible} classes={{ paper: classes.paper }}>
+    <Dialog
+      open={isVisible}
+      classes={{ paper: classes.paper }}
+      style={{ zIndex: "1303" }}
+    >
       <CircularProgress size={80} />
     </Dialog>
   );

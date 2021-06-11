@@ -320,7 +320,6 @@ const ProfileTab = (props) => {
         />
       )}
       <Dialog
-        disableBackdropClick
         open={isProfileEditorOpen}
         TransitionComponent={Transition}
         style={{ zIndex: "1302" }}

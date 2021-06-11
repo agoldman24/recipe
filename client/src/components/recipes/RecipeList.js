@@ -234,7 +234,7 @@ class RecipeList extends React.Component {
                         />
                       ) : this.props.likedRecipeIds.includes(recipe.id) ? (
                         <IconButton
-                          style={{ padding: "15px 8px" }}
+                          style={{ padding: "15px 8px", color: "#ff6060" }}
                           onClick={(event) => {
                             event.stopPropagation();
                             this.setState({ likedId: recipe.id });
@@ -301,9 +301,9 @@ class RecipeList extends React.Component {
             </div>
           )}
         <Dialog
-          disableBackdropClick
           style={{ zIndex: "1302" }}
           open={this.state.isDetailOpen}
+          onClose={() => this.setState({ isDetailOpen: false })}
           TransitionComponent={Transition}
         >
           {this.state.detailRecipe && (

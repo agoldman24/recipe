@@ -121,7 +121,7 @@ const ProfileEditor = (props) => {
           props.closeProfileEditor();
           props.deleteUser();
         }}
-        message={"Are you sure want to delete your account?"}
+        message={"Are you sure you want to delete your account?"}
       />
     </TableContainer>
   );

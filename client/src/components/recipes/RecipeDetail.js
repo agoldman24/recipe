@@ -175,7 +175,7 @@ class RecipeDetail extends React.Component {
                   onClick={this.props.onClose}
                   style={{
                     color: "white",
-                    marginLeft: isMobileOnly ? "10%" : "25%",
+                    marginLeft: isMobileOnly ? "7%" : "25%",
                   }}
                 >
                   <CloseIcon />
@@ -347,7 +347,7 @@ class RecipeDetail extends React.Component {
             this.setState({ isDeleteModalVisible: false });
             this.props.deleteRecipe();
           }}
-          message={"Are you sure want to delete '" + name + "'?"}
+          message={"Are you sure you want to delete '" + name + "'?"}
         />
       </Card>
     );

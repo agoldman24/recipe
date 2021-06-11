@@ -409,7 +409,7 @@ class RecipeList extends React.Component {
           }}
           message={
             this.state.isDeleteModalVisible
-              ? "Are you sure want to delete '" +
+              ? "Are you sure you want to delete '" +
                 this.props.recipes[this.state.pickedIndex].name +
                 "'?"
               : ""
